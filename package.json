@@ -1,0 +1,14 @@
+{
+    "name": "rules_prerender",
+    "version": "0.1.0",
+    "private": true,
+    "devDependencies": {
+        "@bazel/bazelisk": "latest",
+        "@bazel/ibazel": "latest",
+        "@bazel/buildifier": "latest"
+    },
+    "scripts": {
+        "build": "bazel build //...",
+        "test": "bazel test //..."
+    }
+}
