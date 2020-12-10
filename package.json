@@ -8,6 +8,7 @@
         "@bazel/buildifier": "latest"
     },
     "scripts": {
+        "bazel": "bazel",
         "build": "bazel build //...",
         "test": "bazel test //..."
     }

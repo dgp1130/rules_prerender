@@ -254,3 +254,14 @@ web_resources_devserver(
 With this model, a user could do `ibazel run //my_site:devserver` to prerender
 the entire application composed from various self-contained components in a fast
 and incremental fashion.
+
+## Development
+
+There is a `bazel` script in `package.json` so you can run any Bazel command
+with:
+
+```
+npm run -s -- bazel # ...
+```
+
+You can also use `npm run build` and `npm test` to build and test everything.
