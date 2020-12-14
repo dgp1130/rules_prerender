@@ -2,6 +2,8 @@
 
 A Bazel rule set for prerendering HTML pages.
 
+![CI](https://github.com/dgp1130/rules_prerender/workflows/CI/badge.svg)
+
 ## API
 
 The exact API is not currently nailed down, but it is expected to look something
