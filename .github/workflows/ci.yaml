@@ -1,0 +1,32 @@
+# This workflow will do a clean install of Node dependencies and execute all
+# Bazel tests. This implicitly builds all required targets. Any target that is
+# not tested but should verify its build should use a build test.
+# https://github.com/bazelbuild/bazel-skylib/blob/master/rules/build_test.bzl
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    # Install the package, including Bazel.
+    - name: Install
+      run: npm ci
+
+    # Build and test the entire repository.
+    - name: Test
+      run: npm test
