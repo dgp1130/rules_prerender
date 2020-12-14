@@ -264,4 +264,9 @@ with:
 npm run -s -- bazel # ...
 ```
 
+Alternatively, you can run `npm install -g @bazel/bazelisk` to get a global
+install of `bazel` on your `$PATH` and just use it directly. The repository has
+a [`.bazelversion`](./.bazelversion) file used by `bazelisk` to manage and
+download the correct Bazel version for you and pass through all commands to it.
+
 You can also use `npm run build` and `npm test` to build and test everything.
