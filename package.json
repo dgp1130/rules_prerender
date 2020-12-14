@@ -7,6 +7,7 @@
         "@bazel/buildifier": "latest",
         "@bazel/ibazel": "latest",
         "@bazel/typescript": "^2.3.1",
+        "@types/node": "^14.14.13",
         "typescript": "^3.9.7"
     },
     "scripts": {
