@@ -1,3 +1,4 @@
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
@@ -11,4 +12,19 @@ ts_library(
     name = "renderer_lib",
     srcs = ["renderer.ts"],
     deps = ["@npm//@types/node"],
+)
+
+jasmine_node_test(
+    name = "renderer_integration_test",
+    data = [":renderer"],
+    deps = [":renderer_integration_test_lib"],
+)
+
+ts_library(
+    name = "renderer_integration_test_lib",
+    srcs = ["renderer_test.ts"],
+    deps = [
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
 )
