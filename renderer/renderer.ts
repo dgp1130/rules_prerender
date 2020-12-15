@@ -1,10 +1,14 @@
+import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 
 import { invoke } from './entry_point';
 
 async function main(): Promise<number> {
     // Parse binary options and arguments.
-    const { 'entry-point': entryPoint } = yargs
+    const {
+        'entry-point': entryPoint,
+        output,
+    } = yargs
         .option('entry-point', {
             type: 'string',
             description: formatOptionDoc(`
@@ -14,11 +18,17 @@ async function main(): Promise<number> {
                 or a \`Promise<string>\`.
             `),
         })
-        .demand([ 'entry-point' ])
+        .option('output', {
+            type: 'string',
+            description: formatOptionDoc(`
+                The path to the output file to write the rendered result to.
+            `),
+        })
+        .demand([ 'entry-point', 'output' ])
         .argv;
 
     const rendered = await invoke(entryPoint);
-    console.log(rendered);
+    await fs.writeFile(output, rendered);
 
     return 0;
 }
