@@ -1,5 +1,7 @@
 import * as yargs from 'yargs';
 
+import { invoke } from './entry_point';
+
 async function main(): Promise<number> {
     // Parse binary options and arguments.
     const { 'entry-point': entryPoint } = yargs
@@ -15,7 +17,8 @@ async function main(): Promise<number> {
         .demand([ 'entry-point' ])
         .argv;
 
-    console.log(`--entry-point=${entryPoint}`);
+    const rendered = await invoke(entryPoint);
+    console.log(rendered);
 
     return 0;
 }

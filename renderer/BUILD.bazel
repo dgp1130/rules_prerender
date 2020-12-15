@@ -15,6 +15,7 @@ ts_library(
     name = "renderer_lib",
     srcs = ["renderer.ts"],
     deps = [
+        ":entry_point",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
@@ -33,4 +34,31 @@ ts_library(
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
+)
+
+ts_library(
+    name = "dynamic_import",
+    srcs = ["dynamic_import.ts"],
+)
+
+ts_library(
+    name = "entry_point",
+    srcs = ["entry_point.ts"],
+    deps = [":dynamic_import"],
+)
+
+ts_library(
+    name = "entry_point_test_lib",
+    srcs = ["entry_point_test.ts"],
+    deps = [
+        ":dynamic_import",
+        ":entry_point",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "entry_point_test",
+    deps = [":entry_point_test_lib"],
 )
