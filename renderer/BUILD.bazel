@@ -5,13 +5,19 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 nodejs_binary(
     name = "renderer",
     entry_point = "renderer.ts",
-    data = [":renderer_lib"],
+    data = [
+        ":renderer_lib",
+        "@npm//yargs",
+    ],
 )
 
 ts_library(
     name = "renderer_lib",
     srcs = ["renderer.ts"],
-    deps = ["@npm//@types/node"],
+    deps = [
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
 )
 
 jasmine_node_test(

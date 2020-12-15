@@ -12,15 +12,20 @@ if (!runfiles) throw new Error('$RUNFILES not set.');
 const renderer = `${runfiles}/rules_prerender/renderer/renderer.sh`;
 
 /** Invokes the renderer binary. */
-async function run(): Promise<{ stdout: string, stderr: string }> {
-    return await execFile(renderer);
+async function run({ entryPoint }: { entryPoint: string }):
+        Promise<{ stdout: string, stderr: string }> {
+    return await execFile(renderer, [
+        '--entry-point', entryPoint,
+    ]);
 }
 
 describe('renderer', () => {
     it('prints hello', async () => {
-        const { stdout, stderr } = await run();
+        const { stdout, stderr } = await run({
+            entryPoint: 'foo.js',
+        });
 
-        expect(stdout.trim()).toBe('Hello, World!');
+        expect(stdout.trim()).toBe('--entry-point=foo.js');
         expect(stderr.trim()).toBe('');
     });
 });
