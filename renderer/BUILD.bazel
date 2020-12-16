@@ -1,19 +1,12 @@
 load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-
-nodejs_binary(
-    name = "renderer",
-    entry_point = "renderer.ts",
-    data = [
-        ":renderer_lib",
-        "@npm//yargs",
-    ],
-)
+load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
 ts_library(
-    name = "renderer_lib",
+    name = "renderer",
     srcs = ["renderer.ts"],
+    visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
         "@npm//@types/node",
@@ -21,9 +14,25 @@ ts_library(
     ],
 )
 
+filegroup(
+    name = "renderer_js",
+    srcs = [":renderer"],
+    visibility = ["//visibility:public"],
+    output_group = "es5_sources",
+)
+
+nodejs_binary(
+    name = "renderer_test_binary",
+    entry_point = "renderer.ts",
+    testonly = True,
+    data = RENDERER_RUNTIME_DEPS + [
+        ":renderer",
+    ],
+)
+
 jasmine_node_test(
     name = "renderer_integration_test",
-    data = [":renderer"],
+    data = [":renderer_test_binary"],
     deps = [":renderer_integration_test_lib"],
 )
 
