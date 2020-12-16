@@ -1,0 +1,32 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_page")
+
+prerender_page(
+    name = "page",
+    src = "page.ts",
+    lib_deps = [":dep"],
+)
+
+ts_library(
+    name = "dep",
+    srcs = ["dep.ts"],
+    deps = [":transitive"],
+)
+
+ts_library(
+    name = "transitive",
+    srcs = ["transitive.ts"],
+)
+
+sh_test(
+    name = "page_test",
+    srcs = ["page_test.sh"],
+    args = [
+        "$(location page.html)",
+        "$(location page.golden.html)",
+    ],
+    data = [
+        "page.html",
+        "page.golden.html",
+    ],
+)
