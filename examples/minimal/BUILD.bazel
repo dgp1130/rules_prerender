@@ -1,4 +1,4 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
 load("//:index.bzl", "prerender_page")
 
 prerender_page(
@@ -29,4 +29,20 @@ sh_test(
         "page.html",
         "page.golden.html",
     ],
+)
+
+genrule(
+    name = "index_rename",
+    srcs = ["page.html"],
+    outs = ["index.html"],
+    cmd = """
+        cp $< $@
+    """,
+)
+
+# Works with `ibazel`!
+ts_devserver(
+    name = "devserver",
+    static_files = ["index.html"],
+    additional_root_paths = ["rules_prerender/examples/minimal"],
 )

@@ -259,16 +259,24 @@ and incremental fashion.
 
 ## Development
 
-There is a `bazel` script in `package.json` so you can run any Bazel command
-with:
+There are `bazel` and `ibazel` scripts in `package.json` so you can run any
+Bazel command with:
 
-```
+```shell
 npm run -s -- bazel # ...
 ```
 
-Alternatively, you can run `npm install -g @bazel/bazelisk` to get a global
-install of `bazel` on your `$PATH` and just use it directly. The repository has
-a [`.bazelversion`](./.bazelversion) file used by `bazelisk` to manage and
-download the correct Bazel version for you and pass through all commands to it.
+Or, if you want to live-reload on changes:
+
+```shell
+npm run -s -- ibazel # ...
+```
+
+Alternatively, you can run `npm install -g @bazel/bazelisk @bazel/ibazel` to get
+a global install of `bazel` and `ibazel` on your `$PATH` and just use them
+directly instead of proxying through the NPM wrapper scripts. This repository
+has a [`.bazelversion`](./.bazelversion) file used by `bazelisk` to manage and
+download the correct Bazel version for you and pass through all commands to it
+(not totally sure if it applies to `ibazel` though).
 
 You can also use `npm run build` and `npm test` to build and test everything.
