@@ -2,6 +2,31 @@ load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
 ts_library(
+    name = "effects",
+    srcs = ["effects.ts"],
+    testonly = True,
+    deps = [
+        ":proxy",
+        "@npm//@types/jasmine",
+    ],
+)
+
+ts_library(
+    name = "effects_test_lib",
+    srcs = ["effects_test.ts"],
+    testonly = True,
+    deps = [
+        ":effects",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "effects_test",
+    deps = [":effects_test_lib"],
+)
+
+ts_library(
     name = "proxy",
     srcs = ["proxy.ts"],
     visibility = ["//visibility:public"],
