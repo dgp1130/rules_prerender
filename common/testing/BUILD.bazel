@@ -27,6 +27,30 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "effect_tester",
+    srcs = ["effect_tester.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = ["@npm//@types/jasmine"],
+)
+
+ts_library(
+    name = "effect_tester_test_lib",
+    srcs = ["effect_tester_test.ts"],
+    testonly = True,
+    deps = [
+        ":effects",
+        ":effect_tester",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "effect_tester_test",
+    deps = [":effect_tester_test_lib"],
+)
+
+ts_library(
     name = "proxy",
     srcs = ["proxy.ts"],
     visibility = ["//visibility:public"],

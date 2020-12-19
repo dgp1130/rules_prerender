@@ -6,6 +6,7 @@
         "prerender",
         "prerendered",
         "prerendering",
-        "promisified"
+        "promisified",
+        "unproxied"
     ]
 }
