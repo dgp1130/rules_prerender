@@ -1,5 +1,47 @@
 load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+
+ts_library(
+    name = "devserver",
+    srcs = ["devserver.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":effects",
+        "//common:http",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//http-status-codes",
+        "@npm//tree-kill",
+    ],
+)
+
+ts_library(
+    name = "devserver_test_lib",
+    srcs = ["devserver_test.ts"],
+    testonly = True,
+    deps = [
+        ":devserver",
+        ":effect_tester",
+        "//common:http",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//http-status-codes",
+    ],
+)
+
+ts_devserver(
+    name = "devserver_test_server",
+    testonly = True,
+    static_files = ["devserver_test_page.html"],
+    additional_root_paths = ["rules_prerender/common/testing"],
+)
+
+jasmine_node_test(
+    name = "devserver_test",
+    data = [":devserver_test_server"],
+    deps = [":devserver_test_lib"],
+)
 
 ts_library(
     name = "effects",
