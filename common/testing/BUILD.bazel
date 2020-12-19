@@ -116,3 +116,34 @@ jasmine_node_test(
     name = "proxy_test",
     deps = [":proxy_test_lib"],
 )
+
+ts_library(
+    name = "puppeteer",
+    srcs = ["puppeteer.ts"],
+    visibility = ["//visibility:public"],
+    testonly = True,
+    deps = [
+        ":effects",
+        "@npm//@types/node",
+        "@npm//@types/puppeteer",
+    ],
+)
+
+ts_library(
+    name = "puppeteer_test_lib",
+    srcs = ["puppeteer_test.ts"],
+    testonly = True,
+    deps = [
+        ":effect_tester",
+        ":puppeteer",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//@types/puppeteer",
+    ],
+)
+
+jasmine_node_test(
+    name = "puppeteer_test",
+    data = ["@npm//puppeteer"],
+    deps = [":puppeteer_test_lib"],
+)
