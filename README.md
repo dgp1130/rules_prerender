@@ -280,3 +280,56 @@ download the correct Bazel version for you and pass through all commands to it
 (not totally sure if it applies to `ibazel` though).
 
 You can also use `npm run build` and `npm test` to build and test everything.
+
+## Testing
+
+Most tests are run in [Jasmine](https://jasmine.github.io/) using
+[`jasmine_node_test()`](https://www.npmjs.com/package/@bazel/jasmine#jasmine_node_test).
+These can be executed with a simple `bazel test //path/to/pkg:target`.
+
+### Debugging Tests
+
+To debug these tests, simply add `--config debug`, which will opt in to
+additional flags specifically for testing. Most notably, this includes
+`--inspect-brk` so Node will not begin executing until a debugger has connected.
+You can use `chrome://inspect` or the "Attach" run configuration in VSCode to
+attach a debugger and start test execution.
+
+Source maps should be set up and usable, however `rules_nodejs` currently
+compiles everything to ES5, so `async/await` gets transpiled to generators,
+meaning stepping over an `await` can be quite fiddly sometimes. When using
+`chrome://inspect`, consider using the `debugger;` keyword at a particular file
+in order to stop execution programmatically and then set interactive breakpoints
+via the DevTools debugger itself. Otherwise most files are not loaded at the
+time `--inspect-brk` stops execution.
+
+### Debugging Puppeteer/Chrome tests
+
+When debugging a test that launches Chrome via
+[Puppeteer](https://www.npmjs.com/package/puppeteer) and using `--config debug`,
+the browser will open non-headless, giving you the opportunity to visual inspect
+the page under test and debug it directly. This is done via an X server, so make
+sure the `$DISPLAY` variable is set. For example, if debugging over SSH, you'll
+need to enable X11 forwarding.
+
+When using [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) a
+there is also some forwarding required. WSL 2 does not currently support
+graphical applications out of the box and Windows does not ship with an X server
+implementation. To get this working, you need to:
+
+1.  Install an X server for Windows (such as
+    [VcXsrv](https://sourceforge.net/projects/vcxsrv/))
+1.  Launch the X server and set it up enable public access (for VcXsrv, this is
+    the "Disable access control" box).
+1.  When Windows Defender pops up about network permissions, allow access for
+    private **and public** networks.
+1.  In the WSL Ubuntu terminal, run:
+    ```shell
+    export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+    ```
+    Consider adding it to your `~/.bashrc` so you don't have to remember to do
+    this.
+
+Then running a `bazel test --config debug //path/to/pkg:target` for a Puppeteer
+test should open Chrome visually and give you an opportunity to debug and
+inspect the page.

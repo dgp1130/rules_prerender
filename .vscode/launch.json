@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // From: https://bazelbuild.github.io/rules_nodejs/debugging.html#debugging-with-vs-code
+            "type": "node",
+            "request": "attach",
+            "name": "Attach",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "internalConsoleOptions": "neverOpen",
+            "sourceMapPathOverrides": {
+                "../*": "${workspaceRoot}/*",
+                "../../*": "${workspaceRoot}/*",
+                "../../../*": "${workspaceRoot}/*",
+                "../../../../*": "${workspaceRoot}/*",
+                "../../../../../*": "${workspaceRoot}/*",
+                "../../../../../../*": "${workspaceRoot}/*",
+                "../../../../../../../*": "${workspaceRoot}/*",
+                "../../../../../../../../*": "${workspaceRoot}/*",
+                "../../../../../../../../../*": "${workspaceRoot}/*",
+                "../../../../../../../../../../*": "${workspaceRoot}/*",
+            },
+        }
+    ]
+}

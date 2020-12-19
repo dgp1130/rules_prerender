@@ -1,3 +1,4 @@
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
 load("//:index.bzl", "prerender_page")
 
@@ -18,19 +19,6 @@ ts_library(
     srcs = ["transitive.ts"],
 )
 
-sh_test(
-    name = "page_test",
-    srcs = ["page_test.sh"],
-    args = [
-        "$(location page.html)",
-        "$(location page.golden.html)",
-    ],
-    data = [
-        "page.html",
-        "page.golden.html",
-    ],
-)
-
 genrule(
     name = "index_rename",
     srcs = ["page.html"],
@@ -45,4 +33,25 @@ ts_devserver(
     name = "devserver",
     static_files = ["index.html"],
     additional_root_paths = ["rules_prerender/examples/minimal"],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    testonly = True,
+    deps = [
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    data = [
+        ":devserver",
+        "@npm//puppeteer",
+    ],
+    deps = [":test_lib"],
 )

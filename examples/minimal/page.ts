@@ -11,9 +11,9 @@ export default function(): string {
         <script src="/_/ts_scripts.js" async defer></script>
     </head>
     <body>
-        <h2>Hello, World!</h2>
-        <span>${foo}</span>
-        <span>${bar}</span>
+        <h2 id="hello">Hello, World!</h2>
+        <span id="foo">${foo}</span>
+        <span id="bar">${bar}</span>
     </body>
 </html>
     `.trim() + '\n' /* trailing newline */;
