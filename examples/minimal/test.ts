@@ -9,12 +9,12 @@ if (!runfiles) throw new Error('$RUNFILES not set.');
 const devserverBinary =
         `${runfiles}/rules_prerender/examples/minimal/devserver`;
 
-describe('page', () => {
+describe('minimal', () => {
     const server = useDevserver(devserverBinary);
     const browser = useBrowser();
     const page = usePage(browser);
 
-    it('exists', async () => {
+    it('renders', async () => {
         await page.goto(`http://${server.host}:${server.port}/`, {
             waitUntil: 'load',
         });
@@ -22,19 +22,13 @@ describe('page', () => {
         const title = await page.title();
         expect(title).toBe('Minimal');
 
-        const hello = await page.$('#hello');
-        expect(hello).not.toBeNull();
-        const helloText: string = await hello!.evaluate((el) => el.textContent);
-        expect(helloText).toBe('Hello, World!');
+        const hello = await page.$eval('#hello', (el) => el.textContent);
+        expect(hello).toBe('Hello, World!');
 
-        const foo = await page.$('#foo');
-        expect(foo).not.toBeNull();
-        const fooText: string = await foo!.evaluate((el) => el.textContent);
-        expect(fooText).toBe('foo');
+        const foo = await page.$eval('#foo', (el) => el.textContent);
+        expect(foo).toBe('foo');
 
-        const bar = await page.$('#bar');
-        expect(bar).not.toBeNull();
-        const barText: string = await bar!.evaluate((el) => el.textContent);
-        expect(barText).toBe('bar');
+        const bar = await page.$eval('#bar', (el) => el.textContent);
+        expect(bar).toBe('bar');
     });
 });
