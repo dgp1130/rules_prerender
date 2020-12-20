@@ -8,6 +8,7 @@ def prerender_page(
     name,
     src,
     lib_deps = [],
+    deps = [],
     testonly = None,
     **kwargs
 ):
@@ -22,7 +23,7 @@ def prerender_page(
     `Promise<string>`. A `ts_library()` is used to generate this and `lib_deps`
     is used as the `deps` parameter.
 
-    Output:
+    Outputs:
         %{name}.html: An HTML file containing the content returned by the `src`
             file.
     
@@ -30,7 +31,8 @@ def prerender_page(
         name: The name of this rule.
         src: The TypeScript source file.
         lib_deps: Dependencies for the TypeScript source file.
-        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html
+        deps: `prerender_component()` dependencies for this component.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         **kwargs: Remaining arguments to pass through, see:
             https://docs.bazel.build/versions/master/be/common-definitions.html
     """
@@ -41,7 +43,7 @@ def prerender_page(
         name = prerender_lib,
         srcs = [src],
         testonly = testonly,
-        deps = lib_deps,
+        deps = lib_deps + ["%s_prerender" % dep for dep in deps],
     )
 
     # Get the generated JS file path for the user provided TypeScript source.

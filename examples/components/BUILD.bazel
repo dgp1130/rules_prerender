@@ -1,6 +1,12 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//:index.bzl", "prerender_component")
-load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+load("//:index.bzl", "prerender_component", "prerender_page")
+
+prerender_page(
+    name = "page",
+    src = "page.ts",
+    deps = [":component"],
+)
 
 prerender_component(
     name = "component",
@@ -25,7 +31,38 @@ prerender_component(
     srcs = ["transitive.ts"],
 )
 
-build_test(
+genrule(
+    name = "index_rename",
+    srcs = ["page.html"],
+    outs = ["index.html"],
+    cmd = """
+        cp $< $@
+    """,
+)
+
+ts_devserver(
+    name = "devserver",
+    static_files = ["index.html"],
+    additional_root_paths = ["rules_prerender/exmaples/components"],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    testonly = True,
+    deps = [
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
     name = "test",
-    targets = [":component_prerender"],
+    data = [
+        ":devserver",
+        "@npm//puppeteer",
+    ],
+    deps = [":test_lib"],
 )
