@@ -1,0 +1,31 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_component")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    lib_deps = [":ts_dep"],
+    deps = [":dep"],
+)
+
+ts_library(
+    name = "ts_dep",
+    srcs = ["ts_dep.ts"],
+)
+
+prerender_component(
+    name = "dep",
+    srcs = ["dep.ts"],
+    deps = [":transitive"],
+)
+
+prerender_component(
+    name = "transitive",
+    srcs = ["transitive.ts"],
+)
+
+build_test(
+    name = "test",
+    targets = [":component_prerender"],
+)
