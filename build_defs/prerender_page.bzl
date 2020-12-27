@@ -8,6 +8,7 @@ def prerender_page(
     name,
     src,
     lib_deps = [],
+    scripts = [],
     deps = [],
     testonly = None,
     **kwargs
@@ -31,6 +32,8 @@ def prerender_page(
         name: The name of this rule.
         src: The TypeScript source file.
         lib_deps: Dependencies for the TypeScript source file.
+        scripts: List of client-side JavaScript libraries to be bundled for the
+            generated page.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         **kwargs: Remaining arguments to pass through, see:
@@ -74,6 +77,13 @@ def prerender_page(
         renderer = ":%s" % binary,
         testonly = testonly,
         **kwargs
+    )
+
+    # Reexport all included scripts.
+    ts_library(
+        name = "%s_scripts" % name,
+        srcs = [],
+        deps = scripts,
     )
 
 def _prerender_page_impl(ctx):
