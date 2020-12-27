@@ -30,3 +30,24 @@ bzl_library(
     srcs = ["label.bzl"],
     visibility = ["//visibility:public"],
 )
+
+ts_library(
+    name = "prerender_annotation",
+    srcs = ["prerender_annotation.ts"],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "prerender_annotation_test_lib",
+    srcs = ["prerender_annotation_test.ts"],
+    testonly = True,
+    deps = [
+        ":prerender_annotation",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_annotation_test",
+    deps = [":prerender_annotation_test_lib"],
+)
