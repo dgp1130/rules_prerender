@@ -1,0 +1,17 @@
+if (document.readyState === 'complete'
+        || document.readyState === 'interactive') {
+    // Document already loaded.
+    updateTransitive();
+} else {
+    // Wait for document to load.
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTransitive();
+    });
+}
+
+function updateTransitive() {
+    // Overwrite a prerendered HTML element with different content.
+    const el = document.getElementById('transitive-replace');
+    if (!el) throw new Error('Could not find `#transitive-replace` element.');
+    el.innerText = 'This text rendered by transitive JavaScript!';
+}

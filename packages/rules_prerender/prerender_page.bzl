@@ -83,7 +83,7 @@ def prerender_page(
     ts_library(
         name = "%s_scripts" % name,
         srcs = [],
-        deps = scripts,
+        deps = scripts + ["%s_scripts" % dep for dep in deps],
     )
 
 def _prerender_page_impl(ctx):

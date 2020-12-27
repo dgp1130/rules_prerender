@@ -6,6 +6,7 @@ def prerender_component(
     name,
     srcs,
     lib_deps = [],
+    scripts = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -26,6 +27,8 @@ def prerender_component(
         name: The name of this rule.
         srcs: The TypeScript source files for use in prerendering.
         lib_deps: `ts_library()` dependencies for the TypeScript source files.
+        scripts: List of client-side JavaScript libraries which can be included
+            in the prerendered HTML.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -35,6 +38,14 @@ def prerender_component(
         name = "%s_prerender" % name,
         srcs = srcs,
         deps = lib_deps + ["%s_prerender" % dep for dep in deps],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+    ts_library(
+        name = "%s_scripts" % name,
+        srcs = [],
+        deps = scripts + ["%s_scripts" % dep for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

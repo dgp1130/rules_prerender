@@ -1,0 +1,14 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//packages/rules_prerender:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "transitive",
+    srcs = ["transitive.ts"],
+    scripts = [":transitive_script"],
+    visibility = ["//examples/javascript:__subpackages__"],
+)
+
+ts_library(
+    name = "transitive_script",
+    srcs = ["transitive_script.ts"],
+)

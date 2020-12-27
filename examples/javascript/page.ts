@@ -1,3 +1,5 @@
+import { renderComponent } from './component/component';
+
 /** Render some HTML with a `<script />` tag. */
 export default function(): string {
     return `
@@ -13,6 +15,7 @@ export default function(): string {
                 <div id="replace">
                     To be replaced by client-side JavaScript.
                 </div>
+                ${renderComponent()}
             </body>
         </html>
     `;
