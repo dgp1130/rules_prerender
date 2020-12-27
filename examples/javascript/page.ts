@@ -1,4 +1,5 @@
-import { renderComponent } from './component/component';
+import { includeScript } from 'rules_prerender';
+import { renderComponent } from 'rules_prerender/examples/javascript/component/component';
 
 /** Render some HTML with a `<script />` tag. */
 export default function(): string {
@@ -15,6 +16,7 @@ export default function(): string {
                 <div id="replace">
                     To be replaced by client-side JavaScript.
                 </div>
+                ${includeScript('rules_prerender/examples/javascript/script.js')}
                 ${renderComponent()}
             </body>
         </html>

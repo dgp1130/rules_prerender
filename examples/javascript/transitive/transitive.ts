@@ -1,3 +1,5 @@
+import { includeScript } from 'rules_prerender';
+
 /** Renders HTML which expects a JavaScript library to be included. */
 export function renderTransitive(): string {
     return `
@@ -5,5 +7,6 @@ export function renderTransitive(): string {
         <div id="transitive-replace">
             This text to be overwritten by client-side JavaScript.
         </div>
+        ${includeScript('rules_prerender/examples/javascript/transitive/transitive_script.js')}
     `;
 }
