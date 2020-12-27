@@ -24,5 +24,15 @@ describe('javascript', () => {
 
         const replaced = await page.$eval('#replace', (el) => el.textContent);
         expect(replaced).toBe('This text rendered by page JavaScript!');
+
+        const componentReplaced =
+                await page.$eval('#component-replace', (el) => el.textContent);
+        expect(componentReplaced)
+                .toBe('This text rendered by component JavaScript!');
+
+        const transitiveReplaced =
+                await page.$eval('#transitive-replace', (el) => el.textContent);
+        expect(transitiveReplaced)
+                .toBe('This text rendered by transitive JavaScript!');
     });
 });
