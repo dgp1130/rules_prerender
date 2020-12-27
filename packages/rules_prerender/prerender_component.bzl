@@ -1,6 +1,7 @@
 """Defines `prerender_component()` functionality."""
 
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//common:label.bzl", "absolute")
 
 def prerender_component(
     name,
@@ -37,7 +38,7 @@ def prerender_component(
     ts_library(
         name = "%s_prerender" % name,
         srcs = srcs,
-        deps = lib_deps + ["%s_prerender" % dep for dep in deps],
+        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )
@@ -45,7 +46,7 @@ def prerender_component(
     ts_library(
         name = "%s_scripts" % name,
         srcs = [],
-        deps = scripts + ["%s_scripts" % dep for dep in deps],
+        deps = scripts + ["%s_scripts" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

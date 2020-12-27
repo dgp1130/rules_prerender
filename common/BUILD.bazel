@@ -1,3 +1,4 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
@@ -22,4 +23,10 @@ ts_library(
 jasmine_node_test(
     name = "http_test",
     deps = [":http_test_lib"],
+)
+
+bzl_library(
+    name = "label",
+    srcs = ["label.bzl"],
+    visibility = ["//visibility:public"],
 )

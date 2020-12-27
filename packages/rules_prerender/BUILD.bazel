@@ -4,10 +4,12 @@ bzl_library(
     name = "prerender_component",
     srcs = ["prerender_component.bzl"],
     visibility = ["//visibility:public"],
+    deps = ["//common:label"],
 )
 
 bzl_library(
     name = "prerender_page",
     srcs = ["prerender_page.bzl"],
     visibility = ["//visibility:public"],
+    deps = ["//common:label"],
 )

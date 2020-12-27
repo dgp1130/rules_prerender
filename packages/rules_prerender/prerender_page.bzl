@@ -2,6 +2,7 @@
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//common:label.bzl", "absolute")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
 def prerender_page(
@@ -46,7 +47,7 @@ def prerender_page(
         name = prerender_lib,
         srcs = [src],
         testonly = testonly,
-        deps = lib_deps + ["%s_prerender" % dep for dep in deps],
+        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
     )
 
     # Get the generated JS file path for the user provided TypeScript source.
@@ -83,7 +84,7 @@ def prerender_page(
     ts_library(
         name = "%s_scripts" % name,
         srcs = [],
-        deps = scripts + ["%s_scripts" % dep for dep in deps],
+        deps = scripts + ["%s_scripts" % absolute(dep) for dep in deps],
     )
 
 def _prerender_page_impl(ctx):

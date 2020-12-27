@@ -7,7 +7,7 @@ prerender_page(
     name = "page",
     src = "page.ts",
     scripts = [":script"],
-    deps = ["//examples/javascript/component:component"],
+    deps = ["//examples/javascript/component"],
 )
 
 ts_library(
