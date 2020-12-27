@@ -1,6 +1,6 @@
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
-load("//:index.bzl", "prerender_page")
+load("//packages/rules_prerender:index.bzl", "prerender_page")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_page(
