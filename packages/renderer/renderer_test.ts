@@ -13,7 +13,8 @@ if (!runfiles) throw new Error('$RUNFILES not set.');
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
 
-const renderer = `${runfiles}/rules_prerender/renderer/renderer_test_binary.sh`;
+const renderer =
+        `${runfiles}/rules_prerender/packages/renderer/renderer_test_binary.sh`;
 
 /** Invokes the renderer binary. */
 async function run({ entryPoint, output }: {

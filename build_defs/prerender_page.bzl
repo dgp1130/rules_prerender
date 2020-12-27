@@ -2,7 +2,7 @@
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
+load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
 def prerender_page(
     name,
@@ -62,11 +62,11 @@ def prerender_page(
     binary = "%s_binary" % name
     nodejs_binary(
         name = binary,
-        entry_point = "//renderer:renderer_js",
+        entry_point = "//packages/renderer:renderer_js",
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + [
             ":%s" % prerender_lib,
-            "//renderer",
+            "//packages/renderer",
         ],
     )
 
