@@ -7,8 +7,8 @@
  *     tooling.
  */
 export function createAnnotation(annotation: PrerenderAnnotation): string {
-    return `<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - ${
-            JSON.stringify(annotation)} -->`;
+    return `bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - ${
+            JSON.stringify(annotation)}`;
 }
 
 /**
