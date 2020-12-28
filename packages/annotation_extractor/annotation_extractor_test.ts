@@ -17,9 +17,17 @@ interface ProcessResult {
     stderr: string;
 }
 
-async function run(): Promise<ProcessResult> {
+async function run({ inputHtml, outputHtml, outputAnnotations }: {
+    inputHtml: string,
+    outputHtml: string,
+    outputAnnotations: string,
+}): Promise<ProcessResult> {
     try {
-        const { stdout, stderr } = await execFile(extractor);
+        const { stdout, stderr } = await execFile(extractor, [
+            '--input-html', inputHtml,
+            '--output-html', outputHtml,
+            '--output-annotations', outputAnnotations,
+        ]);
         return {
             code: 0,
             stdout,
@@ -32,11 +40,18 @@ async function run(): Promise<ProcessResult> {
 }
 
 describe('annotation_extractor', () => {
-    it('prints hello', async () => {
-        const { code, stdout, stderr } = await run();
+    it('prints flags', async () => {
+        const { code, stdout, stderr } = await run({
+            inputHtml: 'input.html',
+            outputHtml: 'output.html',
+            outputAnnotations: 'annotations.json',
+        });
 
         expect(code).toBe(0);
-        expect(stdout.trim()).toBe('Hello, World!');
         expect(stderr.trim()).toBe('');
+        expect(stdout.trim()).toContain('--input-html=input.html');
+        expect(stdout.trim()).toContain('--output-html=output.html');
+        expect(stdout.trim())
+                .toContain('--output-annotations=annotations.json');
     });
 });
