@@ -35,3 +35,28 @@ jasmine_node_test(
     data = [":annotation_extractor"],
     deps = [":annotation_extractor_test_lib"],
 )
+
+ts_library(
+    name = "extractor",
+    srcs = ["extractor.ts"],
+    deps = [
+        "//common:prerender_annotation",
+        "@npm//@types/node",
+        "@npm//node-html-parser",
+    ],
+)
+
+ts_library(
+    name = "extractor_test_lib",
+    srcs = ["extractor_test.ts"],
+    testonly = True,
+    deps = [
+        ":extractor",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "extractor_test",
+    deps = [":extractor_test_lib"],
+)
