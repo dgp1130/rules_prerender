@@ -17,16 +17,16 @@ interface ProcessResult {
     stderr: string;
 }
 
-async function run({ inputHtml, outputHtml, outputAnnotations }: {
+async function run({ inputHtml, outputHtml, outputMetadata }: {
     inputHtml: string,
     outputHtml: string,
-    outputAnnotations: string,
+    outputMetadata: string,
 }): Promise<ProcessResult> {
     try {
         const { stdout, stderr } = await execFile(extractor, [
             '--input-html', inputHtml,
             '--output-html', outputHtml,
-            '--output-annotations', outputAnnotations,
+            '--output-metadata', outputMetadata,
         ]);
         return {
             code: 0,
@@ -44,14 +44,13 @@ describe('annotation_extractor', () => {
         const { code, stdout, stderr } = await run({
             inputHtml: 'input.html',
             outputHtml: 'output.html',
-            outputAnnotations: 'annotations.json',
+            outputMetadata: 'metadata.json',
         });
 
         expect(code).toBe(0);
         expect(stderr.trim()).toBe('');
         expect(stdout.trim()).toContain('--input-html=input.html');
         expect(stdout.trim()).toContain('--output-html=output.html');
-        expect(stdout.trim())
-                .toContain('--output-annotations=annotations.json');
+        expect(stdout.trim()).toContain('--output-metadata=metadata.json');
     });
 });

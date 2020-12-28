@@ -4,7 +4,7 @@ async function main(): Promise<number> {
     const {
         'input-html': inputHtml,
         'output-html': outputHtml,
-        'output-annotations': outputAnnotations,
+        'output-metadata': outputMetadata,
     } = yargs
         .usage(formatOptionDoc(`
             Extracts annotations from the given HTML file. Outputs the same HTML
@@ -24,19 +24,19 @@ async function main(): Promise<number> {
                 HTML file, except with annotations removed.
             `),
         })
-        .option('output-annotations', {
+        .option('output-metadata', {
             type: 'string',
             description: formatOptionDoc(`
-                The output JSON file to write annotations to. Will contain all
-                extracted annotations in a structured format.
+                The output JSON file to write metadata to. Will contain all
+                extracted annotations in the \`PrerenderMetadata\` format.
             `),
         })
-        .demand([ 'input-html', 'output-html', 'output-annotations' ])
+        .demand([ 'input-html', 'output-html', 'output-metadata' ])
         .argv;
 
     console.log(`--input-html=${inputHtml}`);
     console.log(`--output-html=${outputHtml}`);
-    console.log(`--output-annotations=${outputAnnotations}`);
+    console.log(`--output-metadata=${outputMetadata}`);
 
     return 0;
 }
