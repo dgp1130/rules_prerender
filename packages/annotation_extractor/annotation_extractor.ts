@@ -1,4 +1,7 @@
+import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
+import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
+import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
 
 async function main(): Promise<number> {
     const {
@@ -34,9 +37,19 @@ async function main(): Promise<number> {
         .demand([ 'input-html', 'output-html', 'output-metadata' ])
         .argv;
 
-    console.log(`--input-html=${inputHtml}`);
-    console.log(`--output-html=${outputHtml}`);
-    console.log(`--output-metadata=${outputMetadata}`);
+    // Read input HTML file.
+    const input = await fs.readFile(inputHtml, { encoding: 'utf8' });
+
+    // Extract annotations from the HTML.
+    const [ output, annotations ] = extract(input);
+
+    // Assemble annotations into the metadata format.
+    const metadata = assembleMetadata(annotations);
+
+    // Write output HTML and metadata JSON.
+    await fs.writeFile(outputHtml, output);
+    await fs.writeFile(outputMetadata,
+            JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
 
     return 0;
 }
