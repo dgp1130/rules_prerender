@@ -60,3 +60,27 @@ jasmine_node_test(
     name = "extractor_test",
     deps = [":extractor_test_lib"],
 )
+
+ts_library(
+    name = "metadata",
+    srcs = ["metadata.ts"],
+    deps = [
+        "//common:prerender_annotation",
+        "//common:prerender_metadata",
+    ],
+)
+
+ts_library(
+    name = "metadata_test_lib",
+    srcs = ["metadata_test.ts"],
+    testonly = True,
+    deps = [
+        ":metadata",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "metadata_test",
+    deps = [":metadata_test_lib"],
+)
