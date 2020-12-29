@@ -1,5 +1,44 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+nodejs_binary(
+    name = "entry_generator",
+    entry_point = ":entry_generator.ts",
+    data = [
+        ":entry_generator_lib",
+        "@npm//yargs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "entry_generator_lib",
+    srcs = ["entry_generator.ts"],
+    deps = [
+        ":generator",
+        "//common:prerender_metadata",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)
+
+ts_library(
+    name = "entry_generator_test_lib",
+    srcs = ["entry_generator_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:prerender_metadata",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "entry_generator_test",
+    data = [":entry_generator"],
+    deps = [":entry_generator_test_lib"],
+)
 
 ts_library(
     name = "generator",
