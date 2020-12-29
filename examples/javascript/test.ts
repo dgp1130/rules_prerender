@@ -36,11 +36,7 @@ describe('javascript', () => {
                 .toBe('This text rendered by transitive JavaScript!');
 
         const pageContent = await page.evaluate(() => document.body.innerHTML);
-        expect(pageContent)
-                .toContain('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"rules_prerender/examples/javascript/script.js"} -->');
-        expect(pageContent)
-                .toContain('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"rules_prerender/examples/javascript/component/component_script.js"} -->');
-        expect(pageContent)
-                .toContain('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"rules_prerender/examples/javascript/transitive/transitive_script.js"} -->');
+        expect(pageContent).not.toContain(
+                'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE');
     });
 });

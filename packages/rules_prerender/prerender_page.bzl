@@ -12,7 +12,7 @@ def prerender_page(
     scripts = [],
     deps = [],
     testonly = None,
-    **kwargs
+    visibility = None,
 ):
     """Renders an HTML page with the given TypeScript source at build time.
 
@@ -37,8 +37,7 @@ def prerender_page(
             generated page.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-        **kwargs: Remaining arguments to pass through, see:
-            https://docs.bazel.build/versions/master/be/common-definitions.html
+        visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
 
     # Compile the user provided TypeScript source.
@@ -72,15 +71,29 @@ def prerender_page(
     )
 
     # Execute the runner to generate an output HTML page.
+    annotated_page = "%s_annotated" % name
     _prerender_page_rule(
-        name = name,
+        name = annotated_page,
         entry_point = ":%s" % prerender_js,
         renderer = ":%s" % binary,
         testonly = testonly,
-        **kwargs
     )
 
-    # Reexport all included scripts.
+    # Extract annotations and generate metadata from them.
+    _extract_annotations(
+        name = name,
+        annotated_page = annotated_page,
+        testonly = testonly,
+    )
+
+    # Export only the extracted HTML file to users at `%{name}`.
+    native.filegroup(
+        name = name,
+        srcs = ["%s.html" % name],
+        visibility = visibility,
+    )
+
+    # Reexport all included scripts at `%{name}_scripts`.
     ts_library(
         name = "%s_scripts" % name,
         srcs = [],
@@ -125,3 +138,43 @@ _prerender_page_rule = rule(
         a JavaScript file that renders the page as a string.
     """,
 )
+
+def _extract_annotations(
+    name,
+    annotated_page,
+    testonly = None,
+):
+    """Extracts annotations from the provided HTML.
+    
+    Args:
+        name: The name to base the output file paths on.
+        annotated_page: An annotated HTML page to extract from.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+    
+    Outputs:
+        %{name}.html: The input HTML page with all annotations removed.
+        %{name}_metadata.json: Metadata generated from all the annotations in
+            the page.
+    """
+    extracted_page = "%s.html" % name
+    metadata = "%s_metadata.json" % name
+    native.genrule(
+        name = "%s_annotation_extractor" % name,
+        srcs = [annotated_page],
+        outs = [
+            extracted_page,
+            metadata,
+        ],
+        cmd = """
+            $(location //packages/annotation_extractor) \\
+                --input-html $(location {annotated_page}) \\
+                --output-html $(location {extracted_page}) \\
+                --output-metadata $(location {metadata})
+        """.format(
+            annotated_page = annotated_page,
+            extracted_page = extracted_page,
+            metadata = metadata,
+        ),
+        testonly = testonly,
+        tools = ["//packages/annotation_extractor"],
+    )
