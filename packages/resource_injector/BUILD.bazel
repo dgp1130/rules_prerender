@@ -1,0 +1,32 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+ts_library(
+    name = "config",
+    srcs = ["config.ts"],
+)
+
+ts_library(
+    name = "injector",
+    srcs = ["injector.ts"],
+    deps = [
+        ":config",
+        "@npm//node-html-parser",
+    ],
+)
+
+ts_library(
+    name = "injector_test_lib",
+    srcs = ["injector_test.ts"],
+    testonly = True,
+    deps = [
+        ":config",
+        ":injector",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "injector_test",
+    deps = [":injector_test_lib"],
+)
