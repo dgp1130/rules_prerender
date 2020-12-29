@@ -47,11 +47,13 @@ async function main(): Promise<number> {
     const metadata = assembleMetadata(annotations);
 
     // Write output HTML and metadata JSON.
-    await fs.writeFile(outputHtml, output);
     const metadataOutput =
             JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */)
             + `\n` /* trailing newline */;
-    await fs.writeFile(outputMetadata, metadataOutput);
+    await Promise.all([
+        fs.writeFile(outputHtml, output),
+        fs.writeFile(outputMetadata, metadataOutput),
+    ]);
 
     return 0;
 }
