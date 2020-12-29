@@ -1,0 +1,23 @@
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+ts_library(
+    name = "generator",
+    srcs = ["generator.ts"],
+    deps = ["//common:prerender_metadata"],
+)
+
+ts_library(
+    name = "generator_test_lib",
+    srcs = ["generator_test.ts"],
+    testonly = True,
+    deps = [
+        ":generator",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "generator_test",
+    deps = [":generator_test_lib"],
+)
