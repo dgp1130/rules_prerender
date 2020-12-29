@@ -25,7 +25,12 @@ ts_library(
 rollup_bundle(
     name = "bundle",
     entry_point = ":entry.ts",
-    deps = [":bundle_lib"],
+    config_file = "rollup.config.js",
+    link_workspace_root = True,
+    deps = [
+        ":bundle_lib",
+        "@npm//@rollup/plugin-node-resolve",
+    ],
 )
 
 genrule(
