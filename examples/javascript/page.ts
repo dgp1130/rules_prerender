@@ -14,7 +14,7 @@ export default function(): string {
             <body>
                 <h2>JavaScript</h2>
                 <div id="replace">
-                    To be replaced by client-side JavaScript.
+                    This text to be overwritten by client-side JavaScript.
                 </div>
                 ${includeScript('rules_prerender/examples/javascript/script.js')}
                 ${renderComponent()}
