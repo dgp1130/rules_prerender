@@ -8,8 +8,6 @@ export default function(): string {
         <html>
             <head>
                 <title>JavaScript</title>
-                <!-- Load client-side JavaScript. -->
-                <script src="/bundle.js" async defer></script>
             </head>
             <body>
                 <h2>JavaScript</h2>
