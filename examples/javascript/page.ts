@@ -16,7 +16,7 @@ export default function(): string {
                 <div id="replace">
                     This text to be overwritten by client-side JavaScript.
                 </div>
-                ${includeScript('rules_prerender/examples/javascript/script.js')}
+                ${includeScript('rules_prerender/examples/javascript/script')}
                 ${renderComponent()}
             </body>
         </html>

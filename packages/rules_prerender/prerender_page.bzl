@@ -28,6 +28,10 @@ def prerender_page(
     Outputs:
         %{name}.html: An HTML file containing the content returned by the `src`
             file.
+        %{name}_scripts: A `ts_library()` rule containing all the client-side
+            scripts used by the page. This includes a generate file
+            `%{name}_scripts.ts` which acts as an entry point, importing all
+            scripts that were included in the page via `includeScript()`.
     
     Args:
         name: The name of this rule.
@@ -80,9 +84,13 @@ def prerender_page(
     )
 
     # Extract annotations and generate metadata from them.
+    extracted_page = "%s.html" % name
+    metadata = "%s_metadata.json" % name
     _extract_annotations(
-        name = name,
+        name = "%s_annotation_extractor" % name,
         annotated_page = annotated_page,
+        output_page = extracted_page,
+        output_metadata = metadata,
         testonly = testonly,
     )
 
@@ -93,10 +101,18 @@ def prerender_page(
         visibility = visibility,
     )
 
+    client_scripts = "%s_scripts" % name
+    entry_point = "%s.ts" % client_scripts
+    _entry_point(
+        name = "%s_entry" % name,
+        metadata = metadata,
+        output_entry_point = entry_point,
+    )
+
     # Reexport all included scripts at `%{name}_scripts`.
     ts_library(
-        name = "%s_scripts" % name,
-        srcs = [],
+        name = client_scripts,
+        srcs = [entry_point],
         deps = scripts + ["%s_scripts" % absolute(dep) for dep in deps],
     )
 
@@ -142,39 +158,62 @@ _prerender_page_rule = rule(
 def _extract_annotations(
     name,
     annotated_page,
+    output_page,
+    output_metadata,
     testonly = None,
 ):
     """Extracts annotations from the provided HTML.
     
     Args:
-        name: The name to base the output file paths on.
+        name: The name of the rule.
         annotated_page: An annotated HTML page to extract from.
+        output_page: The file to write the output HTML to. This will be the
+            input HTML page except with all annotations removed.
+        output_metadata: The file to write the output metadata JSON which is
+            generated from the annotations extracted from the input HTML file.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-    
-    Outputs:
-        %{name}.html: The input HTML page with all annotations removed.
-        %{name}_metadata.json: Metadata generated from all the annotations in
-            the page.
     """
-    extracted_page = "%s.html" % name
-    metadata = "%s_metadata.json" % name
     native.genrule(
-        name = "%s_annotation_extractor" % name,
+        name = name,
         srcs = [annotated_page],
         outs = [
-            extracted_page,
-            metadata,
+            output_page,
+            output_metadata,
         ],
         cmd = """
             $(location //packages/annotation_extractor) \\
                 --input-html $(location {annotated_page}) \\
-                --output-html $(location {extracted_page}) \\
-                --output-metadata $(location {metadata})
+                --output-html $(location {output_html}) \\
+                --output-metadata $(location {output_metadata})
         """.format(
             annotated_page = annotated_page,
-            extracted_page = extracted_page,
-            metadata = metadata,
+            output_html = output_page,
+            output_metadata = output_metadata,
         ),
         testonly = testonly,
         tools = ["//packages/annotation_extractor"],
+    )
+
+def _entry_point(name, metadata, output_entry_point, testonly = None):
+    """Creates a TypeScript entry point for the given metadata JSON.
+    
+    Args:
+        name: The name of the rule.
+        metadata: The metadata JSON file to generate an entry point from.
+        output_entry_point: The file to write the entry point contents to.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+    """
+    native.genrule(
+        name = name,
+        srcs = [metadata],
+        outs = [output_entry_point],
+        cmd = """
+            $(location //packages/entry_generator) \\
+                --metadata $(location {metadata}) \\
+                --output $(location {output})
+        """.format(
+            metadata = metadata,
+            output = output_entry_point,
+        ),
+        tools = ["//packages/entry_generator"],
     )

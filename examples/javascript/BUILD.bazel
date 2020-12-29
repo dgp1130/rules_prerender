@@ -16,19 +16,13 @@ ts_library(
     srcs = ["script.ts"],
 )
 
-ts_library(
-    name = "bundle_lib",
-    srcs = ["entry.ts"],
-    deps = [":page_scripts"],
-)
-
 rollup_bundle(
     name = "bundle",
-    entry_point = ":entry.ts",
+    entry_point = ":page_scripts.ts",
     config_file = "rollup.config.js",
     link_workspace_root = True,
     deps = [
-        ":bundle_lib",
+        ":page_scripts",
         "@npm//@rollup/plugin-node-resolve",
     ],
 )
@@ -69,17 +63,4 @@ jasmine_node_test(
         "@npm//puppeteer",
     ],
     deps = [":test_lib"],
-)
-
-sh_test(
-    name = "metadata_test",
-    srcs = ["metadata_test.sh"],
-    data = [
-        "page_metadata.json",
-        "metadata_golden.json",
-    ],
-    args = [
-        "$(location page_metadata.json)",
-        "$(location metadata_golden.json)",
-    ],
 )
