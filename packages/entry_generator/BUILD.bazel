@@ -1,6 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//tools:jasmine.bzl", "jasmine_node_test")
 
 nodejs_binary(
     name = "entry_generator",
