@@ -333,3 +333,25 @@ implementation. To get this working, you need to:
 Then running a `bazel test --config debug //path/to/pkg:target` for a Puppeteer
 test should open Chrome visually and give you an opportunity to debug and
 inspect the page.
+
+## VSCode Snippets
+
+The repository includes a few custom snippets available if you use VSCode. Type
+the given name and hit <kbd>Tab</kbd> to insert the snippet. Then type out the
+desired value for various parameters using <kbd>Tab</kbd> and
+<kbd>Shift</kbd>+<kbd>Tab</kbd> to navigate between them. The snippet will take
+care of making sure certain values match as expected.
+
+*   Typing `ts_lib` in a `BUILD.bazel` file with a filename will generate a
+    `ts_library()` rule for that file, a rule for its test file, and a
+    `jasmine_node_test()` rule. Useful when creating a new file to auto-generate
+    its default `BUILD` rules.
+*   Typing `jas` in a TypeScript file will generate a base Jasmine setup with
+    imports and an initial test with a `TODO`.
+*   Typing `desc` in a TypeScript file will generate a Jasmine test suite,
+    moving the cursor exactly where you want it to go.
+*   Typing `it` in a TypeScript file will generate a Jasmine test, moving the
+    cursor exactly where you want it to go. It will generate an `async` test by
+    default, which you can either skip over with <kbd>Tab</kbd> to accept, or
+    delete with <kbd>Backspace</kbd> (and then move on with <kbd>Tab</kbd>) to
+    make synchronous.
