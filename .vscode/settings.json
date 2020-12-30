@@ -12,6 +12,7 @@
         "prerendering",
         "prerenders",
         "promisified",
+        "runfile",
         "transpiled",
         "unproxied"
     ]

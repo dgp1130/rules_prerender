@@ -73,3 +73,26 @@ bzl_library(
     srcs = ["label.bzl"],
     visibility = ["//visibility:public"],
 )
+
+ts_library(
+    name = "runfiles",
+    srcs = ["runfiles.ts"],
+    visibility = ["//visibility:public"],
+    deps = ["@npm//@types/node"],
+)
+
+ts_library(
+    name = "runfiles_test_lib",
+    srcs = ["runfiles_test.ts"],
+    testonly = True,
+    deps = [
+        ":runfiles",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "runfiles_test",
+    deps = [":runfiles_test_lib"],
+)
