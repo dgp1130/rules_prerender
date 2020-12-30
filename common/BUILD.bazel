@@ -25,6 +25,27 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "formatters",
+    srcs = ["formatters.ts"],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "formatters_test_lib",
+    srcs = ["formatters_test.ts"],
+    testonly = True,
+    deps = [
+        ":formatters",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "formatters_test",
+    deps = [":formatters_test_lib"],
+)
+
+ts_library(
     name = "http",
     srcs = ["http.ts"],
     visibility = ["//visibility:public"],
