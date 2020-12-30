@@ -17,6 +17,7 @@ ts_library(
     srcs = ["entry_generator.ts"],
     deps = [
         ":generator",
+        "//common:binary",
         "//common/models:prerender_metadata",
         "@npm//@types/node",
         "@npm//@types/yargs",

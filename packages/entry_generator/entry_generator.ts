@@ -1,9 +1,10 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
+import { main } from 'rules_prerender/common/binary';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { generateEntryPoint } from 'rules_prerender/packages/entry_generator/generator';
 
-async function main(): Promise<number> {
+main(async () => {
     // Parse options and flags.
     const { metadata: metadataFile, output } = yargs
         .usage(formatOptionDoc(`
@@ -43,13 +44,6 @@ async function main(): Promise<number> {
     await fs.writeFile(output, entryPoint);
 
     return 0;
-}
-
-main().catch((err) => {
-    console.error(err.message);
-    return 1;
-}).then((code) => {
-    process.exit(code);
 });
 
 function formatOptionDoc(doc: string): string {

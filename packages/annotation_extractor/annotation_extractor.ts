@@ -1,9 +1,10 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
+import { main } from 'rules_prerender/common/binary';
 import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
 import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
 
-async function main(): Promise<number> {
+main(async () => {
     const {
         'input-html': inputHtml,
         'output-html': outputHtml,
@@ -56,13 +57,6 @@ async function main(): Promise<number> {
     ]);
 
     return 0;
-}
-
-main().catch((err) => {
-    console.error(err.message);
-    return 1;
-}).then((code) => {
-    process.exit(code);
 });
 
 function formatOptionDoc(doc: string): string {

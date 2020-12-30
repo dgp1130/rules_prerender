@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
+import { main } from 'rules_prerender/common/binary';
+import { invoke } from 'rules_prerender/packages/renderer/entry_point';
 
-import { invoke } from './entry_point';
-
-async function main(): Promise<number> {
+main(async () => {
     // Parse binary options and arguments.
     const {
         'entry-point': entryPoint,
@@ -31,13 +31,6 @@ async function main(): Promise<number> {
     await fs.writeFile(output, rendered);
 
     return 0;
-}
-
-main().catch((err) => {
-    console.error(err.message);
-    return 1;
-}).then((code) => {
-    process.exit(code);
 });
 
 function formatOptionDoc(doc: string): string {

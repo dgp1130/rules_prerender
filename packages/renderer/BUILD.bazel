@@ -9,6 +9,7 @@ ts_library(
     visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
+        "//common:binary",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
