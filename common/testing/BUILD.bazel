@@ -2,6 +2,30 @@ load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 ts_library(
+    name = "binary",
+    srcs = ["binary.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = ["@npm//@types/node"],
+)
+
+ts_library(
+    name = "binary_test_lib",
+    srcs = ["binary_test.ts"],
+    testonly = True,
+    deps = [
+        ":binary",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "binary_test",
+    deps = [":binary_test_lib"],
+)
+
+ts_library(
     name = "devserver",
     srcs = ["devserver.ts"],
     testonly = True,
