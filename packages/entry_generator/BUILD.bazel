@@ -32,6 +32,7 @@ ts_library(
     deps = [
         "//common:runfiles",
         "//common/models:prerender_metadata",
+        "//common/testing:binary",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

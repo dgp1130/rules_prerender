@@ -32,6 +32,7 @@ ts_library(
     deps = [
         ":config",
         "//common:runfiles",
+        "//common/testing:binary",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

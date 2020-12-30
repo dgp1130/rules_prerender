@@ -41,8 +41,10 @@ jasmine_node_test(
 ts_library(
     name = "renderer_integration_test_lib",
     srcs = ["renderer_test.ts"],
+    testonly = True,
     deps = [
         "//common:runfiles",
+        "//common/testing:binary",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

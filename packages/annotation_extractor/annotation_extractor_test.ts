@@ -1,12 +1,9 @@
 import 'jasmine';
 
-import { execFile as execFileCb } from 'child_process';
 import { promises as fs } from 'fs';
 import { env } from 'process';
-import { promisify } from 'util';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
-
-const execFile = promisify(execFileCb);
+import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
@@ -14,32 +11,16 @@ if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
 const extractor = resolveRunfile(
     'rules_prerender/packages/annotation_extractor/annotation_extractor.sh');
 
-interface ProcessResult {
-    code: number;
-    stdout: string;
-    stderr: string;
-}
-
 async function run({ inputHtml, outputHtml, outputMetadata }: {
     inputHtml: string,
     outputHtml: string,
     outputMetadata: string,
 }): Promise<ProcessResult> {
-    try {
-        const { stdout, stderr } = await execFile(extractor, [
-            '--input-html', inputHtml,
-            '--output-html', outputHtml,
-            '--output-metadata', outputMetadata,
-        ]);
-        return {
-            code: 0,
-            stdout,
-            stderr,
-        };
-    } catch (err) {
-        const { code, stdout, stderr } = err;
-        return { code, stdout, stderr };
-    }
+    return await execBinary(extractor, [
+        '--input-html', inputHtml,
+        '--output-html', outputHtml,
+        '--output-metadata', outputMetadata,
+    ]);
 }
 
 describe('annotation_extractor', () => {

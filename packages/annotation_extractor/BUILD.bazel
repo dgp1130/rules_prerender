@@ -31,6 +31,7 @@ ts_library(
     testonly = True,
     deps = [
         "//common:runfiles",
+        "//common/testing:binary",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

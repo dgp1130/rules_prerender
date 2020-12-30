@@ -1,12 +1,9 @@
 import 'jasmine';
 
-import { execFile as execFileCb } from 'child_process';
 import { env } from 'process';
-import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
-
-const execFile = promisify(execFileCb);
+import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
@@ -18,17 +15,11 @@ const renderer = resolveRunfile(
 async function run({ entryPoint, output }: {
     entryPoint: string,
     output: string,
-}): Promise<{ code: number, stdout: string, stderr: string }> {
-    try {
-        const { stdout, stderr } = await execFile(renderer, [
-            '--entry-point', entryPoint,
-            '--output', output,
-        ]);
-        return { code: 0, stdout, stderr };
-    } catch (err) {
-        const { code, stdout, stderr } = err;
-        return { code, stdout, stderr };
-    }
+}): Promise<ProcessResult> {
+    return await execBinary(renderer, [
+        '--entry-point', entryPoint,
+        '--output', output,
+    ]);
 }
 
 describe('renderer', () => {
