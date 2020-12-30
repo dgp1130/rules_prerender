@@ -4,16 +4,15 @@ import { execFile as execFileCb } from 'child_process';
 import { promises as fs } from 'fs';
 import { env } from 'process';
 import { promisify } from 'util';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
 
 const execFile = promisify(execFileCb);
-
-const runfiles = env['RUNFILES'];
-if (!runfiles) throw new Error('$RUNFILES not set.');
 
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
 
-const extractor = `${runfiles}/rules_prerender/packages/annotation_extractor/annotation_extractor.sh`;
+const extractor = resolveRunfile(
+    'rules_prerender/packages/annotation_extractor/annotation_extractor.sh');
 
 interface ProcessResult {
     code: number;

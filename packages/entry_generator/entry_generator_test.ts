@@ -5,17 +5,15 @@ import { env } from 'process';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
 
 const execFile = promisify(execFileCb);
-
-const runfiles = env['RUNFILES'];
-if (!runfiles) throw new Error('$RUNFILES not set.');
 
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
 
-const entryGenerator =
-        `${runfiles}/rules_prerender/packages/entry_generator/entry_generator.sh`;
+const entryGenerator = resolveRunfile(
+        'rules_prerender/packages/entry_generator/entry_generator.sh');
 
 /** Invokes the entry generator binary. */
 async function run({ metadata, output }: { metadata: string, output: string }):

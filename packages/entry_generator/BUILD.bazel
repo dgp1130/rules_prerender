@@ -30,6 +30,7 @@ ts_library(
     srcs = ["entry_generator_test.ts"],
     testonly = True,
     deps = [
+        "//common:runfiles",
         "//common/models:prerender_metadata",
         "@npm//@types/jasmine",
         "@npm//@types/node",

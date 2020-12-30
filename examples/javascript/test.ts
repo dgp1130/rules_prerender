@@ -1,13 +1,11 @@
 import 'jasmine';
 
-import { env } from 'process';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
 import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
-const runfiles = env['RUNFILES'];
-if (!runfiles) throw new Error('$RUNFILES not set.');
-const devserverBinary =
-        `${runfiles}/rules_prerender/examples/javascript/devserver`;
+const devserverBinary = resolveRunfile(
+        'rules_prerender/examples/javascript/devserver');
 
 describe('javascript', () => {
     const server = useDevserver(devserverBinary);

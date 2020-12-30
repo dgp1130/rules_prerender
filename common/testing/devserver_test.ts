@@ -1,16 +1,14 @@
 import 'jasmine';
 
 import { StatusCodes } from 'http-status-codes';
-import { env } from 'process';
 import { URL } from 'url';
 import * as http from 'rules_prerender/common/http';
-import { Server, useDevserver } from './devserver';
-import { EffectTester } from './effect_tester';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { Server, useDevserver } from 'rules_prerender/common/testing/devserver';
+import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
 
-const runfiles = env['RUNFILES'];
-if (!runfiles) throw new Error('$RUNFILES not set.');
-const devserver =
-        `${runfiles}/rules_prerender/common/testing/devserver_test_server`;
+const devserver = resolveRunfile(
+        'rules_prerender/common/testing/devserver_test_server');
 
 describe('devserver', () => {
     describe('Server', () => {

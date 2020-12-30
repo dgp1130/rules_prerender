@@ -42,6 +42,7 @@ ts_library(
     name = "renderer_integration_test_lib",
     srcs = ["renderer_test.ts"],
     deps = [
+        "//common:runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

@@ -4,18 +4,16 @@ import { execFile as execFileCb } from 'child_process';
 import { env } from 'process';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { InjectorConfig } from 'rules_prerender/packages/resource_injector/config';
 
 const execFile = promisify(execFileCb);
 
-const runfiles = env['RUNFILES'];
-if (!runfiles) throw new Error('$RUNFILES not set.');
-
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
 
-const injector =
-        `${runfiles}/rules_prerender/packages/resource_injector/resource_injector.sh`;
+const injector = resolveRunfile(
+        'rules_prerender/packages/resource_injector/resource_injector.sh');
 
 /** Invokes the renderer binary. */
 async function run({ input, config, output }: {

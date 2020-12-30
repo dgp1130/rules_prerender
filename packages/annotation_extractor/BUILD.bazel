@@ -30,6 +30,7 @@ ts_library(
     srcs = ["annotation_extractor_test.ts"],
     testonly = True,
     deps = [
+        "//common:runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

@@ -4,17 +4,15 @@ import { execFile as execFileCb } from 'child_process';
 import { env } from 'process';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
 
 const execFile = promisify(execFileCb);
-
-const runfiles = env['RUNFILES'];
-if (!runfiles) throw new Error('$RUNFILES not set.');
 
 const testTmpDir = env['TEST_TMPDIR'];
 if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
 
-const renderer =
-        `${runfiles}/rules_prerender/packages/renderer/renderer_test_binary.sh`;
+const renderer = resolveRunfile(
+        'rules_prerender/packages/renderer/renderer_test_binary.sh');
 
 /** Invokes the renderer binary. */
 async function run({ entryPoint, output }: {
