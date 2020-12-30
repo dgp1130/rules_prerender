@@ -1,4 +1,4 @@
-import { PrerenderMetadata } from 'rules_prerender/common/prerender_metadata';
+import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 /**
  * Generates a TypeScript entry point which imports all the scripts in the given

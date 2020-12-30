@@ -4,7 +4,7 @@ import { execFile as execFileCb } from 'child_process';
 import { env } from 'process';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
-import { PrerenderMetadata } from 'rules_prerender/common/prerender_metadata';
+import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 const execFile = promisify(execFileCb);
 

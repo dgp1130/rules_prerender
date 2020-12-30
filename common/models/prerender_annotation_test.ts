@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderAnnotation, createAnnotation, parseAnnotation } from 'rules_prerender/common/prerender_annotation';
+import { PrerenderAnnotation, createAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('prerender_annotation', () => {
     describe('PrerenderAnnotation', () => {

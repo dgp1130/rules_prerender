@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
-import { PrerenderMetadata } from 'rules_prerender/common/prerender_metadata';
+import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { generateEntryPoint } from 'rules_prerender/packages/entry_generator/generator';
 
 async function main(): Promise<number> {

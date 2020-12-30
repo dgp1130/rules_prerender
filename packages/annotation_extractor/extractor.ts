@@ -1,5 +1,5 @@
 import { parse, HTMLElement, Node, CommentNode } from 'node-html-parser';
-import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/prerender_annotation';
+import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import * as assert from 'assert';
 
 /**

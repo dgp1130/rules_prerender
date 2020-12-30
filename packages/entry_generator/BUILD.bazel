@@ -17,7 +17,7 @@ ts_library(
     srcs = ["entry_generator.ts"],
     deps = [
         ":generator",
-        "//common:prerender_metadata",
+        "//common/models:prerender_metadata",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
@@ -28,7 +28,7 @@ ts_library(
     srcs = ["entry_generator_test.ts"],
     testonly = True,
     deps = [
-        "//common:prerender_metadata",
+        "//common/models:prerender_metadata",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
@@ -43,7 +43,7 @@ jasmine_node_test(
 ts_library(
     name = "generator",
     srcs = ["generator.ts"],
-    deps = ["//common:prerender_metadata"],
+    deps = ["//common/models:prerender_metadata"],
 )
 
 ts_library(

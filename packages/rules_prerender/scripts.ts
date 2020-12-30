@@ -1,4 +1,4 @@
-import { createAnnotation } from 'rules_prerender/common/prerender_annotation';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 /**
  * Returns a prerender annotation as a string to be included in prerendered

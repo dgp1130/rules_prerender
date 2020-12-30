@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderMetadata, ScriptMetadata } from 'rules_prerender/common/prerender_metadata';
+import { PrerenderMetadata, ScriptMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 describe('prerender_metadata', () => {
     describe('PrerenderMetadata', () => {
