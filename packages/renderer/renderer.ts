@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
+import { mdSpacing } from 'rules_prerender/common/formatters';
 import { invoke } from 'rules_prerender/packages/renderer/entry_point';
 
 main(async () => {
@@ -11,7 +12,7 @@ main(async () => {
     } = yargs
         .option('entry-point', {
             type: 'string',
-            description: formatOptionDoc(`
+            description: mdSpacing(`
                 The entry point to render the template. Should be a path to a
                 JavaScript file which has a CommonJS default export of a
                 function which takes no arguments and returns a page as a string
@@ -20,7 +21,7 @@ main(async () => {
         })
         .option('output', {
             type: 'string',
-            description: formatOptionDoc(`
+            description: mdSpacing(`
                 The path to the output file to write the rendered result to.
             `),
         })
@@ -32,9 +33,3 @@ main(async () => {
 
     return 0;
 });
-
-function formatOptionDoc(doc: string): string {
-    return doc.trim().split('\n')
-            .map((line) => line.trimStart())
-            .join(' ');
-}

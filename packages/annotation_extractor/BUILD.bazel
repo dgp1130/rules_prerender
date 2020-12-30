@@ -19,6 +19,7 @@ ts_library(
         ":extractor",
         ":metadata",
         "//common:binary",
+        "//common:formatters",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],

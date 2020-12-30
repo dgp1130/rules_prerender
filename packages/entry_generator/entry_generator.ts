@@ -1,13 +1,14 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
+import { mdSpacing } from 'rules_prerender/common/formatters';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { generateEntryPoint } from 'rules_prerender/packages/entry_generator/generator';
 
 main(async () => {
     // Parse options and flags.
     const { metadata: metadataFile, output } = yargs
-        .usage(formatOptionDoc(`
+        .usage(mdSpacing(`
             Generates an entry point for all the scripts in the given metadata
             file. The entry point is a TypeScript source file which
             side-effectfully imports all the given scripts which can be used as
@@ -17,7 +18,7 @@ main(async () => {
         .option('metadata', {
             type: 'string',
             required: true,
-            description: formatOptionDoc(`
+            description: mdSpacing(`
                 A path to a file containing a \`PrerenderMetadata\` object in
                 JSON format. This metadata should contain a \`scripts\` property
                 which contains all the scripts to reference in the output file.
@@ -26,7 +27,7 @@ main(async () => {
         .option('output', {
             type: 'string',
             required: true,
-            description: formatOptionDoc(`
+            description: mdSpacing(`
                 A path to a file which will be written to by this tool,
                 containing TypeScript source of the entry point generated.
             `),
@@ -45,9 +46,3 @@ main(async () => {
 
     return 0;
 });
-
-function formatOptionDoc(doc: string): string {
-    return doc.trim().split('\n')
-            .map((line) => line.trimStart())
-            .join(' ');
-}

@@ -10,6 +10,7 @@ ts_library(
     deps = [
         ":entry_point",
         "//common:binary",
+        "//common:formatters",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],

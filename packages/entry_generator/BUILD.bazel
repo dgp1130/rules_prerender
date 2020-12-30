@@ -18,6 +18,7 @@ ts_library(
     deps = [
         ":generator",
         "//common:binary",
+        "//common:formatters",
         "//common/models:prerender_metadata",
         "@npm//@types/node",
         "@npm//@types/yargs",

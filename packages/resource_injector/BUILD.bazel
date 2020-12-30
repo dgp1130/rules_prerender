@@ -19,6 +19,7 @@ ts_library(
         ":config",
         ":injector",
         "//common:binary",
+        "//common:formatters",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],

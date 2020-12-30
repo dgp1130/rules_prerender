@@ -1,27 +1,28 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
+import { mdSpacing } from 'rules_prerender/common/formatters';
 import { InjectorConfig } from 'rules_prerender/packages/resource_injector/config';
 import { inject } from 'rules_prerender/packages/resource_injector/injector';
 
 main(async () => {
     // Define command line flags.
     const { input: inputFile, config: configFile, output: outputFile } = yargs
-        .usage(formatOptionDoc(`
+        .usage(mdSpacing(`
             Injects web resources specified by the config file into the provided
             HTML and writes the output to a new file.
         `))
         .option('input', {
             type: 'string',
             required: true,
-            description: formatOptionDoc(`
+            description: mdSpacing(`
                 Path to the input HTML file to inject resources into.
             `),
         })
         .option('config', {
             type: 'string',
             required: true,
-            description: formatOptionDoc(`
+            description: mdSpacing(`
                 Path to the configuration JSON file containing information about
                 the resources to inject. Must match the \`InjectorConfig\` type.
             `),
@@ -29,7 +30,7 @@ main(async () => {
         .option('output', {
             type: 'string',
             required: true,
-            description: formatOptionDoc(`Path to write the output HTML to.`),
+            description: mdSpacing(`Path to write the output HTML to.`),
         })
         .argv;
 
@@ -48,9 +49,3 @@ main(async () => {
 
     return 0;
 });
-
-function formatOptionDoc(doc: string): string {
-    return doc.trim().split('\n')
-            .map((line) => line.trimStart())
-            .join(' ');
-}
