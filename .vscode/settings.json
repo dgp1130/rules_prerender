@@ -15,6 +15,7 @@
         "prerenders",
         "promisified",
         "runfile",
+        "testonly",
         "transpiled",
         "unproxied"
     ]

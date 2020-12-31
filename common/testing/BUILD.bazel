@@ -175,3 +175,31 @@ jasmine_node_test(
     data = ["@npm//puppeteer"],
     deps = [":puppeteer_test_lib"],
 )
+
+ts_library(
+    name = "temp_dir",
+    srcs = ["temp_dir.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":effects",
+        "@npm//@types/node",
+    ],
+)
+
+ts_library(
+    name = "temp_dir_test_lib",
+    srcs = ["temp_dir_test.ts"],
+    testonly = True,
+    deps = [
+        ":temp_dir",
+        ":effect_tester",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "temp_dir_test",
+    deps = [":temp_dir_test_lib"],
+)
