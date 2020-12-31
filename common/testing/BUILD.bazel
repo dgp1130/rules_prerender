@@ -133,6 +133,7 @@ ts_library(
     testonly = True,
     deps = [
         ":effects",
+        ":effect_fake",
         ":effect_tester",
         "@npm//@types/jasmine",
     ],

@@ -1,6 +1,7 @@
 import 'jasmine';
 
 import { useForEach } from 'rules_prerender/common/testing/effects';
+import { effectFake } from 'rules_prerender/common/testing/effect_fake';
 import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
 
 describe('EffectTester', () => {
@@ -56,7 +57,7 @@ describe('EffectTester', () => {
             // Multiples calls to `before*()` callbacks.
             beforeEach(() => {});
             beforeAll(() => {});
-            return { get: () => 'foo' };
+            return effectFake('foo');
         })).toThrowError(/Already have an effect init callback/);
 
         expect(failSpy).toHaveBeenCalled();
@@ -75,7 +76,7 @@ describe('EffectTester', () => {
             afterEach(() => {});
             afterAll(() => {});
 
-            return { get: () => 'foo' };
+            return effectFake('foo');
         })).toThrowError(/Already have an effect cleanup callback/);
 
         expect(failSpy).toHaveBeenCalled();
@@ -88,7 +89,7 @@ describe('EffectTester', () => {
 
         expect(() => EffectTester.of(() => {
             // No calls to `before*()`.
-            return { get: () => 'foo' };
+            return effectFake('foo');
         })).toThrowError(/No init callback/);
 
         expect(failSpy).toHaveBeenCalledTimes(1);
@@ -103,7 +104,7 @@ describe('EffectTester', () => {
                 done(); // Calls unsupported `done()`.
             });
 
-            return { get: () => 'foo' };
+            return effectFake('foo');
         });
 
         await expectAsync(tester.initialize()).toBeRejectedWithError(
