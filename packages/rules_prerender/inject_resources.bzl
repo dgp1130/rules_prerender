@@ -1,6 +1,13 @@
 """Defines `inject_resources()` functionality."""
 
-def inject_resources(name, input, scripts, testonly = None, visibility = None):
+def inject_resources(
+    name,
+    input,
+    scripts,
+    output = None,
+    testonly = None,
+    visibility = None,
+):
     """Injects web resources into the given HTML input.
 
     Outputs:
@@ -11,9 +18,13 @@ def inject_resources(name, input, scripts, testonly = None, visibility = None):
         name: The name of this rule.
         input: The HTML file use as a base for injecting resources into.
         scripts: A list of URL paths to inject as a `<script />` tag.
+        output: The file to write the injected HTML output to. Defualts to
+            `%{name}.html`
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
+    output = output or "%s.html" % name
+
     injections = [{"type": "script", "path": script} for script in scripts]
     
     config = "%s_config.json" % name
@@ -27,11 +38,10 @@ def inject_resources(name, input, scripts, testonly = None, visibility = None):
         testonly = testonly,
     )
 
-    output_html = "%s.html" % name
     native.genrule(
         name = name,
         srcs = [input, config],
-        outs = [output_html],
+        outs = [output],
         cmd = """
             $(location //packages/resource_injector) \\
                 --input $(location {input}) \\
@@ -40,7 +50,7 @@ def inject_resources(name, input, scripts, testonly = None, visibility = None):
         """.format(
             input = input,
             config = config,
-            output = output_html,
+            output = output,
         ),
         tools = ["//packages/resource_injector"],
         testonly = testonly,
