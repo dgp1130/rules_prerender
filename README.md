@@ -18,10 +18,10 @@ resources (images, fonts, JSON) required for to it to function.
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_library")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("@npm//rules_prerender:index.bzl", "prerender_library", "web_resources")
+load("@npm//rules_prerender:index.bzl", "prerender_component", "web_resources")
 
-# A library encapsulating the entire component.
-prerender_library(
+# A "library" target encapsulating the entire component.
+prerender_component(
     name = "my_component",
     # The library which will prerender the HTML at build time in a Node process.
     srcs = ["my_component_prerender.ts"],
@@ -48,8 +48,8 @@ sass_library(
     srcs = ["my_component.scss"],
 )
 
-# Other resources required for this component to function at the URLs they are
-# expected to be hosted at.
+# Other resources required for this component to function at the URL paths they
+# are expected to be hosted at.
 web_resources(
     name = "resources",
     contents = {
@@ -61,7 +61,7 @@ web_resources(
 
 ```typescript
 // my_component/my_component_prerender.ts
-import { injectScript, injectStyle } from 'rules_prerender';
+import { includeScript, includeStyle } from 'rules_prerender';
 import { renderOtherComponent } from '__main__/my_other_component/my_other_component_prerender';
 
 /**
@@ -84,10 +84,10 @@ export function renderMyComponent(name: string): string {
         })}
 
         <!-- Inject the associated client-side JavaScript. -->
-        ${injectScript('my_component.js')}
+        ${includeScript('my_component.js')}
 
         <!-- Inject the associated CSS styles. -->
-        ${injectStyle('my_component.css')}
+        ${includeStyle('my_component.css')}
     `;
 }
 ```
@@ -152,110 +152,78 @@ export default function render(): string {
 ```python
 # my_page/BUILD
 
-load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
-load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(
     "@npm//rules_prerender:index.bzl",
-    "inject_resources",
-    "prerender_binary",
+    "prerender_page_bundled",
     "web_resources",
 )
 
-# Generates:
-#   prerendered_page.html - Rendered HTML content with no JS or CSS yet.
-#   :prerendered_page_scripts - JavaScript sources from transitive dependencies.
-#   :prerendered_page_styles - CSS sources from transitive dependencies.
-#   :prerendered_page_resources - Other web resources from transitive dependencies.
-prerender_binary(
+# Renders the page, bundles JavaScript and CSS, injects the relevant
+# `<script />` and `<style />` tags, and combines with all transitive resources
+# to create a directory with the following paths:
+#     /my_page/index.html - Final prerendered HTML page.
+#     /my_page/index.js - All transitive client-side JS source files bundled
+#         into a single file.
+#     /images/foo.png - The image used in `my_component`.
+#     /fonts/roboto.woff - The Robot font used in `my_component`.
+#     ... - Possibly other resources from `my_other_component` and transitive
+#         dependencies.
+prerender_page_bundled(
     name = "prerendered_page",
     # Script to invoke the default export of to generate the page.
     src = "my_page_prerender.ts",
+    path = "/my_page/",
+    # Components used during prerendering.
     deps = ["//my_component"],
-)
-
-# Bundle the scripts to a single `bundle.js` file. Could use any bundler.
-rollup_bundle(
-    name = "bundle",
-    srcs = [":prerendered_page_scripts"],
-    # ...
-)
-
-# Bundle the CSS to a single `styles.css` file. Could use any bundler.
-sass_binary(
-    name = "styles",
-    src = ":prerendered_page_styles",
-)
-
-# Generates `injected_page.html` with JS and CSS inserted into the HTML.
-inject_resources(
-    name = "injected_page",
-    # Base HTML page to inject JS and CSS resources into.
-    page = "prerendered_page.html",
-    # Inject JavaScript as a link `<script src="/my_page/scripts.js"></script>`
-    scripts = [
-        {
-            path: "/my_page/scripts.js",
-        },
-    ],
-    # Inject CSS as an inline `<style></style>` tag.
-    styles = [
-        {
-            inline: True,
-            src: "styles.css",
-        },
-    ],
-)
-
-# Assemble all the resources into a single directory at the right paths.
-# Generates a directory with the following paths:
-#   /my_page/index.html - Final prerendered HTML page.
-#   /my_page/scripts.js - All transitive JS sources bundled to a single file.
-#   /images/foo.png - The image used in `my_component`.
-#   /fonts/roboto.woff - The Robot font used in `my_component`.
-#   ... - Possibly other resources from `my_other_component`.
-web_resources(
-    name = "my_page",
-    # Set up HTML and linked JS at appropriate locations.
-    contents = {
-        "/my_page/index.html": "injected_page.html",
-        "/my_page/scripts.js": "bundle.js",
-    },
-    # Also include any resources required in transitive deps.
-    deps = [":prerendered_page_resources"],
 )
 ```
 
-With each page represented as a `web_resources()` directory of all the
-transitive resources required to load that page, we can then build a site by
-simply merging all the individual pages!
+Each page is built into a directory which contains its HTML, JavaScript, CSS,
+and other resources from all the transitively included components at their
+expected paths.
+
+Multiple `prerender_page_bundled()` directories can then be composed together
+into a single `web_resources()` rule which contains a final directory of
+everything merged together, representing an entire prerendered web site.
+
+This final directory can be served with a simple devserver for local builds or
+uploaded directly to a CDN for production deployments.
 
 ```python
 # my_site/BUILD.bazel
 
-load("@npm//rules_prerender", "web_resources", "web_resources_devserver")
-
-# Merge all the individual `web_resources()` rules to build a singular site,
-# expressed as a simple directory.
+# Combines all the prerendered resources into a single directory, composing a
+# site from a bunch of `prerender_page_bundled()` and `web_resources()` rules.
+# Just upload this to a CDN for production builds!
 web_resources(
     name = "my_site",
     deps = [
         "//my_page",
-        "//my_other_page",
-        # ...
+        "//another:page",
+        "//blog:posts",
     ],
 )
 
-# Some means of serving the directory as static files, likely using
-# `ts_devserver()`.
+# A simple devserver implementation to serve the generated directory.
 web_resources_devserver(
     name = "devserver",
-    deps = [":my_site"],
+    resources = ":site",
 )
 ```
 
 With this model, a user could do `ibazel run //my_site:devserver` to prerender
 the entire application composed from various self-contained components in a fast
-and incremental fashion.
+and incremental fashion. They could also just run `bazel build //my_site` to
+generate the application as directory and upload it to a CDN for production
+deployments. They could even make a separate `bazel run //my_site:deploy` target
+which performs the upload and run it from CI for easy deployments.
+
+### Custom Bundling
+
+The previous example automatically bundled all the JavaScript and CSS for a
+given page. This is very simple and easy to use, but also somewhat limited. A
+separate `prerender_page()` rule will provided unbundled JavaScript and CSS
+resources so a user could manually bundle them with whatever means they like.
 
 ## Development
 
