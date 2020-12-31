@@ -13,14 +13,17 @@ describe('components', () => {
     const page = usePage(browser);
 
     it('renders', async () => {
-        await page.goto(`http://${server.host}:${server.port}/`, {
-            waitUntil: 'load',
-        });
+        await page.get().goto(
+            `http://${server.get().host}:${server.get().port}/`,
+            {
+                waitUntil: 'load',
+            },
+        );
 
-        const title = await page.title();
+        const title = await page.get().title();
         expect(title).toBe('Components');
 
-        const component = await page.$('.component');
+        const component = await page.get().$('.component');
         expect(component).not.toBeNull();
 
         const componentText = await component!.$eval(

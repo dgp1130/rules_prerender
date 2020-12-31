@@ -7,7 +7,7 @@ import net from 'net';
 import { URL } from 'url';
 import { promisify } from 'util';
 import * as http from 'rules_prerender/common/http';
-import { useForAll } from './effects';
+import { Effect, useForAll } from 'rules_prerender/common/testing/effects';
 
 type Signal = Parameters<ChildProcess['kill']>[0];
 const execFile = promisify(execFileCb);
@@ -25,7 +25,8 @@ const execFile = promisify(execFileCb);
  *   const server = useDevserver('path/to/devserver/binary');
  * 
  *   it('is alive', async () => {
- *     const res = await fetch(`http://${server.host}:${server.port}/`);
+ *     const res = await fetch(
+ *         `http://${server.get().host}:${server.get().port}/`);
  *     expect(res.status).toBe(200);
  *   });
  * });
@@ -35,7 +36,8 @@ const execFile = promisify(execFileCb);
  *     documentation there.
  * @return A proxied {@link Server} instance usable for tests.
  */
-export function useDevserver(...args: Parameters<typeof Server.spawn>): Server {
+export function useDevserver(...args: Parameters<typeof Server.spawn>):
+        Effect<Server> {
     return useForAll(async () => {
         const server = await Server.spawn(...args);
 

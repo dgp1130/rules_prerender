@@ -1,6 +1,6 @@
 import { env } from 'process';
-import { Browser, launch, Page } from 'puppeteer';
-import { useForEach, useForAll } from './effects';
+import { Browser, Page, launch } from 'puppeteer';
+import { Effect, useForEach, useForAll } from 'rules_prerender/common/testing/effects';
 
 /**
  * An effect encapsulating a Puppeteer {@link Browser}. Manages creation/cleanup
@@ -17,7 +17,7 @@ import { useForEach, useForAll } from './effects';
  * 
  * @return A proxied {@link Browser} instance usable within the test suite.
  */
-export function useBrowser(): Browser {
+export function useBrowser(): Effect<Browser> {
     return useForAll(async () => {
         // Run headless if $DISPLAY is **not** set. If $DISPLAY is set, user
         // likely explicitly passed this and is trying to debug a test.
@@ -39,15 +39,13 @@ export function useBrowser(): Browser {
  * An effect encapsulating a Puppeteer {@link Page}. Manages creation/cleanup of
  * a {@link Page} instance.
  * 
- * @param browser A Puppeteer {@link Browser} instance to create the
- *     {@link Page} on. The {@link Browser} is only ever used in Jasmine
- *     `before*()` / `after*()`, so an effect {@link Proxy} is usable here (such
- *     as {@link useBrowser}).
+ * @param browser An {@link Effect} of a Puppeteer {@link Browser} instance to
+ *     create the {@link Page} on.
  * @return A proxied {@link Page} instance usable within a test.
  */
-export function usePage(browser: Browser): Page {
+export function usePage(browser: Effect<Browser>): Effect<Page> {
     return useForEach(async () => {
-        const page = await browser.newPage();
+        const page = await browser.get().newPage();
 
         return [ page, async () => { await page.close(); } ];
     });

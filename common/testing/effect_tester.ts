@@ -1,5 +1,7 @@
 import 'jasmine';
 
+import { Effect } from 'rules_prerender/common/testing/effects';
+
 /**
  * Utility class for testing effects.
  * 
@@ -12,11 +14,11 @@ import 'jasmine';
  * 
  * ```typescript
  * import 'jasmine';
- * import { useForEach } from 'rules_prerender/common/testing/effects';
+ * import { Effect, useForEach } from 'rules_prerender/common/testing/effects';
  * import { Foo } from './foo';
  * 
  * // Given an example effect:
- * function useEffect(): Foo {
+ * function useEffect(): Effect<Foo> {
  *   return useForEach(() => {
  *     const foo = Foo.create();
  *     return [ foo, () => Foo.destroy() ];
@@ -37,7 +39,7 @@ import 'jasmine';
  *   expect(mockFoo.destroy).not.toHaveBeenCalled(); // Cleanup has not run yet.
  * 
  *   // Do something with the `Foo` `Proxy` returned by the effect.
- *   expect(() => tester.resource.doSomething()).not.toThrow();
+ *   expect(() => tester.get().doSomething()).not.toThrow();
  * 
  *   await tester.cleanup(); // Invokes cleanup function (if returned).
  *   expect(mockFoo.destroy).toHaveBeenCalled();
@@ -46,7 +48,7 @@ import 'jasmine';
  */
 export class EffectTester<T> {
     /** The resource managed by the effect under test. */
-    public readonly resource: T;
+    private readonly effect: Effect<T>;
 
     /** Initializes the resource and returns its raw, unproxied value. */
     private readonly init: jasmine.ImplementationCallback;
@@ -54,12 +56,12 @@ export class EffectTester<T> {
     /** Cleans up the resource. */
     private readonly destroy?: jasmine.ImplementationCallback;
 
-    private constructor({ resource, init, destroy }: {
-        resource: T,
+    private constructor({ effect, init, destroy }: {
+        effect: Effect<T>,
         init: jasmine.ImplementationCallback,
         destroy?: jasmine.ImplementationCallback,
     }) {
-        this.resource = resource;
+        this.effect = effect;
         this.init = init;
         this.destroy = destroy;
     }
@@ -72,7 +74,7 @@ export class EffectTester<T> {
      *     returns its result.
      * @return An {@link EffectTester} wrapping the provided effect function.
      */
-    public static of<T>(createEffect: () => T): EffectTester<T> {
+    public static of<T>(createEffect: () => Effect<T>): EffectTester<T> {
         // Watch `beforeEach()` / `beforeAll()` for the initialization function.
         let init: jasmine.ImplementationCallback | undefined;
         spyOn(globalThis, 'beforeEach').and.callFake((cb) => {
@@ -107,7 +109,7 @@ export class EffectTester<T> {
             cleanup = cb;
         });
 
-        const resource = createEffect();
+        const effect = createEffect();
 
         // If we don't have an initialization callback, effect is not fulfilling
         // its contract.
@@ -116,10 +118,21 @@ export class EffectTester<T> {
         }
 
         return new EffectTester({
-            resource,
+            effect,
             init: init!,
             destroy: cleanup,
         });
+    }
+
+    /**
+     * Retrieves the value held by the effect under test.
+     * 
+     * @return The value held by the effect under test.
+     * @throws If the value is not available yet, possibly due to being
+     *     requested outside of a test.
+     */
+    public get(): T {
+        return this.effect.get();
     }
 
     /**

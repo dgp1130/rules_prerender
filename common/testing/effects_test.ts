@@ -4,7 +4,7 @@ import { useForAll, useForEach } from './effects';
 describe('effects', () => {
     describe('useForEach()', () => {
         const init = jasmine.createSpy('init', () => [
-            { foo: 'bar' } /* value */,
+            'foo' /* value */,
             () => { init.calls.reset() } /* cleanup */,
         ] as const).and.callThrough();
         const used = useForEach(init);
@@ -12,7 +12,7 @@ describe('effects', () => {
         it('initializes before each test', () => {
             expect(init).toHaveBeenCalledOnceWith();
 
-            expect(used.foo).toEqual('bar');
+            expect(used.get()).toEqual('foo');
         });
 
         const initUndefined = jasmine.createSpy('initUndefined', () => [
@@ -24,7 +24,7 @@ describe('effects', () => {
         it('fails the test if the value is not initialized', () => {
             spyOn(globalThis, 'fail');
 
-            expect(() => usedUndefined.foo).toThrowError(/not initialized/);
+            expect(() => usedUndefined.get()).toThrowError(/not initialized/);
 
             expect(globalThis.fail).toHaveBeenCalled();
         });
@@ -52,7 +52,7 @@ describe('effects', () => {
 
     describe('useForAll()', () => {
         const init = jasmine.createSpy('init', () => [
-            { foo: 'bar' } /* value */,
+            'foo' /* value */,
             () => { init.calls.reset() } /* cleanup */,
         ] as const).and.callThrough();
         const used = useForAll(init);
@@ -60,7 +60,7 @@ describe('effects', () => {
         it('initializes before all tests', () => {
             expect(init).toHaveBeenCalledOnceWith();
 
-            expect(used.foo).toEqual('bar');
+            expect(used.get()).toEqual('foo');
         });
 
         const initUndefined = jasmine.createSpy('initUndefined', () => [
@@ -72,7 +72,7 @@ describe('effects', () => {
         it('fails the test if the value is not initialized', () => {
             spyOn(globalThis, 'fail');
 
-            expect(() => usedUndefined.foo).toThrowError(/not initialized/);
+            expect(() => usedUndefined.get()).toThrowError(/not initialized/);
 
             expect(globalThis.fail).toHaveBeenCalled();
         });

@@ -1,7 +1,7 @@
 import 'jasmine';
 
-import { useForEach } from './effects';
-import { EffectTester } from './effect_tester';
+import { useForEach } from 'rules_prerender/common/testing/effects';
+import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
 
 describe('EffectTester', () => {
     it('tests effects', async () => {
@@ -20,7 +20,7 @@ describe('EffectTester', () => {
         expect(cleanup).not.toHaveBeenCalled();
 
         // Use the resource of the effect.
-        expect(tester.resource.foo).toBe('bar');
+        expect(tester.get().foo).toBe('bar');
 
         // Clean up the effect.
         await tester.cleanup();
@@ -43,7 +43,7 @@ describe('EffectTester', () => {
         expect(init).toHaveBeenCalled();
 
         // Use the resource of the effect.
-        expect(tester.resource.foo).toBe('bar');
+        expect(tester.get().foo).toBe('bar');
 
         // Clean up the effect, should be a no-op.
         await expectAsync(tester.cleanup()).toBeResolved();
@@ -56,7 +56,7 @@ describe('EffectTester', () => {
             // Multiples calls to `before*()` callbacks.
             beforeEach(() => {});
             beforeAll(() => {});
-            return {};
+            return { get: () => 'foo' };
         })).toThrowError(/Already have an effect init callback/);
 
         expect(failSpy).toHaveBeenCalled();
@@ -75,7 +75,7 @@ describe('EffectTester', () => {
             afterEach(() => {});
             afterAll(() => {});
 
-            return {};
+            return { get: () => 'foo' };
         })).toThrowError(/Already have an effect cleanup callback/);
 
         expect(failSpy).toHaveBeenCalled();
@@ -88,7 +88,7 @@ describe('EffectTester', () => {
 
         expect(() => EffectTester.of(() => {
             // No calls to `before*()`.
-            return {};
+            return { get: () => 'foo' };
         })).toThrowError(/No init callback/);
 
         expect(failSpy).toHaveBeenCalledTimes(1);
@@ -103,7 +103,7 @@ describe('EffectTester', () => {
                 done(); // Calls unsupported `done()`.
             });
 
-            return {};
+            return { get: () => 'foo' };
         });
 
         await expectAsync(tester.initialize()).toBeRejectedWithError(

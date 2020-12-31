@@ -73,7 +73,6 @@ ts_library(
     srcs = ["effects.ts"],
     testonly = True,
     deps = [
-        ":proxy",
         "@npm//@types/jasmine",
     ],
 )
@@ -98,7 +97,10 @@ ts_library(
     srcs = ["effect_tester.ts"],
     testonly = True,
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/jasmine"],
+    deps = [
+        ":effects",
+        "@npm//@types/jasmine",
+    ],
 )
 
 ts_library(
@@ -115,31 +117,6 @@ ts_library(
 jasmine_node_test(
     name = "effect_tester_test",
     deps = [":effect_tester_test_lib"],
-)
-
-ts_library(
-    name = "proxy",
-    srcs = ["proxy.ts"],
-    visibility = ["//visibility:public"],
-    testonly = True,
-    deps = [
-        "@npm//@types/jasmine",
-    ],
-)
-
-ts_library(
-    name = "proxy_test_lib",
-    srcs = ["proxy_test.ts"],
-    testonly = True,
-    deps = [
-        ":proxy",
-        "@npm//@types/jasmine",
-    ],
-)
-
-jasmine_node_test(
-    name = "proxy_test",
-    deps = [":proxy_test_lib"],
 )
 
 ts_library(

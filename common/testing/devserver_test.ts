@@ -72,7 +72,7 @@ describe('devserver', () => {
             expect(mockServer.kill).not.toHaveBeenCalled();
 
             // Server is now available.
-            expect(tester.resource.host).toBe('localhost');
+            expect(tester.get().host).toBe('localhost');
 
             // Cleanup kills the server.
             await tester.cleanup();

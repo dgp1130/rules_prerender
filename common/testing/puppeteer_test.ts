@@ -32,7 +32,7 @@ describe('puppeteer', () => {
             expect(mockBrowser.close).not.toHaveBeenCalled();
 
             // Browser should be available.
-            expect(tester.resource.newPage).toBeDefined();
+            expect(tester.get().newPage).toBeDefined();
 
             // Cleanup to simulate test end, should close the browser.
             await tester.cleanup();
@@ -63,7 +63,7 @@ describe('puppeteer', () => {
             expect(mockBrowser.close).not.toHaveBeenCalled();
 
             // Browser should be available.
-            expect(tester.resource.newPage).toBeDefined();
+            expect(tester.get().newPage).toBeDefined();
 
             // Cleanup to simulate test end, should close the browser.
             await tester.cleanup();

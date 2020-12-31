@@ -6,13 +6,16 @@
  * {@link beforeEach} and {@link afterEach}. Using them generally looks like so:
  * 
  * ```typescript
+ * import { Effect } from 'rules_prerender/common/testing/effects';
+ * import { useSomeResource } from './testing/resource';
+ * 
  * describe('test suite', () => {
  *   // An "effect" representing a resource. Encapsulates initialization and
  *   // cleanup functionality so the test doesn't have to deal with it.
- *   const resource: MyResource = useSomeResource();
+ *   const resource: Effect<MyResource> = useSomeResource();
  * 
  *   it('uses the resource', () => {
- *     expect(() => resource.doSomething()).not.toThrow();
+ *     expect(() => resource.get().doSomething()).not.toThrow();
  *   });
  * });
  * ```
@@ -32,10 +35,53 @@
 
 import 'jasmine';
 
-import { delegatedProxy } from './proxy';
-
 // Not `undefined` or `null`.
 type Defined = string | number | boolean | symbol | object;
+
+/**
+ * Holds a value of type T which is usable during test functions. The value may
+ * be reset between tests or test suites to isolate them if appropriate. This is
+ * a type-only re-export of the private implementation to avoid leaking
+ * unnecessary abstraction details.
+ */
+export type Effect<T> = {
+    /**
+     * Returns an instance of the underlying value.
+     * 
+     * @throws If called when the value is not available, such as outside a
+     *     test.
+     */
+    get: EffectImpl<T>['get'];
+};
+
+/**
+ * Holds a value of type T which is usable during test functions. The value may
+ * be reset between tests or test suites to isolate them if appropriate.
+ */
+class EffectImpl<T> {
+    private constructor(private readonly getter: () => T) { }
+
+    /**
+     * Creates a new effect wrapping the result of the given function.
+     * 
+     * @param getter A function which returns the value of the effect. Will be
+     *     called every time the value is retrieved and should throw if the
+     *     value is not available, such as between tests.
+     */
+    public static of<T>(getter: () => T): EffectImpl<T> {
+        return new EffectImpl(getter);
+    }
+
+    /**
+     * Returns an instance of the underlying value.
+     * 
+     * @throws If called when the value is not available, such as outside a
+     *     test.
+     */
+    get(): T {
+        return this.getter();
+    }
+}
 
 /**
  * Returns a reference to a dynamically initialized value before each test. The
@@ -51,7 +97,7 @@ type Defined = string | number | boolean | symbol | object;
  *     will fail the test if used when not ready.
  */
 export function useForEach<T extends Defined>(
-        init: () => MaybePromise<UseResult<T>>): T {
+        init: () => MaybePromise<UseResult<T>>): Effect<T> {
     return useValue({
         init,
         beforeFn: beforeEach,
@@ -73,7 +119,7 @@ export function useForEach<T extends Defined>(
  *     will fail the test if used when not ready.
  */
 export function useForAll<T extends Defined>(
-        init: () => MaybePromise<UseResult<T>>): T {
+        init: () => MaybePromise<UseResult<T>>): Effect<T> {
     return useValue({
         init,
         beforeFn: beforeAll,
@@ -87,7 +133,7 @@ function useValue<T extends Defined>({ init, beforeFn, afterFn }: {
     init: () => MaybePromise<UseResult<T>>,
     beforeFn: (cb: () => MaybePromise<void>) => void,
     afterFn: (cb: () => MaybePromise<void>) => void,
-}): T {
+}): Effect<T> {
     let value: T | undefined;
     let cleanup: (() => void | Promise<void>) | undefined;
 
@@ -103,7 +149,7 @@ function useValue<T extends Defined>({ init, beforeFn, afterFn }: {
     });
 
     // Return a proxy of the initialized value.
-    return delegatedProxy(() => {
+    return EffectImpl.of(() => {
         if (!value) {
             fail('Value not initialized or already cleaned up.');
             throw new Error('Value not initialized or already cleaned up.');
