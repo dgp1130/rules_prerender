@@ -3,16 +3,30 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 bzl_library(
+    name = "bzl",
+    srcs = ["index.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":inject_resources",
+        ":prerender_component",
+        ":prerender_page",
+    ],
+)
+
+bzl_library(
+    name = "inject_resources",
+    srcs = ["inject_resources.bzl"],
+)
+
+bzl_library(
     name = "prerender_component",
     srcs = ["prerender_component.bzl"],
-    visibility = ["//visibility:public"],
     deps = ["//common:label"],
 )
 
 bzl_library(
     name = "prerender_page",
     srcs = ["prerender_page.bzl"],
-    visibility = ["//visibility:public"],
     deps = ["//common:label"],
 )
 
