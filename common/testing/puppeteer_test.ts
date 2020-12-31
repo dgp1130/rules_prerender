@@ -1,9 +1,10 @@
 import 'jasmine';
 
 import { env } from 'process';
-import puppeteer, { Browser } from 'puppeteer';
-import { useBrowser } from './puppeteer';
-import { EffectTester } from './effect_tester';
+import puppeteer, { Browser, Page } from 'puppeteer';
+import { effectFake } from 'rules_prerender/common/testing/effect_fake';
+import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
+import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 describe('puppeteer', () => {
     beforeEach(() => {
@@ -13,7 +14,6 @@ describe('puppeteer', () => {
     describe('useBrowser()', () => {
         it('provides a `Browser` effect', async () => {
             const mockBrowser = {
-                newPage: jasmine.createSpy('newPage'),
                 close: jasmine.createSpy('close'),
             } as unknown as Browser;
 
@@ -32,7 +32,7 @@ describe('puppeteer', () => {
             expect(mockBrowser.close).not.toHaveBeenCalled();
 
             // Browser should be available.
-            expect(tester.get().newPage).toBeDefined();
+            expect(tester.get()).toBe(mockBrowser);
 
             // Cleanup to simulate test end, should close the browser.
             await tester.cleanup();
@@ -44,7 +44,6 @@ describe('puppeteer', () => {
             env['DISPLAY'] = '127.0.0.1:8000';
             
             const mockBrowser = {
-                newPage: jasmine.createSpy('newPage'),
                 close: jasmine.createSpy('close'),
             } as unknown as Browser;
 
@@ -63,11 +62,39 @@ describe('puppeteer', () => {
             expect(mockBrowser.close).not.toHaveBeenCalled();
 
             // Browser should be available.
-            expect(tester.get().newPage).toBeDefined();
+            expect(tester.get()).toBe(mockBrowser);
 
             // Cleanup to simulate test end, should close the browser.
             await tester.cleanup();
             expect(mockBrowser.close).toHaveBeenCalledOnceWith();
+        });
+    });
+
+    describe('usePage()', () => {
+        it('provides a `Page` effect', async () => {
+            const mockPage = {
+                close: jasmine.createSpy('close').and.resolveTo(),
+            } as unknown as Page;
+            const mockBrowser = {
+                newPage: jasmine.createSpy('newPage').and.returnValue(mockPage),
+            } as unknown as Browser;
+
+            // Execute effect, should not be initialized yet.
+            const tester = EffectTester.of(
+                    () => usePage(effectFake(mockBrowser)));
+            expect(mockBrowser.newPage).not.toHaveBeenCalled();
+
+            // Initialize to simulate test start, should launch a browser.
+            await tester.initialize();
+            expect(mockBrowser.newPage).toHaveBeenCalledOnceWith();
+            expect(mockPage.close).not.toHaveBeenCalled();
+
+            // Browser should be available.
+            expect(tester.get()).toBe(mockPage);
+
+            // Cleanup to simulate test end, should close the browser.
+            await tester.cleanup();
+            expect(mockPage.close).toHaveBeenCalledOnceWith();
         });
     });
 });

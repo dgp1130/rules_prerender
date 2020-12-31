@@ -161,6 +161,7 @@ ts_library(
     srcs = ["puppeteer_test.ts"],
     testonly = True,
     deps = [
+        ":effect_fake",
         ":effect_tester",
         ":puppeteer",
         "@npm//@types/jasmine",
