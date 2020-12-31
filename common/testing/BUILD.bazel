@@ -93,6 +93,30 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "effect_fake",
+    srcs = ["effect_fake.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [":effects"],
+)
+
+ts_library(
+    name = "effect_fake_test_lib",
+    srcs = ["effect_fake_test.ts"],
+    testonly = True,
+    deps = [
+        ":effects",
+        ":effect_fake",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "effect_fake_test",
+    deps = [":effect_fake_test_lib"],
+)
+
+ts_library(
     name = "effect_tester",
     srcs = ["effect_tester.ts"],
     testonly = True,
