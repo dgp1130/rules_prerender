@@ -2,6 +2,11 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
+exports_files(
+    ["rollup-default.config.js"],
+    visibility = ["//visibility:public"],
+)
+
 bzl_library(
     name = "bzl",
     srcs = ["index.bzl"],
@@ -10,6 +15,7 @@ bzl_library(
         ":inject_resources",
         ":prerender_component",
         ":prerender_page",
+        ":prerender_page_bundled",
     ],
 )
 
@@ -28,6 +34,15 @@ bzl_library(
     name = "prerender_page",
     srcs = ["prerender_page.bzl"],
     deps = ["//common:label"],
+)
+
+bzl_library(
+    name = "prerender_page_bundled",
+    srcs = ["prerender_page_bundled.bzl"],
+    deps = [
+        ":inject_resources",
+        ":prerender_page",
+    ],
 )
 
 ts_library(

@@ -1,13 +1,8 @@
-load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
-load(
-    "//packages/rules_prerender:index.bzl",
-    "inject_resources",
-    "prerender_page",
-)
+load("//packages/rules_prerender:index.bzl", "prerender_page_bundled")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
-prerender_page(
+prerender_page_bundled(
     name = "page",
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],
@@ -20,26 +15,9 @@ ts_library(
     srcs = ["script.ts"],
 )
 
-rollup_bundle(
-    name = "bundle",
-    entry_point = ":page_scripts.ts",
-    config_file = "rollup.config.js",
-    link_workspace_root = True,
-    deps = [
-        ":page_scripts",
-        "@npm//@rollup/plugin-node-resolve",
-    ],
-)
-
-inject_resources(
-    name = "injected_page",
-    input = "page.html",
-    scripts = ["/bundle.js"],
-)
-
 genrule(
     name = "index_rename",
-    srcs = ["injected_page.html"],
+    srcs = ["page.html"],
     outs = ["index.html"],
     cmd = """
         cp $< $@
@@ -50,7 +28,7 @@ ts_devserver(
     name = "devserver",
     static_files = [
         "index.html",
-        "bundle.js",
+        "page_bundle.js", # From :page
     ],
 )
 
