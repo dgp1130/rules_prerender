@@ -4,6 +4,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
+load(":prerender_component.bzl", "prerender_component")
 
 def prerender_page(
     name,
@@ -43,15 +44,16 @@ def prerender_page(
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
-
-    # Compile the user provided TypeScript source.
-    prerender_lib = "%s_prerender" % name
-    ts_library(
-        name = prerender_lib,
+    # Generates `%{name}_component_prerender` and `%{name}_component_scripts`.
+    prerender_component(
+        name = "%s_component" % name,
         srcs = [src],
+        lib_deps = lib_deps,
+        scripts = scripts,
+        deps = deps,
         testonly = testonly,
-        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
     )
+    prerender_lib = "%s_component_prerender" % name
 
     # Get the generated JS file path for the user provided TypeScript source.
     prerender_js = "%s_prerender_js" % name
@@ -98,22 +100,27 @@ def prerender_page(
     native.filegroup(
         name = name,
         srcs = ["%s.html" % name],
+        testonly = testonly,
         visibility = visibility,
     )
 
+    # Generate the entry point importing all included scripts.
     client_scripts = "%s_scripts" % name
     entry_point = "%s.ts" % client_scripts
     _entry_point(
         name = "%s_entry" % name,
         metadata = metadata,
         output_entry_point = entry_point,
+        testonly = testonly,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
     ts_library(
         name = client_scripts,
         srcs = [entry_point],
-        deps = scripts + ["%s_scripts" % absolute(dep) for dep in deps],
+        deps = ["%s_component_scripts" % name],
+        testonly = testonly,
+        visibility = visibility,
     )
 
 def _prerender_page_impl(ctx):
