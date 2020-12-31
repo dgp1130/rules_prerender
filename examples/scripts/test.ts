@@ -5,7 +5,7 @@ import { useDevserver } from 'rules_prerender/common/testing/devserver';
 import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary = resolveRunfile(
-        'rules_prerender/examples/javascript/devserver');
+        'rules_prerender/examples/scripts/devserver');
 
 describe('javascript', () => {
     const server = useDevserver(devserverBinary);

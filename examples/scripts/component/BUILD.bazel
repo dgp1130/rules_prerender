@@ -6,8 +6,8 @@ prerender_component(
     srcs = ["component.ts"],
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":component_script"],
-    visibility = ["//examples/javascript:__subpackages__"],
-    deps = ["//examples/javascript/transitive"],
+    visibility = ["//examples/scripts:__subpackages__"],
+    deps = ["//examples/scripts/transitive"],
 )
 
 ts_library(

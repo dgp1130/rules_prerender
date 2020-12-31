@@ -6,7 +6,7 @@ prerender_component(
     srcs = ["transitive.ts"],
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":transitive_script"],
-    visibility = ["//examples/javascript:__subpackages__"],
+    visibility = ["//examples/scripts:__subpackages__"],
 )
 
 ts_library(

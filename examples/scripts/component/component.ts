@@ -1,5 +1,5 @@
 import { includeScript } from 'rules_prerender';
-import { renderTransitive } from 'rules_prerender/examples/javascript/transitive/transitive';
+import { renderTransitive } from 'rules_prerender/examples/scripts/transitive/transitive';
 
 /** Renders HTML which expects a JavaScript library to be included. */
 export function renderComponent(): string {
@@ -8,7 +8,7 @@ export function renderComponent(): string {
         <div id="component-replace">
             This text to be overwritten by client-side JavaScript.
         </div>
-        ${includeScript('rules_prerender/examples/javascript/component/component_script')}
+        ${includeScript('rules_prerender/examples/scripts/component/component_script')}
         ${renderTransitive()}
     `;
 }

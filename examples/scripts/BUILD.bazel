@@ -12,7 +12,7 @@ prerender_page(
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":script"],
-    deps = ["//examples/javascript/component"],
+    deps = ["//examples/scripts/component"],
 )
 
 ts_library(
