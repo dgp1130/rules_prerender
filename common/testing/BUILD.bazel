@@ -15,6 +15,7 @@ ts_library(
     testonly = True,
     deps = [
         ":binary",
+        ":temp_dir",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

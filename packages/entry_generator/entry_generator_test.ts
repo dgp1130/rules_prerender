@@ -1,13 +1,10 @@
 import 'jasmine';
 
-import { env } from 'process';
 import { promises as fs } from 'fs';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
-
-const testTmpDir = env['TEST_TMPDIR'];
-if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
+import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
 const entryGenerator = resolveRunfile(
         'rules_prerender/packages/entry_generator/entry_generator.sh');
@@ -22,14 +19,7 @@ async function run({ metadata, output }: { metadata: string, output: string }):
 }
 
 describe('entry_generator', () => {
-    let tmpDir: string;
-    beforeEach(async () => {
-        tmpDir = await fs.mkdtemp(`${testTmpDir}/renderer_test-`);
-    });
-
-    afterEach(async () => {
-        await fs.rmdir(tmpDir, { recursive: true });
-    });
+    const tmpDir = useTempDir();
 
     it('generates an entry point', async () => {
         const metadata: PrerenderMetadata = {
@@ -38,19 +28,19 @@ describe('entry_generator', () => {
                 { path: 'wksp/hello/world' },
             ],
         };
-        await fs.writeFile(`${tmpDir}/metadata.json`,
+        await fs.writeFile(`${tmpDir.get()}/metadata.json`,
                 JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
         
         const { code, stdout, stderr } = await run({
-            metadata: `${tmpDir}/metadata.json`,
-            output: `${tmpDir}/entryPoint.ts`,
+            metadata: `${tmpDir.get()}/metadata.json`,
+            output: `${tmpDir.get()}/entryPoint.ts`,
         });
 
         expect(code).toBe(0);
         expect(stdout).toBe('');
         expect(stderr).toBe('');
 
-        const entryPoint = await fs.readFile(`${tmpDir}/entryPoint.ts`, {
+        const entryPoint = await fs.readFile(`${tmpDir.get()}/entryPoint.ts`, {
             encoding: 'utf8',
         });
 
@@ -61,11 +51,11 @@ import 'wksp/hello/world';
     });
 
     it('exits with non-zero exit code if metadata is not valid JSON', async () => {
-        await fs.writeFile(`${tmpDir}/metadata.json`, 'not JSON');
+        await fs.writeFile(`${tmpDir.get()}/metadata.json`, 'not JSON');
 
         const { code, stdout, stderr } = await run({
-            metadata: `${tmpDir}/metadata.json`,
-            output: `${tmpDir}/entryPoint.ts`,
+            metadata: `${tmpDir.get()}/metadata.json`,
+            output: `${tmpDir.get()}/entryPoint.ts`,
         });
 
         expect(code).toBe(1);

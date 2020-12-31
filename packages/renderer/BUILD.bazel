@@ -45,6 +45,7 @@ ts_library(
     deps = [
         "//common:runfiles",
         "//common/testing:binary",
+        "//common/testing:temp_dir",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

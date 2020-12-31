@@ -1,12 +1,9 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { env } from 'process';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
-
-const testTmpDir = env['TEST_TMPDIR'];
-if (!testTmpDir) throw new Error('$TEST_TMPDIR not set.');
+import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
 const extractor = resolveRunfile(
     'rules_prerender/packages/annotation_extractor/annotation_extractor.sh');
@@ -24,17 +21,10 @@ async function run({ inputHtml, outputHtml, outputMetadata }: {
 }
 
 describe('annotation_extractor', () => {
-    let tmpDir: string;
-    beforeEach(async () => {
-        tmpDir = await fs.mkdtemp(`${testTmpDir}/annotation_extractor_test-`);
-    });
-
-    afterEach(async () => {
-        await fs.rmdir(tmpDir, { recursive: true });
-    });
+    const tmpDir = useTempDir();
 
     it('extracts annotations', async () => {
-        await fs.writeFile(`${tmpDir}/input.html`, `
+        await fs.writeFile(`${tmpDir.get()}/input.html`, `
 <!DOCTYPE html>
 <html>
     <head>
@@ -51,16 +41,16 @@ describe('annotation_extractor', () => {
         `.trim());
 
         const { code, stdout, stderr } = await run({
-            inputHtml: `${tmpDir}/input.html`,
-            outputHtml: `${tmpDir}/output.html`,
-            outputMetadata: `${tmpDir}/metadata.json`,
+            inputHtml: `${tmpDir.get()}/input.html`,
+            outputHtml: `${tmpDir.get()}/output.html`,
+            outputMetadata: `${tmpDir.get()}/metadata.json`,
         });
 
         expect(code).toBe(0);
         expect(stdout.trim()).toBe('');
         expect(stderr.trim()).toBe('');
 
-        const output = await fs.readFile(`${tmpDir}/output.html`, {
+        const output = await fs.readFile(`${tmpDir.get()}/output.html`, {
             encoding: 'utf8',
         });
         expect(output).toBe(`
@@ -79,9 +69,10 @@ describe('annotation_extractor', () => {
 </html>
         `.trim());
 
-        const metadata = JSON.parse(await fs.readFile(`${tmpDir}/metadata.json`, {
-            encoding: 'utf8',
-        }));
+        const metadata = JSON.parse(
+            await fs.readFile(`${tmpDir.get()}/metadata.json`,
+            { encoding: 'utf8' },
+        ));
         expect(metadata).toEqual({
             scripts: [
                 { path: 'foo.js' },

@@ -33,6 +33,7 @@ ts_library(
         ":config",
         "//common:runfiles",
         "//common/testing:binary",
+        "//common/testing:temp_dir",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

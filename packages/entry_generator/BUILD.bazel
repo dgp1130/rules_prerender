@@ -33,6 +33,7 @@ ts_library(
         "//common:runfiles",
         "//common/models:prerender_metadata",
         "//common/testing:binary",
+        "//common/testing:temp_dir",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
