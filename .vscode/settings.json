@@ -2,6 +2,8 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "javascript.preferences.quoteStyle": "single",
     "typescript.preferences.quoteStyle": "single",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
     "cSpell.words": [
         "deduplicated",
         "deduplicates",
