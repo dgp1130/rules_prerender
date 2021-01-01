@@ -2,7 +2,6 @@
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//common:label.bzl", "absolute")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":prerender_component.bzl", "prerender_component")
 

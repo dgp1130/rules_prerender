@@ -35,7 +35,7 @@ bzl_library(
     srcs = ["prerender_page.bzl"],
     deps = [
         ":prerender_component",
-        "//common:label",
+        "//packages/renderer:build_vars",
     ],
 )
 
