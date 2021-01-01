@@ -1,0 +1,78 @@
+load(
+    "@build_bazel_rules_postcss//:index.bzl",
+    "postcss_binary",
+    "postcss_plugin",
+)
+load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+load("//packages/rules_prerender:index.bzl", "prerender_page_bundled")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+load(":postcss_import_plugin.bzl", "PLUGIN_CONFIG")
+
+prerender_page_bundled(
+    name = "page",
+    src = "page.ts",
+    deps = ["//examples/styles/component"],
+)
+
+filegroup(
+    name = "page_styles",
+    srcs = [
+        "page.css",
+        "//examples/styles/component:component_styles",
+    ],
+)
+
+postcss_plugin(
+    name = "import",
+    node_require = "postcss-import",
+    deps = ["@npm//postcss-import"],
+)
+
+postcss_binary(
+    name = "bundle",
+    src = "entry.css",
+    sourcemap = True,
+    plugins = {
+        ":import": PLUGIN_CONFIG,
+    },
+    deps = [":page_styles"],
+)
+
+genrule(
+    name = "index_rename",
+    srcs = ["page.html"],
+    outs = ["index.html"],
+    cmd = """
+        cp $< $@
+    """,
+)
+
+ts_devserver(
+    name = "devserver",
+    static_files = [
+        "index.html",
+        ":bundle",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    data = [
+        ":devserver",
+        "@npm//puppeteer",
+    ],
+    deps = [":test_lib"],
+)

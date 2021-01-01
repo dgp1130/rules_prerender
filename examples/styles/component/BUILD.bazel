@@ -1,0 +1,17 @@
+load("//packages/rules_prerender:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    visibility = ["//examples/styles:__subpackages__"],
+    deps = ["//examples/styles/transitive"],
+)
+
+filegroup(
+    name = "component_styles",
+    srcs = [
+        "component_styles.css",
+        "//examples/styles/transitive:transitive_styles",
+    ],
+    visibility = ["//examples/styles:__subpackages__"],
+)
