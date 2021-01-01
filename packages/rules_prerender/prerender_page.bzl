@@ -10,6 +10,7 @@ def prerender_page(
     src,
     lib_deps = [],
     scripts = [],
+    styles = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -29,9 +30,11 @@ def prerender_page(
         %{name}.html: An HTML file containing the content returned by the `src`
             file.
         %{name}_scripts: A `ts_library()` rule containing all the client-side
-            scripts used by the page. This includes a generate file
+            scripts used by the page. This includes a generated file
             `%{name}_scripts.ts` which acts as an entry point, importing all
             scripts that were included in the page via `includeScript()`.
+        %{name}_styles: A `filegroup()` containing all the CSS styles used by
+            the page.
     
     Args:
         name: The name of this rule.
@@ -39,26 +42,32 @@ def prerender_page(
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled for the
             generated page.
+        styles: List of CSS files or `filegroup()`s of CSS files which can be
+            included in the prerendered HTML.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
     # Generates `%{name}_component_prerender` and `%{name}_component_scripts`.
+    component = "%s_component" % name
     prerender_component(
-        name = "%s_component" % name,
+        name = component,
         srcs = [src],
         lib_deps = lib_deps,
         scripts = scripts,
+        styles = styles,
         deps = deps,
         testonly = testonly,
     )
-    prerender_lib = "%s_component_prerender" % name
+    component_prerender = "%s_prerender" % component
+    component_scripts = "%s_scripts" % component
+    component_styles = "%s_styles" % component
 
     # Get the generated JS file path for the user provided TypeScript source.
     prerender_js = "%s_prerender_js" % name
     native.filegroup(
         name = prerender_js,
-        srcs = [":%s" % prerender_lib],
+        srcs = [":%s" % component_prerender],
         testonly = testonly,
         output_group = "es5_sources",
     )
@@ -70,7 +79,7 @@ def prerender_page(
         entry_point = "//packages/renderer:renderer_js",
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + [
-            ":%s" % prerender_lib,
+            ":%s" % component_prerender,
             "//packages/renderer",
         ],
     )
@@ -117,7 +126,15 @@ def prerender_page(
     ts_library(
         name = client_scripts,
         srcs = [entry_point],
-        deps = ["%s_component_scripts" % name],
+        deps = [":%s" % component_scripts],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+    # Reexport all included styles at `%{name}_styles`.
+    native.alias(
+        name = "%s_styles" % name,
+        actual = ":%s" % component_styles,
         testonly = testonly,
         visibility = visibility,
     )

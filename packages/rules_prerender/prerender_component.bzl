@@ -8,6 +8,7 @@ def prerender_component(
     srcs,
     lib_deps = [],
     scripts = [],
+    styles = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -30,6 +31,8 @@ def prerender_component(
         lib_deps: `ts_library()` dependencies for the TypeScript source files.
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
+        styles: List of CSS files or `filegroup()`s of CSS files which can be
+            included in the prerendered HTML.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -47,6 +50,13 @@ def prerender_component(
         name = "%s_scripts" % name,
         srcs = [],
         deps = scripts + ["%s_scripts" % absolute(dep) for dep in deps],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+    native.filegroup(
+        name = "%s_styles" % name,
+        srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

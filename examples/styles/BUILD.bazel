@@ -11,15 +11,8 @@ load(":postcss_import_plugin.bzl", "PLUGIN_CONFIG")
 prerender_page_bundled(
     name = "page",
     src = "page.ts",
+    styles = ["page.css"],
     deps = ["//examples/styles/component"],
-)
-
-filegroup(
-    name = "page_styles",
-    srcs = [
-        "page.css",
-        "//examples/styles/component:component_styles",
-    ],
 )
 
 postcss_plugin(
@@ -35,7 +28,7 @@ postcss_binary(
     plugins = {
         ":import": PLUGIN_CONFIG,
     },
-    deps = [":page_styles"],
+    deps = [":page_page_styles"],
 )
 
 genrule(

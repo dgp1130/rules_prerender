@@ -1,4 +1,4 @@
-"""TODO"""
+"""Defines `prerender_page_bundled()` functionality."""
 
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":prerender_page.bzl", "prerender_page")
@@ -9,6 +9,7 @@ def prerender_page_bundled(
     src,
     lib_deps = [],
     scripts = [],
+    styles = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -47,6 +48,8 @@ def prerender_page_bundled(
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled for the
             generated page.
+        styles: List of CSS files or `filegroup()`s of CSS files which can be
+            included in the prerendered HTML.
         deps: `prerender_component()` dependencies for this page.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -58,6 +61,7 @@ def prerender_page_bundled(
         src = src,
         lib_deps = lib_deps,
         scripts = scripts,
+        styles = styles,
         deps = deps,
         testonly = testonly,
         visibility = visibility,
