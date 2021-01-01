@@ -7,10 +7,10 @@ export default function(): string {
         <!DOCTYPE html>
         <html>
             <head>
-                <title>JavaScript</title>
+                <title>Scripts</title>
             </head>
             <body>
-                <h2>JavaScript</h2>
+                <h2>Scripts</h2>
                 <div id="replace">
                     This text to be overwritten by client-side JavaScript.
                 </div>

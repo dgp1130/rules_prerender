@@ -7,12 +7,12 @@ import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 const devserverBinary = resolveRunfile(
         'rules_prerender/examples/scripts/devserver');
 
-describe('javascript', () => {
+describe('Scripts', () => {
     const server = useDevserver(devserverBinary);
     const browser = useBrowser();
     const page = usePage(browser);
 
-    it('renders with JavaScript', async () => {
+    it('renders with scripts', async () => {
         await page.get().goto(
             `http://${server.get().host}:${server.get().port}/`,
             {
@@ -21,7 +21,7 @@ describe('javascript', () => {
         );
 
         const title = await page.get().title();
-        expect(title).toBe('JavaScript');
+        expect(title).toBe('Scripts');
 
         const replaced = await page.get().$eval(
                 '#replace', (el) => el.textContent);
