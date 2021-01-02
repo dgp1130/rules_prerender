@@ -21,10 +21,7 @@ genrule(
 
 ts_devserver(
     name = "devserver",
-    static_files = [
-        "index.html",
-        ":page_styles",
-    ],
+    static_files = ["index.html"],
 )
 
 ts_library(

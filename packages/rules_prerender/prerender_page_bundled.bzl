@@ -88,23 +88,26 @@ def prerender_page_bundled(
     )
 
     # Bundle all styles.
+    bundled_css = "%s_styles_bundled.css" % name
     postcss_binary(
         name = "%s_styles" % name,
         src = ":%s_styles.css" % prerender_name,
         sourcemap = True,
+        output_name = bundled_css,
         plugins = {
             "//packages/rules_prerender:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
         },
         deps = [":%s_styles" % prerender_name],
     )
 
-    # Inject `<script />` tag into the HTML and move it to `%{name}.html`.
+    # Inject bundled JS and CSS into the HTML and move it to `%{name}.html`.
     output_html = "%s.html" % name
     inject_resources(
         name = "%s_inject" % name,
         input = "%s.html" % prerender_name,
         output = output_html,
         scripts = ["/%s.js" % bundle],
+        styles = [bundled_css],
     )
 
     # Export only the two resulting files.
