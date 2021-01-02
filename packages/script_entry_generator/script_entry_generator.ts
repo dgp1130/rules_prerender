@@ -3,7 +3,7 @@ import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
 import { mdSpacing } from 'rules_prerender/common/formatters';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
-import { generateEntryPoint } from 'rules_prerender/packages/entry_generator/generator';
+import { generateEntryPoint } from 'rules_prerender/packages/script_entry_generator/generator';
 
 main(async () => {
     // Parse options and flags.

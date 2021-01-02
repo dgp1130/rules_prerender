@@ -7,7 +7,7 @@ import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
 const entryGenerator = resolveRunfile(
-        'rules_prerender/packages/entry_generator/entry_generator.sh');
+        'rules_prerender/packages/script_entry_generator/script_entry_generator.sh');
 
 /** Invokes the entry generator binary. */
 async function run({ metadata, output }: { metadata: string, output: string }):
@@ -18,7 +18,7 @@ async function run({ metadata, output }: { metadata: string, output: string }):
     ]);
 }
 
-describe('entry_generator', () => {
+describe('script_entry_generator', () => {
     const tmpDir = useTempDir();
 
     it('generates an entry point', async () => {

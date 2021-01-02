@@ -1,7 +1,7 @@
-# Entry Generator
+# Script Entry Generator
 
 Generates a TypeScript source file which imports all the scripts in the given
-metadata input. It effective converts:
+metadata input. It effectively converts:
 
 ```jsonc
 {

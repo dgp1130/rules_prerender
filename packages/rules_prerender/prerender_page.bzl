@@ -114,18 +114,18 @@ def prerender_page(
 
     # Generate the entry point importing all included scripts.
     client_scripts = "%s_scripts" % name
-    entry_point = "%s.ts" % client_scripts
-    _entry_point(
-        name = "%s_entry" % name,
+    script_entry_point = "%s.ts" % client_scripts
+    _script_entry_point(
+        name = "%s_entry" % client_scripts,
         metadata = metadata,
-        output_entry_point = entry_point,
+        output_entry_point = script_entry_point,
         testonly = testonly,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
     ts_library(
         name = client_scripts,
-        srcs = [entry_point],
+        srcs = [script_entry_point],
         deps = [":%s" % component_scripts],
         testonly = testonly,
         visibility = visibility,
@@ -217,7 +217,7 @@ def _extract_annotations(
         tools = ["//packages/annotation_extractor"],
     )
 
-def _entry_point(name, metadata, output_entry_point, testonly = None):
+def _script_entry_point(name, metadata, output_entry_point, testonly = None):
     """Creates a TypeScript entry point for the given metadata JSON.
     
     Args:
@@ -231,12 +231,12 @@ def _entry_point(name, metadata, output_entry_point, testonly = None):
         srcs = [metadata],
         outs = [output_entry_point],
         cmd = """
-            $(location //packages/entry_generator) \\
+            $(location //packages/script_entry_generator) \\
                 --metadata $(location {metadata}) \\
                 --output $(location {output})
         """.format(
             metadata = metadata,
             output = output_entry_point,
         ),
-        tools = ["//packages/entry_generator"],
+        tools = ["//packages/script_entry_generator"],
     )

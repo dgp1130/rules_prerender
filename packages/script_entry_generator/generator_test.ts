@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { mockPrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
-import { generateEntryPoint } from 'rules_prerender/packages/entry_generator/generator';
+import { generateEntryPoint } from 'rules_prerender/packages/script_entry_generator/generator';
 
 describe('generator', () => {
     describe('generateEntryPoint()', () => {

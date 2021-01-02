@@ -3,18 +3,18 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 nodejs_binary(
-    name = "entry_generator",
-    entry_point = ":entry_generator.ts",
+    name = "script_entry_generator",
+    entry_point = ":script_entry_generator.ts",
     data = [
-        ":entry_generator_lib",
+        ":script_entry_generator_lib",
         "@npm//yargs",
     ],
     visibility = ["//visibility:public"],
 )
 
 ts_library(
-    name = "entry_generator_lib",
-    srcs = ["entry_generator.ts"],
+    name = "script_entry_generator_lib",
+    srcs = ["script_entry_generator.ts"],
     deps = [
         ":generator",
         "//common:binary",
@@ -26,8 +26,8 @@ ts_library(
 )
 
 ts_library(
-    name = "entry_generator_test_lib",
-    srcs = ["entry_generator_test.ts"],
+    name = "script_entry_generator_test_lib",
+    srcs = ["script_entry_generator_test.ts"],
     testonly = True,
     deps = [
         "//common:runfiles",
@@ -40,9 +40,9 @@ ts_library(
 )
 
 jasmine_node_test(
-    name = "entry_generator_test",
-    data = [":entry_generator"],
-    deps = [":entry_generator_test_lib"],
+    name = "script_entry_generator_test",
+    data = [":script_entry_generator"],
+    deps = [":script_entry_generator_test_lib"],
 )
 
 ts_library(
