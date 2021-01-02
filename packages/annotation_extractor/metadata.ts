@@ -18,14 +18,20 @@ export function assembleMetadata(annotations: Set<PrerenderAnnotation>):
 
     // Add each annotation to its relevant place in the metadata object.
     for (const annotation of annotations) {
-        switch (annotation.type) {
+        const { type } = annotation;
+        switch (type) {
             case 'script': {
                 metadata.scripts.push({
                     path: annotation.path,
                 });
                 break;
+            } case 'style': {
+                metadata.styles.push({
+                    path: annotation.path,
+                });
+                break;
             } default: {
-                return assertNever(annotation.type);
+                return assertNever(type);
             }
         }
     }

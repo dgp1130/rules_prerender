@@ -85,6 +85,7 @@ ts_library(
     testonly = True,
     deps = [
         ":metadata",
+        "//common/models:prerender_annotation_mock",
         "//common/models:prerender_metadata_mock",
         "@npm//@types/jasmine",
     ],

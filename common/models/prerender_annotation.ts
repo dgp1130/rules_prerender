@@ -38,7 +38,7 @@ export function parseAnnotation(comment: string): PrerenderAnnotation|undefined 
  * An annotation to be used by the build process to include external resources
  * in the final generated HTML page.
  */
-export type PrerenderAnnotation = ScriptAnnotation;
+export type PrerenderAnnotation = ScriptAnnotation | StyleAnnotation;
 
 /**
  * An annotation of a JavaScript resource to be included in the final generated
@@ -48,5 +48,16 @@ export interface ScriptAnnotation {
     type: 'script';
 
     /** A path to the JavaScript file to include. */
+    path: string;
+}
+
+/**
+ * An annotation of a CSS resource to be included in the final generated HTML
+ * page.
+ */
+export interface StyleAnnotation {
+    type: 'style',
+
+    /** A path to the CSS file to include. */
     path: string;
 }

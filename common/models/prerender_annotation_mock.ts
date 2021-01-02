@@ -3,7 +3,7 @@
  * @see /README.md#Mocking
  */
 
-import { PrerenderAnnotation, ScriptAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, ScriptAnnotation, StyleAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 /**
  * Mocks a {@link PrerenderAnnotation} object. Since this type is a
@@ -13,6 +13,7 @@ import { PrerenderAnnotation, ScriptAnnotation } from 'rules_prerender/common/mo
  * data.
  * 
  * @see mockScriptAnnotation
+ * @see mockStyleAnnotation
  */
 export function mockPrerenderAnnotation(): PrerenderAnnotation {
     return mockScriptAnnotation();
@@ -24,6 +25,16 @@ export function mockScriptAnnotation(overrides: Partial<ScriptAnnotation> = {}):
     return {
         type: 'script',
         path: 'path/to/mocked/script',
+        ...overrides,
+    };
+}
+
+/** Mocks a {@link StyleAnnotation} object with the given overrides. */
+export function mockStyleAnnotation(overrides: Partial<StyleAnnotation> = {}):
+        StyleAnnotation {
+    return {
+        type: 'style',
+        path: 'path/to/mocked/style.css',
         ...overrides,
     };
 }
