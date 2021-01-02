@@ -31,6 +31,7 @@ ts_library(
     testonly = True,
     deps = [
         "//common:runfiles",
+        "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
         "@npm//@types/jasmine",
@@ -84,6 +85,7 @@ ts_library(
     testonly = True,
     deps = [
         ":metadata",
+        "//common/models:prerender_metadata_mock",
         "@npm//@types/jasmine",
     ],
 )

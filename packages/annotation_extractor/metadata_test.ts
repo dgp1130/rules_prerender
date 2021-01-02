@@ -1,5 +1,6 @@
 import 'jasmine';
 
+import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
 import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
 
 describe('metadata', () => {
@@ -11,13 +12,13 @@ describe('metadata', () => {
                 { type: 'script', path: 'baz.js' },
             ]));
 
-            expect(metadata).toEqual({
+            expect(metadata).toEqual(mockPrerenderMetadata({
                 scripts: [
-                    { path: 'foo.js' },
-                    { path: 'bar.js' },
-                    { path: 'baz.js' },
+                    mockScriptMetadata({ path: 'foo.js' }),
+                    mockScriptMetadata({ path: 'bar.js' }),
+                    mockScriptMetadata({ path: 'baz.js' }),
                 ],
-            });
+            }));
         });
     });
 });

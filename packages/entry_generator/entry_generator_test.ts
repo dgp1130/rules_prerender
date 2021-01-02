@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
@@ -22,12 +22,12 @@ describe('entry_generator', () => {
     const tmpDir = useTempDir();
 
     it('generates an entry point', async () => {
-        const metadata: PrerenderMetadata = {
+        const metadata = mockPrerenderMetadata({
             scripts: [
-                { path: 'wksp/foo/bar/baz' },
-                { path: 'wksp/hello/world' },
+                mockScriptMetadata({ path: 'wksp/foo/bar/baz' }),
+                mockScriptMetadata({ path: 'wksp/hello/world' }),
             ],
-        };
+        });
         await fs.writeFile(`${tmpDir.get()}/metadata.json`,
                 JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
         
