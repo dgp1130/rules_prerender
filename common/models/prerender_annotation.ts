@@ -44,7 +44,7 @@ export type PrerenderAnnotation = ScriptAnnotation;
  * An annotation of a JavaScript resource to be included in the final generated
  * HTML page.
  */
-interface ScriptAnnotation {
+export interface ScriptAnnotation {
     type: 'script';
 
     /** A path to the JavaScript file to include. */

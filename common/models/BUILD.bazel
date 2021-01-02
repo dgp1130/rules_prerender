@@ -23,6 +23,14 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "prerender_annotation_mock",
+    srcs = ["prerender_annotation_mock.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [":prerender_annotation"],
+)
+
+ts_library(
     name = "prerender_metadata",
     srcs = ["prerender_metadata.ts"],
     visibility = ["//visibility:public"],
