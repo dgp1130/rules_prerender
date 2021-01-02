@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
+import { mockPrerenderMetadata, mockStyleMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
@@ -23,9 +23,9 @@ describe('style_entry_generator', () => {
 
     it('generates an entry point', async () => {
         const metadata = mockPrerenderMetadata({
-            scripts: [
-                mockScriptMetadata({ path: 'wksp/foo/bar/baz' }),
-                mockScriptMetadata({ path: 'wksp/hello/world' }),
+            styles: [
+                mockStyleMetadata({ path: 'wksp/foo/bar/baz.css' }),
+                mockStyleMetadata({ path: 'wksp/hello/world.css' }),
             ],
         });
         await fs.writeFile(`${tmpDir.get()}/metadata.json`,
@@ -45,8 +45,8 @@ describe('style_entry_generator', () => {
         });
 
         expect(entryPoint).toBe(`
-import 'wksp/foo/bar/baz';
-import 'wksp/hello/world';
+@import 'wksp/foo/bar/baz.css';
+@import 'wksp/hello/world.css';
         `.trim());
     });
 

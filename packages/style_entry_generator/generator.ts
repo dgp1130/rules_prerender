@@ -1,16 +1,16 @@
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 /**
- * Generates a TypeScript entry point which imports all the scripts in the given
+ * Generates a CSS entry point which imports all the styles in the given
  * {@link PrerenderMetadata} object.
  * 
- * @param metadata Contains all the scripts to import in the resulting entry
+ * @param metadata Contains all the styles to import in the resulting entry
  *     point.
- * @returns A TypeScript source file which perform side-effectful imports of all
- *     the metadata scripts.
+ * @returns A CSS source file which includes imports of all styles in the given
+ *     metadata object.
  */
 export function generateEntryPoint(metadata: PrerenderMetadata): string {
-    return metadata.scripts
-            .map((script) => `import '${script.path}';`)
+    return metadata.styles
+            .map((style) => `@import '${style.path}';`)
             .join('\n');
 }

@@ -9,19 +9,17 @@ main(async () => {
     // Parse options and flags.
     const { metadata: metadataFile, output } = yargs
         .usage(mdSpacing(`
-            Generates an entry point for all the scripts in the given metadata
-            file. The entry point is a TypeScript source file which
-            side-effectfully imports all the given scripts which can be used as
-            an entry point for tools like Rollup, which expect direct references
-            to all top-level scripts.
+            Generates an entry point for all the styles in the given metadata
+            file. The entry point is a CSS source file which imports all the
+            given styles which can be used as an entry point for various tools.
         `))
         .option('metadata', {
             type: 'string',
             required: true,
             description: mdSpacing(`
                 A path to a file containing a \`PrerenderMetadata\` object in
-                JSON format. This metadata should contain a \`scripts\` property
-                which contains all the scripts to reference in the output file.
+                JSON format. This metadata should contain a \`styles\` property
+                which contains all the styles to reference in the output file.
             `),
         })
         .option('output', {
@@ -29,7 +27,7 @@ main(async () => {
             required: true,
             description: mdSpacing(`
                 A path to a file which will be written to by this tool,
-                containing TypeScript source of the entry point generated.
+                containing CSS source of the entry point generated.
             `),
         })
         .argv;
