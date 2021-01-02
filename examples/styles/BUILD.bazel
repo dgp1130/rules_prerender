@@ -24,7 +24,7 @@ postcss_plugin(
 
 postcss_binary(
     name = "bundle",
-    src = "entry.css",
+    src = "page_page_styles.css",
     sourcemap = True,
     plugins = {
         ":import": PLUGIN_CONFIG,

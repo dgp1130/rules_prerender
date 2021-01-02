@@ -131,10 +131,23 @@ def prerender_page(
         visibility = visibility,
     )
 
+    # Generate the entry point importing all included styles.
+    client_styles = "%s_styles" % name
+    style_entry_point = "%s.css" % client_styles
+    _style_entry_point(
+        name = "%s_entry" % client_styles,
+        metadata = metadata,
+        output_entry_point = style_entry_point,
+        testonly = testonly,
+    )
+
     # Reexport all included styles at `%{name}_styles`.
-    native.alias(
-        name = "%s_styles" % name,
-        actual = ":%s" % component_styles,
+    native.filegroup(
+        name = client_styles,
+        srcs = [
+            style_entry_point,
+            ":%s" % component_styles,
+        ],
         testonly = testonly,
         visibility = visibility,
     )
@@ -239,4 +252,28 @@ def _script_entry_point(name, metadata, output_entry_point, testonly = None):
             output = output_entry_point,
         ),
         tools = ["//packages/script_entry_generator"],
+    )
+
+def _style_entry_point(name, metadata, output_entry_point, testonly = None):
+    """Creates a CSS entry point for the given metadata JSON.
+    
+    Args:
+        name: The name of the rule.
+        metadata: The metadata JSON file to generate an entry point from.
+        output_entry_point: The file to write the entry point contents to.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+    """
+    native.genrule(
+        name = name,
+        srcs = [metadata],
+        outs = [output_entry_point],
+        cmd = """
+            $(location //packages/style_entry_generator) \\
+                --metadata $(location {metadata}) \\
+                --output $(location {output})
+        """.format(
+            metadata = metadata,
+            output = output_entry_point,
+        ),
+        tools = ["//packages/style_entry_generator"],
     )
