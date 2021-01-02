@@ -75,6 +75,60 @@ describe('injector', () => {
         `.trim());
     });
 
+    it('injects styles', async () => {
+        await fs.writeFile(`${tmpDir.get()}/input.html`, `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+        `.trim());
+
+        await fs.writeFile(`${tmpDir.get()}/foo.css`, `.foo { color: red; }`);
+        await fs.writeFile(`${tmpDir.get()}/bar.css`, `.bar { color: green; }`);
+        await fs.writeFile(`${tmpDir.get()}/baz.css`, `.baz { color: blue; }`);
+
+        const config: InjectorConfig = [
+            { type: 'style', path: `${tmpDir.get()}/foo.css` },
+            { type: 'style', path: `${tmpDir.get()}/bar.css` },
+            { type: 'style', path: `${tmpDir.get()}/baz.css` },
+        ];
+        await fs.writeFile(`${tmpDir.get()}/config.json`,
+                JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
+
+        const { code, stdout, stderr } = await run({
+            input: `${tmpDir.get()}/input.html`,
+            config: `${tmpDir.get()}/config.json`,
+            output: `${tmpDir.get()}/output.html`,
+        });
+
+        expect(code).toBe(0);
+        expect(stdout).toBe('');
+        expect(stderr).toBe('');
+
+        const output = await fs.readFile(`${tmpDir.get()}/output.html`, {
+            encoding: 'utf8',
+        });
+        expect(output).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    <style>.foo { color: red; }</style>
+<style>.bar { color: green; }</style>
+<style>.baz { color: blue; }</style>
+</head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+        `.trim());
+    });
+
     it('exits with non-zero exit code when injector fails', async () => {
         await fs.writeFile(
                 `${tmpDir.get()}/input.html`, 'not an HTML document');

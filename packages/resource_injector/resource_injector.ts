@@ -42,7 +42,7 @@ main(async () => {
     const config = JSON.parse(configText) as InjectorConfig;
 
     // Inject the resources.
-    const output = inject(input, config);
+    const output = await inject(input, config);
 
     // Write output file.
     await fs.writeFile(outputFile, output);

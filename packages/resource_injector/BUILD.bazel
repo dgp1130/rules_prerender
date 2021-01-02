@@ -55,6 +55,7 @@ ts_library(
     srcs = ["injector.ts"],
     deps = [
         ":config",
+        "//common:fs",
         "@npm//node-html-parser",
     ],
 )
@@ -66,6 +67,7 @@ ts_library(
     deps = [
         ":config",
         ":injector",
+        "//common:fs",
         "@npm//@types/jasmine",
     ],
 )

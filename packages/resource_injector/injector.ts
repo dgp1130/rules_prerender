@@ -1,5 +1,6 @@
+import * as fs from 'rules_prerender/common/fs';
 import { HTMLElement, parse } from 'node-html-parser';
-import { InjectorConfig, InjectScript } from 'rules_prerender/packages/resource_injector/config';
+import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packages/resource_injector/config';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the
@@ -12,7 +13,8 @@ import { InjectorConfig, InjectScript } from 'rules_prerender/packages/resource_
  *     injected into the HTML document.
  * @returns A new HTML document with all the resources injected into it.
  */
-export function inject(html: string, config: InjectorConfig): string {
+export async function inject(html: string, config: InjectorConfig):
+        Promise<string> {
     // Parse input HTML.
     const root = parse(html, {
         comment: true,
@@ -30,8 +32,11 @@ export function inject(html: string, config: InjectorConfig): string {
             case 'script': {
                 injectScript(root, action);
                 break;
+            } case 'style': {
+                await injectStyle(root, action);
+                break;
             } default: {
-                assertNever(action.type);
+                assertNever(action);
             }
         }
     }
@@ -83,6 +88,31 @@ function injectScript(root: HTMLElement, action: InjectScript): void {
 
     // Insert a trailing newline so subsequent insertions look a little better.
     script.insertAdjacentHTML('afterend', '\n');
+}
+
+/**
+ * Appends a `<style />` tag for the provided CSS to the `<head />` tag of the
+ * provided HTML document. This tag inlines the content of the file at the
+ * provided path.
+ * 
+ * @param root The root element of the HTML document to inject the script into.
+ * @param action Metadata about the `<style />` tag to create.
+ */
+async function injectStyle(root: HTMLElement, { path }: InjectStyle):
+        Promise<void> {
+    const head = getOrInjectHead(root);
+
+    // Read the CSS contents from the given file path.
+    const css = await fs.readFile(path, { encoding: 'utf8' });
+
+    // Insert a `<style />` tag at the end of the `<head />` element with the
+    // CSS content inlined.
+    const style = new HTMLElement('style', {});
+    style.set_content(css);
+    head.appendChild(style);
+
+    // Insert a trailing newline so subsequent insertions look a little better.
+    style.insertAdjacentHTML('afterend', '\n');
 }
 
 function assertNever(value: never): never {
