@@ -1,0 +1,68 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+nodejs_binary(
+    name = "style_entry_generator",
+    entry_point = ":style_entry_generator.ts",
+    data = [
+        ":style_entry_generator_lib",
+        "@npm//yargs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "style_entry_generator_lib",
+    srcs = ["style_entry_generator.ts"],
+    deps = [
+        ":generator",
+        "//common:binary",
+        "//common:formatters",
+        "//common/models:prerender_metadata",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)
+
+ts_library(
+    name = "style_entry_generator_test_lib",
+    srcs = ["style_entry_generator_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/models:prerender_metadata_mock",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "style_entry_generator_test",
+    data = [":style_entry_generator"],
+    deps = [":style_entry_generator_test_lib"],
+)
+
+ts_library(
+    name = "generator",
+    srcs = ["generator.ts"],
+    deps = ["//common/models:prerender_metadata"],
+)
+
+ts_library(
+    name = "generator_test_lib",
+    srcs = ["generator_test.ts"],
+    testonly = True,
+    deps = [
+        ":generator",
+        "//common/models:prerender_metadata_mock",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "generator_test",
+    deps = [":generator_test_lib"],
+)
