@@ -3,59 +3,74 @@
 def inject_resources(
     name,
     input,
-    scripts,
+    scripts = [],
+    styles = [],
     output = None,
-    testonly = None,
-    visibility = None,
+    **kwargs
 ):
     """Injects web resources into the given HTML input.
 
-    Outputs:
-        %{name}.html: An HTML file identical to the input, except with all the
-            defined resources injected into it.
-    
     Args:
         name: The name of this rule.
         input: The HTML file use as a base for injecting resources into.
-        scripts: A list of URL paths to inject as a `<script />` tag.
+        scripts: A list of URL paths to inject as `<script />` tags.
+        styles: A list of CSS files to inline in `<style />` tags.
         output: The file to write the injected HTML output to. Defualts to
             `%{name}.html`
-        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-        visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        **kwargs: Remaining arugments to pass through to the underlying rule.
     """
-    output = output or "%s.html" % name
-
-    injections = [{"type": "script", "path": script} for script in scripts]
-    
-    config = "%s_config.json" % name
-    native.genrule(
-        name = "%s_config" % name,
-        srcs = [],
-        outs = [config],
-        cmd = """
-            echo '%s' > $@
-        """ % _encode_json(injections),
-        testonly = testonly,
-    )
-
-    native.genrule(
+    _inject_resources_rule(
         name = name,
-        srcs = [input, config],
-        outs = [output],
-        cmd = """
-            $(location //packages/resource_injector) \\
-                --input $(location {input}) \\
-                --config $(location {config}) \\
-                --output $(location {output})
-        """.format(
-            input = input,
-            config = config,
-            output = output,
-        ),
-        tools = ["//packages/resource_injector"],
-        testonly = testonly,
-        visibility = visibility,
+        input = input,
+        scripts = scripts,
+        styles = styles,
+        output = output or "%s.html" % name,
+        **kwargs
     )
+
+def _inject_resources_impl(ctx):
+    # Generate configuration JSON from `scripts` and `styles` input.
+    script_injections = [{"type": "script", "path": script}
+                         for script in ctx.attr.scripts]
+    style_injections = [{"type": "style", "path": style.path}
+                        for style in ctx.files.styles]
+    injections = script_injections + style_injections
+
+    # Write the configuration to a file.
+    config = ctx.actions.declare_file("%s_config.json" % ctx.attr.name)
+    ctx.actions.write(config, _encode_json(injections))
+
+    # Run the resource injector.
+    args = ctx.actions.args()
+    args.add("--input", ctx.file.input.path)
+    args.add("--config", config.path)
+    args.add("--output", ctx.outputs.output.path)
+    ctx.actions.run(
+        mnemonic = "InjectResources",
+        progress_message = "Injecting resources",
+        executable = ctx.executable._injector,
+        arguments = [args],
+        inputs = [ctx.file.input, config] + ctx.files.styles,
+        outputs = [ctx.outputs.output],
+    )
+
+_inject_resources_rule = rule(
+    implementation = _inject_resources_impl,
+    attrs = {
+        "input": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+        ),
+        "scripts": attr.string_list(),
+        "styles": attr.label_list(allow_files = True),
+        "output": attr.output(mandatory = True),
+        "_injector": attr.label(
+            default = "//packages/resource_injector",
+            executable = True,
+            cfg = "exec",
+        ),
+    },
+)
 
 def _encode_json(value):
     """Hack to serialize the given value as JSON."""
