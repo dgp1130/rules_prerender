@@ -12,6 +12,7 @@ prerender_page_bundled(
     name = "page",
     src = "page.ts",
     styles = ["page.css"],
+    lib_deps = ["//packages/rules_prerender"],
     deps = ["//examples/styles/component"],
 )
 

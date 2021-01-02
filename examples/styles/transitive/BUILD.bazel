@@ -4,5 +4,6 @@ prerender_component(
     name = "transitive",
     srcs = ["transitive.ts"],
     styles = ["transitive_styles.css"],
+    lib_deps = ["//packages/rules_prerender"],
     visibility = ["//examples/styles:__subpackages__"],
 )
