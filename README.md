@@ -16,7 +16,6 @@ resources (images, fonts, JSON) required for to it to function.
 ```python
 # my_component/BUILD.bazel
 
-load("@io_bazel_rules_sass//:defs.bzl", "sass_library")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("@npm//rules_prerender:index.bzl", "prerender_component", "web_resources")
 
@@ -30,7 +29,7 @@ prerender_component(
     # Client-side JavaScript to be executed in the browser.
     scripts = [":scripts"],
     # Styles for the component.
-    styles = [":styles"],
+    styles = ["my_component.css"],
     # Other resources required by the component.
     resources = [":resources"],
 )
@@ -40,12 +39,6 @@ ts_library(
     name = "scripts",
     srcs = ["my_component.ts"],
     deps = ["//my_other_component:scripts"],
-)
-
-# Styles for the HTML in this component.
-sass_library(
-    name = "styles",
-    srcs = ["my_component.scss"],
 )
 
 # Other resources required for this component to function at the URL paths they
@@ -84,10 +77,10 @@ export function renderMyComponent(name: string): string {
         })}
 
         <!-- Inject the associated client-side JavaScript. -->
-        ${includeScript('my_component.js')}
+        ${includeScript('my_workspace/my_component/my_component')}
 
         <!-- Inject the associated CSS styles. -->
-        ${includeStyle('my_component.css')}
+        ${includeStyle('my_workspace/my_component/my_component.css')}
     `;
 }
 ```
@@ -110,8 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-```scss
-/* my_component/my_component.scss */
+```css
+/* my_component/my_component.css */
 
 /* Styles for the component. */
 @font-face {
@@ -125,9 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 ```
 
-Given components of this format which are composed with each other to construct
-progressively higher-level components, we can eventually render a complete web
-page.
+The second part of the rule set leverages such components to prerender an entire
+web page.
 
 ```typescript
 // my_page_prerender.ts
@@ -161,7 +153,7 @@ load(
 # Renders the page, bundles JavaScript and CSS, injects the relevant
 # `<script />` and `<style />` tags, and combines with all transitive resources
 # to create a directory with the following paths:
-#     /my_page/index.html - Final prerendered HTML page.
+#     /my_page/index.html - Final prerendered HTML page with CSS styles inlined.
 #     /my_page/index.js - All transitive client-side JS source files bundled
 #         into a single file.
 #     /images/foo.png - The image used in `my_component`.
