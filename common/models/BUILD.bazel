@@ -42,3 +42,11 @@ jasmine_node_test(
     name = "prerender_metadata_test",
     deps = [":prerender_metadata_test_lib"],
 )
+
+ts_library(
+    name = "prerender_metadata_mock",
+    srcs = ["prerender_metadata_mock.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [":prerender_metadata"],
+)

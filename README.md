@@ -302,6 +302,70 @@ Then running a `bazel test --config debug //path/to/pkg:target` for a Puppeteer
 test should open Chrome visually and give you an opportunity to debug and
 inspect the page.
 
+### Mocking
+
+Most model types are stored under [//common/models/...](common/models/) and
+generally consist of interfaces rather than classes. This provides immutable,
+pure-data structured types which work well with functional design patterns. They
+are also easy to assert in Jasmine with `expect().toEqual()`.
+
+These models typically include a `_mock.ts` file which exposes `mock*()`
+functions. These provide simple helpers to generate a mock for a model using
+default values with override values as inputs. Using these mocks, a test can
+explicitly specify only the properties of an object that it actually cares about
+and trust that the mock function will provide reasonable and semantically
+accurate defaults for all other values. For example:
+
+```typescript
+// Some model interface.
+interface MyModel {
+    name: string;
+    path: string;
+}
+
+// Some real function.
+function getName(model: MyModel): string {
+    return model.name;
+}
+
+// A mock for the model.
+function mockModel(overrides: Partial<MyModel> = {}): MyModel {
+    return {
+        name: 'MockName',
+        // Default is semantically accurate, even if it is an arbitrary value.
+        path: 'some/mocked/path.txt',
+        // Allow caller to specify any given value.
+        ...overrides,
+    };
+}
+
+// Test of a real function.
+it('`getName()` returns the name', () => {
+    const model = mockModel({
+        name: 'Ollie',
+        // path uses the default value.
+    });
+
+    expect(getName(model)).toBe('Ollie');
+
+    // There are several benefits with this approach:
+    // 1.  `path` isn't used, so no need to specify it for the test, making the
+    //     test and its intent much clearer.
+    // 2.  If `path` is accidentally used for an important operation as part of
+    //     `getName()`, the test would almost certainly fail and the `path`
+    //     value can be explicitly specified as part of the test.
+    // 3.  Even if `path` is used as part of unimportant operations in
+    //     `getName()` (such as simply validating the type), it will not break
+    //     the test because the default value is semantically accurate.
+    // 4.  This isolates the test from unrelated changes to `MyModel`.
+    //     Introducing another property is not likely to break `getName()` and
+    //     would not require changes to the test to support.
+});
+```
+
+This is a semi-experimental mocking strategy, so whether or not it is actually a
+good idea is still to be determined.
+
 ## VSCode Snippets
 
 The repository includes a few custom snippets available if you use VSCode. Type
