@@ -1,12 +1,6 @@
-load(
-    "@build_bazel_rules_postcss//:index.bzl",
-    "postcss_binary",
-    "postcss_plugin",
-)
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
 load("//packages/rules_prerender:index.bzl", "prerender_page_bundled")
 load("//tools:jasmine.bzl", "jasmine_node_test")
-load(":postcss_import_plugin.bzl", "PLUGIN_CONFIG")
 
 prerender_page_bundled(
     name = "page",
@@ -14,22 +8,6 @@ prerender_page_bundled(
     styles = ["page.css"],
     lib_deps = ["//packages/rules_prerender"],
     deps = ["//examples/styles/component"],
-)
-
-postcss_plugin(
-    name = "import",
-    node_require = "postcss-import",
-    deps = ["@npm//postcss-import"],
-)
-
-postcss_binary(
-    name = "bundle",
-    src = "page_page_styles.css",
-    sourcemap = True,
-    plugins = {
-        ":import": PLUGIN_CONFIG,
-    },
-    deps = [":page_page_styles"],
 )
 
 genrule(
@@ -45,7 +23,7 @@ ts_devserver(
     name = "devserver",
     static_files = [
         "index.html",
-        ":bundle",
+        ":page_styles",
     ],
 )
 

@@ -8,7 +8,7 @@ export default function(): string {
         <html>
             <head>
                 <title>Styling</title>
-                <link rel="stylesheet" href="/bundle.css">
+                <link rel="stylesheet" href="/page_styles.css">
             </head>
             <body>
                 <h2>Styling</h2>

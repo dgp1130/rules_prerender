@@ -1,6 +1,8 @@
 """Defines `prerender_page_bundled()` functionality."""
 
+load("@build_bazel_rules_postcss//:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
+load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_page.bzl", "prerender_page")
 load(":inject_resources.bzl", "inject_resources")
 
@@ -40,6 +42,10 @@ def prerender_page_bundled(
             provided to `includeScript()` during rendering of the page and its
             components. Scripts are de-duplicated and can import each other like
             normal modules. Unused scripts are tree-shaken.
+        %{name}_styles.css: A bundled CSS file including all styles provided to
+            `includeStyle()` during rendering of the page and its components.
+            Styles are de-duplicated and can import each other. Unused styles
+            are tree-shaken.
     
     Args:
         name: The name of this rule.
@@ -79,6 +85,17 @@ def prerender_page_bundled(
             ":%s_scripts" % prerender_name,
             "@npm//@rollup/plugin-node-resolve",
         ],
+    )
+
+    # Bundle all styles.
+    postcss_binary(
+        name = "%s_styles" % name,
+        src = ":%s_styles.css" % prerender_name,
+        sourcemap = True,
+        plugins = {
+            "//packages/rules_prerender:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
+        },
+        deps = [":%s_styles" % prerender_name],
     )
 
     # Inject `<script />` tag into the HTML and move it to `%{name}.html`.
