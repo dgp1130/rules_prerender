@@ -53,7 +53,10 @@ ts_library(
     srcs = ["index.ts"],
     module_name = "rules_prerender",
     visibility = ["//visibility:public"],
-    deps = [":scripts"],
+    deps = [
+        ":scripts",
+        ":styles",
+    ],
 )
 
 ts_library(
@@ -75,4 +78,25 @@ ts_library(
 jasmine_node_test(
     name = "scripts_test",
     deps = [":scripts_test_lib"],
+)
+
+ts_library(
+    name = "styles",
+    srcs = ["styles.ts"],
+    deps = ["//common/models:prerender_annotation"],
+)
+
+ts_library(
+    name = "styles_test_lib",
+    srcs = ["styles_test.ts"],
+    testonly = True,
+    deps = [
+        ":styles",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "styles_test",
+    deps = [":styles_test_lib"],
 )
