@@ -46,6 +46,13 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "fs",
+    srcs = ["fs.ts"],
+    visibility = ["//visibility:public"],
+    deps = ["@npm//@types/node"],
+)
+
+ts_library(
     name = "http",
     srcs = ["http.ts"],
     visibility = ["//visibility:public"],
