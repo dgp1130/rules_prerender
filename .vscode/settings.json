@@ -18,6 +18,7 @@
         "runfile",
         "testonly",
         "transpiled",
+        "unmocked",
         "unproxied"
     ]
 }

@@ -146,6 +146,29 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "mocks",
+    srcs = ["mocks.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = ["@npm//@types/jasmine"],
+)
+
+ts_library(
+    name = "mocks_test_lib",
+    srcs = ["mocks_test.ts"],
+    testonly = True,
+    deps = [
+        ":mocks",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "mocks_test",
+    deps = [":mocks_test_lib"],
+)
+
+ts_library(
     name = "puppeteer",
     srcs = ["puppeteer.ts"],
     visibility = ["//visibility:public"],
