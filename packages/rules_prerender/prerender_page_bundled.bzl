@@ -13,6 +13,7 @@ def prerender_page_bundled(
     scripts = [],
     styles = [],
     deps = [],
+    bundle_js = True,
     testonly = None,
     visibility = None,
 ):
@@ -57,6 +58,8 @@ def prerender_page_bundled(
         styles: List of CSS files or `filegroup()`s of CSS files which can be
             included in the prerendered HTML.
         deps: `prerender_component()` dependencies for this page.
+        bundle_js: Whether or not to bundle and inject JavaScript files.
+            Defaults to `True`.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
@@ -73,19 +76,20 @@ def prerender_page_bundled(
         visibility = visibility,
     )
 
-    # Bundle all client-side scripts at `%{name}_bundle.js`.
     bundle = "%s_bundle" % name
-    rollup_bundle(
-        name = bundle,
-        entry_point = ":%s_scripts.ts" % prerender_name,
-        config_file = "//packages/rules_prerender:rollup-default.config.js",
-        link_workspace_root = True,
-        silent = True,
-        deps = [
-            ":%s_scripts" % prerender_name,
-            "@npm//@rollup/plugin-node-resolve",
-        ],
-    )
+    if bundle_js:
+        # Bundle all client-side scripts at `%{name}_bundle.js`.
+        rollup_bundle(
+            name = bundle,
+            entry_point = ":%s_scripts.ts" % prerender_name,
+            config_file = "//packages/rules_prerender:rollup-default.config.js",
+            link_workspace_root = True,
+            silent = True,
+            deps = [
+                ":%s_scripts" % prerender_name,
+                "@npm//@rollup/plugin-node-resolve",
+            ],
+        )
 
     # Bundle all styles.
     bundled_css = "%s_styles_bundled.css" % name
@@ -102,19 +106,18 @@ def prerender_page_bundled(
 
     # Inject bundled JS and CSS into the HTML and move it to `%{name}.html`.
     output_html = "%s.html" % name
+    scripts_to_inject = ["/%s.js" % bundle] if bundle_js else []
     inject_resources(
         name = "%s_inject" % name,
         input = "%s.html" % prerender_name,
         output = output_html,
-        scripts = ["/%s.js" % bundle],
+        scripts = scripts_to_inject,
         styles = [bundled_css],
     )
 
     # Export only the two resulting files.
+    outputs = [output_html] + ["%s.js" % bundle] if bundle_js else []
     native.filegroup(
         name = name,
-        srcs = [
-            output_html,
-            "%s.js" % bundle,
-        ],
+        srcs = outputs,
     )
