@@ -2,6 +2,33 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 ts_library(
+    name = "packager",
+    srcs = ["packager.ts"],
+    deps = [
+        ":resource_map",
+        "//common:fs",
+    ],
+)
+
+ts_library(
+    name = "packager_test_lib",
+    srcs = ["packager_test.ts"],
+    testonly = True,
+    deps = [
+        ":packager",
+        ":resource_map",
+        ":resource_map_mock",
+        "//common:fs",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "packager_test",
+    deps = [":packager_test_lib"],
+)
+
+ts_library(
     name = "resource_map",
     srcs = ["resource_map.ts"],
 )
