@@ -7,6 +7,7 @@ prerender_page_bundled(
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":script"],
+    bundle_css = False,
     deps = ["//examples/scripts/component"],
 )
 

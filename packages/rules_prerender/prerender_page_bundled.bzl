@@ -14,6 +14,7 @@ def prerender_page_bundled(
     styles = [],
     deps = [],
     bundle_js = True,
+    bundle_css = True,
     testonly = None,
     visibility = None,
 ):
@@ -60,6 +61,8 @@ def prerender_page_bundled(
         deps: `prerender_component()` dependencies for this page.
         bundle_js: Whether or not to bundle and inject JavaScript files.
             Defaults to `True`.
+        bundle_css: Whether or not to bundle and inject CSS files. Defaults to
+            `True`.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
@@ -91,28 +94,30 @@ def prerender_page_bundled(
             ],
         )
 
-    # Bundle all styles.
     bundled_css = "%s_styles_bundled.css" % name
-    postcss_binary(
-        name = "%s_styles" % name,
-        src = ":%s_styles.css" % prerender_name,
-        sourcemap = True,
-        output_name = bundled_css,
-        plugins = {
-            "//packages/rules_prerender:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
-        },
-        deps = [":%s_styles" % prerender_name],
-    )
+    if bundle_css:
+        # Bundle all styles.
+        postcss_binary(
+            name = "%s_styles" % name,
+            src = ":%s_styles.css" % prerender_name,
+            sourcemap = True,
+            output_name = bundled_css,
+            plugins = {
+                "//packages/rules_prerender:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
+            },
+            deps = [":%s_styles" % prerender_name],
+        )
 
     # Inject bundled JS and CSS into the HTML and move it to `%{name}.html`.
     output_html = "%s.html" % name
     scripts_to_inject = ["/%s.js" % bundle] if bundle_js else []
+    styles_to_inject = [bundled_css] if bundle_css else []
     inject_resources(
         name = "%s_inject" % name,
         input = "%s.html" % prerender_name,
         output = output_html,
         scripts = scripts_to_inject,
-        styles = [bundled_css],
+        styles = styles_to_inject,
     )
 
     # Export only the two resulting files.
