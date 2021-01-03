@@ -1,0 +1,46 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+load("//packages/rules_prerender:index.bzl", "prerender_page_bundled")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_page_bundled(
+    name = "page",
+    src = "page.ts",
+    bundle_js = False,
+    bundle_css = False,
+    deps = ["//examples/resources/component"],
+)
+
+genrule(
+    name = "index_rename",
+    srcs = ["page.html"],
+    outs = ["index.html"],
+    cmd = """
+        cp $< $@
+    """,
+)
+
+ts_devserver(
+    name = "devserver",
+    static_files = ["index.html"],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    data = [
+        ":devserver",
+        "@npm//puppeteer",
+    ],
+    deps = [":test_lib"],
+)

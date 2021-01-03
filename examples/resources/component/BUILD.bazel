@@ -1,0 +1,8 @@
+load("//packages/rules_prerender:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    visibility = ["//visibility:public"],
+    deps = ["//examples/resources/transitive"],
+)
