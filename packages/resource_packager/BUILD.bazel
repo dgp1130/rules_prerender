@@ -44,6 +44,32 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "package_loader",
+    srcs = ["package_loader.ts"],
+    deps = [
+        ":resource_map",
+        "@npm//@types/node",
+    ],
+)
+
+ts_library(
+    name = "package_loader_test_lib",
+    srcs = ["package_loader_test.ts"],
+    testonly = True,
+    deps = [
+        ":package_loader",
+        "//common/testing:temp_dir",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "package_loader_test",
+    deps = [":package_loader_test_lib"],
+)
+
+ts_library(
     name = "packager",
     srcs = ["packager.ts"],
     deps = [
