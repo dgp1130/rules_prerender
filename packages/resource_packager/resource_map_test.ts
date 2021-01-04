@@ -94,4 +94,45 @@ describe('ResourceMap', () => {
                 .toThrowError('New root must not end with a slash: /test/');
         });
     });
+
+    describe('merge()', () => {
+        it('returns a merged `ResourceMap` from all the inputs', () => {
+            const merged = ResourceMap.merge(
+                ResourceMap.fromEntries(Object.entries({
+                    '/foo.html': 'src/foo.html',
+                })),
+                ResourceMap.fromEntries(Object.entries({
+                    '/stuff/bar.txt': 'src/somewhere/bar.txt',
+                })),
+                ResourceMap.fromEntries(Object.entries({
+                    '/stuff/other/baz.txt': 'src/elsewhere/baz.txt',
+                    '/hello/world.txt': 'src/test.ext',
+                })),
+            );
+
+            expect(Array.from(merged.entries())).toEqual(Object.entries({
+                '/foo.html': 'src/foo.html',
+                '/stuff/bar.txt': 'src/somewhere/bar.txt',
+                '/stuff/other/baz.txt': 'src/elsewhere/baz.txt',
+                '/hello/world.txt': 'src/test.ext',
+            }));
+        });
+
+        it('throws an error when given two `ResourceMap` objects with the same path', () => {
+            expect(() => ResourceMap.merge(
+                ResourceMap.fromEntries(Object.entries({
+                    '/foo.html': mockFileRef(),
+                    '/duplicate.txt': 'src/duplicate.txt',
+                })),
+                ResourceMap.fromEntries(Object.entries({
+                    '/duplicate.txt': 'bazel-bin/stuff/duplicate.txt',
+                })),
+            )).toThrowError(`
+Found URL path conflict. \`/duplicate.txt\` maps to both:
+  src/duplicate.txt
+**and**
+  bazel-bin/stuff/duplicate.txt
+            `.trim());
+        });
+    });
 });

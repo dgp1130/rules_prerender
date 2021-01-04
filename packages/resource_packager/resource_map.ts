@@ -47,6 +47,37 @@ export class ResourceMap {
         );
     }
 
+    /**
+     * Merges all the given {@link ResourceMap} objects into a single instance.
+     * Does not modify any URL path or file reference, simply puts them in the
+     * same map.
+     * 
+     * @param resources {@link ResourceMap} objects to merge into a single
+     *     {@link ResourceMap}.
+     * @throws When multiple {@link ResourceMap} objects have a file at the same
+     *     URL path.
+     */
+    public static merge(...resources: ResourceMap[]): ResourceMap {
+        const entries = resources.map((res) => Array.from(res.entries()))
+            .reduce((res1, res2) => [ ...res1, ...res2 ], []);
+        
+        for (const [ first, second ] of nonEquivalentPairs(entries)) {
+            const [ firstUrlPath, firstFileRef ] = first;
+            const [ secondUrlPath, secondFileRef ] = second;
+
+            if (firstUrlPath === secondUrlPath) {
+                throw new Error(`
+Found URL path conflict. \`${firstUrlPath}\` maps to both:
+  ${firstFileRef}
+**and**
+  ${secondFileRef}
+                `.trim());
+            }
+        }
+    
+        return ResourceMap.fromEntries(entries);
+    }
+
     /** Returns all the {@link UrlPath} objects in this map. */
     public urlPaths(): Iterable<UrlPath> {
         return this.map.keys();
@@ -83,4 +114,17 @@ function validateMap(entries: Iterable<[ UrlPath, FileRef ]>):
         }
     }
     return map;
+}
+
+/**
+ * Returns an {@link Iterable} of all the various pairs of the input, excluding
+ * pairs of the same item in both slots.
+ */
+function* nonEquivalentPairs<T>(items: T[]): Iterable<[ T, T ]> {
+    for (let i = 0; i < items.length; ++i) {
+        const first = items[i];
+        for (const second of items.slice(i + 1)) {
+            yield [ first, second ];
+        }
+    }
 }
