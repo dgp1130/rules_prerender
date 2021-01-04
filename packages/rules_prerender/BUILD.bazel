@@ -29,7 +29,10 @@ bzl_library(
 bzl_library(
     name = "prerender_component",
     srcs = ["prerender_component.bzl"],
-    deps = ["//common:label"],
+    deps = [
+        ":web_resources",
+        "//common:label",
+    ],
 )
 
 bzl_library(
@@ -37,6 +40,7 @@ bzl_library(
     srcs = ["prerender_page.bzl"],
     deps = [
         ":prerender_component",
+        ":web_resources",
         "//packages/renderer:build_vars",
     ],
 )
@@ -48,6 +52,7 @@ bzl_library(
         ":inject_resources",
         ":prerender_page",
         ":postcss_import_plugin_bzl",
+        ":web_resources",
     ],
 )
 

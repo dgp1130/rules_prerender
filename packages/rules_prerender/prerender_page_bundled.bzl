@@ -5,13 +5,16 @@ load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_page.bzl", "prerender_page")
 load(":inject_resources.bzl", "inject_resources")
+load(":web_resources.bzl", "web_resources")
 
 def prerender_page_bundled(
     name,
     src,
+    path = None,
     lib_deps = [],
     scripts = [],
     styles = [],
+    resources = [],
     deps = [],
     bundle_js = True,
     bundle_css = True,
@@ -37,27 +40,25 @@ def prerender_page_bundled(
     `<script />` tag.
     
     Outputs:
-        %{name}.html: An HTML file containing the content returned by the `src`
-            file. Also includes a `<script />` tag which loads
-            `/%{name}_bundle.js`.
-        %{name}_bundle.js: A bundled JavaScript file including all scripts
-            provided to `includeScript()` during rendering of the page and its
-            components. Scripts are de-duplicated and can import each other like
-            normal modules. Unused scripts are tree-shaken.
-        %{name}_styles.css: A bundled CSS file including all styles provided to
-            `includeStyle()` during rendering of the page and its components.
-            Styles are de-duplicated and can import each other. Unused styles
-            are tree-shaken.
+        %{name}: A `web_resources()` rule which includes the prerendered HTML
+            file with injected `<script />` and `<style />` tags, a JavaScript
+            file with all the transitive sources bundled together, and all
+            transitive resources included. CSS is inlined directly in the HTML
+            document in a `<style />` tag.
     
     Args:
         name: The name of this rule.
         src: The TypeScript source file with a default export that returns a
             string which contains the HTML document.
+        path: The path the page is hosted at. Must start with a slash and
+            defaults to `%{name}.html`.
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled for the
             generated page.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
             included in the prerendered HTML.
+        resources: List of `web_resources()` rules required by the page at
+            runtime.
         deps: `prerender_component()` dependencies for this page.
         bundle_js: Whether or not to bundle and inject JavaScript files.
             Defaults to `True`.
@@ -66,6 +67,8 @@ def prerender_page_bundled(
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
+    path = path or "/%s.html" % name
+
     # Render the HTML page at `%{name}_page.html`.
     prerender_name = "%s_page" % name
     prerender_page(
@@ -74,6 +77,7 @@ def prerender_page_bundled(
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,
+        resources = resources,
         deps = deps,
         testonly = testonly,
         visibility = visibility,
@@ -120,9 +124,14 @@ def prerender_page_bundled(
         styles = styles_to_inject,
     )
 
-    # Export only the two resulting files.
-    outputs = [output_html] + ["%s.js" % bundle] if bundle_js else []
-    native.filegroup(
+    # Output a resources directory of the HTML, bundled JavaScript, and any
+    # resource dependencies.
+    entries = {path: output_html}
+    if bundle_js:
+        js_path = ".".join(path.split(".")[:-1]) + ".js"
+        entries[js_path] = "%s.js" % bundle
+    web_resources(
         name = name,
-        srcs = outputs,
+        entries = entries,
+        deps = ["%s_resources" % prerender_name],
     )

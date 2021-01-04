@@ -2,6 +2,7 @@
 
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
+load(":web_resources.bzl", "web_resources")
 
 def prerender_component(
     name,
@@ -9,6 +10,7 @@ def prerender_component(
     lib_deps = [],
     scripts = [],
     styles = [],
+    resources = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -33,6 +35,8 @@ def prerender_component(
             in the prerendered HTML.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
             included in the prerendered HTML.
+        resources: List of `web_resources()` required by this component at
+            runtime.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -59,4 +63,11 @@ def prerender_component(
         srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
+    )
+
+    web_resources(
+        name = "%s_resources" % name,
+        testonly = testonly,
+        visibility = visibility,
+        deps = resources + ["%s_resources" % absolute(dep) for dep in deps],
     )

@@ -4,6 +4,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":prerender_component.bzl", "prerender_component")
+load(":web_resources.bzl", "web_resources")
 
 def prerender_page(
     name,
@@ -11,6 +12,7 @@ def prerender_page(
     lib_deps = [],
     scripts = [],
     styles = [],
+    resources = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -44,6 +46,8 @@ def prerender_page(
             generated page.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
             included in the prerendered HTML.
+        resources: List of `web_resources()` rules required by the page at
+            runtime.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -56,6 +60,7 @@ def prerender_page(
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,
+        resources = resources,
         deps = deps,
         testonly = testonly,
     )
@@ -141,12 +146,20 @@ def prerender_page(
         testonly = testonly,
     )
 
+    # Reexport resources from component.
+    output_resources = "%s_resources" % name
+    web_resources(
+        name = output_resources,
+        deps = ["%s_resources" % component],
+    )
+
     # Reexport all included styles at `%{name}_styles`.
     native.filegroup(
         name = client_styles,
         srcs = [
             style_entry_point,
             ":%s" % component_styles,
+            ":%s" % output_resources,
         ],
         testonly = testonly,
         visibility = visibility,
