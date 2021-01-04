@@ -1,5 +1,47 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+
+nodejs_binary(
+    name = "resource_packager",
+    entry_point = ":resource_packager.ts",
+    visibility = ["//visibility:public"],
+    data = [
+        ":resource_packager_lib",
+        "@npm//yargs",
+    ],
+)
+
+ts_library(
+    name = "resource_packager_lib",
+    srcs = ["resource_packager.ts"],
+    deps = [
+        ":packager",
+        ":resource_map",
+        "//common:binary",
+        "//common:formatters",
+        "@npm//@types/yargs",
+    ],
+)
+
+ts_library(
+    name = "resource_packager_test_lib",
+    srcs = ["resource_packager_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "resource_packager_test",
+    data = [":resource_packager"],
+    deps = [":resource_packager_test_lib"],
+)
 
 ts_library(
     name = "packager",

@@ -1,0 +1,89 @@
+import * as yargs from 'yargs';
+import { main } from 'rules_prerender/common/binary';
+import { mdSpacing } from 'rules_prerender/common/formatters';
+import { pack } from 'rules_prerender/packages/resource_packager/packager';
+import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
+
+main(async (args) => {
+    const {
+        'url-path': urlPaths,
+        'file-ref': fileRefs,
+        'dest-dir': destDir,
+    } = yargs
+        .usage(mdSpacing(`
+            Packages all the given resources (file references) by moving them to
+            their associated URL path relative to the destination directory.
+            \`--url-path\` and \`--file-ref\` must be set the same number of
+            times. The first file reference will be copied to the first URL path
+            within the destination directory, and so on for each pair.
+        `) + '\n\n' + `
+Example:
+
+\`\`\`shell
+./$0 --url-path /foo.txt --file-ref bazel-bin/pkg/foo.txt \\
+    --url-path /some/dir/bar.txt --file-ref bazel-bin/pkg/baz.txt \\
+    --dest-dir bazel-bin/output
+\`\`\`
+
+Is equivalent to:
+
+\`\`\`shell
+cp bazel-bin/pkg/foo.txt bazel-bin/output/foo.txt
+mkdir -p bazel-out/output/some/dir/
+cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
+\`\`\`
+        `.trim())
+        .option('url-path', {
+            type: 'array',
+            default: [] as string[],
+            description: mdSpacing(`
+                A list of URL paths to combine with file references. Each path
+                is the location its corresponding file reference is copied to
+                (relative to the destination directory). Must start with a
+                slash, as this is intended to represent an absolute URL path.
+            `),
+        })
+        .option('file-ref', {
+            type: 'array',
+            default: [] as string[],
+            description: mdSpacing(`
+                A list of file references (paths to Bazel files) to combine with
+                URL paths. Each file reference holds the contents which are
+                copied to its corresponding URL path (relative to the
+                destination directory).
+            `),
+        })
+        .option('dest-dir', {
+            type: 'string',
+            required: true,
+            description: mdSpacing(`
+                Destination directory to write outputs to.
+            `),
+        })
+        .parse(args);
+
+    if (urlPaths.length !== fileRefs.length) {
+        console.error(mdSpacing(`
+            Number of \`--url-path\` and \`--file-ref\` flags should be the
+            same, got ${urlPaths.length} \`--url-path\` flag(s) and
+            ${fileRefs.length} \`--file-ref\` flag(s).
+        `));
+        return 1;
+    }
+
+    const resourceMap = ResourceMap.fromEntries(zip(urlPaths, fileRefs));
+    await pack(destDir, resourceMap);
+
+    return 0;
+});
+
+/**
+ * Given two arrays, returns an {@link Iterable} of pairs of the same index.
+ * Assumes the two inputs have the same number of items.
+ */
+function* zip<First, Second>(firsts: First[], seconds: Second[]):
+        Iterable<[ First, Second ]> {
+    for (let index = 0; index < firsts.length; index++) {
+        yield [ firsts[index], seconds[index] ];
+    }
+}
