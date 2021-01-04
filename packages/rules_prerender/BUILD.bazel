@@ -17,6 +17,7 @@ bzl_library(
         ":prerender_component",
         ":prerender_page",
         ":prerender_page_bundled",
+        ":web_resources",
     ],
 )
 
@@ -53,6 +54,12 @@ bzl_library(
 bzl_library(
     name = "postcss_import_plugin_bzl",
     srcs = ["postcss_import_plugin.bzl"],
+)
+
+bzl_library(
+    name = "web_resources",
+    srcs = ["web_resources.bzl"],
+    deps = ["//common:label"],
 )
 
 ts_library(
