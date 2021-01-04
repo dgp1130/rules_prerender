@@ -16,6 +16,7 @@ ts_library(
     name = "resource_packager_lib",
     srcs = ["resource_packager.ts"],
     deps = [
+        ":package_loader",
         ":packager",
         ":resource_map",
         "//common:binary",

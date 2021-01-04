@@ -3,11 +3,13 @@ import { main } from 'rules_prerender/common/binary';
 import { mdSpacing } from 'rules_prerender/common/formatters';
 import { pack } from 'rules_prerender/packages/resource_packager/packager';
 import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
+import { loadPackage } from 'rules_prerender/packages/resource_packager/package_loader';
 
 main(async (args) => {
     const {
         'url-path': urlPaths,
         'file-ref': fileRefs,
+        'merge-dir': mergeDirs,
         'dest-dir': destDir,
     } = yargs
         .usage(mdSpacing(`
@@ -16,6 +18,10 @@ main(async (args) => {
             \`--url-path\` and \`--file-ref\` must be set the same number of
             times. The first file reference will be copied to the first URL path
             within the destination directory, and so on for each pair.
+
+            Any directories given with \`--merge-dir\` are copied into the
+            destination directory. If there is a path conflict, the tool aborts
+            with exit code 1.
         `) + '\n\n' + `
 Example:
 
@@ -53,6 +59,15 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
                 destination directory).
             `),
         })
+        .option('merge-dir', {
+            type: 'array',
+            default: [] as string[],
+            description: mdSpacing(`
+                Directories to merge into the final output directory. Exits with
+                code 1 if there is a conflict from multiple directories using
+                the same URL path.
+            `),
+        })
         .option('dest-dir', {
             type: 'string',
             required: true,
@@ -71,8 +86,17 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
         return 1;
     }
 
-    const resourceMap = ResourceMap.fromEntries(zip(urlPaths, fileRefs));
-    await pack(destDir, resourceMap);
+    // Build a map from the given inputs.
+    const entries = ResourceMap.fromEntries(zip(urlPaths, fileRefs));
+
+    // Load all dependent packages.
+    const deps = await Promise.all(mergeDirs.map((dir) => loadPackage(dir)));
+
+    // Merge everything together.
+    const merged = ResourceMap.merge(entries, ...deps);
+
+    // Write to output directory.
+    await pack(destDir, merged);
 
     return 0;
 });
