@@ -18,6 +18,35 @@ export class ResourceMap {
         });
     }
 
+    /**
+     * "Re-roots" the given {@link ResourceMap} by moving all its contents under
+     * the given root path. For example, re-rooting a {@link ResourceMap} of:
+     * /foo.txt
+     * /bar/baz.txt
+     * 
+     * At `/test`, will result in a {@link ResourceMap} of:
+     * /test/foo.txt
+     * /test/bar/baz.txt
+     * 
+     * @param root New directory all contents should be moved under. Must start
+     *     with a slash and must **not** end with a slash.
+     * @param map The map to re-root.
+     */
+    public static reRoot(root: string, map: ResourceMap): ResourceMap {
+        // Disallow roots ending with a slash or else re-rooted paths would have
+        // extra slashes between file names.
+        if (root.endsWith('/')) {
+            throw new Error(`New root must not end with a slash: ${root}`);
+        }
+
+        return ResourceMap.fromEntries(
+            Array.from(map.entries()).map(([ urlPath, fileRef ]) => [
+                `${root}${urlPath}`, // urlPath
+                fileRef, // fileRef
+            ]),
+        );
+    }
+
     /** Returns all the {@link UrlPath} objects in this map. */
     public urlPaths(): Iterable<UrlPath> {
         return this.map.keys();

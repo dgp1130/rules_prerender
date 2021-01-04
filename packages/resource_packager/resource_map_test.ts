@@ -60,4 +60,38 @@ describe('ResourceMap', () => {
             }))).toThrowError(/URL paths must be absolute/);
         }); 
     });
+
+    describe('reRoot()', () => {
+        it('re-roots the given `ResourceMap`', () => {
+            const input = ResourceMap.fromEntries(Object.entries({
+                '/foo.html': 'src/foo.html',
+                '/bar/baz.txt': 'src/stuff/baz.txt',
+            }));
+
+            const reRooted = ResourceMap.reRoot('/test', input);
+
+            expect(Array.from(reRooted.entries())).toEqual(Object.entries({
+                '/test/foo.html': 'src/foo.html',
+                '/test/bar/baz.txt': 'src/stuff/baz.txt',
+            }));
+        });
+
+        it('throws an error when given a root that does not start with a slash', () => {
+            const input = ResourceMap.fromEntries(Object.entries({
+                '/foo.html': 'src/foo.html',
+            }));
+
+            expect(() => ResourceMap.reRoot('test', input))
+                .toThrowError(/URL paths must be absolute/);
+        });
+
+        it('throws an error when given a root that ends with a slash', () => {
+            const input = ResourceMap.fromEntries(Object.entries({
+                '/foo.html': 'src/foo.html',
+            }));
+
+            expect(() => ResourceMap.reRoot('/test/', input))
+                .toThrowError('New root must not end with a slash: /test/');
+        });
+    });
 });
