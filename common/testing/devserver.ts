@@ -96,9 +96,12 @@ export class Server {
      *     server.
      */
     public static async spawn(binary: string, {
-        stdout = (data) => console.error(`[devserver - stdout] ${data}`),
-        stderr = (data) => console.error(`[devserver - stderr] ${data}`),
-        onError = (data) => console.error(`[devserver - onError] ${data}`),
+        stdout = (data) => console.error(
+            prependLine('[devserver - stdout] ', data)),
+        stderr = (data) => console.error(
+            prependLine('[devserver - stderr] ', data)),
+        onError = (data) => console.error(
+            prependLine('[devserver - onError] ', data.message)),
     }: {
         stdout?: (data: string) => void,
         stderr?: (data: string) => void,
@@ -202,4 +205,10 @@ async function killServer(pid: number, signal: Signal): Promise<void> {
             else resolve();
         });
     });
+}
+
+function prependLine(prefix: string, content: string): string {
+    return content.split('\n')
+        .map((line) => `${prefix}${line}`)
+        .join('\n');
 }
