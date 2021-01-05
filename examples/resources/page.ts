@@ -10,7 +10,10 @@ export default function(): string {
     <body>
         <h2>Resources</h2>
 
-        <div>Hello from the page!</div>
+        <div>
+            <span>Hello from the page!</span>
+            <img src="/favicon.ico" />
+        </div>
         ${renderComponent()}
     </body>
 </html>

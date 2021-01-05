@@ -20,5 +20,23 @@ describe('resources', () => {
 
         const title = await page.get().title();
         expect(title).toBe('Resources');
+
+        const pageImageLoaded = await page.get().$eval(
+            'img[src="/favicon.ico"]',
+            (img) => (img as HTMLImageElement).complete,
+        );
+        expect(pageImageLoaded).toBeTrue();
+
+        const componentImageLoaded = await page.get().$eval(
+            'img[src="/images/component.png"]',
+            (img) => (img as HTMLImageElement).complete,
+        );
+        expect(componentImageLoaded).toBeTrue();
+
+        const transitiveImageLoaded = await page.get().$eval(
+            'img[src="/images/transitive.png"]',
+            (img) => (img as HTMLImageElement).complete,
+        );
+        expect(transitiveImageLoaded).toBeTrue();
     });
 });

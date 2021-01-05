@@ -2,7 +2,10 @@ import { renderTransitive } from 'rules_prerender/examples/resources/transitive/
 
 export function renderComponent(): string {
     return `
-        <div>Hello from the component!</div>
+        <div>
+            <span>Hello from the component!</span>
+            <img src="/images/component.png" />
+        </div>
         ${renderTransitive()}
     `;
 }
