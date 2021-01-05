@@ -4,7 +4,10 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 exports_files(
-    ["rollup-default.config.js"],
+    [
+        "devserver.tmpl.sh",
+        "rollup-default.config.js",
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -65,6 +68,11 @@ bzl_library(
     name = "web_resources",
     srcs = ["web_resources.bzl"],
     deps = ["//common:label"],
+)
+
+bzl_library(
+    name = "web_resources_devserver",
+    srcs = ["web_resources_devserver.bzl"],
 )
 
 ts_library(
