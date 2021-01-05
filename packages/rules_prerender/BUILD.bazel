@@ -67,6 +67,12 @@ bzl_library(
     deps = ["//common:label"],
 )
 
+bzl_library(
+    name = "web_resources_devserver",
+    srcs = ["web_resources_devserver.bzl"],
+    deps = ["//common:label"],
+)
+
 ts_library(
     name = "rules_prerender",
     srcs = ["index.ts"],

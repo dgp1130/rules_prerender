@@ -81,7 +81,11 @@ def _web_resources_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([dest_dir])),
+        DefaultInfo(
+            files = depset([dest_dir]),
+            # Needed to include the directory when used as a `data` input.
+            data_runfiles = ctx.runfiles([dest_dir]),
+        ),
         _WebResourceInfo(resources = dest_dir),
     ]
 

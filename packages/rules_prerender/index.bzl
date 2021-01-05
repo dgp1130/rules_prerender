@@ -8,9 +8,14 @@ load(
     _prerender_page_bundled = "prerender_page_bundled",
 )
 load(":web_resources.bzl", _web_resources = "web_resources")
+load(
+    ":web_resources_devserver.bzl",
+    _web_resources_devserver = "web_resources_devserver",
+)
 
 inject_resources = _inject_resources
 prerender_component = _prerender_component
 prerender_page = _prerender_page
 prerender_page_bundled = _prerender_page_bundled
 web_resources = _web_resources
+web_resources_devserver = _web_resources_devserver
