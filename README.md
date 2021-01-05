@@ -45,7 +45,7 @@ ts_library(
 # are expected to be hosted at.
 web_resources(
     name = "resources",
-    contents = {
+    entries = {
         "/images/foo.png": ":foo.png",
         "/fonts/roboto.woff": "//fonts:roboto",
     },
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* Styles for the component. */
 @font-face {
     font-family: Roboto;
-    src: url(/fonts/roboto.woff);
+    src: url(/fonts/roboto.woff); /* Use related web resources. */
 }
 
 .my-component-header {
@@ -148,6 +148,7 @@ load(
     "@npm//rules_prerender:index.bzl",
     "prerender_page_bundled",
     "web_resources",
+    "web_resources_devserver",
 )
 
 # Renders the page, bundles JavaScript and CSS, injects the relevant
@@ -164,15 +165,16 @@ prerender_page_bundled(
     name = "prerendered_page",
     # Script to invoke the default export of to generate the page.
     src = "my_page_prerender.ts",
-    path = "/my_page/",
+    # The URL path this page to host this page at.
+    path = "/my_page/index.html",
     # Components used during prerendering.
     deps = ["//my_component"],
 )
 ```
 
-Each page is built into a directory which contains its HTML, JavaScript, CSS,
-and other resources from all the transitively included components at their
-expected paths.
+The page is built into a `web_resources()` rule which is a directory that
+contains its HTML, JavaScript, CSS, and other resources from all the
+transitively included components at their expected paths.
 
 Multiple `prerender_page_bundled()` directories can then be composed together
 into a single `web_resources()` rule which contains a final directory of
@@ -183,6 +185,12 @@ uploaded directly to a CDN for production deployments.
 
 ```python
 # my_site/BUILD.bazel
+
+load(
+    "@npm//rules_prerender:index.bzl",
+    "web_resources",
+    "web_resources_devserver",
+)
 
 # Combines all the prerendered resources into a single directory, composing a
 # site from a bunch of `prerender_page_bundled()` and `web_resources()` rules.
@@ -206,9 +214,9 @@ web_resources_devserver(
 With this model, a user could do `ibazel run //my_site:devserver` to prerender
 the entire application composed from various self-contained components in a fast
 and incremental fashion. They could also just run `bazel build //my_site` to
-generate the application as directory and upload it to a CDN for production
+generate the application as a directory and upload it to a CDN for production
 deployments. They could even make a separate `bazel run //my_site:deploy` target
-which performs the upload and run it from CI for easy deployments.
+which performs the upload and run it from CI for easy deployments!
 
 ### Custom Bundling
 
