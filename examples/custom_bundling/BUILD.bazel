@@ -1,9 +1,11 @@
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
-load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load(
     "//packages/rules_prerender:index.bzl",
     "inject_resources",
     "prerender_page",
+    "web_resources",
+    "web_resources_devserver",
 )
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
@@ -34,24 +36,21 @@ rollup_bundle(
 inject_resources(
     name = "injected_page",
     input = "page.html",
-    scripts = ["/bundle.js"],
+    scripts = ["/index.js"],
 )
 
-genrule(
-    name = "index_rename",
-    srcs = ["injected_page.html"],
-    outs = ["index.html"],
-    cmd = """
-        cp $< $@
-    """,
+web_resources(
+    name = "site",
+    entries = {
+        "/index.html": "injected_page.html",
+        "/index.js": "bundle.js",
+    },
+    deps = [":page_resources"],
 )
 
-ts_devserver(
+web_resources_devserver(
     name = "devserver",
-    static_files = [
-        "index.html",
-        "bundle.js",
-    ],
+    resources = ":site",
 )
 
 ts_library(

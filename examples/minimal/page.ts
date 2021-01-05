@@ -7,8 +7,6 @@ export default function(): string {
 <html>
     <head>
         <title>Minimal</title>
-        <!-- For live-reload script from \`ts_devserver()\`. -->
-        <script src="/_/ts_scripts.js" async defer></script>
     </head>
     <body>
         <h2 id="hello">Hello, World!</h2>

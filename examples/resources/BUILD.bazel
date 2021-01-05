@@ -11,8 +11,8 @@ prerender_page_bundled(
     name = "page",
     src = "page.ts",
     path = "/index.html",
-    bundle_js = False,
-    bundle_css = False,
+    bundle_js = False, # Optimization: No client-side JavaScript on this page.
+    bundle_css = False, # Optimization: No CSS styling on this page.
     resources = [":resources"],
     deps = ["//examples/resources/component"],
 )

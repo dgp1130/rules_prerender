@@ -1,14 +1,16 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load(
     "//packages/rules_prerender:index.bzl",
     "prerender_component",
     "prerender_page_bundled",
+    "web_resources_devserver",
 )
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_page_bundled(
     name = "page",
     src = "page.ts",
+    path = "/index.html",
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     bundle_css = False, # Optimization: No CSS styling on this page.
     deps = [":component"],
@@ -37,19 +39,9 @@ prerender_component(
     srcs = ["transitive.ts"],
 )
 
-genrule(
-    name = "index_rename",
-    srcs = ["page.html"],
-    outs = ["index.html"],
-    cmd = """
-        cp $< $@
-    """,
-)
-
-ts_devserver(
+web_resources_devserver(
     name = "devserver",
-    static_files = ["index.html"],
-    additional_root_paths = ["rules_prerender/exmaples/components"],
+    resources = ":page",
 )
 
 ts_library(

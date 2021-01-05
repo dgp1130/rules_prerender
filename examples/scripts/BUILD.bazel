@@ -12,7 +12,7 @@ prerender_page_bundled(
     path = "/index.html",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":script"],
-    bundle_css = False,
+    bundle_css = False, # Optimization: No CSS styling on this page.
     deps = ["//examples/scripts/component"],
 )
 
