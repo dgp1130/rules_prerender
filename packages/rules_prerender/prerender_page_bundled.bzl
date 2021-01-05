@@ -114,7 +114,8 @@ def prerender_page_bundled(
 
     # Inject bundled JS and CSS into the HTML and move it to `%{name}.html`.
     output_html = "%s.html" % name
-    scripts_to_inject = ["/%s.js" % bundle] if bundle_js else []
+    js_path = ".".join(path.split(".")[:-1]) + ".js"
+    scripts_to_inject = [js_path] if bundle_js else []
     styles_to_inject = [bundled_css] if bundle_css else []
     inject_resources(
         name = "%s_inject" % name,
@@ -128,7 +129,6 @@ def prerender_page_bundled(
     # resource dependencies.
     entries = {path: output_html}
     if bundle_js:
-        js_path = ".".join(path.split(".")[:-1]) + ".js"
         entries[js_path] = "%s.js" % bundle
     web_resources(
         name = name,
