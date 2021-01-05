@@ -1,5 +1,8 @@
 export function renderTransitive(): string {
     return `
-        <div>Hello from the transitive component!</div>
+        <div>
+            <span>Hello from the transitive component!</span>
+            <img src="/images/transitive.png" />
+        </div>
     `;
 }

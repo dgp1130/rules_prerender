@@ -1,8 +1,20 @@
-load("//packages/rules_prerender:index.bzl", "prerender_component")
+load(
+    "//packages/rules_prerender:index.bzl",
+    "prerender_component",
+    "web_resources",
+)
 
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//examples/resources:__subpackages__"],
+    resources = [":resources"],
     deps = ["//examples/resources/transitive"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/images/component.png": "image.png",
+    },
 )

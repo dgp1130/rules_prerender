@@ -1,7 +1,19 @@
-load("//packages/rules_prerender:index.bzl", "prerender_component")
+load(
+    "//packages/rules_prerender:index.bzl",
+    "prerender_component",
+    "web_resources",
+)
 
 prerender_component(
     name = "transitive",
     srcs = ["transitive.ts"],
-    visibility = ["//visibility:public"],
+    resources = [":resources"],
+    visibility = ["//examples/resources:__subpackages__"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/images/transitive.png": "icon.png",
+    },
 )
