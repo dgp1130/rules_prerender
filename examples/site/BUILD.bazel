@@ -6,7 +6,10 @@ load(
 
 web_resources(
     name = "site",
-    deps = ["//examples/site/home"],
+    deps = [
+        "//examples/site/about",
+        "//examples/site/home",
+    ],
 )
 
 web_resources_devserver(
