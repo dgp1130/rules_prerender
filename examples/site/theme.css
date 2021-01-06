@@ -1,0 +1,11 @@
+:root {
+    /** Colors for theming. */
+    --primary-color: blue;
+    --text-color: white;
+
+    /** Max width of the content on a page. */
+    --content-max-width: 1024px;
+
+    /** Padding between page content and the sides of the viewport. */
+    --page-padding-width: 10px;
+}

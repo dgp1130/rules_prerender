@@ -13,3 +13,9 @@ web_resources_devserver(
     name = "devserver",
     resources = ":site",
 )
+
+filegroup(
+    name = "theme",
+    srcs = ["theme.css"],
+    visibility = [":__subpackages__"],
+)

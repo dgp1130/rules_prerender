@@ -1,0 +1,41 @@
+@import 'rules_prerender/examples/site/theme.css';
+
+[comp-header] {
+    background-color: var(--primary-color);
+}
+
+[comp-header] h1 {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    text-align: center;
+    color: var(--text-color);
+    padding: 0.25rem;
+}
+
+[comp-header] nav {
+    border-top: 1px solid white;
+}
+
+[comp-header] ul {
+    display: flex;
+    flex-direction: row;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+[comp-header] li {
+    flex: 1;
+    font-size: 1.3rem;
+    padding: 10px var(--page-padding-width);
+}
+
+[comp-header] a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+[comp-header] a:hover, [comp-header] a:visited {
+    text-decoration: underline;
+}

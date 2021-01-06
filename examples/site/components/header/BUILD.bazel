@@ -3,24 +3,33 @@ load("//packages/rules_prerender:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_component(
-    name = "base",
-    srcs = ["base.ts"],
+    name = "header",
+    srcs = ["header.ts"],
+    lib_deps = ["//packages/rules_prerender"],
+    styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
-    deps = ["//examples/site/components/header"],
+)
+
+filegroup(
+    name = "styles",
+    srcs = [
+        "header.css",
+        "//examples/site:theme",
+    ],
 )
 
 ts_library(
-    name = "base_test_lib",
-    srcs = ["base_test.ts"],
+    name = "header_test_lib",
+    srcs = ["header_test.ts"],
     testonly = True,
     deps = [
-        ":base_prerender",
+        ":header_prerender",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
     ],
 )
 
 jasmine_node_test(
-    name = "base_test",
-    deps = [":base_test_lib"],
+    name = "header_test",
+    deps = [":header_test_lib"],
 )

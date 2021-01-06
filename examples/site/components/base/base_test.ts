@@ -17,6 +17,9 @@ describe('base', () => {
             expect(fragment.querySelector('html head title').text)
                 .toBe('Some title');
 
+            // Renders the header.
+            expect(fragment.querySelector('[comp-header]')).toBeDefined();
+
             // Callback should be placed under `<main />` tag.
             const main = fragment.querySelector('body main');
             const mainChildren = main.childNodes

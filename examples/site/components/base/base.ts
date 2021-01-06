@@ -1,3 +1,5 @@
+import { renderHeader } from 'rules_prerender/examples/site/components/header/header';
+
 /**
  * Provides a basic structure for an HTML page.
  * 
@@ -15,6 +17,7 @@ export function baseLayout(title: string, main: () => string): string {
                 <meta charset="utf-8">
             </head>
             <body>
+                ${renderHeader()}
                 <main>
                     ${main()}
                 </main>
