@@ -1,0 +1,32 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(
+    "//packages/rules_prerender:index.bzl",
+    "prerender_component",
+    "web_resources",
+)
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    lib_deps = ["//packages/rules_prerender"],
+    scripts = [":scripts"],
+    styles = ["component_styles.css"],
+    resources = [":resources"],
+    testonly = True,
+    visibility = ["//examples/testonly:__subpackages__"],
+    deps = ["//examples/testonly/transitive"],
+)
+
+ts_library(
+    name = "scripts",
+    srcs = ["component_script.ts"],
+    testonly = True,
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/images/component.png": "image.png",
+    },
+    testonly = True,
+)
