@@ -13,6 +13,7 @@ prerender_page_bundled(
     bundle_js = False,
     bundle_css = False,
     visibility = ["//examples/site:__pkg__"],
+    deps = ["//examples/site/components/base"],
 )
 
 web_resources_devserver(

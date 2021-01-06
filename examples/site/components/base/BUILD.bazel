@@ -1,0 +1,25 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//packages/rules_prerender:index.bzl", "prerender_component")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_component(
+    name = "base",
+    srcs = ["base.ts"],
+    visibility = ["//examples/site:__subpackages__"],
+)
+
+ts_library(
+    name = "base_test_lib",
+    srcs = ["base_test.ts"],
+    testonly = True,
+    deps = [
+        ":base_prerender",
+        "@npm//@types/jasmine",
+        "@npm//node-html-parser",
+    ],
+)
+
+jasmine_node_test(
+    name = "base_test",
+    deps = [":base_test_lib"],
+)
