@@ -1,4 +1,5 @@
 import { includeStyle } from 'rules_prerender';
+import { repo } from 'rules_prerender/examples/site/links';
 
 /** Renders a footer component for the site. */
 export function renderFooter(): string {
@@ -7,8 +8,8 @@ export function renderFooter(): string {
             <footer>
                 <span>
                     Made with
-                    <a href="https://bazel.build/" rel="noopener">Bazel</a> and
-                    <a href="https://github.com/dgp1130/rules_prerender/" rel="noopener">rules_prerender</a>.
+                    <a href="https://bazel.build/" rel="noopener" target="_blank">Bazel</a> and
+                    <a href="${repo}" rel="noopener" target="_blank">rules_prerender</a>.
                 </span>
             </footer>
             ${includeStyle('rules_prerender/examples/site/components/footer/footer.css')}

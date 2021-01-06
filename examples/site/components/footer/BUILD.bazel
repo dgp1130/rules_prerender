@@ -5,7 +5,10 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 prerender_component(
     name = "footer",
     srcs = ["footer.ts"],
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//examples/site:links",
+        "//packages/rules_prerender",
+    ],
     styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
 )
