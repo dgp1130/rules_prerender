@@ -1,4 +1,4 @@
-@import 'rules_prerender/examples/site/theme.css';
+@import 'rules_prerender/examples/site/common/theme.css';
 
 [comp-home] {
     max-width: var(--content-max-width);

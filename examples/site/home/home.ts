@@ -1,6 +1,6 @@
 import { includeStyle } from 'rules_prerender';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
-import { repo, srcLink } from 'rules_prerender/examples/site/links';
+import { repo, srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the entire home page. */
 export default function (): string {
@@ -49,7 +49,7 @@ export default function (): string {
                 can just return some simple strings, or use other libraries and
                 modules that do cool things in Node! As one example, all those
                 links above come from a
-                <a href="${srcLink('/examples/site/links.ts')}" rel="noopener" target="_blank"><code>links.ts</code></a>
+                <a href="${srcLink('/examples/site/common/links.ts')}" rel="noopener" target="_blank"><code>links.ts</code></a>
                 module which nicely abstracts away all the awkwardness that is
                 GitHub URLs.</p>
 

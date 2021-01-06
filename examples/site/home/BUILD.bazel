@@ -11,7 +11,7 @@ prerender_page_bundled(
     src = "home.ts",
     path = "/index.html",
     lib_deps = [
-        "//examples/site:links",
+        "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
     styles = [":styles"],
@@ -24,7 +24,7 @@ filegroup(
     name = "styles",
     srcs = [
         "home.css",
-        "//examples/site:theme",
+        "//examples/site/common:theme",
     ],
 )
 

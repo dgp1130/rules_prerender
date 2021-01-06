@@ -1,0 +1,13 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+ts_library(
+    name = "links",
+    srcs = ["links.ts"],
+    visibility = ["//examples/site:__subpackages__"],
+)
+
+filegroup(
+    name = "theme",
+    srcs = ["theme.css"],
+    visibility = ["//examples/site:__subpackages__"],
+)

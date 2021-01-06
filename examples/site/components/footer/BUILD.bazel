@@ -6,7 +6,7 @@ prerender_component(
     name = "footer",
     srcs = ["footer.ts"],
     lib_deps = [
-        "//examples/site:links",
+        "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
     styles = [":styles"],
@@ -17,7 +17,7 @@ filegroup(
     name = "styles",
     srcs = [
         "footer.css",
-        "//examples/site:theme",
+        "//examples/site/common:theme",
     ],
 )
 

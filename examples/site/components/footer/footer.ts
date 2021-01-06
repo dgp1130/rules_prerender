@@ -1,5 +1,5 @@
 import { includeStyle } from 'rules_prerender';
-import { repo } from 'rules_prerender/examples/site/links';
+import { repo } from 'rules_prerender/examples/site/common/links';
 
 /** Renders a footer component for the site. */
 export function renderFooter(): string {

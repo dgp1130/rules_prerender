@@ -14,7 +14,7 @@ filegroup(
     name = "styles",
     srcs = [
         "header.css",
-        "//examples/site:theme",
+        "//examples/site/common:theme",
     ],
 )
 
