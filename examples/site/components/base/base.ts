@@ -1,4 +1,6 @@
 import { renderHeader } from 'rules_prerender/examples/site/components/header/header';
+import { renderFooter } from 'rules_prerender/examples/site/components/footer/footer';
+import { includeStyle } from 'rules_prerender';
 
 /**
  * Provides a basic structure for an HTML page.
@@ -11,7 +13,7 @@ import { renderHeader } from 'rules_prerender/examples/site/components/header/he
 export function baseLayout(title: string, main: () => string): string {
     return `
         <!DOCTYPE html>
-        <html>
+        <html comp-base>
             <head>
                 <title>${title}</title>
                 <meta charset="utf-8">
@@ -21,7 +23,9 @@ export function baseLayout(title: string, main: () => string): string {
                 <main>
                     ${main()}
                 </main>
+                ${renderFooter()}
             </body>
+            ${includeStyle('rules_prerender/examples/site/components/base/base.css')}
         </html>
     `;
 }

@@ -2,6 +2,7 @@
     /** Colors for theming. */
     --primary-color: blue;
     --text-color: white;
+    --link-color: pink;
 
     /** Max width of the content on a page. */
     --content-max-width: 1024px;

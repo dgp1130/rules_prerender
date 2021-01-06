@@ -1,10 +1,5 @@
 @import 'rules_prerender/examples/site/theme.css';
 
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
 [comp-home] {
     max-width: var(--content-max-width);
     margin: 0 auto;

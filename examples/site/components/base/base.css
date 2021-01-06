@@ -1,0 +1,14 @@
+html[comp-base], [comp-base] body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+[comp-base] body {
+    display: flex;
+    flex-direction: column;
+}
+
+[comp-base] main {
+    flex: 1;
+}
