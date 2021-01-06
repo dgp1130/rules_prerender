@@ -1,0 +1,15 @@
+load(
+    "//packages/rules_prerender:index.bzl",
+    "web_resources",
+    "web_resources_devserver",
+)
+
+web_resources(
+    name = "site",
+    deps = ["//examples/site/home"],
+)
+
+web_resources_devserver(
+    name = "devserver",
+    resources = ":site",
+)

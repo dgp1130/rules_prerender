@@ -1,0 +1,44 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(
+    "//packages/rules_prerender:index.bzl",
+    "prerender_page_bundled",
+    "web_resources_devserver",
+)
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_page_bundled(
+    name = "home",
+    src = "home.ts",
+    path = "/index.html",
+    bundle_js = False,
+    bundle_css = False,
+    visibility = ["//examples/site:__pkg__"],
+)
+
+web_resources_devserver(
+    name = "home_devserver",
+    resources = ":home",
+    testonly = True,
+)
+
+ts_library(
+    name = "home_test_lib",
+    srcs = ["home_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+        "@npm//@types/puppeteer",
+    ],
+)
+
+jasmine_node_test(
+    name = "home_test",
+    data = [
+        ":home_devserver",
+        "@npm//puppeteer",
+    ],
+    deps = [":home_test_lib"],
+)
