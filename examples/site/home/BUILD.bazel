@@ -10,7 +10,10 @@ prerender_page_bundled(
     name = "home",
     src = "home.ts",
     path = "/index.html",
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//examples/site:links",
+        "//packages/rules_prerender",
+    ],
     styles = [":styles"],
     bundle_js = False,
     visibility = ["//examples/site:__pkg__"],
