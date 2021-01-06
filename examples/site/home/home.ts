@@ -1,4 +1,3 @@
-import { includeStyle } from 'rules_prerender';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { repo, srcLink } from 'rules_prerender/examples/site/common/links';
 
@@ -62,7 +61,6 @@ export default function (): string {
                 <p>Check out some other pages to see more of the cool features
                 of <code>rules_prerender</code>!</p>
             </article>
-            ${includeStyle('rules_prerender/examples/site/home/home.css')}
         </div>
     `);
 }

@@ -6,11 +6,19 @@ prerender_component(
     name = "base",
     srcs = ["base.ts"],
     lib_deps = ["//packages/rules_prerender"],
-    styles = ["base.css"],
+    styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
     deps = [
         "//examples/site/components/footer",
         "//examples/site/components/header",
+    ],
+)
+
+filegroup(
+    name = "styles",
+    srcs = [
+        "base.css",
+        "//examples/site/common:theme",
     ],
 )
 

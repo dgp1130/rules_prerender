@@ -20,9 +20,11 @@ export function baseLayout(title: string, main: () => string): string {
             </head>
             <body>
                 ${renderHeader()}
-                <main>
-                    ${main()}
-                </main>
+                <div class="main-container">
+                    <main>
+                        ${main()}
+                    </main>
+                </div>
                 ${renderFooter()}
             </body>
             ${includeStyle('rules_prerender/examples/site/components/base/base.css')}

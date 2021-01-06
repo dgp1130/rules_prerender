@@ -1,3 +1,5 @@
+@import 'rules_prerender/examples/site/common/theme.css';
+
 html[comp-base], [comp-base] body {
     margin: 0;
     padding: 0;
@@ -9,6 +11,13 @@ html[comp-base], [comp-base] body {
     flex-direction: column;
 }
 
-[comp-base] main {
+[comp-base] .main-container {
     flex: 1;
+
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+}
+
+[comp-base] main {
+    padding: 10px var(--page-padding-width);
 }
