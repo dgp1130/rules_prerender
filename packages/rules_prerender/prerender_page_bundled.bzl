@@ -92,6 +92,7 @@ def prerender_page_bundled(
             config_file = "//packages/rules_prerender:rollup-default.config.js",
             link_workspace_root = True,
             silent = True,
+            testonly = testonly,
             deps = [
                 ":%s_scripts" % prerender_name,
                 "@npm//@rollup/plugin-node-resolve",
@@ -109,6 +110,7 @@ def prerender_page_bundled(
             plugins = {
                 "//packages/rules_prerender:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
             },
+            testonly = testonly,
             deps = [":%s_styles" % prerender_name],
         )
 
@@ -123,6 +125,7 @@ def prerender_page_bundled(
         output = output_html,
         scripts = scripts_to_inject,
         styles = styles_to_inject,
+        testonly = testonly,
     )
 
     # Output a resources directory of the HTML, bundled JavaScript, and any
@@ -133,5 +136,7 @@ def prerender_page_bundled(
     web_resources(
         name = name,
         entries = entries,
+        testonly = testonly,
+        visibility = visibility,
         deps = ["%s_resources" % prerender_name],
     )

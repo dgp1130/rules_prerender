@@ -151,6 +151,8 @@ def prerender_page(
     web_resources(
         name = output_resources,
         deps = ["%s_resources" % component],
+        testonly = testonly,
+        visibility = visibility,
     )
 
     # Reexport all included styles at `%{name}_styles`.

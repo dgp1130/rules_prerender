@@ -3,7 +3,12 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver")
 load("//common:label.bzl", "absolute")
 
-def web_resources_devserver(name, resources, **kwargs):
+def web_resources_devserver(
+    name,
+    resources,
+    testonly = None,
+    visibility = None,
+):
     """Generates a devserver which serves the provided `web_resources()` target.
 
     IMPORTANT NOTE: This server is for **development purposes only**. It has not
@@ -13,7 +18,8 @@ def web_resources_devserver(name, resources, **kwargs):
     Args:
         name: The name of this rule.
         resources: The `web_resources()` target to serve.
-        **kwargs: Remaining arguments to pass through to the underlying rule.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
     # Get the workspace-relative path to the resources directory.
     resources_path = absolute(resources)[len("//"):].replace(":", "/")
@@ -23,4 +29,6 @@ def web_resources_devserver(name, resources, **kwargs):
         name = name,
         static_files = [resources],
         additional_root_paths = [resources_path],
+        testonly = testonly,
+        visibility = visibility,
     )
