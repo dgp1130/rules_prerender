@@ -11,7 +11,7 @@ prerender_page_bundled(
     src = "home.ts",
     path = "/index.html",
     lib_deps = ["//examples/site/common:links"],
-    bundle_js = False,
+    bundle_js = False, # Optimization: No client-side JavaScript on this page.
     visibility = ["//examples/site:__pkg__"],
     deps = ["//examples/site/components/base"],
 )

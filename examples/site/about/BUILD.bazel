@@ -4,6 +4,7 @@ prerender_page_bundled(
     name = "about",
     src = "about.ts",
     path = "/about/index.html",
+    bundle_js = False, # Optimization: No client-side JavaScript on this page.
     visibility = ["//examples/site:__pkg__"],
     deps = ["//examples/site/components/base"],
 )
