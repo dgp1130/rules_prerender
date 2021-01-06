@@ -19,6 +19,7 @@ describe('header', () => {
             expect(navItems).toEqual({
                 'Home': '/',
                 'About': '/about/',
+                'Counter': '/counter/',
             });
         });
     });

@@ -1,0 +1,9 @@
+load("//packages/rules_prerender:index.bzl", "prerender_page_bundled")
+
+prerender_page_bundled(
+    name = "counter",
+    src = "counter.ts",
+    path = "/counter/index.html",
+    visibility = ["//examples/site:__pkg__"],
+    deps = ["//examples/site/components/base"],
+)
