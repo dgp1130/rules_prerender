@@ -1,0 +1,32 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//packages/rules_prerender:index.bzl", "prerender_component")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_component(
+    name = "counter",
+    srcs = ["counter_prerender.ts"],
+    lib_deps = ["//packages/rules_prerender"],
+    scripts = [":scripts"],
+    visibility = ["//examples/site:__subpackages__"],
+)
+
+ts_library(
+    name = "counter_prerender_test_lib",
+    srcs = ["counter_prerender_test.ts"],
+    testonly = True,
+    deps = [
+        ":counter_prerender",
+        "@npm//@types/jasmine",
+        "@npm//node-html-parser",
+    ],
+)
+
+jasmine_node_test(
+    name = "counter_prerender_test",
+    deps = [":counter_prerender_test_lib"],
+)
+
+ts_library(
+    name = "scripts",
+    srcs = ["counter_script.ts"],
+)
