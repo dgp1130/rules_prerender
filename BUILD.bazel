@@ -1,4 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
+load("//tools:publish.bzl", "publish_files")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
 
@@ -17,4 +20,46 @@ bzl_library(
         "//packages/rules_prerender:web_resources",
         "//packages/rules_prerender:web_resources_devserver",
     ],
+)
+
+publish_files(
+    name = "publish_files",
+    files = [
+        "index.bzl",
+        "package.bzl",
+        "package.json",
+    ],
+)
+
+pkg_npm(
+    name = "pkg",
+    package_name = "rules_prerender",
+    substitutions = {
+        # Remap packages with a `BUILD.publish` file to use
+        # `@npm//rules_prerender/...` so they can be resolved at runtime.
+        "//common": "@npm//rules_prerender/common",
+        "//packages/renderer": "@npm//rules_prerender/packages/renderer",
+        "//packages/rules_prerender": "@npm//rules_prerender/packages/rules_prerender",
+        "//tools/internal": "@npm//rules_prerender/tools/internal",
+    },
+    deps = [
+        # Merge all tools and files to publish all together into the directory.
+        ":publish_files",
+        "//common:publish_files",
+        "//packages/annotation_extractor",
+        "//packages/renderer",
+        "//packages/renderer:publish_files",
+        "//packages/resource_injector",
+        "//packages/resource_packager",
+        "//packages/rules_prerender",
+        "//packages/rules_prerender:publish_files",
+        "//packages/script_entry_generator",
+        "//packages/style_entry_generator",
+        "//tools/internal:publish_files",
+    ],
+)
+
+build_test(
+    name = "pkg_test",
+    targets = [":pkg"],
 )

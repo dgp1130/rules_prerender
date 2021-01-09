@@ -1,6 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:publish.bzl", "publish_files")
 
 exports_files(
     ["rollup-default.config.js"],
@@ -16,6 +17,14 @@ ts_library(
         ":scripts",
         ":styles",
     ],
+)
+
+publish_files(
+    name = "publish_files",
+    files = glob(["**/*.bzl"]) + [
+        "rollup-default.config.js",
+    ],
+    visibility = ["//:__pkg__"],
 )
 
 bzl_library(
