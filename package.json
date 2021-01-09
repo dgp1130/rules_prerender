@@ -1,35 +1,61 @@
 {
     "name": "rules_prerender",
-    "version": "0.1.0",
-    "private": true,
-    "devDependencies": {
-        "@bazel/bazelisk": "latest",
-        "@bazel/buildifier": "latest",
-        "@bazel/ibazel": "latest",
-        "@bazel/jasmine": "^2.3.1",
-        "@bazel/postcss": "^0.5.0",
-        "@bazel/rollup": "^2.3.2",
-        "@bazel/typescript": "^2.3.1",
-        "@rollup/plugin-node-resolve": "^11.0.1",
-        "@types/jasmine": "^3.6.2",
-        "@types/node": "^14.14.13",
-        "@types/puppeteer": "^5.4.2",
-        "@types/yargs": "^15.0.11",
-        "http-status-codes": "^2.1.4",
-        "jasmine": "^3.6.3",
-        "node-html-parser": "^2.0.0",
-        "postcss": "^7.0.35",
-        "postcss-import": "^12.0.1",
-        "puppeteer": "^5.5.0",
-        "rollup": "^2.35.1",
-        "tree-kill": "^1.2.2",
-        "typescript": "^3.9.7",
-        "yargs": "^16.2.0"
+    "version": "0.0.0",
+    "main": "./packages/rules_prerender/index.js",
+    "typings": "./packages/rules_prerender/index.d.ts",
+    "bin": {
+        "annotation-extractor": "./packages/annotation_extractor/annotation_extractor.js",
+        "renderer": "./packages/renderer/renderer.js",
+        "resource-injector": "./packages/resource_injector/resource_injector.js",
+        "resource-packager": "./packages/resource_packager/resource_packager.js",
+        "script-entry-generator": "./packages/script_entry_generator/script_entry_generator.js",
+        "style-entry-generator": "./packages/style_entry_generator/style_entry_generator.js"
     },
     "scripts": {
         "bazel": "bazel",
         "ibazel": "ibazel",
         "build": "bazel build //...",
         "test": "bazel test //..."
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dgp1130/rules_prerender.git",
+        "directory": "packages/rules_prerender"
+    },
+    "bugs": {
+        "url": "https://github.com/dgp1130/rules_nodejs/issues"
+    },
+    "keywords": [
+        "bazel",
+        "static-site-generator"
+    ],
+    "dependencies": {
+        "@bazel/postcss": "^0.5.0",
+        "@bazel/rollup": "^2.3.2",
+        "@rollup/plugin-node-resolve": "^11.0.1",
+        "node-html-parser": "^2.0.0",
+        "postcss": "^7.0.35",
+        "postcss-import": "^12.0.1",
+        "rollup": "^2.35.1",
+        "yargs": "^16.2.0"
+    },
+    "devDependencies": {
+        "@bazel/bazelisk": "latest",
+        "@bazel/buildifier": "latest",
+        "@bazel/ibazel": "latest",
+        "@bazel/jasmine": "^2.3.1",
+        "@bazel/typescript": "^2.3.1",
+        "@types/jasmine": "^3.6.2",
+        "@types/node": "^14.14.13",
+        "@types/puppeteer": "^5.4.2",
+        "@types/yargs": "^15.0.11",
+        "http-status-codes": "^2.1.4",
+        "jasmine": "^3.6.3",
+        "puppeteer": "^5.5.0",
+        "tree-kill": "^1.2.2",
+        "typescript": "^3.9.7"
+    },
+    "peerDependencies": {
+        "@bazel/typescript": "^2.0.0"
     }
 }
