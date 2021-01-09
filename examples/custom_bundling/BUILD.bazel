@@ -27,6 +27,7 @@ rollup_bundle(
     entry_point = ":page_scripts.ts",
     config_file = "rollup.config.js",
     link_workspace_root = True,
+    silent = True,
     deps = [
         ":page_scripts",
         "@npm//@rollup/plugin-node-resolve",
