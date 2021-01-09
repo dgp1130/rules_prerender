@@ -1,0 +1,19 @@
+{
+    "name": "user",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "build": "bazel build //...",
+        "test": "bazel test //..."
+    },
+    "devDependencies": {
+        "@bazel/bazelisk": "latest",
+        "@bazel/buildifier": "latest",
+        "@bazel/ibazel": "latest",
+        "@bazel/rollup": "^5.0.0",
+        "@bazel/typescript": "^5.0.0",
+        "rollup": "^2.39.0",
+        "rules_prerender": "file:../rules_prerender-0.0.0-unstamped.tgz",
+        "typescript": "^3.9.7"
+    }
+}

@@ -1,0 +1,17 @@
+load("@npm//rules_prerender:index.bzl", "css_library", "prerender_component")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    styles = [":styles"],
+    visibility = ["//app:__subpackages__"],
+    lib_deps = ["@npm//rules_prerender"],
+    source_map = True,
+    tsconfig = "//:tsconfig.json",
+    deps = ["@npm//rules_prerender:declarative_shadow_dom"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["component.css"],
+)
