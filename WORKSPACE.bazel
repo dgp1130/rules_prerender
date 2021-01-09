@@ -40,11 +40,3 @@ http_archive(
 )
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
-
-# Load `rules_postcss`.
-http_archive(
-    name = "build_bazel_rules_postcss",
-    url = "https://github.com/bazelbuild/rules_postcss/archive/0.5.0.tar.gz",
-    strip_prefix = "rules_postcss-0.5.0",
-    sha256 = "3f0c754f97e3940ea90f4d6408bfb2aefb3850e7941572b22b1b88579c428ff9",
-)

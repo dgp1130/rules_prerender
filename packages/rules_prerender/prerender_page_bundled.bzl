@@ -1,6 +1,6 @@
 """Defines `prerender_page_bundled()` functionality."""
 
-load("@build_bazel_rules_postcss//:index.bzl", "postcss_binary")
+load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_page.bzl", "prerender_page")
