@@ -1,0 +1,33 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(
+    "@npm//rules_prerender:index.bzl",
+    "web_resources",
+    "web_resources_devserver",
+)
+load("@npm//rules_prerender/packages/rules_prerender:prerender_multi_page_bundled.bzl", "prerender_multi_page_bundled")
+
+prerender_multi_page_bundled(
+    name = "multi",
+    src = "multi.ts",
+    lib_deps = ["@npm//rules_prerender"],
+    scripts = [":scripts"],
+    styles = ["styles.css"],
+    resources = [":resources"],
+)
+
+ts_library(
+    name = "scripts",
+    srcs = ["script.ts"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/logo.png": "logo.png",
+    },
+)
+
+web_resources_devserver(
+    name = "devserver",
+    resources = ":multi",
+)

@@ -1,0 +1,7 @@
+load("@npm//rules_prerender:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    visibility = ["//app:__subpackages__"],
+)

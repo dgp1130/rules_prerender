@@ -1,0 +1,66 @@
+load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(
+    "@npm//rules_prerender:index.bzl",
+    "extract_single_resource",
+    "inject_resources",
+    "prerender_multi_page",
+    "web_resources",
+    "web_resources_devserver",
+)
+
+# Prerender a single HTML file.
+prerender_multi_page(
+    name = "page",
+    src = "page.ts",
+    lib_deps = ["@npm//rules_prerender"],
+    scripts = [":script"],
+)
+
+# Extract the prerendered file to `page.html`.
+extract_single_resource(
+    resources = ":page",
+    out = "page.html",
+)
+
+ts_library(
+    name = "script",
+    srcs = ["script.ts"],
+)
+
+# Manually bundle all scripts.
+rollup_bundle(
+    name = "bundle",
+    entry_point = ":page_scripts.ts",
+    config_file = "rollup.config.js",
+    link_workspace_root = True,
+    silent = True,
+    deps = [
+        ":page_scripts",
+        "@npm//@rollup/plugin-node-resolve",
+    ],
+)
+
+# Inject a `<script />` tag for the bundled JavaScript into the prerendered HTML
+# file.
+inject_resources(
+    name = "injected_page",
+    input = "page.html",
+    scripts = ["/index.js"],
+)
+
+# Merge HTML and JavaScript into a single directory with files at the correct
+# paths.
+web_resources(
+    name = "site",
+    entries = {
+        "/index.html": "injected_page.html",
+        "/index.js": "bundle.js",
+    },
+    deps = [":page_resources"],
+)
+
+web_resources_devserver(
+    name = "devserver",
+    resources = ":site",
+)
