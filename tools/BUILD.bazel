@@ -7,3 +7,9 @@ bzl_library(
     srcs = ["jasmine.bzl"],
     visibility = ["//visibility:public"],
 )
+
+bzl_library(
+    name = "publish",
+    srcs = ["publish.bzl"],
+    visibility = ["//visibility:public"],
+)
