@@ -4,6 +4,44 @@ A Bazel rule set for prerendering HTML pages.
 
 ![CI](https://github.com/dgp1130/rules_prerender/workflows/CI/badge.svg)
 
+## Installation
+
+NOTE: The project is not yet published, but this is the way it is expected to be
+installed.
+
+Start with a
+[`rules_nodejs`](https://github.com/bazelbuild/rules_nodejs#quickstart) project,
+if you already have one, great. If not, the easiest way to make one is:
+
+```shell
+npx @bazel/create ${NAME}
+cd ${NAME}
+npm install
+npm run build # Confirm project is buildable.
+```
+
+Then install `rules_prerender` as a dev dependency. You must also satisfy a peer
+dep on [`@bazel/typescript`](https://www.npmjs.com/package/@bazel/typescript),
+which itself has a peer dep on
+[`typescript`](https://www.npmjs.com/package/typescript).
+
+```shell
+npm install rules_prerender @bazel/typescript typescript --save-dev
+```
+
+Make sure to resolve any peer dep warnings and ensure that everything is using
+compatible versions.
+
+Last step is to add to your `WORKSPACE` file:
+
+```python
+load("@npm//rules_prerender:package.bzl", "rules_prerender_dependencies")
+rules_prerender_dependencies()
+```
+
+With that all done, you should be ready to use `rules_prerender`! See the next
+section for how to use the API.
+
 ## API
 
 The exact API is not currently nailed down, but it is expected to look something
