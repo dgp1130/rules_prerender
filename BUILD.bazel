@@ -4,7 +4,10 @@ exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
 
 bzl_library(
     name = "rules_prerender",
-    srcs = ["index.bzl"],
+    srcs = [
+        "index.bzl",
+        "package.bzl",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//packages/rules_prerender:inject_resources",
