@@ -479,8 +479,14 @@ this manually, you need to:
     ```shell
     bazel build //:pkg.pack
     ```
-1.  Set up a separate Bazel workspace.
-    *   Easiest way to do this is `npm init @bazel ${NAME}`.
+1.  Set up a separate Bazel workspace and `cd` into it.
+    *   Easiest way to do this from scratch is:
+
+        ```shell
+        npx @bazel/create ${NAME}
+        cd ${NAME}
+        npm install
+        ```
 1.  Install the local `rules_prerender` build.
 
     ```shell
@@ -489,6 +495,6 @@ this manually, you need to:
 1.  Use `@npm//rules_prerender/...` and build some code.
 
 Check out the
-[`ref/external`](https://github.com/dgp1130/rules_prerender/blob/ref/external/)
+[`ref/external`](https://github.com/dgp1130/rules_prerender/tree/ref/external/)
 branch which includes an in-tree user workspace which can be used to more easily
 verify and debug run time execution.
