@@ -1,7 +1,7 @@
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load(
-    "//packages/rules_prerender:index.bzl",
+    "//:index.bzl",
     "inject_resources",
     "prerender_page",
     "web_resources",

@@ -1,9 +1,5 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load(
-    "//packages/rules_prerender:index.bzl",
-    "prerender_page_bundled",
-    "web_resources_devserver",
-)
+load("//:index.bzl", "prerender_page_bundled", "web_resources_devserver")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_page_bundled(

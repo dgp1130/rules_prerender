@@ -1,5 +1,5 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//packages/rules_prerender:index.bzl", "prerender_component")
+load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "component",

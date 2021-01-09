@@ -1,1 +1,17 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
+
+bzl_library(
+    name = "rules_prerender",
+    srcs = ["index.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//packages/rules_prerender:inject_resources",
+        "//packages/rules_prerender:prerender_component",
+        "//packages/rules_prerender:prerender_page",
+        "//packages/rules_prerender:prerender_page_bundled",
+        "//packages/rules_prerender:web_resources",
+        "//packages/rules_prerender:web_resources_devserver",
+    ],
+)

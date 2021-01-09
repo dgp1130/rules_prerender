@@ -8,27 +8,27 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 
-bzl_library(
-    name = "bzl",
-    srcs = ["index.bzl"],
+ts_library(
+    name = "rules_prerender",
+    srcs = ["index.ts"],
+    module_name = "rules_prerender",
     visibility = ["//visibility:public"],
     deps = [
-        ":inject_resources",
-        ":prerender_component",
-        ":prerender_page",
-        ":prerender_page_bundled",
-        ":web_resources",
+        ":scripts",
+        ":styles",
     ],
 )
 
 bzl_library(
     name = "inject_resources",
     srcs = ["inject_resources.bzl"],
+    visibility = ["//:__pkg__"],
 )
 
 bzl_library(
     name = "prerender_component",
     srcs = ["prerender_component.bzl"],
+    visibility = ["//:__pkg__"],
     deps = [
         ":web_resources",
         "//common:label",
@@ -38,6 +38,7 @@ bzl_library(
 bzl_library(
     name = "prerender_page",
     srcs = ["prerender_page.bzl"],
+    visibility = ["//:__pkg__"],
     deps = [
         ":prerender_component",
         ":web_resources",
@@ -48,6 +49,7 @@ bzl_library(
 bzl_library(
     name = "prerender_page_bundled",
     srcs = ["prerender_page_bundled.bzl"],
+    visibility = ["//:__pkg__"],
     deps = [
         ":inject_resources",
         ":prerender_page",
@@ -64,24 +66,15 @@ bzl_library(
 bzl_library(
     name = "web_resources",
     srcs = ["web_resources.bzl"],
+    visibility = ["//:__pkg__"],
     deps = ["//common:label"],
 )
 
 bzl_library(
     name = "web_resources_devserver",
     srcs = ["web_resources_devserver.bzl"],
+    visibility = ["//:__pkg__"],
     deps = ["//common:label"],
-)
-
-ts_library(
-    name = "rules_prerender",
-    srcs = ["index.ts"],
-    module_name = "rules_prerender",
-    visibility = ["//visibility:public"],
-    deps = [
-        ":scripts",
-        ":styles",
-    ],
 )
 
 ts_library(

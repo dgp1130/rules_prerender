@@ -1,8 +1,4 @@
-load(
-    "//packages/rules_prerender:index.bzl",
-    "prerender_component",
-    "web_resources",
-)
+load("//:index.bzl", "prerender_component", "web_resources")
 
 prerender_component(
     name = "transitive",

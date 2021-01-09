@@ -1,4 +1,4 @@
-load("//packages/rules_prerender:index.bzl", "prerender_page_bundled")
+load("//:index.bzl", "prerender_page_bundled")
 
 prerender_page_bundled(
     name = "about",
