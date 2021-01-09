@@ -119,7 +119,7 @@ _web_resources_rule = rule(
             """,
         ),
         "_packager": attr.label(
-            default = "//packages/resource_packager",
+            default = "//tools/internal:resource_packager",
             executable = True,
             cfg = "exec",
         ),

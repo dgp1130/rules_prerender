@@ -1,5 +1,4 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@npm//@bazel/postcss:index.bzl", "postcss_plugin")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
@@ -117,11 +116,4 @@ ts_library(
 jasmine_node_test(
     name = "styles_test",
     deps = [":styles_test_lib"],
-)
-
-postcss_plugin(
-    name = "postcss_import_plugin",
-    node_require = "postcss-import",
-    visibility = ["//visibility:public"],
-    deps = ["@npm//postcss-import"],
 )

@@ -65,7 +65,7 @@ _inject_resources_rule = rule(
         "styles": attr.label_list(allow_files = True),
         "output": attr.output(mandatory = True),
         "_injector": attr.label(
-            default = "//packages/resource_injector",
+            default = "//tools/internal:resource_injector",
             executable = True,
             cfg = "exec",
         ),

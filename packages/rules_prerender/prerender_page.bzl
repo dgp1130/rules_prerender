@@ -85,7 +85,7 @@ def prerender_page(
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + [
             ":%s" % component_prerender,
-            "//packages/renderer",
+            "//tools/internal:renderer",
         ],
     )
 
@@ -232,7 +232,7 @@ def _extract_annotations(
             output_metadata,
         ],
         cmd = """
-            $(location //packages/annotation_extractor) \\
+            $(location //tools/internal:annotation_extractor) \\
                 --input-html $(location {annotated_page}) \\
                 --output-html $(location {output_html}) \\
                 --output-metadata $(location {output_metadata})
@@ -242,7 +242,7 @@ def _extract_annotations(
             output_metadata = output_metadata,
         ),
         testonly = testonly,
-        tools = ["//packages/annotation_extractor"],
+        tools = ["//tools/internal:annotation_extractor"],
     )
 
 def _script_entry_point(name, metadata, output_entry_point, testonly = None):
@@ -259,14 +259,14 @@ def _script_entry_point(name, metadata, output_entry_point, testonly = None):
         srcs = [metadata],
         outs = [output_entry_point],
         cmd = """
-            $(location //packages/script_entry_generator) \\
+            $(location //tools/internal:script_entry_generator) \\
                 --metadata $(location {metadata}) \\
                 --output $(location {output})
         """.format(
             metadata = metadata,
             output = output_entry_point,
         ),
-        tools = ["//packages/script_entry_generator"],
+        tools = ["//tools/internal:script_entry_generator"],
     )
 
 def _style_entry_point(name, metadata, output_entry_point, testonly = None):
@@ -283,12 +283,12 @@ def _style_entry_point(name, metadata, output_entry_point, testonly = None):
         srcs = [metadata],
         outs = [output_entry_point],
         cmd = """
-            $(location //packages/style_entry_generator) \\
+            $(location //tools/internal:style_entry_generator) \\
                 --metadata $(location {metadata}) \\
                 --output $(location {output})
         """.format(
             metadata = metadata,
             output = output_entry_point,
         ),
-        tools = ["//packages/style_entry_generator"],
+        tools = ["//tools/internal:style_entry_generator"],
     )

@@ -20,5 +20,8 @@
         "transpiled",
         "unmocked",
         "unproxied"
-    ]
+    ],
+    "files.associations": {
+        "BUILD.publish": "starlark"
+    }
 }

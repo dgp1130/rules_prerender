@@ -108,7 +108,7 @@ def prerender_page_bundled(
             sourcemap = True,
             output_name = bundled_css,
             plugins = {
-                "//packages/rules_prerender:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
+                "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
             },
             testonly = testonly,
             deps = [":%s_styles" % prerender_name],
