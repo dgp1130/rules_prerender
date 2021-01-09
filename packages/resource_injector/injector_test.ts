@@ -31,9 +31,9 @@ describe('injector', () => {
 <html>
     <head>
         <title>Some title</title>
-    <script src="/foo.js" type="module" async></script>
-<script src="/bar.js" type="module" async></script>
-<script src="/baz.js" type="module" async></script>
+    <script src="/foo.js" async defer></script>
+<script src="/bar.js" async defer></script>
+<script src="/baz.js" async defer></script>
 </head>
     <body>
         <h2>Hello, World!</h2>
@@ -61,7 +61,7 @@ describe('injector', () => {
 <!DOCTYPE html>
 <html>
 <head>
-<script src="/foo.js" type="module" async></script>
+<script src="/foo.js" async defer></script>
 </head>
     <body>
         <h2>Hello, World!</h2>
@@ -87,7 +87,7 @@ describe('injector', () => {
             expect(injected).toBe(`
 <html>
 <head>
-<script src="/foo.js" type="module" async></script>
+<script src="/foo.js" async defer></script>
 </head>
     <body>
         <h2>Hello, World!</h2>
