@@ -64,6 +64,11 @@ run:debug --define=VERBOSE_LOGS=1 -- --node_options=--inspect-brk
 # The following option will change the build output of certain rules such as terser and may not be desirable in all cases
 build:debug --compilation_mode=dbg
 
+# Configuration for release builds. This should optimize its builds and stamp
+# them with the version number for the NPM package defined as
+# $BAZEL_RULES_PRERENDER_VERSION. This environment variable *must* be specified.
+build:release -c opt --stamp --workspace_status_command "tools/bazel_stamp_vars.sh \"${BAZEL_RULES_PRERENDER_VERSION}\""
+
 # Turn off legacy external runfiles
 # This prevents accidentally depending on this feature, which Bazel will remove.
 build --nolegacy_external_runfiles
