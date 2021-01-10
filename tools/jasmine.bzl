@@ -11,6 +11,9 @@ def jasmine_node_test(**kwargs):
     _jasmine_node_test(
         config_file = kwargs.pop("config_file", None) or "//tools:jasmine.json",
         templated_args = kwargs.pop("templated_args", []) + [
+            # Patch module resolution until I understand how to address:
+            # https://github.com/bazelbuild/rules_nodejs/issues/2388
+            "--bazel_patch_module_resolver",
             # Fail the test on unhandled rejection.
             "--node_options=--unhandled-rejections=strict",
         ],

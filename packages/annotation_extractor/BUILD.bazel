@@ -6,6 +6,7 @@ nodejs_binary(
     name = "annotation_extractor",
     entry_point = "annotation_extractor.ts",
     visibility = ["//visibility:public"],
+    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":annotation_extractor_lib",
         "@npm//yargs",

@@ -5,6 +5,7 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 nodejs_binary(
     name = "resource_packager",
     entry_point = ":resource_packager.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
     visibility = ["//visibility:public"],
     data = [
         ":resource_packager_lib",

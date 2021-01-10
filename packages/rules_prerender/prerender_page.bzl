@@ -82,6 +82,7 @@ def prerender_page(
     nodejs_binary(
         name = binary,
         entry_point = "//packages/renderer:renderer_js",
+        templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + [
             ":%s" % component_prerender,

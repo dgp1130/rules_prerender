@@ -5,6 +5,7 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 nodejs_binary(
     name = "resource_injector",
     entry_point = "resource_injector.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":resource_injector_lib",
         "@npm//yargs",

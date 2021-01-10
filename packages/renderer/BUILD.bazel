@@ -34,6 +34,7 @@ filegroup(
 nodejs_binary(
     name = "renderer_test_binary",
     entry_point = "renderer.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
     testonly = True,
     data = RENDERER_RUNTIME_DEPS + [
         ":renderer",
