@@ -2,7 +2,7 @@ import 'jasmine';
 
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary = resolveRunfile(
         'rules_prerender/examples/styles/devserver');
@@ -49,5 +49,5 @@ describe('styles', () => {
                 () => document.body.innerHTML);
         expect(pageContent).not.toContain(
                 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE');
-    });
+    }, puppeteerTestTimeout);
 });

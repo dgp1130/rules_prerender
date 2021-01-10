@@ -1,7 +1,8 @@
 import 'jasmine';
+
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary = resolveRunfile(
     'rules_prerender/examples/site/home/home_devserver');
@@ -16,5 +17,5 @@ describe('home', () => {
             `http://${devserver.get().host}:${devserver.get().port}`);
         
         await expectAsync(page.get().title()).toBeResolvedTo('Home');
-    });
+    }, puppeteerTestTimeout);
 });

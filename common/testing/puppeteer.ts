@@ -3,6 +3,15 @@ import { Browser, Page, launch } from 'puppeteer';
 import { Effect, useForEach, useForAll } from 'rules_prerender/common/testing/effects';
 
 /**
+ * Default timeout value to use for Puppeteer tests. They can be quite resource
+ * intensive, and even if the test on its own is not that long, when run in
+ * parallel with other tests, resource exhaustion can slow things down
+ * drastically. This should be passed in as the third parameter to `it()`
+ * functions which use Puppeteer.
+ */
+export const puppeteerTestTimeout = 60 * 1000; // 60 seconds.
+
+/**
  * An effect encapsulating a Puppeteer {@link Browser}. Manages creation/cleanup
  * of a {@link Browser} instance. The same instance is used for all tests
  * because a restart is very likely not to be required.
@@ -14,6 +23,9 @@ import { Effect, useForEach, useForAll } from 'rules_prerender/common/testing/ef
  * and inspect the page under test directly. Passing through the `$DISPLAY`
  * variable via `--test_env=DISPLAY` will run in non-headless mode (with GUI)
  * for easy debugging.
+ * 
+ * Make sure to use {@link puppeteerTestTimeout} for any test which uses the
+ * browser.
  * 
  * @return A proxied {@link Browser} instance usable within the test suite.
  */
@@ -39,6 +51,9 @@ export function useBrowser(): Effect<Browser> {
  * An effect encapsulating a Puppeteer {@link Page}. Manages creation/cleanup of
  * a {@link Page} instance.
  * 
+ * Make sure to use {@link puppeteerTestTimeout} for any test which uses the
+ * page.
+ * 
  * @param browser An {@link Effect} of a Puppeteer {@link Browser} instance to
  *     create the {@link Page} on.
  * @return A proxied {@link Page} instance usable within a test.
@@ -46,6 +61,7 @@ export function useBrowser(): Effect<Browser> {
 export function usePage(browser: Effect<Browser>): Effect<Page> {
     return useForEach(async () => {
         const page = await browser.get().newPage();
+        page.setDefaultNavigationTimeout(puppeteerTestTimeout);
 
         return [ page, async () => { await page.close(); } ];
     });

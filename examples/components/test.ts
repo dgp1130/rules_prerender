@@ -2,7 +2,7 @@ import 'jasmine';
 
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary = resolveRunfile(
         'rules_prerender/examples/components/devserver');
@@ -46,5 +46,5 @@ describe('components', () => {
                 '.content', (el) => el.textContent);
         expect(transitiveText?.trim()).toBe(
                 `I'm a component which is depended upon transitively!`);
-    });
+    }, puppeteerTestTimeout);
 });

@@ -4,7 +4,7 @@ import { env } from 'process';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { effectFake } from 'rules_prerender/common/testing/effect_fake';
 import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { useBrowser, usePage, puppeteerTestTimeout } from 'rules_prerender/common/testing/puppeteer';
 
 describe('puppeteer', () => {
     beforeEach(() => {
@@ -74,6 +74,8 @@ describe('puppeteer', () => {
         it('provides a `Page` effect', async () => {
             const mockPage = {
                 close: jasmine.createSpy('close').and.resolveTo(),
+                setDefaultNavigationTimeout:
+                    jasmine.createSpy('setDefaultNavigationTimeout'),
             } as unknown as Page;
             const mockBrowser = {
                 newPage: jasmine.createSpy('newPage').and.returnValue(mockPage),
@@ -87,6 +89,8 @@ describe('puppeteer', () => {
             // Initialize to simulate test start, should launch a browser.
             await tester.initialize();
             expect(mockBrowser.newPage).toHaveBeenCalledOnceWith();
+            expect(mockPage.setDefaultNavigationTimeout)
+                .toHaveBeenCalledOnceWith(puppeteerTestTimeout);
             expect(mockPage.close).not.toHaveBeenCalled();
 
             // Browser should be available.
@@ -95,6 +99,13 @@ describe('puppeteer', () => {
             // Cleanup to simulate test end, should close the browser.
             await tester.cleanup();
             expect(mockPage.close).toHaveBeenCalledOnceWith();
+        });
+    });
+
+    describe('puppeteerTestTimeout', () => {
+        it('is a test timeout', () => {
+            expect(puppeteerTestTimeout).toEqual(jasmine.any(Number));
+            expect(puppeteerTestTimeout).toBeGreaterThan(0);
         });
     });
 });

@@ -1,8 +1,8 @@
 import 'jasmine';
 
-import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { useDevserver } from 'rules_prerender/common/testing/devserver';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary = resolveRunfile(
         'rules_prerender/examples/resources/devserver');
@@ -38,5 +38,5 @@ describe('resources', () => {
             (img) => (img as HTMLImageElement).complete,
         );
         expect(transitiveImageLoaded).toBeTrue();
-    });
+    }, puppeteerTestTimeout);
 });
