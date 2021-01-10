@@ -3,6 +3,7 @@ import 'jasmine';
 import { promises as fs } from 'fs';
 import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
@@ -73,7 +74,7 @@ describe('annotation_extractor', () => {
         const metadata = JSON.parse(
             await fs.readFile(`${tmpDir.get()}/metadata.json`,
             { encoding: 'utf8' },
-        ));
+        )) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
             scripts: [
                 mockScriptMetadata({ path: 'foo.js' }),
