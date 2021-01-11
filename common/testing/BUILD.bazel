@@ -1,4 +1,5 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 ts_library(
@@ -56,7 +57,7 @@ ts_library(
     ],
 )
 
-ts_devserver(
+concatjs_devserver(
     name = "devserver_test_server",
     testonly = True,
     static_files = ["devserver_test_page.html"],

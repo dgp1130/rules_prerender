@@ -59,7 +59,7 @@ export class Server {
 
     /**
      * Constructs a new DevServer representing an already running
-     * `ts_devserver()` child process.
+     * `concatjs_devserver()` child process.
      * 
      * @param host The host the devserver is running on (typically 'localhost').
      * @param port The port the devserver is running on.
@@ -80,14 +80,15 @@ export class Server {
      * 
      * @param binary Path to a `ts_binary()` executable to invoke which will
      *     start the server. This is usually done via a `data` dependency on a
-     *     `ts_devserver()`. The path to a `ts_devserver()` target can be
-     *     retrieved by resolving a runfile at
+     *     `concatjs_devserver()`. The path to a `concatjs_devserver()` target
+     *     can be retrieved by resolving a runfile at
      *     `${workspaceName}/${pathToDevserverPkg}/${devserverName}` (see
      *     [runfiles.ts](../runfiles.ts)). For example, a
-     *     `ts_devserver(name = "my_server")` target in `path/to/pkg/BUILD` with
-     *     a `workspace(name = "wksp")` in the root `WORKSPACE` file would have
-     *     its binary at `resolveRunfile('wksp/path/to/pkg/my_server')` (don't
-     *     forget the `data` dependency on `//path/to/pkg:my_server`!).
+     *     `concatjs_devserver(name = "my_server")` target in
+     *     `path/to/pkg/BUILD` with a `workspace(name = "wksp")` in the root
+     *     `WORKSPACE` file would have its binary at
+     *     `resolveRunfile('wksp/path/to/pkg/my_server')` (don't forget the
+     *     `data` dependency on `//path/to/pkg:my_server`!).
      * @param stdout A function to call when receiving data from stdout of the
      *     server.
      * @param stderr A function to call when receiving data from stderr of the

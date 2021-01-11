@@ -1,6 +1,6 @@
 """Defines `web_resources_devserver()` functionality."""
 
-load("@npm//@bazel/typescript:index.bzl", "ts_devserver")
+load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
 load("//common:label.bzl", "absolute")
 
 def web_resources_devserver(
@@ -25,7 +25,7 @@ def web_resources_devserver(
     resources_path = absolute(resources)[len("//"):].replace(":", "/")
 
     # Generate a devserver implementation.
-    ts_devserver(
+    concatjs_devserver(
         name = name,
         static_files = [resources],
         additional_root_paths = [resources_path],

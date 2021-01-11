@@ -11,7 +11,7 @@ installed.
 
 Start with a
 [`rules_nodejs`](https://github.com/bazelbuild/rules_nodejs#quickstart) project,
-if you already have one, great. If not, the easiest way to make one is:
+if you already have one, great! If not, the easiest way to make one is:
 
 ```shell
 npx @bazel/create ${NAME}
@@ -32,12 +32,26 @@ npm install rules_prerender @bazel/typescript typescript --save-dev
 Make sure to resolve any peer dep warnings and ensure that everything is using
 compatible versions.
 
-Last step is to add to your `WORKSPACE` file:
+Last step is to update to your `WORKSPACE` file. Add:
 
 ```python
+# `rules_webtesting` is necessary for `@bazel/concatjs` which provides the
+# devserver implementation used by `rules_prerender`.
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    sha256 = "9bb461d5ef08e850025480bab185fd269242d4e533bca75bfb748001ceb343c3",
+    urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.3/rules_webtesting.tar.gz"],
+)
+load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
+web_test_repositories()
+
+# Load other `rules_prerender` dependencies.
 load("@npm//rules_prerender:package.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()
 ```
+
+And make sure your `npm_install()` rule has `strict_visibility = False`.
 
 With that all done, you should be ready to use `rules_prerender`! See the next
 section for how to use the API.
@@ -264,6 +278,10 @@ separate `prerender_page()` rule will provided unbundled JavaScript and CSS
 resources so a user could manually bundle them with whatever means they like.
 
 ## Development
+
+NOTE: If you encounter "Missing inputs" errors from `fsevents` or other optional
+dependencies, consider using `npm ci` instead of `npm install`.
+See: https://github.com/bazelbuild/rules_nodejs/issues/2395.
 
 There are `bazel` and `ibazel` scripts in `package.json` so you can run any
 Bazel command with:

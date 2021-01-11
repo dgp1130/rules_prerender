@@ -30,8 +30,9 @@
         "static-site-generator"
     ],
     "dependencies": {
+        "@bazel/concatjs": "^3.0.0",
         "@bazel/postcss": "^0.5.0",
-        "@bazel/rollup": "^2.3.2",
+        "@bazel/rollup": "^3.0.0",
         "@rollup/plugin-node-resolve": "^11.0.1",
         "node-html-parser": "^2.0.0",
         "postcss": "^7.0.35",
@@ -43,8 +44,8 @@
         "@bazel/bazelisk": "latest",
         "@bazel/buildifier": "latest",
         "@bazel/ibazel": "latest",
-        "@bazel/jasmine": "^2.3.1",
-        "@bazel/typescript": "^2.3.1",
+        "@bazel/jasmine": "^3.0.0",
+        "@bazel/typescript": "^3.0.0",
         "@types/jasmine": "^3.6.2",
         "@types/node": "^14.14.13",
         "@types/puppeteer": "^5.4.2",
@@ -56,6 +57,6 @@
         "typescript": "^3.9.7"
     },
     "peerDependencies": {
-        "@bazel/typescript": "^2.0.0"
+        "@bazel/typescript": "^3.0.0"
     }
 }
