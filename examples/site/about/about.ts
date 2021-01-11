@@ -1,4 +1,6 @@
+import { includeStyle } from 'rules_prerender';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
+import { srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the about page. */
 export default function (): string {
@@ -6,6 +8,18 @@ export default function (): string {
         <article comp-about>
             <p>This is the about page. It gives additional background on the
             project and this example.</p>
+
+            <img src="/images/icon" />
+
+            <p>This page includes an image resource at <code>/images/icon</code>
+            although in source it is called
+            <a href="${srcLink('/examples/site/about/logo.png')}" rel="noopener"><code>logo.png</code></a>.
+            As part of the build process it gets renamed and propagated to the
+            final build directory. This gives developers full control over the
+            URL structure of their site. If another file were to be given the
+            same path, <code>rules_prerender</code> would throw an error and
+            fail the build with a precise error message about the file conflict.
+            </p>
 
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisi
             ex, pellentesque eu dignissim ac, mattis ac felis. Vestibulum congue
@@ -37,6 +51,8 @@ export default function (): string {
             faucibus sed dignissim quis, venenatis non mi. Curabitur lacinia
             tincidunt vulputate. Proin non vehicula risus, id pharetra lorem.
             </p>
+
+            ${includeStyle('rules_prerender/examples/site/about/about.css')}
         </article>
     `);
 }

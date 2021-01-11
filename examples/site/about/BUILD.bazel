@@ -1,10 +1,23 @@
-load("//:index.bzl", "prerender_page_bundled")
+load("//:index.bzl", "prerender_page_bundled", "web_resources")
 
 prerender_page_bundled(
     name = "about",
     src = "about.ts",
     path = "/about/index.html",
+    lib_deps = [
+        "//examples/site/common:links",
+        "//packages/rules_prerender",
+    ],
+    styles = ["about.css"],
+    resources = [":resources"],
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     visibility = ["//examples/site:__pkg__"],
     deps = ["//examples/site/components/base"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/images/icon": "logo.png",
+    },
 )
