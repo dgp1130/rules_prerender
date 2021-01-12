@@ -35,17 +35,6 @@ compatible versions.
 Last step is to update to your `WORKSPACE` file. Add:
 
 ```python
-# `rules_webtesting` is necessary for `@bazel/concatjs` which provides the
-# devserver implementation used by `rules_prerender`.
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "io_bazel_rules_webtesting",
-    sha256 = "9bb461d5ef08e850025480bab185fd269242d4e533bca75bfb748001ceb343c3",
-    urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.3/rules_webtesting.tar.gz"],
-)
-load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
-web_test_repositories()
-
 # Load other `rules_prerender` dependencies.
 load("@npm//rules_prerender:package.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()
