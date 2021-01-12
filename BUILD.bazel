@@ -26,6 +26,7 @@ bzl_library(
 publish_files(
     name = "publish_files",
     files = [
+        "README.md",
         "index.bzl",
         "package.bzl",
         "package.json",
