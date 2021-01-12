@@ -10,9 +10,6 @@ quite yet.
 
 ## Installation
 
-NOTE: The project is not yet published, but this is the way it is expected to be
-installed.
-
 Start with a
 [`rules_nodejs`](https://github.com/bazelbuild/rules_nodejs#quickstart) project,
 if you already have one, great! If not, the easiest way to make one is:
