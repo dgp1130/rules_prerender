@@ -1,7 +1,7 @@
 """Defines `web_resources_devserver()` functionality."""
 
 load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
-load("//common:label.bzl", "absolute")
+load("//common:label.bzl", "absolute", "file_path_of")
 
 def web_resources_devserver(
     name,
@@ -21,14 +21,11 @@ def web_resources_devserver(
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
-    # Get the workspace-relative path to the resources directory.
-    resources_path = absolute(resources)[len("//"):].replace(":", "/")
-
     # Generate a devserver implementation.
     concatjs_devserver(
         name = name,
         static_files = [resources],
-        additional_root_paths = [resources_path],
+        additional_root_paths = [file_path_of(absolute(resources))],
         testonly = testonly,
         visibility = visibility,
     )
