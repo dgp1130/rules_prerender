@@ -33,8 +33,15 @@ which itself has a peer dep on
 npm install rules_prerender @bazel/typescript typescript --save-dev
 ```
 
-Make sure to resolve any peer dep warnings and ensure that everything is using
-compatible versions.
+You will also need a `tsconfig.json`. Easiest way to generate one is with:
+
+```shell
+npx typescript --init
+```
+
+See
+[`rules_typescript` suggestions](https://bazelbuild.github.io/rules_nodejs/TypeScript.html#writing-typescript-code-for-bazel)
+to set up absolute imports.
 
 Last step is to update to your `WORKSPACE` file. Add:
 
@@ -47,7 +54,10 @@ rules_prerender_dependencies()
 And make sure your `npm_install()` rule has `strict_visibility = False`.
 
 With that all done, you should be ready to use `rules_prerender`! See the next
-section for how to use the API.
+section for how to use the API, or you can check out
+[some examples](/examples/site/) which shows most of the relevant features in
+action (note that where they depend on `//packages/rules_prerender`, you should
+depend on `@npm//rules_prerender`).
 
 ## API
 
@@ -69,7 +79,9 @@ prerender_component(
     name = "my_component",
     # The library which will prerender the HTML at build time in a Node process.
     srcs = ["my_component_prerender.ts"],
-    # Dependent `prerender_library()` rules used by `my_component_prerender.ts`.
+    # Other `ts_library()` rules used by `my_component_prerender.ts`.
+    lib_deps = ["@npm//rules_prerender"],
+    # Other `prerender_component()` rules used by `my_component_prerender.ts`.
     deps = ["//my_other_component"],
     # Client-side JavaScript to be executed in the browser.
     scripts = [":scripts"],
@@ -99,6 +111,7 @@ web_resources(
 
 ```typescript
 // my_component/my_component_prerender.ts
+
 import { includeScript, includeStyle } from 'rules_prerender';
 import { renderOtherComponent } from '__main__/my_other_component/my_other_component_prerender';
 
@@ -133,7 +146,7 @@ export function renderMyComponent(name: string): string {
 ```typescript
 // my_component/my_component.ts
 
-import {show} from '__main__/my_other_component/my_other_component';
+import { show } from '__main__/my_other_component/my_other_component';
 
 // Register an event handler to show the other component. Could just as easily
 // use a framework like Angular, LitElement, React, or just define an
@@ -167,7 +180,7 @@ The second part of the rule set leverages such components to prerender an entire
 web page.
 
 ```typescript
-// my_page_prerender.ts
+// my_page/my_page_prerender.ts
 
 import { renderMyComponent } from '__main__/my_component/my_component_prerender';
 
@@ -187,12 +200,11 @@ export default function render(): string {
 ```
 
 ```python
-# my_page/BUILD
+# my_page/BUILD.bazel
 
 load(
     "@npm//rules_prerender:index.bzl",
     "prerender_page_bundled",
-    "web_resources",
     "web_resources_devserver",
 )
 
@@ -214,6 +226,13 @@ prerender_page_bundled(
     path = "/my_page/index.html",
     # Components used during prerendering.
     deps = ["//my_component"],
+)
+
+# Simple server to test out this page. `bazel run` / `ibazel run` this target to
+# check out the page at `/my_page/index.html`.
+web_resources_devserver(
+    name = "devserver",
+    resources = ":prerendered_page",
 )
 ```
 
@@ -249,7 +268,7 @@ web_resources(
     ],
 )
 
-# A simple devserver implementation to serve the generated directory.
+# A simple devserver implementation to serve the entire site.
 web_resources_devserver(
     name = "devserver",
     resources = ":site",
