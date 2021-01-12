@@ -1,6 +1,10 @@
 """Utilities related to Bazel labels."""
 
-def absolute(target):
+def absolute(
+    target,
+    repository_name = native.repository_name,
+    package_name = native.package_name,
+):
     """Returns an absolute path to the provided possibly-relative target.
 
     This is useful for generating labels for targets that are siblings of a
@@ -23,13 +27,17 @@ def absolute(target):
     
     Args:
         target: A label string which may be relative or absolute.
+        repository_name: Function which returns the repository name. Used for
+            tests only, should not be set in production code.
+        package_name: Function which returns the package name. Used for tests
+            only, should not be set in production code.
     
     Returns: The absolute path to the provided target. If the target is
         relative, then it is interpretted as relative to the current package as
         determined by `native.repository_name()` and `native.package_name()`.
     """
     lbl = Label("%s//%s:__pkg__" % (
-        native.repository_name(),
-        native.package_name(),
+        repository_name(),
+        package_name(),
     ))
     return str(lbl.relative(target))

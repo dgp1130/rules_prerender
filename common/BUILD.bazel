@@ -2,6 +2,7 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
+load(":label_test.bzl", "label_test_suite")
 
 publish_files(
     name = "publish_files",
@@ -87,6 +88,14 @@ bzl_library(
     srcs = ["label.bzl"],
     visibility = ["//visibility:public"],
 )
+
+bzl_library(
+    name = "label_test_lib",
+    srcs = ["label_test.bzl"],
+    deps = [":label"],
+)
+
+label_test_suite(name = "label_test")
 
 ts_library(
     name = "runfiles",
