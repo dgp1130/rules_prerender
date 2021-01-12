@@ -41,3 +41,25 @@ def absolute(
         package_name(),
     ))
     return str(lbl.relative(target))
+
+def file_path_of(lbl):
+    """Returns the runtime file path to the given target.
+
+    Args:
+        lbl: An absolute target (as a string) to generate the file path of.
+
+    Returns:
+        The runtime path to the provided target. Generally of the form
+        `workspace_name/path/to/pkg/target`. Workspace name is dropped if in the
+        primary workspace. Package path is dropped if in the root level package.
+    """
+    # Isolate the workspace name, package, and target strings.
+    [wksp, absolute_path] = lbl.split("//")
+    [pkg, target] = absolute_path.split(":")
+
+    # Build a file path to the given target.
+    path_to_target = "%s/%s" % (pkg, target) if pkg else target
+    if not wksp:
+        return path_to_target
+
+    return "%s/%s" % (wksp.replace("@", ""), path_to_target)

@@ -1,7 +1,7 @@
 """Tests for `label.bzl`."""
 
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
-load(":label.bzl", "absolute")
+load(":label.bzl", "absolute", "file_path_of")
 
 def _mock_self_repository_name():
     return "@"
@@ -12,7 +12,7 @@ def _mock_external_repository_name():
 def _mock_package_name():
     return "path/to/some/pkg"
 
-def _absolute_given_relative_path_impl(ctx):
+def _absolute_given_relative_target_impl(ctx):
     env = unittest.begin(ctx)
     
     lbl = absolute(
@@ -24,10 +24,10 @@ def _absolute_given_relative_path_impl(ctx):
     
     return unittest.end(env)
 
-_absolute_given_relative_path_test = unittest.make(
-    _absolute_given_relative_path_impl)
+_absolute_given_relative_target_test = unittest.make(
+    _absolute_given_relative_target_impl)
 
-def _absolute_given_absolute_path_impl(ctx):
+def _absolute_given_absolute_target_impl(ctx):
     env = unittest.begin(ctx)
     
     lbl = absolute(
@@ -39,10 +39,10 @@ def _absolute_given_absolute_path_impl(ctx):
     
     return unittest.end(env)
 
-_absolute_given_absolute_path_test = unittest.make(
-    _absolute_given_absolute_path_impl)
+_absolute_given_absolute_target_test = unittest.make(
+    _absolute_given_absolute_target_impl)
 
-def _absolute_given_external_path_impl(ctx):
+def _absolute_given_external_target_impl(ctx):
     env = unittest.begin(ctx)
     
     lbl = absolute(
@@ -54,8 +54,8 @@ def _absolute_given_external_path_impl(ctx):
     
     return unittest.end(env)
 
-_absolute_given_external_path_test = unittest.make(
-    _absolute_given_external_path_impl)
+_absolute_given_external_target_test = unittest.make(
+    _absolute_given_external_target_impl)
 
 def _absolute_given_relative_path_in_external_workspace_impl(ctx):
     env = unittest.begin(ctx)
@@ -87,12 +87,60 @@ def _absolute_given_absolute_path_in_external_workspace_impl(ctx):
 _absolute_given_absolute_path_in_external_workspace_test = unittest.make(
     _absolute_given_absolute_path_in_external_workspace_impl)
 
+def _file_path_of_given_absolute_target_impl(ctx):
+    env = unittest.begin(ctx)
+    
+    path = file_path_of("//path/to/some/other/pkg:foo")
+    asserts.equals(env, "path/to/some/other/pkg/foo", str(path))
+    
+    return unittest.end(env)
+
+_file_path_of_given_absolute_target_test = unittest.make(
+    _file_path_of_given_absolute_target_impl)
+
+def _file_path_of_given_external_target_impl(ctx):
+    env = unittest.begin(ctx)
+    
+    path = file_path_of("@wksp//path/to/some/other/pkg:foo")
+    asserts.equals(env, "wksp/path/to/some/other/pkg/foo", str(path))
+    
+    return unittest.end(env)
+
+_file_path_of_given_external_target_test = unittest.make(
+    _file_path_of_given_external_target_impl)
+
+def _file_path_of_given_root_package_target_impl(ctx):
+    env = unittest.begin(ctx)
+    
+    path = file_path_of("//:foo")
+    asserts.equals(env, "foo", str(path))
+    
+    return unittest.end(env)
+
+_file_path_of_given_root_package_target_test = unittest.make(
+    _file_path_of_given_root_package_target_impl)
+
+def _file_path_of_given_external_root_package_target_impl(ctx):
+    env = unittest.begin(ctx)
+    
+    path = file_path_of("@wksp//:foo")
+    asserts.equals(env, "wksp/foo", str(path))
+    
+    return unittest.end(env)
+
+_file_path_of_given_external_root_package_target_test = unittest.make(
+    _file_path_of_given_external_root_package_target_impl)
+
 def label_test_suite(name):
     unittest.suite(
         name,
-        _absolute_given_relative_path_test,
-        _absolute_given_absolute_path_test,
-        _absolute_given_external_path_test,
+        _absolute_given_relative_target_test,
+        _absolute_given_absolute_target_test,
+        _absolute_given_external_target_test,
         _absolute_given_relative_path_in_external_workspace_test,
         _absolute_given_absolute_path_in_external_workspace_test,
+        _file_path_of_given_absolute_target_test,
+        _file_path_of_given_external_target_test,
+        _file_path_of_given_root_package_target_test,
+        _file_path_of_given_external_root_package_target_test,
     )
