@@ -4,6 +4,10 @@ A Bazel rule set for prerendering HTML pages.
 
 ![CI](https://github.com/dgp1130/rules_prerender/workflows/CI/badge.svg)
 
+NOTE: This project is currently **experimental**. Feel free to install it to try
+it out, give feedback, and suggest improvements! Just don't use it in production
+quite yet.
+
 ## Installation
 
 NOTE: The project is not yet published, but this is the way it is expected to be
