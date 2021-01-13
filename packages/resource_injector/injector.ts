@@ -1,6 +1,6 @@
-import * as fs from 'rules_prerender/common/fs';
+import * as fs from '../../common/fs';
 import { HTMLElement, parse } from 'node-html-parser';
-import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packages/resource_injector/config';
+import { InjectorConfig, InjectScript, InjectStyle } from './config';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the

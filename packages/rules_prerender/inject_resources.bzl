@@ -1,5 +1,7 @@
 """Defines `inject_resources()` functionality."""
 
+load("@build_bazel_rules_nodejs//:providers.bzl", "run_node")
+
 def inject_resources(
     name,
     input,
@@ -45,10 +47,11 @@ def _inject_resources_impl(ctx):
     args.add("--input", ctx.file.input.path)
     args.add("--config", config.path)
     args.add("--output", ctx.outputs.output.path)
-    ctx.actions.run(
+    run_node(
+        ctx = ctx,
         mnemonic = "InjectResources",
         progress_message = "Injecting resources",
-        executable = ctx.executable._injector,
+        executable = "_injector",
         arguments = [args],
         inputs = [ctx.file.input, config] + ctx.files.styles,
         outputs = [ctx.outputs.output],
@@ -67,7 +70,7 @@ _inject_resources_rule = rule(
         "_injector": attr.label(
             default = "//tools/internal:resource_injector",
             executable = True,
-            cfg = "exec",
+            cfg = "host",
         ),
     },
 )
