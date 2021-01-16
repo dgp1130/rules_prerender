@@ -11,6 +11,7 @@ def prerender_page_bundled(
     name,
     src,
     path = None,
+    tsconfig = None,
     lib_deps = [],
     scripts = [],
     styles = [],
@@ -52,6 +53,8 @@ def prerender_page_bundled(
             string which contains the HTML document.
         path: The path the page is hosted at. Must start with a slash and
             defaults to `%{name}.html`.
+        tsconfig: A label referencing a tsconfig.json file or `ts_config()`
+            target. Will be used to compile the `src` file.
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled for the
             generated page.
@@ -74,6 +77,7 @@ def prerender_page_bundled(
     prerender_page(
         name = prerender_name,
         src = src,
+        tsconfig = tsconfig,
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,

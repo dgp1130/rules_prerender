@@ -7,6 +7,7 @@ load(":web_resources.bzl", "web_resources")
 def prerender_component(
     name,
     srcs,
+    tsconfig = None,
     lib_deps = [],
     scripts = [],
     styles = [],
@@ -30,6 +31,8 @@ def prerender_component(
     Args:
         name: The name of this rule.
         srcs: The TypeScript source files for use in prerendering.
+        tsconfig: A label referencing a tsconfig.json file or `ts_config()`
+            target. Will be used to compile files in `srcs`.
         lib_deps: `ts_library()` dependencies for the TypeScript source files.
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
@@ -45,6 +48,7 @@ def prerender_component(
     ts_library(
         name = "%s_prerender" % name,
         srcs = srcs,
+        tsconfig = tsconfig,
         deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,

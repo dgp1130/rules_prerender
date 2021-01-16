@@ -9,6 +9,7 @@ load(":web_resources.bzl", "web_resources")
 def prerender_page(
     name,
     src,
+    tsconfig = None,
     lib_deps = [],
     scripts = [],
     styles = [],
@@ -41,6 +42,8 @@ def prerender_page(
     Args:
         name: The name of this rule.
         src: The TypeScript source file.
+        tsconfig: A label referencing a tsconfig.json file or `ts_config()`
+            target. Will be used to compile the `src` file.
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled for the
             generated page.
@@ -57,6 +60,7 @@ def prerender_page(
     prerender_component(
         name = component,
         srcs = [src],
+        tsconfig = tsconfig,
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,
