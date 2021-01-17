@@ -35,8 +35,8 @@ jobs:
       run: npm ci
 
     # Build and test the entire repository.
-    # - name: Test
-    #   run: npm test
+    - name: Test
+      run: npm test
     
     # Publish the package.
     - name: Publish
