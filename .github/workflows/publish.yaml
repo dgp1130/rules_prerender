@@ -1,5 +1,5 @@
-# This workflow will do a clean install of Node dependencies, executes all Bazel
-# tests and then publishes the package to NPM with the given semver. Should be
+# This workflow will do a clean install of Node dependencies, executes all tests
+# and then publishes the package to NPM with the given semver. Should be
 # executed manually via the GitHub actions UI.
 
 name: Publish
@@ -35,6 +35,7 @@ jobs:
     # Publish the package
     - name: Publish
       run: |
+        npm whoami
         npm run -s -- bazel build //:pkg.publish --config release
         dist/bin/pkg.publish.sh
       env:
