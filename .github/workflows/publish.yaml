@@ -53,5 +53,5 @@ jobs:
       with:
         tag_name: releases/${{ github.event.inputs.version }}
         release_name: ${{ github.event.inputs.version }}
-        prerelease: ${{ github.event.inputs.prerelease == "true" }}
+        prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         body: https://www.npmjs.com/package/rules_prerender/v/${{ github.event.inputs.version }}
