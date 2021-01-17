@@ -5,7 +5,7 @@ load("//common:label.bzl", "absolute")
 
 _WebResourceInfo = provider(
     "Resources for web projects.",
-    fields = ["resources"],
+    fields = ["transitive_entries"],
 )
 
 def web_resources(
@@ -36,6 +36,39 @@ def web_resources(
     )
 
 def _web_resources_impl(ctx):
+    """Implements the `web_resources()` rule.
+
+    `web_resources()` simply outputs a directory at `ctx.attr.name` which
+    contains all the files given to `entries` at their associated file paths. It
+    also merges this directory will all transitive dependencies.
+    
+    This is implemented with two directories, one (the `entries` directory)
+    which includes **only** files that were explicitly listed as `entries` and
+    no dependencies. A second (the `merge` directory), merges the `entries`
+    directory of this target with the `entries` directories of all transitive
+    dependencies. This allows us to support a "triangle" pattern, whereby:
+
+    A
+    |
+    +---+
+    |   |
+    v   |
+    B   v
+    |   |
+    v   |
+    +---+
+    |
+    v
+    C
+
+    In this case, C transitively depends on A via B, but also directly depends
+    on A. If we simply generated a single `merge` directory for each target,
+    entries from A would be duplicated in B, and then cause a merge conflict in
+    C. Having two directories works around this problem, because any given
+    `merge` directory is created by merging transitive `entries` directory, so C
+    would attempt to merge `entries` of B with `entries` of A, which should
+    never have a conflict (if they did, it's a real conflict).
+    """
     # Translate `string` -> `string` dictionary into a `string` -> `label`
     # dictionary by looking up each value in `ctx.attr.file_lbls`.
     url_file_refs = dict([(
@@ -46,9 +79,9 @@ def _web_resources_impl(ctx):
         ][0],
     ) for (url_path, file_ref) in ctx.attr.url_file_refs.items()])
 
-    args = ctx.actions.args()
+    entries_args = ctx.actions.args()
 
-    # Add each arg individually instead of using `args.add_all()` so
+    # Add each arg individually instead of using `entries_args.add_all()` so
     # corresponding `--url-path` and `--file-ref` flags are adjacent to each
     # other for easier debugging.
     for (url_path, file_ref) in url_file_refs.items():
@@ -60,23 +93,48 @@ def _web_resources_impl(ctx):
             ))
         ref = files[0]
 
-        args.add("--url-path", url_path)
-        args.add("--file-ref", ref)
+        entries_args.add("--url-path", url_path)
+        entries_args.add("--file-ref", ref)
 
-    # Add dependencies as `--merge-dir` flag.
-    deps = [dep[_WebResourceInfo].resources for dep in ctx.attr.deps]
-    args.add_all([dep.path for dep in deps], before_each = "--merge-dir")
-
-    dest_dir = ctx.actions.declare_directory(ctx.attr.name)
-    args.add("--dest-dir", dest_dir.path)
-
-    # Package all the resources into the new directory.
+    # Package all `entries` resources into a new directory.
+    res_dir = ctx.actions.declare_directory("%s_entries" % ctx.attr.name)
+    entries_args.add("--dest-dir", res_dir.path)
     ctx.actions.run(
         mnemonic = "ResourcePackager",
-        progress_message = "Packing resources",
+        progress_message = "Packing entries",
         executable = ctx.executable._packager,
-        arguments = [args],
-        inputs = ctx.files.file_lbls + deps,
+        arguments = [entries_args],
+        inputs = ctx.files.file_lbls,
+        outputs = [res_dir],
+    )
+
+    dest_dir = ctx.actions.declare_directory(ctx.attr.name)
+    merge_args = ctx.actions.args()
+
+    # Enumerate the `entries` directory for all transitive dependencies and
+    # deduplicate them.
+    transitive_resources = [dep[_WebResourceInfo].transitive_entries
+                            for dep in ctx.attr.deps]
+    transitive_entries_dirs = collections.uniq(
+        [dir for depset in transitive_resources for dir in depset.to_list()]
+    )
+
+    # Merge all trasitive dependencies `entries` directory.
+    merge_args.add("--merge-dir", res_dir.path)
+    merge_args.add_all(
+        [dep.path for dep in transitive_entries_dirs],
+        before_each = "--merge-dir",
+    )
+    merge_args.add("--dest-dir", dest_dir.path)
+
+    # Merge the `entries` directories of all transitive dependencies into a
+    # single directory.
+    ctx.actions.run(
+        mnemonic = "ResourceMerger",
+        progress_message = "Merging resources",
+        executable = ctx.executable._packager,
+        arguments = [merge_args],
+        inputs = [res_dir] + transitive_entries_dirs,
         outputs = [dest_dir],
     )
 
@@ -86,7 +144,12 @@ def _web_resources_impl(ctx):
             # Needed to include the directory when used as a `data` input.
             data_runfiles = ctx.runfiles([dest_dir]),
         ),
-        _WebResourceInfo(resources = dest_dir),
+        _WebResourceInfo(
+            transitive_entries = depset(
+                [res_dir],
+                transitive = transitive_resources,
+            ),
+        ),
     ]
 
 _web_resources_rule = rule(

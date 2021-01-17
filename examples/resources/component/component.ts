@@ -6,6 +6,6 @@ export function renderComponent(): string {
             <span>Hello from the component!</span>
             <img src="/images/component.png" />
         </div>
-        ${renderTransitive()}
+        ${renderTransitive('component')}
     `;
 }
