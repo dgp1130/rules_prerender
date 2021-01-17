@@ -60,6 +60,28 @@ ts_library(
 )
 
 ts_library(
+    name = "prerender_resource",
+    srcs = ["prerender_resource.ts"],
+    visibility = ["//visibility:public"],
+    deps = [":url_path"],
+)
+
+ts_library(
+    name = "prerender_resource_test_lib",
+    srcs = ["prerender_resource_test.ts"],
+    testonly = True,
+    deps = [
+        ":prerender_resource",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_resource_test",
+    deps = [":prerender_resource_test_lib"],
+)
+
+ts_library(
     name = "url_path",
     srcs = ["url_path.ts"],
 )

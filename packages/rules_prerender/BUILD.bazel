@@ -16,6 +16,7 @@ ts_library(
     deps = [
         ":scripts",
         ":styles",
+        "//common/models:prerender_resource",
     ],
 )
 
