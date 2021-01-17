@@ -35,12 +35,12 @@ jobs:
       run: npm ci
 
     # Build and test the entire repository.
-    - name: Test
-      run: npm test
+    # - name: Test
+    #   run: npm test
     
     # Publish the package.
     - name: Publish
-      run: npm run -s -- bazel run //:pkg.publish --config release
+      run: npm run publish
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
