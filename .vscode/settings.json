@@ -18,6 +18,7 @@
         "prerenders",
         "promisified",
         "runfile",
+        "semver",
         "testonly",
         "transpiled",
         "unmocked",

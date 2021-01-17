@@ -1,0 +1,40 @@
+# This workflow will do a clean install of Node dependencies, executes all Bazel
+# tests and then publishes the package to NPM with the given semver. Should be
+# executed manually via the GitHub actions UI.
+
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: NPM semver to release as.
+        required: true
+        default: "0.0.0-PLACEHOLDER"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    # Install the package, including Bazel.
+    - name: Install
+      run: npm ci
+
+    # Build and test the entire repository.
+    - name: Test
+      run: npm test
+    
+    # Publish the package
+    - name: Publish
+      run: npm run -s -- bazel run //:pkg.publish --config release
+      env:
+        BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
