@@ -493,7 +493,7 @@ needed at run time, then a `publish_files()` macro is needed to copy them into
 the NPM package, and a `BUILD.publish` file may be needed to configure their
 runtime usage and provide consistency with build time usage.
 
-### Testing
+### Testing publishable builds
 
 Currently there are no automated tests of the published package or run time
 builds (aside from a simple build test of the NPM package directory). To test
@@ -525,3 +525,24 @@ Check out the
 [`ref/external`](https://github.com/dgp1130/rules_prerender/tree/ref/external/)
 branch which includes an in-tree user workspace which can be used to more easily
 verify and debug run time execution.
+
+### Releasing
+
+To actually publish a release to NPM, follow these steps:
+
+1.  Consider [testing the release](#testing-publishable-builds).
+    *   No need for `bazel test //...`, the release process will do it for you.
+1.  Go to the
+    [Publish workflow](https://github.com/dgp1130/rules_prerender/actions?query=workflow%3APublish)
+    and click `Run workflow`.
+    *   Make sure to fill out all the requested information.
+    *   This will install the package, execute all tests, and then publish as
+        the given semver to NPM.
+    *   It will also tag the commit with `releases/${semver}` and push it back
+        to the repository.
+    *   Finally, it will create a GitHub release for that tag with a link to NPM
+        for this particular version.
+1.  Once the workflow is complete, consider going to
+    [releases](https://github.com/dgp1130/rules_prerender/releases) to edit the
+    automatically created release to add a changelog or other relevant
+    information.
