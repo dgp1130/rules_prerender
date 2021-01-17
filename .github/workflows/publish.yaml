@@ -39,4 +39,4 @@ jobs:
         dist/bin/pkg.publish.sh
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
