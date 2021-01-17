@@ -13,7 +13,7 @@ on:
         default: "0.0.0-PLACEHOLDER"
 
 jobs:
-  test:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +34,7 @@ jobs:
     
     # Publish the package
     - name: Publish
-      run: npm run -s -- bazel run //:pkg.publish --config release
+      run: npm run -s -- bazel run //:pkg.publish --config release 2>&1
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
