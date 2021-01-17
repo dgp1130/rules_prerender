@@ -15,7 +15,8 @@
         "bazel": "bazel",
         "ibazel": "ibazel",
         "build": "bazel build //...",
-        "test": "bazel test //..."
+        "test": "bazel test //...",
+        "publish": "bazel run //:pkg.publish --config release"
     },
     "repository": {
         "type": "git",

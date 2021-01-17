@@ -35,10 +35,7 @@ jobs:
     
     # Publish the package
     - name: Publish
-      run: |
-        npm whoami
-        npm run -s -- bazel build //:pkg.publish --config release
-        dist/bin/pkg.publish.sh
+      run: npm run publish
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
