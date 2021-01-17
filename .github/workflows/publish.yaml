@@ -16,17 +16,6 @@ on:
           Whether or not to mark the GitHub release as a prerelease. Possible
           values: "true", "false".
         default: "false"
-      body:
-        description: |
-          Body text for the release. Will have a link to NPM prepended, so no
-          need to include that.
-        required: true
-        default: |
-          Made X super awesome!
-
-          Changelog:
-          * Fixed #1 - Did a thing.
-          * Fixed #2 - Did another thing.
 
 jobs:
   publish:
@@ -65,7 +54,4 @@ jobs:
         tag_name: releases/${{ github.event.inputs.version }}
         release_name: ${{ github.event.inputs.version }}
         prerelease: ${{ github.event.inputs.prerelease == "true" }}
-        body: |
-          https://www.npmjs.com/package/rules_prerender/v/${{ github.event.inputs.version }}
-
-          ${{ github.event.inputs.body }}
+        body: https://www.npmjs.com/package/rules_prerender/v/${{ github.event.inputs.version }}
