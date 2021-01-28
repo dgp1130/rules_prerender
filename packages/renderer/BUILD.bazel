@@ -19,6 +19,7 @@ ts_library(
         ":entry_point",
         "//common:binary",
         "//common:formatters",
+        "//common/models:prerender_resource",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
@@ -68,7 +69,10 @@ ts_library(
 ts_library(
     name = "entry_point",
     srcs = ["entry_point.ts"],
-    deps = [":dynamic_import"],
+    deps = [
+        ":dynamic_import",
+        "//common/models:prerender_resource",
+    ],
 )
 
 ts_library(
@@ -77,6 +81,7 @@ ts_library(
     deps = [
         ":dynamic_import",
         ":entry_point",
+        "//common/models:prerender_resource",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

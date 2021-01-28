@@ -1,11 +1,12 @@
 import 'jasmine';
 
-import { invoke } from './entry_point';
-import * as importLib from './dynamic_import';
+import { PrerenderResource } from 'rules_prerender/common/models/prerender_resource';
+import { invoke } from 'rules_prerender/packages/renderer/entry_point';
+import * as importLib from 'rules_prerender/packages/renderer/dynamic_import';
 
 describe('entry_point', () => {
     describe('invoke()', () => {
-        it('invokes the given entry point', async () => {
+        it('invokes the given entry point and returns its string value', async () => {
             const defaultExport = jasmine.createSpy('defaultExport')
                     .and.returnValue('Hello, World!');
             spyOn(importLib, 'dynamicImport').and.resolveTo({
@@ -20,7 +21,7 @@ describe('entry_point', () => {
             expect(rendered).toBe('Hello, World!');
         });
 
-        it('invokes the given entry point and awaits it', async () => {
+        it('invokes the given entry point and awaits its `Promise<string>` value', async () => {
             const defaultExport = jasmine.createSpy('defaultExport')
                     .and.resolveTo('Hello, World!');
             spyOn(importLib, 'dynamicImport').and.resolveTo({
@@ -29,10 +30,74 @@ describe('entry_point', () => {
 
             const rendered = await invoke('foo.js');
 
-            expect(importLib.dynamicImport).toHaveBeenCalledOnceWith('foo.js');
-            expect(defaultExport).toHaveBeenCalledOnceWith();
-
             expect(rendered).toBe('Hello, World!');
+        });
+
+        it('invokes the given entry point and returns its `Iterable<PrerenderResource>` value', async () => {
+            const defaultExport =
+                jasmine.createSpy('defaultExport').and.returnValue([
+                    PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                    PrerenderResource.of('/bar.html', 'Hello, bar!'),
+                    PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                ]);
+            spyOn(importLib, 'dynamicImport').and.resolveTo({
+                default: defaultExport,
+            });
+
+            const rendered = await invoke('foo.js');
+
+            expect((rendered as any)[Symbol.iterator]).toBeDefined();
+            expect(Array.from(rendered as Iterable<PrerenderResource>))
+                .toEqual([
+                    PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                    PrerenderResource.of('/bar.html', 'Hello, bar!'),
+                    PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                ]);
+        });
+
+        it('invokes the given entry point and awaits its `Promise<Iterable<PrerenderResource>>` value', async () => {
+            const defaultExport =
+                jasmine.createSpy('defaultExport').and.resolveTo([
+                    PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                    PrerenderResource.of('/bar.html', 'Hello, bar!'),
+                    PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                ]);
+            spyOn(importLib, 'dynamicImport').and.resolveTo({
+                default: defaultExport,
+            });
+
+            const rendered = await invoke('foo.js');
+
+            expect((rendered as any)[Symbol.iterator]).toBeDefined();
+            expect(Array.from(rendered as Iterable<PrerenderResource>))
+                .toEqual([
+                    PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                    PrerenderResource.of('/bar.html', 'Hello, bar!'),
+                    PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                ]);
+        });
+
+        it('invokes the given entry point and returns its `AsyncIterable<PrerenderResource>` value', async () => {
+            const defaultExport = jasmine.createSpy('defaultExport')
+                .and.returnValue(async function* () {
+                    yield PrerenderResource.of('/foo.html', 'Hello, foo!');
+                    yield PrerenderResource.of('/bar.html', 'Hello, bar!');
+                    yield PrerenderResource.of('/baz.html', 'Hello, baz!');
+                }());
+            spyOn(importLib, 'dynamicImport').and.resolveTo({
+                default: defaultExport,
+            });
+
+            const rendered = await invoke('foo.js');
+
+            expect((rendered as any)[Symbol.asyncIterator]).toBeDefined();
+            const renderedArray = await asyncIterableToArray(
+                rendered as AsyncIterable<PrerenderResource>);
+            expect(renderedArray).toEqual([
+                PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                PrerenderResource.of('/bar.html', 'Hello, bar!'),
+                PrerenderResource.of('/baz.html', 'Hello, baz!'),
+            ]);
         });
 
         it('throws an error if unable to import the module', async () => {
@@ -92,7 +157,16 @@ describe('entry_point', () => {
             });
 
             await expectAsync(invoke('foo.js')).toBeRejectedWithError(
-                    /provided a default export which returned\/resolved a non-string value/);
+                /provided a default export which returned a value that is not one of/);
         });
     });
 });
+
+async function asyncIterableToArray<T>(input: AsyncIterable<T>):
+        Promise<ReadonlyArray<T>> {
+    const array = [] as T[];
+    for await (const value of input) {
+        array.push(value);
+    }
+    return array;
+}
