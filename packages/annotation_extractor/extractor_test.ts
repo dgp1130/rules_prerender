@@ -103,36 +103,5 @@ describe('extractor', () => {
                 },
             ]);
         });
-
-        it('deduplicates repeated annotations', () => {
-            const [ , annotations ] = extract(`
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                    </head>
-                    <body>
-                        <!-- Repeated annotations. -->
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo/bar/baz.js"} -->
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo/bar/baz.js"} -->
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo/bar/baz.js"} -->
-
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"hello/world.js"} -->
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"hello/world.js"} -->
-                    </body>
-                </html>
-            `);
-
-            expect(Array.from(annotations.values())).toEqual([
-                {
-                    type: 'script',
-                    path: 'foo/bar/baz.js',
-                },
-                {
-                    type: 'script',
-                    path: 'hello/world.js',
-                },
-            ]);
-        });
     });
 });

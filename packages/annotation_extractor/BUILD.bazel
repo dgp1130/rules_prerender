@@ -21,6 +21,8 @@ ts_library(
         ":metadata",
         "//common:binary",
         "//common:formatters",
+        "//common:collections",
+        "//common/models:prerender_annotation",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
@@ -52,7 +54,6 @@ ts_library(
     srcs = ["extractor.ts"],
     deps = [
         "//common/models:prerender_annotation",
-        "@npm//@types/node",
         "@npm//node-html-parser",
     ],
 )

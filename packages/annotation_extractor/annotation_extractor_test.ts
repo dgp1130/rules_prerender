@@ -83,4 +83,41 @@ describe('annotation_extractor', () => {
             ],
         }));
     });
+
+    it('deduplicates extracted annotations', async () => {
+        await fs.writeFile(`${tmpDir.get()}/input.html`, `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Some header</h2>
+
+        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+    </body>
+</html>
+        `.trim());
+
+        const { code, stdout, stderr } = await run({
+            inputHtml: `${tmpDir.get()}/input.html`,
+            outputHtml: `${tmpDir.get()}/output.html`,
+            outputMetadata: `${tmpDir.get()}/metadata.json`,
+        });
+
+        expect(code).toBe(0);
+        expect(stdout.trim()).toBe('');
+        expect(stderr.trim()).toBe('');
+
+        const metadata = JSON.parse(
+            await fs.readFile(`${tmpDir.get()}/metadata.json`,
+            { encoding: 'utf8' },
+        )) as PrerenderMetadata;
+        expect(metadata).toEqual(mockPrerenderMetadata({
+            scripts: [
+                mockScriptMetadata({ path: 'foo.js' }),
+            ],
+        }));
+    });
 });

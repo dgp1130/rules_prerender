@@ -1,6 +1,5 @@
 import { parse, HTMLElement, Node, CommentNode } from 'node-html-parser';
 import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import * as assert from 'assert';
 
 /**
  * Parses the given string as HTML and return a tuple of the input HTML with
@@ -13,7 +12,7 @@ import * as assert from 'assert';
  */
 export function extract(html: string): [
     string /* strippedHtml */,
-    Set<PrerenderAnnotation> /* annotations */,
+    Array<PrerenderAnnotation> /* annotations */,
 ] {
     const root = parse(html, {
         comment: true,
@@ -27,7 +26,7 @@ export function extract(html: string): [
 
     // Read all annotations from the HTML **and** remove the comments they come
     // from. This actually applies a side effect of modifying the document.
-    const annotations = unique(stripAnnotations(walkComments(walk(root))));
+    const annotations = Array.from(stripAnnotations(walkComments(walk(root))));
 
     return [ root.toString(), annotations ];
 }
@@ -74,31 +73,5 @@ function* walk(root: Node, parent?: HTMLElement):
         for (const node of root.childNodes) {
             yield* walk(node, root);
         }
-    }
-}
-
-/**
- * Returns a {@link Set} of the unique items of the given iterable, performing a
- * deep equality comparison on the items to determine uniqueness.
- */
-function unique<T extends object>(items: Iterable<T>): Set<T> {
-    const set = new Set<T>();
-    for (const item of items) {
-        const exists = Array.from(set.values())
-                .some((existing) => deepEqual(item, existing));
-        if (!exists) set.add(item);
-    }
-    return set;
-}
-
-/**
- * Returns whether or not the two objects as deeply equivalent to each other.
- */
-function deepEqual(first: object, second: object): boolean {
-    try {
-        assert.deepStrictEqual(first, second);
-        return true;
-    } catch (err) {
-        return false;
     }
 }

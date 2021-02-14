@@ -1,7 +1,9 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
+import { unique } from 'rules_prerender/common/collections';
 import { mdSpacing } from 'rules_prerender/common/formatters';
+import { annotationsEqual } from 'rules_prerender/common/models/prerender_annotation';
 import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
 import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
 
@@ -46,7 +48,8 @@ main(async () => {
     const [ output, annotations ] = extract(input);
 
     // Assemble annotations into the metadata format.
-    const metadata = assembleMetadata(annotations);
+    const uniqueAnnotations = unique(annotations, annotationsEqual);
+    const metadata = assembleMetadata(uniqueAnnotations);
 
     // Write output HTML and metadata JSON.
     const metadataOutput =
