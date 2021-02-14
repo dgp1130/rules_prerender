@@ -21,13 +21,12 @@ def prerender_page(
     """Renders an HTML page with the given TypeScript source at build time.
 
     This invokes the default export function of the given `src` TypeScript,
-    expecting a `string` (or `Promise<string>`) returned and generates an HTML
-    file with that content.
+    and generates an HTML file with the returned content.
 
-    `src` must compile to a CommonJS module with a default export that is a
-    function which accepts no arguments and returns a `string` or a
-    `Promise<string>`. A `ts_library()` is used to generate this and `lib_deps`
-    is used as the `deps` parameter.
+    The file listed in `src` must compile to a CommonJS module with a default
+    export of the type: `() => string | Promise<string>`. A `ts_library()` is
+    used to compile the `src` file and `lib_deps` + `deps` is used as the `deps`
+    parameter.
 
     Outputs:
         %{name}.html: An HTML file containing the content returned by the `src`
@@ -38,6 +37,8 @@ def prerender_page(
             scripts that were included in the page via `includeScript()`.
         %{name}_styles: A `filegroup()` containing all the CSS styles used by
             the page.
+        %{name}_resources: A `web_resources()` target containing all the
+            transitively used resources.
     
     Args:
         name: The name of this rule.
@@ -55,7 +56,7 @@ def prerender_page(
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
-    # Generates `%{name}_component_prerender` and `%{name}_component_scripts`.
+    # Generate a component of the user's code.
     component = "%s_component" % name
     prerender_component(
         name = component,
@@ -71,6 +72,7 @@ def prerender_page(
     component_prerender = "%s_prerender" % component
     component_scripts = "%s_scripts" % component
     component_styles = "%s_styles" % component
+    component_resources = "%s_resources" % component
 
     # Get the generated JS file path for the user provided TypeScript source.
     prerender_js = "%s_prerender_js" % name
@@ -151,23 +153,22 @@ def prerender_page(
         testonly = testonly,
     )
 
-    # Reexport resources from component.
-    output_resources = "%s_resources" % name
-    web_resources(
-        name = output_resources,
-        deps = ["%s_resources" % component],
-        testonly = testonly,
-        visibility = visibility,
-    )
-
     # Reexport all included styles at `%{name}_styles`.
     native.filegroup(
         name = client_styles,
         srcs = [
             style_entry_point,
             ":%s" % component_styles,
-            ":%s" % output_resources,
         ],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+    # Reexport all transitive resources at `%{name}_resources`.
+    output_resources = "%s_resources" % name
+    web_resources(
+        name = output_resources,
+        deps = [component_resources],
         testonly = testonly,
         visibility = visibility,
     )
