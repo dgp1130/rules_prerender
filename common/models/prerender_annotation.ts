@@ -35,6 +35,33 @@ export function parseAnnotation(comment: string): PrerenderAnnotation|undefined 
 }
 
 /**
+ * Returns whether or not two annotations are equivalent.
+ * 
+ * @param first The first annotation to compare.
+ * @param second The second annotation to compare.
+ * @returns Whether or not {@param first} and {@param second} are equivalent and
+ *     represent the same annotation.
+ */
+export function annotationsEqual(
+        first: PrerenderAnnotation, second: PrerenderAnnotation): boolean {
+    if (first.type !== second.type) return false;
+
+    switch (first.type) {
+        case 'script': {
+            const sec = second as ScriptAnnotation;
+            if (first.path !== sec.path) return false;
+            return true;
+        } case 'style': {
+            const sec = second as StyleAnnotation;
+            if (first.path !== sec.path) return false;
+            return true;
+        } default: {
+            return assertNever(first);
+        }
+    }
+}
+
+/**
  * An annotation to be used by the build process to include external resources
  * in the final generated HTML page.
  */
@@ -60,4 +87,8 @@ export interface StyleAnnotation {
 
     /** A path to the CSS file to include. */
     path: string;
+}
+
+function assertNever(value: never): never {
+    throw new Error(`Expected never type but got: ${value}`);
 }

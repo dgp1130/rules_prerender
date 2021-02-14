@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderAnnotation, createAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('prerender_annotation', () => {
     describe('PrerenderAnnotation', () => {
@@ -58,6 +58,43 @@ describe('prerender_annotation', () => {
             expect(() => parseAnnotation(
                     'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - not JSON'))
                     .toThrow();
+        });
+    });
+
+    describe('annotationsEqual()', () => {
+        it('returns `true` when given two equivalent `ScriptAnnotations`', () => {
+            const first: ScriptAnnotation = { type: 'script', path: 'foo.js' };
+            const second: ScriptAnnotation = { type: 'script', path: 'foo.js' };
+
+            expect(annotationsEqual(first, second)).toBeTrue();
+        });
+
+        it('returns `true` when given two equivalent `StyleAnnotations`', () => {
+            const first: StyleAnnotation = { type: 'style', path: 'foo.css' };
+            const second: StyleAnnotation = { type: 'style', path: 'foo.css' };
+
+            expect(annotationsEqual(first, second)).toBeTrue();
+        });
+
+        it('returns `false` when given different subtypes of `PrerenderAnnotation`', () => {
+            const first: ScriptAnnotation = { type: 'script', path: 'foo' };
+            const second: StyleAnnotation = { type: 'style', path: 'foo' };
+
+            expect(annotationsEqual(first, second)).toBeFalse();
+        });
+
+        it('returns `false` when given different `ScriptAnnotations`', () => {
+            const first: ScriptAnnotation = { type: 'script', path: 'foo.js' };
+            const second: ScriptAnnotation = { type: 'script', path: 'bar.js' };
+
+            expect(annotationsEqual(first, second)).toBeFalse();
+        });
+
+        it('returns `false` when given different `StyleAnnotations`', () => {
+            const first: StyleAnnotation = { type: 'style', path: 'foo.css' };
+            const second: StyleAnnotation = { type: 'style', path: 'bar.css' };
+
+            expect(annotationsEqual(first, second)).toBeFalse();
         });
     });
 });
