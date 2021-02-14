@@ -3,7 +3,7 @@
 load("@bazel_skylib//lib:collections.bzl", "collections")
 load("//common:label.bzl", "absolute")
 
-_WebResourceInfo = provider(
+WebResourceInfo = provider(
     "Resources for web projects.",
     fields = ["transitive_entries"],
 )
@@ -113,7 +113,7 @@ def _web_resources_impl(ctx):
 
     # Enumerate the `entries` directory for all transitive dependencies and
     # deduplicate them.
-    transitive_resources = [dep[_WebResourceInfo].transitive_entries
+    transitive_resources = [dep[WebResourceInfo].transitive_entries
                             for dep in ctx.attr.deps]
     transitive_entries_dirs = collections.uniq(
         [dir for depset in transitive_resources for dir in depset.to_list()]
@@ -144,7 +144,7 @@ def _web_resources_impl(ctx):
             # Needed to include the directory when used as a `data` input.
             data_runfiles = ctx.runfiles([dest_dir]),
         ),
-        _WebResourceInfo(
+        WebResourceInfo(
             transitive_entries = depset(
                 [res_dir],
                 transitive = transitive_resources,
@@ -175,7 +175,7 @@ _web_resources_rule = rule(
             """,
         ),
         "deps": attr.label_list(
-            providers = [_WebResourceInfo],
+            providers = [WebResourceInfo],
             doc = """
                 Other `web_resources()` targets to include in the output
                 directory.
