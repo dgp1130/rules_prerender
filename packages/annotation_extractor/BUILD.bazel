@@ -49,6 +49,53 @@ jasmine_node_test(
     deps = [":annotation_extractor_test_lib"],
 )
 
+nodejs_binary(
+    name = "multi_annotation_extractor",
+    entry_point = "multi_annotation_extractor.ts",
+    visibility = ["//visibility:public"],
+    templated_args = ["--bazel_patch_module_resolver"],
+    data = [
+        ":multi_annotation_extractor_lib",
+        "@npm//yargs",
+    ],
+)
+
+ts_library(
+    name = "multi_annotation_extractor_lib",
+    srcs = ["multi_annotation_extractor.ts"],
+    deps = [
+        ":extractor",
+        ":metadata",
+        "//common:binary",
+        "//common:formatters",
+        "//common:collections",
+        "//common/models:prerender_annotation",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)
+
+ts_library(
+    name = "multi_annotation_extractor_test_lib",
+    srcs = ["multi_annotation_extractor_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/models:prerender_metadata",
+        "//common/models:prerender_metadata_mock",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "multi_annotation_extractor_test",
+    data = [":multi_annotation_extractor"],
+    deps = [":multi_annotation_extractor_test_lib"],
+)
+
 ts_library(
     name = "extractor",
     srcs = ["extractor.ts"],
