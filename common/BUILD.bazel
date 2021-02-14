@@ -33,6 +33,27 @@ jasmine_node_test(
 )
 
 ts_library(
+    name = "collections",
+    srcs = ["collections.ts"],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "collections_test_lib",
+    srcs = ["collections_test.ts"],
+    testonly = True,
+    deps = [
+        ":collections",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "collections_test",
+    deps = [":collections_test_lib"],
+)
+
+ts_library(
     name = "formatters",
     srcs = ["formatters.ts"],
     visibility = ["//visibility:public"],
