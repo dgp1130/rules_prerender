@@ -34,6 +34,15 @@ alias(
     actual = "@npm//rules_prerender:rules_prerender__files",
 )
 
+# Mutli-renderer is actually a library that gets built into a custom binary on
+# every `prerender_page()` invocation. This simply represents the
+# `ts_library()` of that package, used as a dep. We can just depend on
+# the whole NPM package instead.
+alias(
+    name = "multi_renderer",
+    actual = "@npm//rules_prerender:rules_prerender__files"
+)
+
 alias(
     name = "resource_injector",
     actual = "@npm//rules_prerender/bin:resource-injector",

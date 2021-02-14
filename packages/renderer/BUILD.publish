@@ -5,3 +5,9 @@ filegroup(
     srcs = ["renderer.js"],
     visibility = ["//visibility:public"],
 )
+
+filegroup(
+    name = "multi_renderer_js",
+    srcs = ["mutli_renderer.js"],
+    visibility = ["//visibility:public"],
+)

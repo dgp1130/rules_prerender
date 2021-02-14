@@ -62,6 +62,57 @@ ts_library(
 )
 
 ts_library(
+    name = "multi_renderer",
+    srcs = ["multi_renderer.ts"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":entry_point",
+        "//common:binary",
+        "//common:formatters",
+        "//common/models:prerender_resource",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)
+
+filegroup(
+    name = "multi_renderer_js",
+    srcs = [":multi_renderer"],
+    visibility = ["//visibility:public"],
+    output_group = "es5_sources",
+)
+
+nodejs_binary(
+    name = "multi_renderer_test_binary",
+    entry_point = "multi_renderer.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+    testonly = True,
+    data = RENDERER_RUNTIME_DEPS + [
+        ":multi_renderer",
+    ],
+)
+
+jasmine_node_test(
+    name = "multi_renderer_integration_test",
+    data = [":multi_renderer_test_binary"],
+    deps = [":multi_renderer_integration_test_lib"],
+)
+
+ts_library(
+    name = "multi_renderer_integration_test_lib",
+    srcs = ["multi_renderer_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/models:prerender_resource",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+ts_library(
     name = "dynamic_import",
     srcs = ["dynamic_import.ts"],
 )
