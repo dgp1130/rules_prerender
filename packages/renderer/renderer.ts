@@ -30,7 +30,7 @@ main(async () => {
         .argv;
 
     // Invoke the provided entry point.
-    let rendered: string | PrerenderResource | Iterable<PrerenderResource>
+    let rendered: string | Iterable<PrerenderResource>
         | AsyncIterable<PrerenderResource>;
     try {
         rendered = await invoke(entryPoint);
