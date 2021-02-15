@@ -1,4 +1,4 @@
-import { PrerenderResource } from 'rules_prerender';
+import { PrerenderResource, includeScript } from 'rules_prerender';
 
 export default function* (): Iterable<PrerenderResource> {
     yield PrerenderResource.of('/index.html', `
@@ -7,6 +7,8 @@ export default function* (): Iterable<PrerenderResource> {
     <head>
         <title>Multi-Page</title>
         <meta charset="utf-8">
+
+        ${includeScript('rules_prerender/examples/multi_page/script')}
     </head>
     <body>
         <h2>Multi-Page</h2>

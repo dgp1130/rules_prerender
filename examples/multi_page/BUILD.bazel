@@ -10,6 +10,12 @@ prerender_multi_page(
     name = "pages",
     src = "pages.ts",
     lib_deps = ["//packages/rules_prerender"],
+    scripts = [":script"],
+)
+
+ts_library(
+    name = "script",
+    srcs = ["script.ts"],
 )
 
 web_resources_devserver(

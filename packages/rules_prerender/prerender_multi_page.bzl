@@ -103,13 +103,23 @@ def prerender_multi_page(
         ],
     )
 
-    # Execute the runner to generate the resources.
+    # Execute the runner to generate annotated resources.
+    annotated = "%s_annotated" % name
     _prerender_multi_page_rule(
-        name = name,
+        name = annotated,
         entry_point = ":%s" % prerender_js,
         multi_renderer = ":%s" % binary,
         testonly = testonly,
         visibility = visibility,
+    )
+
+    # Extract annotations and generate metadata from them.
+    metadata = "%s_metadata.json" % name
+    _multi_extract_annotations(
+        name = name,
+        annotated_dir = ":%s" % annotated,
+        output_metadata = ":%s" % metadata,
+        testonly = testonly,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
@@ -176,4 +186,61 @@ _prerender_multi_page_rule = rule(
             cfg = "exec",
         ),
     },
+)
+
+def _multi_extract_annotations_impl(ctx):
+    """Invokes the multi annotation extractor and returns the new directory.
+    
+    Returns a `DefaultInfo()` object containing a directory which holds all the
+    input files at their same relative location. Non-HTML files are copied over
+    unchanged, while HTML files have their annotations removed and extracted
+    into a separate metadata file.
+    """
+    output_dir = ctx.actions.declare_directory(ctx.attr.name)
+
+    args = ctx.actions.args()
+    args.add("--input-dir", ctx.file.annotated_dir.path)
+    args.add("--output-dir", output_dir.path)
+    args.add("--output-metadata", ctx.outputs.output_metadata.path)
+
+    ctx.actions.run(
+        mnemonic = "MultiAnnotationExtractor",
+        progress_message = "Extracting annotations from multiple pages",
+        executable = ctx.executable._extractor,
+        arguments = [args],
+        inputs = [ctx.file.annotated_dir],
+        outputs = [
+            output_dir,
+            ctx.outputs.output_metadata,
+        ],
+    )
+
+    return DefaultInfo(files = depset([output_dir]))
+
+_multi_extract_annotations = rule(
+    implementation = _multi_extract_annotations_impl,
+    attrs = {
+        "annotated_dir": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+            doc = """
+                A directory of annotated HTML pages to extract from. May also
+                contain non-HTML content which will be copied through to the
+                output.
+            """
+        ),
+        "output_metadata": attr.output(
+            mandatory = True,
+            doc = """
+                The file to write the output metadata JSON which is generated
+                from the annotations extracted from input HTML files.
+            """,
+        ),
+        "_extractor": attr.label(
+            default = "//packages/annotation_extractor:multi_annotation_extractor",
+            executable = True,
+            cfg = "exec",
+        ),
+    },
+    doc = """Extracts annotations from HTML files in the provided directory.""",
 )
