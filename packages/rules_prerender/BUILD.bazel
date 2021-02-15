@@ -29,6 +29,11 @@ publish_files(
 )
 
 bzl_library(
+    name = "entry_points",
+    srcs = ["entry_points.bzl"],
+)
+
+bzl_library(
     name = "inject_resources",
     srcs = ["inject_resources.bzl"],
     visibility = ["//:__pkg__"],
@@ -49,6 +54,7 @@ bzl_library(
     srcs = ["prerender_page.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
+        ":entry_points",
         ":prerender_component",
         ":web_resources",
         "//packages/renderer:build_vars",

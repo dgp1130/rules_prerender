@@ -3,6 +3,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
+load(":entry_points.bzl", "script_entry_point", "style_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":web_resources.bzl", "web_resources")
 
@@ -126,18 +127,18 @@ def prerender_page(
 
     # Generate the entry point importing all included scripts.
     client_scripts = "%s_scripts" % name
-    script_entry_point = "%s.ts" % client_scripts
-    _script_entry_point(
+    script_entry = "%s.ts" % client_scripts
+    script_entry_point(
         name = "%s_entry" % client_scripts,
         metadata = metadata,
-        output_entry_point = script_entry_point,
+        output_entry_point = script_entry,
         testonly = testonly,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
     ts_library(
         name = client_scripts,
-        srcs = [script_entry_point],
+        srcs = [script_entry],
         deps = [":%s" % component_scripts],
         testonly = testonly,
         visibility = visibility,
@@ -145,11 +146,11 @@ def prerender_page(
 
     # Generate the entry point importing all included styles.
     client_styles = "%s_styles" % name
-    style_entry_point = "%s.css" % client_styles
-    _style_entry_point(
+    style_entry = "%s.css" % client_styles
+    style_entry_point(
         name = "%s_entry" % client_styles,
         metadata = metadata,
-        output_entry_point = style_entry_point,
+        output_entry_point = style_entry,
         testonly = testonly,
     )
 
@@ -157,7 +158,7 @@ def prerender_page(
     native.filegroup(
         name = client_styles,
         srcs = [
-            style_entry_point,
+            style_entry,
             ":%s" % component_styles,
         ],
         testonly = testonly,
@@ -249,52 +250,4 @@ def _extract_annotations(
         ),
         testonly = testonly,
         tools = ["//tools/internal:annotation_extractor"],
-    )
-
-def _script_entry_point(name, metadata, output_entry_point, testonly = None):
-    """Creates a TypeScript entry point for the given metadata JSON.
-    
-    Args:
-        name: The name of the rule.
-        metadata: The metadata JSON file to generate an entry point from.
-        output_entry_point: The file to write the entry point contents to.
-        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-    """
-    native.genrule(
-        name = name,
-        srcs = [metadata],
-        outs = [output_entry_point],
-        cmd = """
-            $(location //tools/internal:script_entry_generator) \\
-                --metadata $(location {metadata}) \\
-                --output $(location {output})
-        """.format(
-            metadata = metadata,
-            output = output_entry_point,
-        ),
-        tools = ["//tools/internal:script_entry_generator"],
-    )
-
-def _style_entry_point(name, metadata, output_entry_point, testonly = None):
-    """Creates a CSS entry point for the given metadata JSON.
-    
-    Args:
-        name: The name of the rule.
-        metadata: The metadata JSON file to generate an entry point from.
-        output_entry_point: The file to write the entry point contents to.
-        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-    """
-    native.genrule(
-        name = name,
-        srcs = [metadata],
-        outs = [output_entry_point],
-        cmd = """
-            $(location //tools/internal:style_entry_generator) \\
-                --metadata $(location {metadata}) \\
-                --output $(location {output})
-        """.format(
-            metadata = metadata,
-            output = output_entry_point,
-        ),
-        tools = ["//tools/internal:style_entry_generator"],
     )
