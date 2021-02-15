@@ -32,6 +32,11 @@ alias(
 )
 
 alias(
+    name = "multi_annotation_extractor",
+    actual = "//packages/annotation_extractor:multi_annotation_extractor",
+)
+
+alias(
     name = "multi_renderer",
     actual = "//packages/renderer:multi_renderer",
 )

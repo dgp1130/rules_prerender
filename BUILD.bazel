@@ -16,6 +16,7 @@ bzl_library(
     deps = [
         "//packages/rules_prerender:inject_resources",
         "//packages/rules_prerender:prerender_component",
+        "//packages/rules_prerender:prerender_multi_page",
         "//packages/rules_prerender:prerender_page",
         "//packages/rules_prerender:prerender_page_bundled",
         "//packages/rules_prerender:web_resources",
@@ -58,7 +59,9 @@ pkg_npm(
         ":publish_files",
         "//common:publish_files",
         "//packages/annotation_extractor",
+        "//packages/annotation_extractor:multi_annotation_extractor",
         "//packages/renderer",
+        "//packages/renderer:multi_renderer",
         "//packages/renderer:publish_files",
         "//packages/resource_injector",
         "//packages/resource_packager",

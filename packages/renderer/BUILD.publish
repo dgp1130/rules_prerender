@@ -8,6 +8,6 @@ filegroup(
 
 filegroup(
     name = "multi_renderer_js",
-    srcs = ["mutli_renderer.js"],
+    srcs = ["multi_renderer.js"],
     visibility = ["//visibility:public"],
 )

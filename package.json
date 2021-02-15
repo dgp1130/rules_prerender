@@ -5,7 +5,9 @@
     "typings": "./packages/rules_prerender/index.d.ts",
     "bin": {
         "annotation-extractor": "./packages/annotation_extractor/annotation_extractor.js",
+        "multi-annotation-extractor": "./packages/annotation_extractor/multi_annotation_extractor.js",
         "renderer": "./packages/renderer/renderer.js",
+        "multi-renderer": "./packages/renderer/multi_renderer.js",
         "resource-injector": "./packages/resource_injector/resource_injector.js",
         "resource-packager": "./packages/resource_packager/resource_packager.js",
         "script-entry-generator": "./packages/script_entry_generator/script_entry_generator.js",

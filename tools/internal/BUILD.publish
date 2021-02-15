@@ -25,6 +25,11 @@ alias(
     actual = "@npm//rules_prerender/bin:annotation-extractor",
 )
 
+alias(
+    name = "multi_annotation_extractor",
+    actual = "@npm//rules_prerender/bin:multi-annotation-extractor",
+)
+
 # Renderer is actually a library that gets built into a custom binary on
 # every `prerender_page()` invocation. This simply represents the
 # `ts_library()` of that package, used as a dep. We can just depend on
