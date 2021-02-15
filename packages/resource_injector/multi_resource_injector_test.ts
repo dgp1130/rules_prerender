@@ -81,6 +81,55 @@ describe('injector', () => {
         `.trim());
     });
 
+    it('injects bundle', async () => {
+        await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
+        await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });
+
+        await fs.writeFile(`${tmpDir.get()}/input_dir/page.html`, `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+        `.trim());
+
+        await fs.writeFile(`${tmpDir.get()}/config.json`, `[]`);
+
+        await fs.writeFile(`${tmpDir.get()}/bundle.js`, '');
+
+        const { code, stdout, stderr } = await run({
+            inputDir: `${tmpDir.get()}/input_dir`,
+            config: `${tmpDir.get()}/config.json`,
+            bundle: `${tmpDir.get()}/bundle.js`,
+            outputDir: `${tmpDir.get()}/output_dir`,
+        });
+
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(stdout).toBe('');
+        expect(stderr).toBe('');
+
+        const output = await fs.readFile(
+            `${tmpDir.get()}/output_dir/page.html`,
+            { encoding: 'utf8' },
+        );
+        expect(output).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    <script src="/page.js" async defer></script>
+</head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+        `.trim());
+    });
+
     it('injects styles', async () => {
         await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });

@@ -90,7 +90,14 @@ main(async () => {
             });
 
             // Wait for the configuration to be read and parsed.
-            const config = await configPromise;
+            const inputConfig = await configPromise;
+
+            // If there is a bundle, inject a <script /> tag for it.
+            const siblingJs = relPath.split('.').slice(0, -1).join('.') + '.js';
+            const config = !bundle ? inputConfig : inputConfig.concat({
+                type: 'script',
+                path: `/${siblingJs}`,
+            });
 
             // Inject the requested resources into the HTML content.
             const output = await inject(input, config);
@@ -104,9 +111,7 @@ main(async () => {
             // Copy JavaScript bundle to the output HTML location, but with a
             // `.js` extension.
             if (bundle) {
-                const siblingJs =
-                    outputPath.split('.').slice(0, -1).join('.') + '.js';
-                await fs.copyFile(bundle, siblingJs);
+                await fs.copyFile(bundle, path.join(outputDir, siblingJs));
             }
         })());
     }
