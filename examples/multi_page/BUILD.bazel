@@ -11,6 +11,7 @@ prerender_multi_page(
     src = "pages.ts",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":script"],
+    styles = ["styles.css"],
 )
 
 ts_library(

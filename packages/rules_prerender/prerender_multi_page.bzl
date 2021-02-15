@@ -3,7 +3,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//packages/renderer:build_vars.bzl", "MULTI_RENDERER_RUNTIME_DEPS")
-load(":entry_points.bzl", "script_entry_point")
+load(":entry_points.bzl", "script_entry_point", "style_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
@@ -143,11 +143,24 @@ def prerender_multi_page(
         visibility = visibility,
     )
 
+    # Generate the entry point importing all included styles.
+    client_styles = "%s_styles" % name
+    style_entry = "%s.css" % client_styles
+    style_entry_point(
+        name = "%s_entry" % client_styles,
+        metadata = metadata,
+        output_entry_point = style_entry,
+        testonly = testonly,
+    )
+
     # Reexport all included styles at `%{name}_styles`.
     client_styles = "%s_styles" % name
     native.filegroup(
         name = client_styles,
-        srcs = [":%s" % component_styles],
+        srcs = [
+            style_entry,
+            ":%s" % component_styles,
+        ],
         testonly = testonly,
         visibility = visibility,
     )
