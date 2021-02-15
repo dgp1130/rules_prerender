@@ -3,7 +3,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
-load(":extract_annotations.bzl", "extract_annotations")
 load(":prerender_component.bzl", "prerender_component")
 load(":web_resources.bzl", "web_resources")
 
@@ -109,7 +108,7 @@ def prerender_page(
     # Extract annotations and generate metadata from them.
     extracted_page = "%s.html" % name
     metadata = "%s_metadata.json" % name
-    extract_annotations(
+    _extract_annotations(
         name = "%s_annotation_extractor" % name,
         annotated_page = annotated_page,
         output_page = extracted_page,
@@ -212,6 +211,45 @@ _prerender_page_rule = rule(
         a JavaScript file that renders the page as a string.
     """,
 )
+
+def _extract_annotations(
+    name,
+    annotated_page,
+    output_page,
+    output_metadata,
+    testonly = None,
+):
+    """Extracts annotations from the provided HTML.
+    
+    Args:
+        name: The name of the rule.
+        annotated_page: An annotated HTML page to extract from.
+        output_page: The file to write the output HTML to. This will be the
+            input HTML page except with all annotations removed.
+        output_metadata: The file to write the output metadata JSON which is
+            generated from the annotations extracted from the input HTML file.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+    """
+    native.genrule(
+        name = name,
+        srcs = [annotated_page],
+        outs = [
+            output_page,
+            output_metadata,
+        ],
+        cmd = """
+            $(location //tools/internal:annotation_extractor) \\
+                --input-html $(location {annotated_page}) \\
+                --output-html $(location {output_html}) \\
+                --output-metadata $(location {output_metadata})
+        """.format(
+            annotated_page = annotated_page,
+            output_html = output_page,
+            output_metadata = output_metadata,
+        ),
+        testonly = testonly,
+        tools = ["//tools/internal:annotation_extractor"],
+    )
 
 def _script_entry_point(name, metadata, output_entry_point, testonly = None):
     """Creates a TypeScript entry point for the given metadata JSON.
