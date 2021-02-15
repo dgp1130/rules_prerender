@@ -22,6 +22,12 @@ describe('multi_page', () => {
             const title = await page.get().title();
             expect(title).toBe('Multi-Page');
 
+            const iconLoaded = await page.get().$eval(
+                'img[src="/logo.png"]',
+                (img) => (img as HTMLImageElement).complete,
+            );
+            expect(iconLoaded).toBeTrue();
+
             const links = await page.get().$$eval(
                 'nav a', (els) => els.map((el) => el.getAttribute('href')));
             expect(links).toEqual([

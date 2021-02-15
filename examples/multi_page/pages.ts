@@ -13,6 +13,7 @@ export default function* (): Iterable<PrerenderResource> {
     </head>
     <body>
         <h2>Multi-Page</h2>
+        <img src="/logo.png" />
         <nav>
             <ul>
                 <li><a href="/foo.html">/foo.html</a></li>

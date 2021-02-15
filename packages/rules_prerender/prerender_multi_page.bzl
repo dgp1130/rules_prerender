@@ -239,7 +239,10 @@ def _multi_extract_annotations_impl(ctx):
         ],
     )
 
-    return DefaultInfo(files = depset([output_dir]))
+    return [
+        DefaultInfo(files = depset([output_dir])),
+        WebResourceInfo(transitive_entries = depset([output_dir])),
+    ]
 
 _multi_extract_annotations = rule(
     implementation = _multi_extract_annotations_impl,
