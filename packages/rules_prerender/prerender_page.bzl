@@ -27,7 +27,7 @@ def prerender_page(
     The file listed in `src` must compile to a CommonJS module with a default
     export of the type: `() => string | Promise<string>`. A `ts_library()` is
     used to compile the `src` file and `lib_deps` + `deps` is used as the `deps`
-    parameter.
+    parameter with the given `tsconfig`.
 
     Outputs:
         %{name}.html: An HTML file containing the content returned by the `src`
@@ -43,17 +43,18 @@ def prerender_page(
     
     Args:
         name: The name of this rule.
-        src: The TypeScript source file.
+        src: The TypeScript source file with a defualt export which generates 
+            the HTML document.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile the `src` file.
         lib_deps: Dependencies for the TypeScript source file.
-        scripts: List of client-side JavaScript libraries to be bundled for the
-            generated page.
-        styles: List of CSS files or `filegroup()`s of CSS files which can be
-            included in the prerendered HTML.
+        scripts: List of client-side JavaScript libraries to be included with
+            the generated page.
+        styles: List of CSS files or `filegroup()`s to included with the
+            prerendered HTML file.
         resources: List of `web_resources()` rules required by the page at
             runtime.
-        deps: `prerender_component()` dependencies for this component.
+        deps: `prerender_component()` dependencies for the generated page.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """

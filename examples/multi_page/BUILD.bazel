@@ -1,8 +1,13 @@
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//:index.bzl", "prerender_multi_page", "web_resources", "web_resources_devserver")
+load("//:index.bzl", "web_resources", "web_resources_devserver")
+load(
+    "//packages/rules_prerender:prerender_multi_page_bundled.bzl",
+    "prerender_multi_page_bundled",
+)
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
-prerender_multi_page(
+prerender_multi_page_bundled(
     name = "pages",
     src = "pages.ts",
     lib_deps = ["//packages/rules_prerender"],
@@ -23,19 +28,9 @@ web_resources(
     },
 )
 
-# `prerender_multi_page()` does not bundle content, so we must manually merge
-# resources with generated content.
-web_resources(
-    name = "pages_with_resources",
-    deps = [
-        ":pages",
-        ":pages_resources",
-    ],
-)
-
 web_resources_devserver(
     name = "devserver",
-    resources = ":pages_with_resources",
+    resources = ":pages",
 )
 
 ts_library(
@@ -58,4 +53,12 @@ jasmine_node_test(
         "@npm//puppeteer",
     ],
     deps = [":test_lib"],
+)
+
+build_test(
+    name = "build_test",
+    targets = [
+        ":pages_bundle",
+        ":pages_styles",
+    ],
 )
