@@ -1,4 +1,4 @@
-"""Defines `inject_resources()` functionality."""
+"""Defines `multi_inject_resources()` functionality."""
 
 load(":web_resources.bzl", "WebResourceInfo")
 
@@ -17,13 +17,17 @@ def _multi_inject_resources_impl(ctx):
     args = ctx.actions.args()
     args.add("--input-dir", ctx.file.input_dir.path)
     args.add("--config", config.path)
+    if ctx.attr.bundle:
+        args.add("--bundle", ctx.file.bundle.path)
     args.add("--output-dir", output_dir.path)
     ctx.actions.run(
         mnemonic = "MultiInjectResources",
         progress_message = "Injecting resources into multiple pages",
         executable = ctx.executable._injector,
         arguments = [args],
-        inputs = [ctx.file.input_dir, config] + ctx.files.styles,
+        inputs = [ctx.file.input_dir, config] +
+                 ([ctx.file.bundle] if ctx.file.bundle else []) +
+                 ctx.files.styles,
         outputs = [output_dir],
     )
 
@@ -39,6 +43,7 @@ multi_inject_resources = rule(
             mandatory = True,
             allow_single_file = True,
         ),
+        "bundle": attr.label(allow_single_file = True),
         "styles": attr.label_list(allow_files = True),
         "_injector": attr.label(
             default = "//tools/internal:multi_resource_injector",

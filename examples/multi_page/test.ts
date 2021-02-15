@@ -40,6 +40,10 @@ describe('multi_page', () => {
                 '/bar.html',
                 '/hello/world.html',
             ]);
+
+            const replaced = await page.get().$eval(
+                    '#replace', (el) => el.textContent);
+            expect(replaced).toBe('This text rendered by page JavaScript!');
         });
     });
 
@@ -57,6 +61,10 @@ describe('multi_page', () => {
             const headerColor = await page.get()
                 .$eval('h2', (el) => getComputedStyle(el).color);
             expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
+
+            const replaced = await page.get().$eval(
+                    '#replace', (el) => el.textContent);
+            expect(replaced).toBe('This text rendered by page JavaScript!');
         });
     });
 
@@ -74,6 +82,10 @@ describe('multi_page', () => {
             const headerColor = await page.get()
                 .$eval('h2', (el) => getComputedStyle(el).color);
             expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
+
+            const replaced = await page.get().$eval(
+                    '#replace', (el) => el.textContent);
+            expect(replaced).toBe('This text rendered by page JavaScript!');
         });
     });
 
@@ -91,6 +103,10 @@ describe('multi_page', () => {
             const headerColor = await page.get()
                 .$eval('h2', (el) => getComputedStyle(el).color);
             expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
+
+            const replaced = await page.get().$eval(
+                    '#replace', (el) => el.textContent);
+            expect(replaced).toBe('This text rendered by page JavaScript!');
         });
     });
 });

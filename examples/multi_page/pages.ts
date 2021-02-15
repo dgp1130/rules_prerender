@@ -33,6 +33,9 @@ function generate(content: string): string {
     </head>
     <body>
         ${content}
+        <div id="replace">
+            This text to be overwritten by client-side JavaScript.
+        </div>
     </body>
 </html>
     `.trim();

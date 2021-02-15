@@ -129,6 +129,7 @@ def prerender_multi_page_bundled(
     multi_inject_resources(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
+        bundle = ":%s" % bundle if bundle_js else None,
         styles = [bundled_css] if bundle_css else [],
         testonly = testonly,
     )
