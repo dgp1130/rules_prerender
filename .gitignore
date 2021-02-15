@@ -1,4 +1,6 @@
-
 dist
 bazel-out
 node_modules
+
+# Generated package from `bazel run //:pkg.pack`
+rules_prerender-*.tgz
