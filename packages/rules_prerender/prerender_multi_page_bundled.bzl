@@ -2,6 +2,7 @@
 
 load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
+load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_multi_page.bzl", "prerender_multi_page")
 load(":web_resources.bzl", "web_resources")
@@ -123,6 +124,15 @@ def prerender_multi_page_bundled(
             deps = [":%s_styles" % prerender_name],
         )
 
+    # Inject bundled JS and CSS into the HTML.
+    injected_dir = "%s_injected" % name
+    multi_inject_resources(
+        name = injected_dir,
+        input_dir = ":%s" % prerender_name,
+        styles = [bundled_css] if bundle_css else [],
+        testonly = testonly,
+    )
+
     # Output a resources directory of the HTML, bundled JavaScript, and any
     # resource dependencies.
     web_resources(
@@ -130,7 +140,7 @@ def prerender_multi_page_bundled(
         testonly = testonly,
         visibility = visibility,
         deps = [
-            ":%s" % prerender_name,
+            ":%s" % injected_dir,
             ":%s_resources" % prerender_name,
         ],
     )

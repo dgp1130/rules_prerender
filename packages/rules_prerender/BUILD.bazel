@@ -40,6 +40,13 @@ bzl_library(
 )
 
 bzl_library(
+    name = "multi_inject_resources",
+    srcs = ["multi_inject_resources.bzl"],
+    visibility = ["//:__pkg__"],
+    deps = [":web_resources"],
+)
+
+bzl_library(
     name = "prerender_component",
     srcs = ["prerender_component.bzl"],
     visibility = ["//:__pkg__"],
@@ -66,6 +73,7 @@ bzl_library(
     srcs = ["prerender_multi_page_bundled.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
+        ":multi_inject_resources",
         ":prerender_multi_page",
         ":postcss_import_plugin_bzl",
         ":web_resources",

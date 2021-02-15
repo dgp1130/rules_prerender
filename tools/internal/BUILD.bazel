@@ -52,6 +52,11 @@ alias(
 )
 
 alias(
+    name = "multi_resource_injector",
+    actual = "//packages/resource_injector:multi_resource_injector",
+)
+
+alias(
     name = "resource_packager",
     actual = "//packages/resource_packager",
 )

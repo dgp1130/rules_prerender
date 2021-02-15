@@ -19,8 +19,13 @@ describe('multi_page', () => {
                 { waitUntil: 'load' },
             );
 
-            const title = await page.get().title();
-            expect(title).toBe('Multi-Page');
+            const headerLbl = await page.get()
+                .$eval('h2', (el) => el.textContent);
+            expect(headerLbl).toBe('Multi-Page');
+
+            const headerColor = await page.get()
+                .$eval('h2', (el) => getComputedStyle(el).color);
+            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
 
             const iconLoaded = await page.get().$eval(
                 'img[src="/logo.png"]',
@@ -45,7 +50,13 @@ describe('multi_page', () => {
                 { waitUntil: 'load' },
             );
 
-            expect(await page.get().content()).toContain('foo');
+            const headerLbl = await page.get()
+                .$eval('h2', (el) => el.textContent);
+            expect(headerLbl).toBe('Foo');
+
+            const headerColor = await page.get()
+                .$eval('h2', (el) => getComputedStyle(el).color);
+            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
         });
     });
 
@@ -56,7 +67,13 @@ describe('multi_page', () => {
                 { waitUntil: 'load' },
             );
 
-            expect(await page.get().content()).toContain('bar');
+            const headerLbl = await page.get()
+                .$eval('h2', (el) => el.textContent);
+            expect(headerLbl).toBe('Bar');
+
+            const headerColor = await page.get()
+                .$eval('h2', (el) => getComputedStyle(el).color);
+            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
         });
     });
 
@@ -67,7 +84,13 @@ describe('multi_page', () => {
                 { waitUntil: 'load' },
             );
 
-            expect(await page.get().content()).toContain('Hello, World!');
+            const headerLbl = await page.get()
+                .$eval('h2', (el) => el.textContent);
+            expect(headerLbl).toBe('Hello, World!');
+
+            const headerColor = await page.get()
+                .$eval('h2', (el) => getComputedStyle(el).color);
+            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
         });
     });
 });
