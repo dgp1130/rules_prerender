@@ -110,7 +110,6 @@ def prerender_multi_page(
         entry_point = ":%s" % prerender_js,
         multi_renderer = ":%s" % binary,
         testonly = testonly,
-        visibility = visibility,
     )
 
     # Extract annotations and generate metadata from them.
@@ -120,6 +119,7 @@ def prerender_multi_page(
         annotated_dir = ":%s" % annotated,
         output_metadata = ":%s" % metadata,
         testonly = testonly,
+        visibility = visibility,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
