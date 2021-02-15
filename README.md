@@ -279,6 +279,85 @@ generate the application as a directory and upload it to a CDN for production
 deployments. They could even make a separate `bazel run //my_site:deploy` target
 which performs the upload and run it from CI for easy deployments!
 
+### Generating multiple pages
+
+`prerender_page_bundled()` is only capable of generating a single file.
+Generating multiple files would require multiple `prerender_page_bundled()`
+rules, which could get excessive in certain circumstances. For instance,
+generating a page for every post on a blog, would require a
+`prerender_page_bundled()` target for every post, which could get out of hand.
+
+To help with this, we can use `prerender_multi_page_bundled()` which allows us
+to generate many files all at once! Take this example where we render HTML files
+for a bunch of markdown posts in a blog.
+
+```typescript
+// my_blog/posts_prerender.ts
+
+import * as fs from 'fs';
+import { PrerenderResource } from 'rules_prerender';
+import * as md from 'markdown-it';
+
+export default async function* render(): AsyncIterable<PrerenderResource> {
+    // List all files in the `posts/` directory.
+    const posts = await fs.readdir(
+        `${process.env['RUNFILES']}/__main__/my_blog/posts/`,
+        { withFileTypes: true },
+    );
+
+    for (const post of posts) {
+        // Read the post markdown, convert it to HTML, and then emit the file to
+        // `rules_prerender` which will write it at
+        // `/post/${post_file_name_with_html_extension}`.
+        const postMarkdown = await fs.readFile(post, { encoding: 'utf8' });
+        const postHtml = md.render(postMarkdown);
+        const htmlName = post.split('.').slice(0, -1).join('.') + '.html';
+        yield new PrerenderResource(`/posts/${htmlName}`, postHtml);
+    }
+}
+```
+
+We can easily execute this at build time like so:
+
+```python
+# my_blog/BUILD.bazel
+
+load(
+    "@npm//rules_prerender:index.bzl",
+    "prerender_multi_page_bundled",
+    "web_resources_devserver",
+)
+
+# Renders a page for every `posts/*.md` file. Also performs all the bundling and
+# merging like `prerender_page_bundled()`, but applied to every generated HTML
+# file.
+prerender_multi_page_bundled(
+    name = "prerendered_posts",
+    # Script to invoke the default export of to generate the page.
+    src = "posts_prerender.ts",
+    # Other files needed to generate all the HTML.
+    data = glob(["posts/*.md"]),
+    # Plain TypeScript dependencies used by `posts_prerender.ts`.
+    lib_deps = [
+        "@npm//rules_prerender",
+        "@npm//markdown-it",
+        "@npm//@types/markdown-it",
+        "@npm//@types/node",
+    ],
+)
+
+# Simple server to test out this page. `bazel run` / `ibazel run` this target to
+# check out the posts at `/posts/*.html`.
+web_resources_devserver(
+    name = "devserver",
+    resources = ":prerendered_posts",
+)
+```
+
+With this, all markdown posts in the `posts/` directory will get generated into
+HTML files. Using this strategy, we can scale static-site generation for a large
+number of files with common generation patterns.
+
 ### Custom Bundling
 
 The previous example automatically bundled all the JavaScript and CSS for a
