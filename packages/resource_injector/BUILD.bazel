@@ -46,6 +46,50 @@ jasmine_node_test(
     deps = [":resource_injector_test_lib"],
 )
 
+nodejs_binary(
+    name = "multi_resource_injector",
+    entry_point = "multi_resource_injector.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+    data = [
+        ":multi_resource_injector_lib",
+        "@npm//yargs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "multi_resource_injector_lib",
+    srcs = ["multi_resource_injector.ts"],
+    deps = [
+        ":config",
+        ":injector",
+        "//common:binary",
+        "//common:formatters",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)
+
+ts_library(
+    name = "multi_resource_injector_test_lib",
+    srcs = ["multi_resource_injector_test.ts"],
+    testonly = True,
+    deps = [
+        ":config",
+        "//common:runfiles",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "multi_resource_injector_test",
+    data = [":multi_resource_injector"],
+    deps = [":multi_resource_injector_test_lib"],
+)
+
 ts_library(
     name = "config",
     srcs = ["config.ts"],
