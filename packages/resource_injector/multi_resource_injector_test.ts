@@ -10,14 +10,16 @@ const injector = resolveRunfile(
     'rules_prerender/packages/resource_injector/multi_resource_injector.sh');
 
 /** Invokes the multi resource injector binary. */
-async function run({ inputDir, config, outputDir }: {
+async function run({ inputDir, config, bundle, outputDir }: {
     inputDir: string,
     config: string,
+    bundle?: string,
     outputDir: string,
 }): Promise<ProcessResult> {
     return await execBinary(injector, [
         '--input-dir', inputDir,
         '--config', config,
+        ...(bundle ? [ '--bundle', bundle ] : []),
         '--output-dir', outputDir,
     ]);
 }
@@ -244,6 +246,45 @@ describe('injector', () => {
     </body>
 </html>
         `.trim());
+    });
+
+    it('copies input JavaScript bundle for each HTML file', async () => {
+        await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
+        await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });
+
+        await fs.writeFile(`${tmpDir.get()}/input_dir/page.html`, `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+        `.trim());
+
+        await fs.writeFile(`${tmpDir.get()}/config.json`, `[]`);
+
+        await fs.writeFile(
+            `${tmpDir.get()}/bundle.js`, `console.log('Hello, World!');`);
+
+        const { code, stdout, stderr } = await run({
+            inputDir: `${tmpDir.get()}/input_dir`,
+            config: `${tmpDir.get()}/config.json`,
+            bundle: `${tmpDir.get()}/bundle.js`,
+            outputDir: `${tmpDir.get()}/output_dir`,
+        });
+
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(stdout).toBe('');
+        expect(stderr).toBe('');
+
+        const output = await fs.readFile(
+            `${tmpDir.get()}/output_dir/page.js`,
+            { encoding: 'utf8' },
+        );
+        expect(output).toBe(`console.log('Hello, World!');`);
     });
 
     it('passes through non-HTML files', async () => {

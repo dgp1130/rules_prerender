@@ -11,6 +11,7 @@ main(async () => {
     const {
         'input-dir': inputDir,
         config: configFile,
+        bundle,
         'output-dir': outputDir,
     } = yargs.usage(mdSpacing(`
             Injects web resources specified by the config file into all the HTML
@@ -18,6 +19,9 @@ main(async () => {
             relative paths in the output directory. Non-HTML files in the input
             directory are simply copied to the same relative path in the output
             directory without modification.
+            
+            If \`bundle\` is specified, it will be injected into every HTML file
+            output.
         `))
         .option('input-dir', {
             type: 'string',
@@ -34,6 +38,13 @@ main(async () => {
             description: mdSpacing(`
                 Path to the configuration JSON file containing information about
                 the resources to inject. Must match the \`InjectorConfig\` type.
+            `),
+        })
+        .option('bundle', {
+            type: 'string',
+            description: mdSpacing(`
+                Path to a standalone JavaScript bundle file to inject into each
+                HTML file.
             `),
         })
         .option('output-dir', {
@@ -89,6 +100,14 @@ main(async () => {
             const outputPath = path.join(outputDir, relPath);
             await mkParentDir(outputPath);
             await fs.writeFile(outputPath, output);
+
+            // Copy JavaScript bundle to the output HTML location, but with a
+            // `.js` extension.
+            if (bundle) {
+                const siblingJs =
+                    outputPath.split('.').slice(0, -1).join('.') + '.js';
+                await fs.copyFile(bundle, siblingJs);
+            }
         })());
     }
 
