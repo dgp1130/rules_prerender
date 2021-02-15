@@ -3,6 +3,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//packages/renderer:build_vars.bzl", "MULTI_RENDERER_RUNTIME_DEPS")
+load(":entry_points.bzl", "script_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
@@ -122,11 +123,21 @@ def prerender_multi_page(
         visibility = visibility,
     )
 
+    # Generate the entry point importing all included scripts.
+    client_scripts = "%s_scripts" % name
+    script_entry = "%s.ts" % client_scripts
+    script_entry_point(
+        name = "%s_entry" % client_scripts,
+        metadata = metadata,
+        output_entry_point = script_entry,
+        testonly = testonly,
+    )
+
     # Reexport all included scripts at `%{name}_scripts`.
     client_scripts = "%s_scripts" % name
     ts_library(
         name = client_scripts,
-        srcs = [],
+        srcs = [script_entry],
         deps = [":%s" % component_scripts],
         testonly = testonly,
         visibility = visibility,
