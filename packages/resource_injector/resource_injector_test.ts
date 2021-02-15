@@ -9,7 +9,7 @@ import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 const injector = resolveRunfile(
         'rules_prerender/packages/resource_injector/resource_injector.sh');
 
-/** Invokes the renderer binary. */
+/** Invokes the resource injector binary. */
 async function run({ input, config, output }: {
     input: string,
     config: string,
@@ -52,7 +52,7 @@ describe('injector', () => {
             output: `${tmpDir.get()}/output.html`,
         });
 
-        expect(code).toBe(0);
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
         expect(stderr).toBe('');
 
@@ -106,7 +106,7 @@ describe('injector', () => {
             output: `${tmpDir.get()}/output.html`,
         });
 
-        expect(code).toBe(0);
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
         expect(stderr).toBe('');
 
@@ -145,8 +145,11 @@ describe('injector', () => {
             output: `${tmpDir.get()}/output.html`,
         });
 
-        expect(code).not.toBe(0);
+        expect(code).not.toBe(
+            0,
+            `Binary unexpectedly succeeded. STDERR:\n${stderr}`,
+        );
         expect(stdout).toBe('');
-        expect(stderr).not.toBe('');
+        expect(stderr).toContain('packages/resource_injector/injector.ts');
     });
 });
