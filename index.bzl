@@ -13,6 +13,10 @@ load(
     _prerender_multi_page = "prerender_multi_page",
 )
 load(
+    "//packages/rules_prerender:prerender_multi_page_bundled.bzl",
+    _prerender_multi_page_bundled = "prerender_multi_page_bundled",
+)
+load(
     "//packages/rules_prerender:prerender_page.bzl",
     _prerender_page = "prerender_page",
 )
@@ -32,6 +36,7 @@ load(
 inject_resources = _inject_resources
 prerender_component = _prerender_component
 prerender_multi_page = _prerender_multi_page
+prerender_multi_page_bundled = _prerender_multi_page_bundled
 prerender_page = _prerender_page
 prerender_page_bundled = _prerender_page_bundled
 web_resources = _web_resources
