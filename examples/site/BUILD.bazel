@@ -4,6 +4,7 @@ web_resources(
     name = "site",
     deps = [
         "//examples/site/about",
+        "//examples/site/blog",
         "//examples/site/counter",
         "//examples/site/home",
     ],

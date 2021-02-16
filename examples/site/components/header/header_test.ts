@@ -20,6 +20,7 @@ describe('header', () => {
                 'Home': '/',
                 'About': '/about/',
                 'Counter': '/counter/',
+                'Blog': '/blog/',
             });
         });
     });

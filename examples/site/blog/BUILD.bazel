@@ -1,0 +1,35 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_multi_page_bundled")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_multi_page_bundled(
+    name = "blog",
+    src = "blog.ts",
+    data = glob(["posts/*.md"]),
+    bundle_js = False, # Optimization: No client-side JavaScript on these pages.
+    visibility = ["//examples/site:__pkg__"],
+    lib_deps = [
+        "//packages/rules_prerender",
+        "//examples/site/common:links",
+        "@npm//markdown-it",
+        "@npm//@types/markdown-it",
+        "@npm//@types/node",
+    ],
+    deps = ["//examples/site/components/base"],
+)
+
+ts_library(
+    name = "blog_test_lib",
+    srcs = ["blog_test.ts"],
+    testonly = True,
+    deps = [
+        ":blog_page_component_prerender",
+        "@npm//@types/jasmine",
+        "@npm//node-html-parser",
+    ],
+)
+
+jasmine_node_test(
+    name = "blog_test",
+    deps = [":blog_test_lib"],
+)

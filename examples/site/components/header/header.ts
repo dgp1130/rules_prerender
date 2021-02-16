@@ -9,6 +9,7 @@ export function renderHeader(): string {
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/counter/">Counter</a></li>
+                    <li><a href="/blog/">Blog</a></li>
                     <li><a href="/about/">About</a></li>
                 </ul>
             </nav>
