@@ -11,6 +11,7 @@ def prerender_multi_page_bundled(
     name,
     src,
     tsconfig = None,
+    data = [],
     lib_deps = [],
     scripts = [],
     styles = [],
@@ -63,6 +64,7 @@ def prerender_multi_page_bundled(
             string which contains the HTML document.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile the `src` file.
+        data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled with the
             generated pages.
@@ -84,6 +86,7 @@ def prerender_multi_page_bundled(
         name = prerender_name,
         src = src,
         tsconfig = tsconfig,
+        data = data,
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,

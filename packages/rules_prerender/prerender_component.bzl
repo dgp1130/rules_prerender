@@ -8,6 +8,7 @@ def prerender_component(
     name,
     srcs,
     tsconfig = None,
+    data = [],
     lib_deps = [],
     scripts = [],
     styles = [],
@@ -33,6 +34,7 @@ def prerender_component(
         srcs: The TypeScript source files for use in prerendering.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile files in `srcs`.
+        data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         lib_deps: `ts_library()` dependencies for the TypeScript source files.
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
@@ -49,6 +51,7 @@ def prerender_component(
         name = "%s_prerender" % name,
         srcs = srcs,
         tsconfig = tsconfig,
+        data = data,
         deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
