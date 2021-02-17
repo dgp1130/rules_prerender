@@ -312,7 +312,7 @@ export default async function* render(): AsyncIterable<PrerenderResource> {
         const postMarkdown = await fs.readFile(post, { encoding: 'utf8' });
         const postHtml = md.render(postMarkdown);
         const htmlName = post.split('.').slice(0, -1).join('.') + '.html';
-        yield new PrerenderResource(`/posts/${htmlName}`, postHtml);
+        yield PrerenderResource.of(`/posts/${htmlName}`, postHtml);
     }
 }
 ```
