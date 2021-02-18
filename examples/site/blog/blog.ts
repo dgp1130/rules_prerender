@@ -19,7 +19,8 @@ export default async function*(): AsyncIterable<PrerenderResource> {
     // Get all `posts/*.md` files.
     const entries = await fs.readdir(postsRoot, { withFileTypes: true });
     const posts = entries
-        .filter((entry) => entry.isFile() && entry.name.endsWith('.md'));
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+        .sort();
 
     // Get metadata for each post.
     const postsMeta: PostMeta[] = posts.map((post) => {
@@ -52,7 +53,7 @@ function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
             <ul>
                 ${posts.map(({ title, urlPath: path }) => `
                     <li><a href="${path}">${title}</a></li>
-                `)}
+                `).join('')}
             </ul>
         </article>
     `.trim()));
