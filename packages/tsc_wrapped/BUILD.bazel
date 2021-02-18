@@ -1,0 +1,23 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+nodejs_binary(
+    name = "tsc_wrapped",
+    entry_point = "tsc_wrapped.ts",
+    visibility = ["//visibility:public"],
+    data = [
+        "foo.ts",
+        ":tsc_wrapped_lib",
+    ],
+)
+
+ts_library(
+    name = "tsc_wrapped_lib",
+    srcs = ["tsc_wrapped.ts"],
+    deps = [
+        "@npm//typescript",
+        "@npm//@types/node",
+    ],
+)
+
+# TESTME

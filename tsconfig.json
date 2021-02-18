@@ -71,5 +71,8 @@
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+  },
+  "rulesPrerenderOptions": {
+    "files": ["rules_prerender/packages/tsc_wrapped/foo.ts"],
   }
 }
