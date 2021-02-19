@@ -1,9 +1,9 @@
-import { includeStyle } from 'rules_prerender';
+import { PrerenderResource, includeStyle } from 'rules_prerender';
 import { renderComponent } from 'rules_prerender/examples/styles/component/component';
 
 /** Render an HTML page. */
-export default function(): string {
-    return `
+export default function*(): Iterable<PrerenderResource> {
+    yield PrerenderResource.of('/index.html', `
         <!DOCTYPE html>
         <html>
             <head>
@@ -18,5 +18,5 @@ export default function(): string {
                 </div>
             </body>
         </html>
-    `;
+    `);
 }

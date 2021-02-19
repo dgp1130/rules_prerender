@@ -2,15 +2,14 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load(
     "//:index.bzl",
-    "prerender_page_bundled",
+    "prerender_multi_page_bundled",
     "web_resources",
     "web_resources_devserver",
 )
 
-prerender_page_bundled(
+prerender_multi_page_bundled(
     name = "page",
     src = "page.ts",
-    path = "/index.html",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],
     styles = ["page_styles.css"],

@@ -1,10 +1,11 @@
+import { PrerenderResource } from 'rules_prerender';
 import { srcLink } from 'rules_prerender/examples/site/common/links';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { renderCounter } from 'rules_prerender/examples/site/components/counter/counter_prerender';
 
 /** Renders the counter page. */
-export default function (): string {
-    return baseLayout('Counter', () => `
+export default function*(): Iterable<PrerenderResource> {
+    yield PrerenderResource.of('/counter/index.html', baseLayout('Counter', () => `
         <article>
             <p>This is a basic JavaScript counter.</p>
 
@@ -21,5 +22,5 @@ export default function (): string {
             <a href="https://en.wikipedia.org/wiki/Hydration_(web_development)" rel="noopener">hydrates</a>
             itself without requiring any client-side rendering.</p>
         </article>
-    `);
+    `));
 }

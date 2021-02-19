@@ -1,8 +1,9 @@
+import { PrerenderResource } from 'rules_prerender';
 import { render as renderComponent } from './component';
 
 /** Renders a page using components. */
-export default function(): string {
-    return `
+export default function*(): Iterable<PrerenderResource> {
+    yield PrerenderResource.of('/index.html', `
         <!DOCTYPE html>
         <html>
             <head>
@@ -13,5 +14,5 @@ export default function(): string {
                 ${renderComponent()}
             </body>
         </html>
-    `;
+    `);
 }

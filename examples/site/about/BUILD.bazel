@@ -1,9 +1,8 @@
-load("//:index.bzl", "prerender_page_bundled", "web_resources")
+load("//:index.bzl", "prerender_multi_page_bundled", "web_resources")
 
-prerender_page_bundled(
+prerender_multi_page_bundled(
     name = "about",
     src = "about.ts",
-    path = "/about/index.html",
     lib_deps = [
         "//examples/site/common:links",
         "//packages/rules_prerender",

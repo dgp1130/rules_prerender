@@ -15,7 +15,7 @@
     "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
       // Set up absolute imports per:
       // https://bazelbuild.github.io/rules_nodejs/TypeScript.html#writing-typescript-code-for-ts_library
-      "rules_prerender": ["packages/rules_prerender"], // Map `rules_prerender` module to its implementation.
+      "rules_prerender": ["../../packages/rules_prerender"], // Map `rules_prerender` module to its implementation.
       "rules_prerender/*": ["*"] // Map workspace-relative imports.
     },
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */

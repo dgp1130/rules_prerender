@@ -1,9 +1,10 @@
+import { PrerenderResource } from 'rules_prerender';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { repo, srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the entire home page. */
-export default function (): string {
-    return baseLayout('Home', () => `
+export default function*(): Iterable<PrerenderResource> {
+    yield PrerenderResource.of('/index.html', baseLayout('Home', () => `
         <div comp-home>
             <article>
                 <p>This is the home page of a really cool site built with
@@ -62,5 +63,5 @@ export default function (): string {
                 of <code>rules_prerender</code>!</p>
             </article>
         </div>
-    `);
+    `));
 }
