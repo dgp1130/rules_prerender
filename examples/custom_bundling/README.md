@@ -1,9 +1,10 @@
 # Custom Bundling
 
-An example which uses `prerender_page()` instead of `prerender_page_bundled()`
-to skip the bundling step. It leaves bundling JavaScript and CSS as a matter for
-the user, who can then leverage `inject_resources()` and `web_resources()` to
-assemble the bundled resources together.
+An example which uses `prerender_page()` instead of
+`prerender_multi_page_bundled()` to skip the bundling step. It leaves bundling
+JavaScript and CSS as a matter for the user, who can then leverage
+`inject_resources()` and `web_resources()` to assemble the bundled resources
+together.
 
 It happens to use [Rollup](https://rollupjs.org/) to bundle JavaScript here, but
 any bundler could reasonably be used.

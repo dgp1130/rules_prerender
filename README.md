@@ -201,7 +201,7 @@ export default function render(): string {
 
 load(
     "@npm//rules_prerender:index.bzl",
-    "prerender_page_bundled",
+    "prerender_multi_page_bundled",
     "web_resources_devserver",
 )
 
@@ -215,7 +215,7 @@ load(
 #     /fonts/roboto.woff - The Robot font used in `my_component`.
 #     ... - Possibly other resources from `my_other_component` and transitive
 #         dependencies.
-prerender_page_bundled(
+prerender_multi_page_bundled(
     name = "prerendered_page",
     # Script to invoke the default export of to generate the page.
     src = "my_page_prerender.ts",
@@ -237,9 +237,9 @@ The page is built into a `web_resources()` rule which is a directory that
 contains its HTML, JavaScript, CSS, and other resources from all the
 transitively included components at their expected paths.
 
-Multiple `prerender_page_bundled()` directories can then be composed together
-into a single `web_resources()` rule which contains a final directory of
-everything merged together, representing an entire prerendered web site.
+Multiple `prerender_multi_page_bundled()` directories can then be composed
+together into a single `web_resources()` rule which contains a final directory
+of everything merged together, representing an entire prerendered web site.
 
 This final directory can be served with a simple devserver for local builds or
 uploaded directly to a CDN for production deployments.
@@ -254,8 +254,8 @@ load(
 )
 
 # Combines all the prerendered resources into a single directory, composing a
-# site from a bunch of `prerender_page_bundled()` and `web_resources()` rules.
-# Just upload this to a CDN for production builds!
+# site from a bunch of `prerender_multi_page_bundled()` and `web_resources()`
+# rules. Just upload this to a CDN for production builds!
 web_resources(
     name = "my_site",
     deps = [
@@ -281,15 +281,9 @@ which performs the upload and run it from CI for easy deployments!
 
 ### Generating multiple pages
 
-`prerender_page_bundled()` is only capable of generating a single file.
-Generating multiple files would require multiple `prerender_page_bundled()`
-rules, which could get excessive in certain circumstances. For instance,
-generating a page for every post on a blog, would require a
-`prerender_page_bundled()` target for every post, which could get out of hand.
-
-To help with this, we can use `prerender_multi_page_bundled()` which allows us
-to generate many files all at once! Take this example where we render HTML files
-for a bunch of markdown posts in a blog.
+We can generate multiple pages just as easily as the one. We just need to yield
+more files. Take this example where we render HTML files for a bunch of markdown
+posts in a blog.
 
 ```typescript
 // my_blog/posts_prerender.ts
@@ -329,8 +323,7 @@ load(
 )
 
 # Renders a page for every `posts/*.md` file. Also performs all the bundling and
-# merging like `prerender_page_bundled()`, but applied to every generated HTML
-# file.
+# merging of required JS, CSS, and other resources.
 prerender_multi_page_bundled(
     name = "prerendered_posts",
     # Script to invoke the default export of to generate the page.
