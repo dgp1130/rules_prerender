@@ -182,6 +182,7 @@ module.exports = () => {
         expect(stdout).toBe('');
         expect(stderr).toContain(`${tmpDir.get()}/foo.js`);
         expect(stderr).toContain('return one of:');
+        expect(stderr).not.toContain('\\n'); // String should not be escaped.
         // Stack trace should not be displayed for user-fault errors.
         expect(stderr).not.toContain('    at ');
         

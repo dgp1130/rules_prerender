@@ -50,7 +50,7 @@ main(async () => {
                 'Iterable<PrerenderResource>',
                 'Promise<Iterable<PrerenderResource>>',
                 'AsyncIterable<PrerenderResource>',
-            ].join('\n')}\n\nInstead, got:\n${JSON.stringify(resources)}`,
+            ].join('\n')}\n\nInstead, got:\n${stringify(resources)}`,
         );
         return 1;
     }
@@ -74,3 +74,12 @@ main(async () => {
 
     return 0;
 });
+
+function stringify(value: unknown): string {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') {
+        const obj = value as Record<string, unknown>;
+        if (obj.toString) return obj.toString();
+    }
+    return JSON.stringify(value);
+}
