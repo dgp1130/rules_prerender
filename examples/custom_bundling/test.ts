@@ -7,21 +7,19 @@ import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/commo
 const devserverBinary = resolveRunfile(
         'rules_prerender/examples/custom_bundling/devserver');
 
-describe('javascript', () => {
+describe('custom bundling', () => {
     const server = useDevserver(devserverBinary);
     const browser = useBrowser();
     const page = usePage(browser);
 
-    it('renders with JavaScript', async () => {
+    it('renders a custom bundled page', async () => {
         await page.get().goto(
             `http://${server.get().host}:${server.get().port}/`,
-            {
-                waitUntil: 'load',
-            },
+            { waitUntil: 'load' },
         );
 
         const title = await page.get().title();
-        expect(title).toBe('JavaScript');
+        expect(title).toBe('Custom Bundling');
 
         const replaced = await page.get().$eval(
                 '#replace', (el) => el.textContent);

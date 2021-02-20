@@ -7,10 +7,10 @@ export default function*(): Iterable<PrerenderResource> {
         <!DOCTYPE html>
         <html>
             <head>
-                <title>JavaScript</title>
+                <title>Custom Bundling</title>
             </head>
             <body>
-                <h2>JavaScript</h2>
+                <h2>Custom Bundling</h2>
                 <div id="replace">
                     This text to be overwritten by client-side JavaScript.
                 </div>
