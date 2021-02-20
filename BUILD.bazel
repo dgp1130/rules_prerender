@@ -14,6 +14,7 @@ bzl_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//packages/rules_prerender:extract_single_resource",
         "//packages/rules_prerender:inject_resources",
         "//packages/rules_prerender:prerender_component",
         "//packages/rules_prerender:prerender_multi_page",

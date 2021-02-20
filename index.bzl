@@ -1,6 +1,10 @@
 """Re-exports public Starlark symbols."""
 
 load(
+    "//packages/rules_prerender:extract_single_resource.bzl",
+    _extract_single_resource = "extract_single_resource"
+)
+load(
     "//packages/rules_prerender:inject_resources.bzl",
     _inject_resources = "inject_resources",
 )
@@ -29,6 +33,7 @@ load(
     _web_resources_devserver = "web_resources_devserver",
 )
 
+extract_single_resource = _extract_single_resource
 inject_resources = _inject_resources
 prerender_component = _prerender_component
 prerender_multi_page = _prerender_multi_page
