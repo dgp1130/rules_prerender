@@ -35,11 +35,6 @@ alias(
 )
 
 alias(
-    name = "resource_injector",
-    actual = "@npm//rules_prerender/bin:resource-injector",
-)
-
-alias(
     name = "multi_resource_injector",
     actual = "@npm//rules_prerender/bin:multi-resource-injector",
 )

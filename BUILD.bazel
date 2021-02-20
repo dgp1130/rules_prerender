@@ -61,7 +61,6 @@ pkg_npm(
         "//packages/annotation_extractor",
         "//packages/renderer",
         "//packages/renderer:publish_files",
-        "//packages/resource_injector",
         "//packages/resource_injector:multi_resource_injector",
         "//packages/resource_packager",
         "//packages/rules_prerender",

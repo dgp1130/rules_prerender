@@ -3,50 +3,6 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 nodejs_binary(
-    name = "resource_injector",
-    entry_point = "resource_injector.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
-    data = [
-        ":resource_injector_lib",
-        "@npm//yargs",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-ts_library(
-    name = "resource_injector_lib",
-    srcs = ["resource_injector.ts"],
-    deps = [
-        ":config",
-        ":injector",
-        "//common:binary",
-        "//common:formatters",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-    ],
-)
-
-ts_library(
-    name = "resource_injector_test_lib",
-    srcs = ["resource_injector_test.ts"],
-    testonly = True,
-    deps = [
-        ":config",
-        "//common:runfiles",
-        "//common/testing:binary",
-        "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-    ],
-)
-
-jasmine_node_test(
-    name = "resource_injector_test",
-    data = [":resource_injector"],
-    deps = [":resource_injector_test_lib"],
-)
-
-nodejs_binary(
     name = "multi_resource_injector",
     entry_point = "multi_resource_injector.ts",
     templated_args = ["--bazel_patch_module_resolver"],
