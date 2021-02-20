@@ -138,7 +138,6 @@ def prerender_multi_page(
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
-    client_scripts = "%s_scripts" % name
     ts_library(
         name = client_scripts,
         srcs = [script_entry],
@@ -158,7 +157,6 @@ def prerender_multi_page(
     )
 
     # Reexport all included styles at `%{name}_styles`.
-    client_styles = "%s_styles" % name
     native.filegroup(
         name = client_styles,
         srcs = [
