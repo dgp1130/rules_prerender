@@ -21,8 +21,8 @@ load("@npm//@bazel/postcss:index.bzl", "postcss_plugin")
 package(default_visibility = ["//visibility:public"])
 
 alias(
-    name = "multi_annotation_extractor",
-    actual = "@npm//rules_prerender/bin:multi-annotation-extractor",
+    name = "annotation_extractor",
+    actual = "@npm//rules_prerender/bin:annotation-extractor",
 )
 
 # Renderer is actually a library that gets built into a custom binary on every

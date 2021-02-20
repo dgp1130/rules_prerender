@@ -3,19 +3,19 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 nodejs_binary(
-    name = "multi_annotation_extractor",
-    entry_point = "multi_annotation_extractor.ts",
+    name = "annotation_extractor",
+    entry_point = "annotation_extractor.ts",
     visibility = ["//visibility:public"],
     templated_args = ["--bazel_patch_module_resolver"],
     data = [
-        ":multi_annotation_extractor_lib",
+        ":annotation_extractor_lib",
         "@npm//yargs",
     ],
 )
 
 ts_library(
-    name = "multi_annotation_extractor_lib",
-    srcs = ["multi_annotation_extractor.ts"],
+    name = "annotation_extractor_lib",
+    srcs = ["annotation_extractor.ts"],
     deps = [
         ":extractor",
         ":metadata",
@@ -29,8 +29,8 @@ ts_library(
 )
 
 ts_library(
-    name = "multi_annotation_extractor_test_lib",
-    srcs = ["multi_annotation_extractor_test.ts"],
+    name = "annotation_extractor_test_lib",
+    srcs = ["annotation_extractor_test.ts"],
     testonly = True,
     deps = [
         "//common:runfiles",
@@ -44,9 +44,9 @@ ts_library(
 )
 
 jasmine_node_test(
-    name = "multi_annotation_extractor_test",
-    data = [":multi_annotation_extractor"],
-    deps = [":multi_annotation_extractor_test_lib"],
+    name = "annotation_extractor_test",
+    data = [":annotation_extractor"],
+    deps = [":annotation_extractor_test_lib"],
 )
 
 ts_library(

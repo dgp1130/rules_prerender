@@ -27,8 +27,8 @@ publish_files(
 )
 
 alias(
-    name = "multi_annotation_extractor",
-    actual = "//packages/annotation_extractor:multi_annotation_extractor",
+    name = "annotation_extractor",
+    actual = "//packages/annotation_extractor",
 )
 
 alias(

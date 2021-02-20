@@ -58,7 +58,7 @@ pkg_npm(
         # Merge all tools and files to publish all together into the directory.
         ":publish_files",
         "//common:publish_files",
-        "//packages/annotation_extractor:multi_annotation_extractor",
+        "//packages/annotation_extractor",
         "//packages/renderer",
         "//packages/renderer:publish_files",
         "//packages/resource_injector",

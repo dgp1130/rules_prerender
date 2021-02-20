@@ -266,7 +266,7 @@ _multi_extract_annotations = rule(
             """,
         ),
         "_extractor": attr.label(
-            default = "//tools/internal:multi_annotation_extractor",
+            default = "//tools/internal:annotation_extractor",
             executable = True,
             cfg = "exec",
         ),

@@ -4,7 +4,7 @@
     "main": "./packages/rules_prerender/index.js",
     "typings": "./packages/rules_prerender/index.d.ts",
     "bin": {
-        "multi-annotation-extractor": "./packages/annotation_extractor/multi_annotation_extractor.js",
+        "annotation-extractor": "./packages/annotation_extractor/annotation_extractor.js",
         "renderer": "./packages/renderer/renderer.js",
         "resource-injector": "./packages/resource_injector/resource_injector.js",
         "multi-resource-injector": "./packages/resource_injector/multi_resource_injector.js",
