@@ -1,5 +1,9 @@
 """Defines `inject_resources()` functionality."""
 
+load(":extract_single_resource.bzl", "extract_single_resource")
+load(":multi_inject_resources.bzl", "multi_inject_resources")
+load(":web_resources.bzl", "web_resources")
+
 def inject_resources(
     name,
     input,
@@ -19,60 +23,27 @@ def inject_resources(
             `%{name}.html`
         **kwargs: Remaining arugments to pass through to the underlying rule.
     """
-    _inject_resources_rule(
-        name = name,
-        input = input,
+    # Wrap the input file into a directory.
+    input_dir = "%s_input" % name
+    web_resources(
+        name = input_dir,
+        entries = {
+            "/index.html": input,
+        },
+    )
+
+    # Inject resources into all files in the directory (which is just one).
+    injected = "%s_inject" % name
+    multi_inject_resources(
+        name = injected,
+        input_dir = ":%s" % input_dir,
         scripts = scripts,
         styles = styles,
-        output = output or "%s.html" % name,
-        **kwargs
     )
 
-def _inject_resources_impl(ctx):
-    # Generate configuration JSON from `scripts` and `styles` input.
-    script_injections = [{"type": "script", "path": script}
-                         for script in ctx.attr.scripts]
-    style_injections = [{"type": "style", "path": style.path}
-                        for style in ctx.files.styles]
-    injections = script_injections + style_injections
-
-    # Write the configuration to a file.
-    config = ctx.actions.declare_file("%s_config.json" % ctx.attr.name)
-    ctx.actions.write(config, _encode_json(injections))
-
-    # Run the resource injector.
-    args = ctx.actions.args()
-    args.add("--input", ctx.file.input.path)
-    args.add("--config", config.path)
-    args.add("--output", ctx.outputs.output.path)
-    ctx.actions.run(
-        mnemonic = "InjectResources",
-        progress_message = "Injecting resources",
-        executable = ctx.executable._injector,
-        arguments = [args],
-        inputs = [ctx.file.input, config] + ctx.files.styles,
-        outputs = [ctx.outputs.output],
+    # Extract the one file back out into its own label.
+    extract_single_resource(
+        name = "%s_extract" % name,
+        resources = ":%s" % injected,
+        out = output if output else "%s.html" % name,
     )
-
-_inject_resources_rule = rule(
-    implementation = _inject_resources_impl,
-    attrs = {
-        "input": attr.label(
-            mandatory = True,
-            allow_single_file = True,
-        ),
-        "scripts": attr.string_list(),
-        "styles": attr.label_list(allow_files = True),
-        "output": attr.output(mandatory = True),
-        "_injector": attr.label(
-            default = "//tools/internal:resource_injector",
-            executable = True,
-            cfg = "exec",
-        ),
-    },
-)
-
-def _encode_json(value):
-    """Hack to serialize the given value as JSON."""
-    json = struct(value = value).to_json()
-    return json[len("{\"value\":"):-len("}")]

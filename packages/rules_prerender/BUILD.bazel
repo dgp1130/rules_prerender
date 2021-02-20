@@ -43,6 +43,11 @@ bzl_library(
     name = "inject_resources",
     srcs = ["inject_resources.bzl"],
     visibility = ["//:__pkg__"],
+    deps = [
+        ":extract_single_resource",
+        ":multi_inject_resources",
+        ":web_resources",
+    ],
 )
 
 bzl_library(

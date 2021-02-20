@@ -4,8 +4,11 @@ load(":web_resources.bzl", "WebResourceInfo")
 
 def _multi_inject_resources_impl(ctx):
     # Generate configuration JSON from inputs.
-    injections = [{"type": "style", "path": style.path}
-                  for style in ctx.files.styles]
+    script_injections = [{"type": "script", "path": script}
+                         for script in ctx.attr.scripts]
+    style_injections = [{"type": "style", "path": style.path}
+                         for style in ctx.files.styles]
+    injections = script_injections + style_injections
 
     # Write the configuration to a file.
     config = ctx.actions.declare_file("%s_config.json" % ctx.attr.name)
@@ -44,6 +47,7 @@ multi_inject_resources = rule(
             allow_single_file = True,
         ),
         "bundle": attr.label(allow_single_file = True),
+        "scripts": attr.string_list(),
         "styles": attr.label_list(allow_files = True),
         "_injector": attr.label(
             default = "//tools/internal:multi_resource_injector",
