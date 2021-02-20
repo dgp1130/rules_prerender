@@ -3,19 +3,19 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 nodejs_binary(
-    name = "multi_resource_injector",
-    entry_point = "multi_resource_injector.ts",
+    name = "resource_injector",
+    entry_point = "resource_injector.ts",
     templated_args = ["--bazel_patch_module_resolver"],
     data = [
-        ":multi_resource_injector_lib",
+        ":resource_injector_lib",
         "@npm//yargs",
     ],
     visibility = ["//visibility:public"],
 )
 
 ts_library(
-    name = "multi_resource_injector_lib",
-    srcs = ["multi_resource_injector.ts"],
+    name = "resource_injector_lib",
+    srcs = ["resource_injector.ts"],
     deps = [
         ":config",
         ":injector",
@@ -27,8 +27,8 @@ ts_library(
 )
 
 ts_library(
-    name = "multi_resource_injector_test_lib",
-    srcs = ["multi_resource_injector_test.ts"],
+    name = "resource_injector_test_lib",
+    srcs = ["resource_injector_test.ts"],
     testonly = True,
     deps = [
         ":config",
@@ -41,9 +41,9 @@ ts_library(
 )
 
 jasmine_node_test(
-    name = "multi_resource_injector_test",
-    data = [":multi_resource_injector"],
-    deps = [":multi_resource_injector_test_lib"],
+    name = "resource_injector_test",
+    data = [":resource_injector"],
+    deps = [":resource_injector_test_lib"],
 )
 
 ts_library(

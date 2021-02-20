@@ -6,7 +6,7 @@
     "bin": {
         "annotation-extractor": "./packages/annotation_extractor/annotation_extractor.js",
         "renderer": "./packages/renderer/renderer.js",
-        "multi-resource-injector": "./packages/resource_injector/multi_resource_injector.js",
+        "resource-injector": "./packages/resource_injector/resource_injector.js",
         "resource-packager": "./packages/resource_packager/resource_packager.js",
         "script-entry-generator": "./packages/script_entry_generator/script_entry_generator.js",
         "style-entry-generator": "./packages/style_entry_generator/style_entry_generator.js"

@@ -7,9 +7,9 @@ import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
 const injector = resolveRunfile(
-    'rules_prerender/packages/resource_injector/multi_resource_injector.sh');
+    'rules_prerender/packages/resource_injector/resource_injector.sh');
 
-/** Invokes the multi resource injector binary. */
+/** Invokes the resource injector binary. */
 async function run({ inputDir, config, bundle, outputDir }: {
     inputDir: string,
     config: string,

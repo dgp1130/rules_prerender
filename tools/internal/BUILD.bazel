@@ -37,8 +37,8 @@ alias(
 )
 
 alias(
-    name = "multi_resource_injector",
-    actual = "//packages/resource_injector:multi_resource_injector",
+    name = "resource_injector",
+    actual = "//packages/resource_injector",
 )
 
 alias(
