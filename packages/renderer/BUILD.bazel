@@ -14,7 +14,7 @@ publish_files(
 ts_library(
     name = "renderer",
     srcs = ["renderer.ts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//tools/internal:__pkg__"],
     deps = [
         ":entry_point",
         "//common:binary",
@@ -28,7 +28,7 @@ ts_library(
 filegroup(
     name = "renderer_js",
     srcs = [":renderer"],
-    visibility = ["//visibility:public"],
+    visibility = ["//tools/internal:__pkg__"],
     output_group = "es5_sources",
 )
 

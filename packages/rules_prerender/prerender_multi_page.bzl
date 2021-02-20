@@ -99,7 +99,7 @@ def prerender_multi_page(
     binary = "%s_binary" % name
     nodejs_binary(
         name = binary,
-        entry_point = "//packages/renderer:renderer_js",
+        entry_point = "//tools/internal:renderer_js",
         templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + [
