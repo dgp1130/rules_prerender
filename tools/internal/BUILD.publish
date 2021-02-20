@@ -30,17 +30,8 @@ alias(
     actual = "@npm//rules_prerender/bin:multi-annotation-extractor",
 )
 
-# Renderer is actually a library that gets built into a custom binary on
-# every `prerender_page()` invocation. This simply represents the
-# `ts_library()` of that package, used as a dep. We can just depend on
-# the whole NPM package instead.
-alias(
-    name = "renderer",
-    actual = "@npm//rules_prerender:rules_prerender__files",
-)
-
 # Mutli-renderer is actually a library that gets built into a custom binary on
-# every `prerender_page()` invocation. This simply represents the
+# every `prerender_multi_page()` invocation. This simply represents the
 # `ts_library()` of that package, used as a dep. We can just depend on
 # the whole NPM package instead.
 alias(

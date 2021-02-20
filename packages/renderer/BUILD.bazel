@@ -12,56 +12,6 @@ publish_files(
 )
 
 ts_library(
-    name = "renderer",
-    srcs = ["renderer.ts"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":entry_point",
-        "//common:binary",
-        "//common:formatters",
-        "//common/models:prerender_resource",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-    ],
-)
-
-filegroup(
-    name = "renderer_js",
-    srcs = [":renderer"],
-    visibility = ["//visibility:public"],
-    output_group = "es5_sources",
-)
-
-nodejs_binary(
-    name = "renderer_test_binary",
-    entry_point = "renderer.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
-    testonly = True,
-    data = RENDERER_RUNTIME_DEPS + [
-        ":renderer",
-    ],
-)
-
-jasmine_node_test(
-    name = "renderer_integration_test",
-    data = [":renderer_test_binary"],
-    deps = [":renderer_integration_test_lib"],
-)
-
-ts_library(
-    name = "renderer_integration_test_lib",
-    srcs = ["renderer_test.ts"],
-    testonly = True,
-    deps = [
-        "//common:runfiles",
-        "//common/testing:binary",
-        "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-    ],
-)
-
-ts_library(
     name = "multi_renderer",
     srcs = ["multi_renderer.ts"],
     visibility = ["//visibility:public"],

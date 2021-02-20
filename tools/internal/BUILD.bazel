@@ -42,11 +42,6 @@ alias(
 )
 
 alias(
-    name = "renderer",
-    actual = "//packages/renderer",
-)
-
-alias(
     name = "resource_injector",
     actual = "//packages/resource_injector",
 )
