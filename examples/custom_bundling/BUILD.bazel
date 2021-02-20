@@ -2,14 +2,16 @@ load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load(
     "//:index.bzl",
+    "extract_single_resource",
     "inject_resources",
-    "prerender_page",
+    "prerender_multi_page",
     "web_resources",
     "web_resources_devserver",
 )
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
-prerender_page(
+# Prerender a single HTML file.
+prerender_multi_page(
     name = "page",
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],
@@ -17,11 +19,18 @@ prerender_page(
     deps = ["//examples/custom_bundling/component"],
 )
 
+# Extract the prerendered file to `page.html`.
+extract_single_resource(
+    resources = ":page",
+    out = "page.html",
+)
+
 ts_library(
     name = "script",
     srcs = ["script.ts"],
 )
 
+# Manually bundle all scripts.
 rollup_bundle(
     name = "bundle",
     entry_point = ":page_scripts.ts",
@@ -34,12 +43,16 @@ rollup_bundle(
     ],
 )
 
+# Inject a `<script />` tag for the bundled JavaScript into the prerendered HTML
+# file.
 inject_resources(
     name = "injected_page",
     input = "page.html",
     scripts = ["/index.js"],
 )
 
+# Merge HTML and JavaScript into a single directory with files at the correct
+# paths.
 web_resources(
     name = "site",
     entries = {

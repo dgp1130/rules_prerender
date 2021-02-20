@@ -1,9 +1,9 @@
-import { includeScript } from 'rules_prerender';
+import { PrerenderResource, includeScript } from 'rules_prerender';
 import { renderComponent } from 'rules_prerender/examples/custom_bundling/component/component';
 
 /** Render some HTML with a `<script />` tag. */
-export default function(): string {
-    return `
+export default function*(): Iterable<PrerenderResource> {
+    yield PrerenderResource.of('/does/not/matter.html', `
         <!DOCTYPE html>
         <html>
             <head>
@@ -18,5 +18,5 @@ export default function(): string {
                 ${renderComponent()}
             </body>
         </html>
-    `;
+    `);
 }
