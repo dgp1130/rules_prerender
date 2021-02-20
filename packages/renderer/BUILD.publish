@@ -1,7 +1,7 @@
 exports_files(glob(["**/*.bzl"]), visibility = ["//visibility:public"])
 
 filegroup(
-    name = "multi_renderer_js",
-    srcs = ["multi_renderer.js"],
+    name = "renderer_js",
+    srcs = ["renderer.js"],
     visibility = ["//visibility:public"],
 )

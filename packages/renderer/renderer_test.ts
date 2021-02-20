@@ -6,7 +6,7 @@ import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
 const renderer = resolveRunfile(
-        'rules_prerender/packages/renderer/multi_renderer_test_binary.sh');
+        'rules_prerender/packages/renderer/renderer_test_binary.sh');
 
 /** Invokes the renderer binary. */
 async function run({ entryPoint, outputDir }: {
@@ -163,13 +163,11 @@ module.exports = 'Hello, World!'; // Not a function...
         expect(outputFiles).toEqual([]);
     });
 
-    it('fails from a string result from the entry point', async () => {
+    it('fails from user code returning a bad type', async () => {
         await fs.mkdir(`${tmpDir.get()}/output`);
         await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// Return a value which is valid user code, but incompatible with multi-renderer
-// due to being a \`string\` or \`Promise<string>\`.
 module.exports = () => {
-    return 'Hello, World!';
+    return 'Hello, World!'; // Not an iterable.
 };
         `.trim());
 

@@ -6,7 +6,7 @@
     "bin": {
         "annotation-extractor": "./packages/annotation_extractor/annotation_extractor.js",
         "multi-annotation-extractor": "./packages/annotation_extractor/multi_annotation_extractor.js",
-        "multi-renderer": "./packages/renderer/multi_renderer.js",
+        "renderer": "./packages/renderer/renderer.js",
         "resource-injector": "./packages/resource_injector/resource_injector.js",
         "multi-resource-injector": "./packages/resource_injector/multi_resource_injector.js",
         "resource-packager": "./packages/resource_packager/resource_packager.js",

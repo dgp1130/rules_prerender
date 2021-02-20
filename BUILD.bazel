@@ -60,7 +60,7 @@ pkg_npm(
         "//common:publish_files",
         "//packages/annotation_extractor",
         "//packages/annotation_extractor:multi_annotation_extractor",
-        "//packages/renderer:multi_renderer",
+        "//packages/renderer",
         "//packages/renderer:publish_files",
         "//packages/resource_injector",
         "//packages/resource_injector:multi_resource_injector",

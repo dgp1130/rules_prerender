@@ -2,7 +2,7 @@
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//packages/renderer:build_vars.bzl", "MULTI_RENDERER_RUNTIME_DEPS")
+load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":entry_points.bzl", "script_entry_point", "style_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
@@ -99,12 +99,12 @@ def prerender_multi_page(
     binary = "%s_binary" % name
     nodejs_binary(
         name = binary,
-        entry_point = "//packages/renderer:multi_renderer_js",
+        entry_point = "//packages/renderer:renderer_js",
         templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
-        data = MULTI_RENDERER_RUNTIME_DEPS + [
+        data = RENDERER_RUNTIME_DEPS + [
             ":%s" % component_prerender,
-            "//tools/internal:multi_renderer",
+            "//tools/internal:renderer",
         ],
     )
 
@@ -113,7 +113,7 @@ def prerender_multi_page(
     _prerender_multi_page_rule(
         name = annotated,
         entry_point = ":%s" % prerender_js,
-        multi_renderer = ":%s" % binary,
+        renderer = ":%s" % binary,
         testonly = testonly,
     )
 
@@ -180,9 +180,9 @@ def _prerender_multi_page_impl(ctx):
     # Invoke the renderer and output the content.
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
     ctx.actions.run(
-        mnemonic = "MultiPrerender",
-        progress_message = "Prerendering multiple pages",
-        executable = ctx.executable.multi_renderer,
+        mnemonic = "Prerender",
+        progress_message = "Prerendering pages",
+        executable = ctx.executable.renderer,
         arguments = [
             "--entry-point", "%s/%s" % (
                 ctx.workspace_name,
@@ -206,7 +206,7 @@ _prerender_multi_page_rule = rule(
             mandatory = True,
             allow_single_file = True,
         ),
-        "multi_renderer": attr.label(
+        "renderer": attr.label(
             mandatory = True,
             executable = True,
             cfg = "exec",

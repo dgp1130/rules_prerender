@@ -37,8 +37,8 @@ alias(
 )
 
 alias(
-    name = "multi_renderer",
-    actual = "//packages/renderer:multi_renderer",
+    name = "renderer",
+    actual = "//packages/renderer",
 )
 
 alias(
