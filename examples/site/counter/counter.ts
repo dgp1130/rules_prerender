@@ -4,7 +4,7 @@ import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { renderCounter } from 'rules_prerender/examples/site/components/counter/counter_prerender';
 
 /** Renders the counter page. */
-export default function*(): Iterable<PrerenderResource> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/counter/index.html', baseLayout('Counter', () => `
         <article>
             <p>This is a basic JavaScript counter.</p>

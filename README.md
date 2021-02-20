@@ -292,7 +292,8 @@ import * as fs from 'fs';
 import { PrerenderResource } from 'rules_prerender';
 import * as md from 'markdown-it';
 
-export default async function* render(): AsyncIterable<PrerenderResource> {
+export default async function* render():
+        AsyncGenerator<PrerenderResource, void, void> {
     // List all files in the `posts/` directory.
     const posts = await fs.readdir(
         `${process.env['RUNFILES']}/__main__/my_blog/posts/`,

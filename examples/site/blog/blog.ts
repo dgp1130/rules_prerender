@@ -15,7 +15,8 @@ const postsRoot =
     `${process.env['RUNFILES']}/rules_prerender/examples/site/blog/posts/`;
 
 /** Generates all the blog posts for the site. */
-export default async function*(): AsyncIterable<PrerenderResource> {
+export default async function*():
+        AsyncGenerator<PrerenderResource, void, void> {
     // Get all `posts/*.md` files.
     const entries = await fs.readdir(postsRoot, { withFileTypes: true });
     const posts = entries

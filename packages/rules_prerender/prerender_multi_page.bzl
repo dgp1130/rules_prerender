@@ -33,6 +33,23 @@ def prerender_multi_page(
     () => Iterable<PrerenderResource> | Promise<Iterable<PrerenderResource>>
         | AsyncIterable<PrerenderResource>
     ```
+
+    Note: You may want to write this using the `Generator` or `AsyncGenerator`
+    types, as they are allowed subtypes and will enable TypeScript to catch some
+    foot-guns with `return` and `yield` that come with generators.
+
+    ```typescript
+    export default function*(): Generator<PrerenderResource, void, void> {
+        // ...
+    }
+
+    // OR
+
+    export default async function*():
+            AsyncGenerator<PrerenderResource, void, void> {
+        // ...
+    }
+    ```
     
     A `ts_library()` is used to compile the `src` file and `lib_deps` + `deps`
     is used as the `deps` parameter with the given `tsconfig`.

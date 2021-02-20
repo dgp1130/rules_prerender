@@ -2,7 +2,7 @@ import { PrerenderResource, includeScript } from 'rules_prerender';
 import { renderComponent } from 'rules_prerender/examples/scripts/component/component';
 
 /** Render some HTML with a `<script />` tag. */
-export default function*(): Iterable<PrerenderResource> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `
         <!DOCTYPE html>
         <html>

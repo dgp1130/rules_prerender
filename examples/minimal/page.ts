@@ -2,7 +2,7 @@ import { bar, foo } from './dep';
 import { PrerenderResource } from 'rules_prerender';
 
 /** Renders the page. */
-export default function*(): Iterable<PrerenderResource> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `
         <!DOCTYPE html>
         <html>

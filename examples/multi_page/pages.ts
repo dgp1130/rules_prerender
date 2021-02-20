@@ -1,6 +1,6 @@
 import { PrerenderResource, includeScript, includeStyle } from 'rules_prerender';
 
-export default function* (): Iterable<PrerenderResource> {
+export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', generate(`
 <h2>Multi-Page</h2>
 <img src="/logo.png" />

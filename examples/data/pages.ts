@@ -3,7 +3,8 @@ import * as path from 'path';
 import { PrerenderResource } from 'rules_prerender';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 
-export default async function*(): AsyncIterable<PrerenderResource> {
+export default async function*():
+        AsyncGenerator<PrerenderResource, void, void> {
     // Read all files under `content/` in runfiles.
     const content = resolveRunfile('rules_prerender/examples/data/content/');
     const entries = await fs.readdir(content, { withFileTypes: true });

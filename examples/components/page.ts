@@ -2,7 +2,7 @@ import { PrerenderResource } from 'rules_prerender';
 import { render as renderComponent } from './component';
 
 /** Renders a page using components. */
-export default function*(): Iterable<PrerenderResource> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `
         <!DOCTYPE html>
         <html>

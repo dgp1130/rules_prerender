@@ -3,7 +3,7 @@ import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { repo, srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the entire home page. */
-export default function*(): Iterable<PrerenderResource> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', baseLayout('Home', () => `
         <div comp-home>
             <article>
