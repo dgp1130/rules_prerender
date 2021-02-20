@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
 import { mdSpacing } from 'rules_prerender/common/formatters';
-import { PrerenderResource } from 'rules_prerender/common/models/prerender_resource';
 import { invoke } from 'rules_prerender/packages/renderer/entry_point';
 
 main(async () => {
@@ -34,24 +33,11 @@ main(async () => {
         .argv;
 
     // Invoke the provided entry point.
-    let resources: string | Iterable<PrerenderResource>
-        | AsyncIterable<PrerenderResource>;
+    let resources: PromiseValue<ReturnType<typeof invoke>>;
     try {
         resources = await invoke(entryPoint);
     } catch (err) {
         console.error(err.message);
-        return 1;
-    }
-
-    // Validate the result of the entry point.
-    if (typeof resources === 'string') {
-        console.error(
-            `Expected entry point (${entryPoint}) to return one of:\n${[
-                'Iterable<PrerenderResource>',
-                'Promise<Iterable<PrerenderResource>>',
-                'AsyncIterable<PrerenderResource>',
-            ].join('\n')}\n\nInstead, got:\n${stringify(resources)}`,
-        );
         return 1;
     }
 
@@ -75,11 +61,6 @@ main(async () => {
     return 0;
 });
 
-function stringify(value: unknown): string {
-    if (typeof value === 'string') return value;
-    if (typeof value === 'object') {
-        const obj = value as Record<string, unknown>;
-        if (obj.toString) return obj.toString();
-    }
-    return JSON.stringify(value);
-}
+// Extracts the generic value type from an input `Promise`.
+type PromiseValue<T extends Promise<unknown>> =
+    T extends Promise<infer V> ? V : never;

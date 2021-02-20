@@ -162,32 +162,4 @@ module.exports = 'Hello, World!'; // Not a function...
         });
         expect(outputFiles).toEqual([]);
     });
-
-    it('fails from user code returning a bad type', async () => {
-        await fs.mkdir(`${tmpDir.get()}/output`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-module.exports = () => {
-    return 'Hello, World!'; // Not an iterable.
-};
-        `.trim());
-
-        const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
-            outputDir: `${tmpDir.get()}/output`,
-        });
-
-        expect(code).toBe(1);
-        expect(stdout).toBe('');
-        expect(stderr).toContain(`${tmpDir.get()}/foo.js`);
-        expect(stderr).toContain('return one of:');
-        expect(stderr).not.toContain('\\n'); // String should not be escaped.
-        // Stack trace should not be displayed for user-fault errors.
-        expect(stderr).not.toContain('    at ');
-        
-        // No output files should be written.
-        const outputFiles = await fs.readdir(`${tmpDir.get()}/output`, {
-            withFileTypes: true,
-        });
-        expect(outputFiles).toEqual([]);
-    });
 });

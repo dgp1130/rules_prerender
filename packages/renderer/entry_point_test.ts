@@ -6,33 +6,6 @@ import * as importLib from 'rules_prerender/packages/renderer/dynamic_import';
 
 describe('entry_point', () => {
     describe('invoke()', () => {
-        it('invokes the given entry point and returns its string value', async () => {
-            const defaultExport = jasmine.createSpy('defaultExport')
-                    .and.returnValue('Hello, World!');
-            spyOn(importLib, 'dynamicImport').and.resolveTo({
-                default: defaultExport,
-            });
-
-            const rendered = await invoke('foo.js');
-
-            expect(importLib.dynamicImport).toHaveBeenCalledOnceWith('foo.js');
-            expect(defaultExport).toHaveBeenCalledOnceWith();
-
-            expect(rendered).toBe('Hello, World!');
-        });
-
-        it('invokes the given entry point and awaits its `Promise<string>` value', async () => {
-            const defaultExport = jasmine.createSpy('defaultExport')
-                    .and.resolveTo('Hello, World!');
-            spyOn(importLib, 'dynamicImport').and.resolveTo({
-                default: defaultExport,
-            });
-
-            const rendered = await invoke('foo.js');
-
-            expect(rendered).toBe('Hello, World!');
-        });
-
         it('invokes the given entry point and returns its `Iterable<PrerenderResource>` value', async () => {
             const defaultExport =
                 jasmine.createSpy('defaultExport').and.returnValue([

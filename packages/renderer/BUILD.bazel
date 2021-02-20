@@ -19,7 +19,6 @@ ts_library(
         ":entry_point",
         "//common:binary",
         "//common:formatters",
-        "//common/models:prerender_resource",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],

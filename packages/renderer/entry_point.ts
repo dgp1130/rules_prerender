@@ -6,13 +6,18 @@ import { PrerenderResource } from 'rules_prerender/common/models/prerender_resou
  * the default function export, and validates the result before returning it.
  * 
  * @param entryPoint A path to a JavaScript CommonJS module. This module should
- *     have a default export of a function. This function accepts no arguments
- *     and returns a `string` or a `Promise<string>`. The module is imported
- *     into the NodeJS runtime and invoked, propagating the return value to the
- *     caller.
+ *     have a default export of a function with the type:
+ * 
+ *     ```
+ *     () => Iterable<PrerenderResource> | Promise<Iterable<PrerenderResource>>
+ *         | AsyncIterable<PrerenderResource>
+ *     ```
+ * 
+ *     The module is imported into the NodeJS runtime and invoked, propagating
+ *     the return value to the caller.
+ * @returns The returned value of the invoked entry point.
  */
 export async function invoke(entryPoint: string): Promise<
-    string
     | Iterable<PrerenderResource>
     | AsyncIterable<PrerenderResource>
 > {
@@ -33,7 +38,6 @@ export async function invoke(entryPoint: string): Promise<
     }
 
     const rendered = await defaultExport() as unknown;
-    if (typeof rendered === 'string') return rendered;
     if (isIterable(rendered)) {
         return rendered as Iterable<PrerenderResource>;
     }
@@ -43,9 +47,6 @@ export async function invoke(entryPoint: string): Promise<
 
     throw new Error(`Entry point (${entryPoint}) provided a default export`
         + ` which returned a value that is not one of:\n${[
-            'string',
-            'Promise<string>',
-            'Promise<PrerenderResource>',
             'Iterable<PrerenderResource>',
             'Promise<Iterable<PrerenderResource>>',
             'AsyncIterable<PrerenderResource>',
