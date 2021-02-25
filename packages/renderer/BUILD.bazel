@@ -42,7 +42,7 @@ nodejs_binary(
 )
 
 ts_library(
-    name = "renderer_integration_test_lib",
+    name = "renderer_test_lib",
     srcs = ["renderer_test.ts"],
     testonly = True,
     deps = [
@@ -56,9 +56,9 @@ ts_library(
 )
 
 jasmine_node_test(
-    name = "renderer_integration_test",
+    name = "renderer_test",
     data = [":renderer_test_binary"],
-    deps = [":renderer_integration_test_lib"],
+    deps = [":renderer_test_lib"],
 )
 
 ts_library(
