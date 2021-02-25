@@ -1,4 +1,6 @@
-export {}; // Treat this as an ES module.
+import { foo } from './transitive_script';
+
+console.log(foo()); // DEBUG
 
 if (document.readyState === 'complete'
         || document.readyState === 'interactive') {

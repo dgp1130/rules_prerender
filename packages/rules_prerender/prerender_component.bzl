@@ -1,5 +1,6 @@
 """Defines `prerender_component()` functionality."""
 
+load("@build_bazel_rules_nodejs//:providers.bzl", "JSModuleInfo")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
 load(":web_resources.bzl", "web_resources")
@@ -47,12 +48,30 @@ def prerender_component(
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
 
+    strict_deps_src = "%s_strict_deps.ts" % name
+    _strict_deps(
+        name = "%s_strict_deps" % name,
+        scripts = scripts,
+        output = strict_deps_src,
+    )
+
+    strict_deps_lib = "%s_strict_deps_lib" % name
+    ts_library(
+        name = strict_deps_lib,
+        srcs = [strict_deps_src],
+        tsconfig = tsconfig,
+        testonly = testonly,
+        deps = ["//packages/rules_prerender"],
+    )
+
     ts_library(
         name = "%s_prerender" % name,
         srcs = srcs,
         tsconfig = tsconfig,
         data = data,
-        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps] + [
+            ":%s" % strict_deps_lib,
+        ],
         testonly = testonly,
         visibility = visibility,
     )
@@ -78,3 +97,58 @@ def prerender_component(
         visibility = visibility,
         deps = resources + ["%s_resources" % absolute(dep) for dep in deps],
     )
+
+def _strict_deps_impl(ctx):
+    js_module_infos = [script[JSModuleInfo] for script in ctx.attr.scripts]
+    direct_sources = [source
+                      for module in js_module_infos
+                      for source in module.direct_sources.to_list()]
+    strict_scripts = ["%s/%s" % (
+                          ctx.workspace_name,
+                          source.short_path[:-len("." + source.extension)],
+                      ) for source in direct_sources]
+
+    script_type = " | ".join(["'%s'" % script for script in strict_scripts])
+    ctx.actions.write(ctx.outputs.output, """
+declare module 'rules_prerender' {
+    // interface PrerenderResource {
+    //     of(path: string, contents: string | ArrayBuffer | TypedArray): {
+    //         urlPath: {
+    //             path: string;
+    //         };
+    //         contents: ArrayBuffer;
+    //     }
+    // }
+    // export function includeScript(script: s): string;
+    export interface includeScript {
+        (script: %s): string;
+    }
+
+type TypedArray =
+    Int8Array
+    | Uint8Array
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Uint8ClampedArray
+    | Float32Array
+    | Float64Array;
+}
+    """.strip() % script_type)
+
+_strict_deps = rule(
+    implementation = _strict_deps_impl,
+    attrs = {
+        "scripts": attr.label_list(
+            mandatory = True,
+            providers = [JSModuleInfo],
+        ),
+        "output": attr.output(mandatory = True),
+    },
+)
+
+def _encode_json(value):
+    """Hack to serialize the given value as JSON."""
+    json = struct(value = value).to_json()
+    return json[len("{\"value\":"):-len("}")]

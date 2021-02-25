@@ -5,7 +5,7 @@ prerender_component(
     name = "component",
     srcs = ["component.ts"],
     lib_deps = ["//packages/rules_prerender"],
-    scripts = [":component_script"],
+    scripts = [":component_script", ":transitive_dep"],
     visibility = ["//examples/scripts:__subpackages__"],
     deps = ["//examples/scripts/transitive"],
 )
@@ -13,4 +13,11 @@ prerender_component(
 ts_library(
     name = "component_script",
     srcs = ["component_script.ts"],
+    deps = [":transitive_dep"],
+)
+
+# DEBUG
+ts_library(
+    name = "transitive_dep",
+    srcs = ["transitive_script.ts"],
 )
