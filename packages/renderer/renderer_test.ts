@@ -162,4 +162,33 @@ module.exports = 'Hello, World!'; // Not a function...
         });
         expect(outputFiles).toEqual([]);
     });
+
+    it('fails when the same path is generated multiple times', async () => {
+        await fs.mkdir(`${tmpDir.get()}/output`);
+        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
+// We can't rely on the linker to resolve imports for us. We also don't want to
+// rely on the legacy require() patch, so instead we need to manually load the
+// runfiles helper and require() the file through it.
+const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
+const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
+
+module.exports = async function* () {
+    yield PrerenderResource.of('/foo.html', 'foo');
+
+    // Error: Generating /bar.html twice.
+    yield PrerenderResource.of('/bar.html', 'bar');
+    yield PrerenderResource.of('/bar.html', 'baz');
+};
+        `.trim());
+
+        const { code, stdout, stderr } = await run({
+            entryPoint: `${tmpDir.get()}/foo.js`,
+            outputDir: `${tmpDir.get()}/output`,
+        });
+
+        expect(code)
+            .toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
+        expect(stdout).toBe('');
+        expect(stderr).toContain('Generated path `/bar.html` twice.');
+    });
 });

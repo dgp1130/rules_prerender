@@ -42,17 +42,25 @@ main(async () => {
     }
 
     // Write each resource to its file.
+    const generatedUrlPaths = new Set<string>();
     const writes = [] as Promise<void>[];
     for await (const resource of resources) {
-        const urlPath = path.join(outputDir, resource.path);
-        const dir = urlPath.split('/').slice(0, -1).join('/');
+        // Make sure the given path has not been previously generated.
+        if (generatedUrlPaths.has(resource.path)) {
+            console.error(`Generated path \`${resource.path}\` twice.`);
+            return 1;
+        }
+        generatedUrlPaths.add(resource.path);
+
+        const outputPath = path.join(outputDir, resource.path);
+        const dir = outputPath.split('/').slice(0, -1).join('/');
 
         // Don't block the loop on write, so I/O operations from multiple
         // resources can run in parallel, instead just queue the Promise and
         // `await` them all at the end.
         writes.push((async () => {
             await fs.mkdir(dir, { recursive: true });
-            await fs.writeFile(urlPath, new Uint8Array(resource.contents));
+            await fs.writeFile(outputPath, new Uint8Array(resource.contents));
         })());
     }
 
