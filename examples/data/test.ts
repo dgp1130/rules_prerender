@@ -1,7 +1,7 @@
 import 'jasmine';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary =
     resolveRunfile('rules_prerender/examples/data/devserver');
@@ -31,7 +31,7 @@ describe('data', () => {
                 '/posts/bar.html',
                 '/posts/baz.html',
             ]));
-        });
+        }, puppeteerTestTimeout);
     });
 
     describe('foo page', () => {
@@ -50,7 +50,7 @@ describe('data', () => {
             const content = await page.get().$eval(
                 'article', (el) => el.textContent);
             expect(content).toBe('This is the text for the "foo" post!');
-        });
+        }, puppeteerTestTimeout);
     });
 
     describe('bar page', () => {
@@ -69,7 +69,7 @@ describe('data', () => {
             const content = await page.get().$eval(
                 'article', (el) => el.textContent);
             expect(content).toBe('This is the text for the "bar" post!');
-        });
+        }, puppeteerTestTimeout);
     });
 
     describe('baz page', () => {
@@ -88,6 +88,6 @@ describe('data', () => {
             const content = await page.get().$eval(
                 'article', (el) => el.textContent);
             expect(content).toBe('This is the text for the "baz" post!');
-        });
+        }, puppeteerTestTimeout);
     });
 });

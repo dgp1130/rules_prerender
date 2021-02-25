@@ -2,7 +2,7 @@ import 'jasmine';
 
 import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const devserverBinary = resolveRunfile(
     'rules_prerender/examples/multi_page/devserver');
@@ -44,7 +44,7 @@ describe('multi_page', () => {
             const replaced = await page.get().$eval(
                     '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
-        });
+        }, puppeteerTestTimeout);
     });
 
     describe('foo page', () => {
@@ -65,7 +65,7 @@ describe('multi_page', () => {
             const replaced = await page.get().$eval(
                     '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
-        });
+        }, puppeteerTestTimeout);
     });
 
     describe('bar page', () => {
@@ -86,7 +86,7 @@ describe('multi_page', () => {
             const replaced = await page.get().$eval(
                     '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
-        });
+        }, puppeteerTestTimeout);
     });
 
     describe('hello world page', () => {
@@ -107,6 +107,6 @@ describe('multi_page', () => {
             const replaced = await page.get().$eval(
                     '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
-        });
+        }, puppeteerTestTimeout);
     });
 });
