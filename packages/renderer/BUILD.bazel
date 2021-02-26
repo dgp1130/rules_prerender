@@ -4,6 +4,7 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
+load("//packages/rules_prerender:es6_consumer.bzl", "es6_consumer")
 
 publish_files(
     name = "publish_files",
@@ -28,16 +29,22 @@ filegroup(
     name = "renderer_js",
     srcs = [":renderer"],
     visibility = ["//tools/internal:__pkg__"],
-    output_group = "es5_sources",
+    output_group = "es6_sources",
+)
+
+es6_consumer(
+    name = "renderer_transitive",
+    deps = [":renderer"],
 )
 
 nodejs_binary(
     name = "renderer_test_binary",
-    entry_point = "renderer.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
+    entry_point = "renderer.mjs",
+    link_workspace_root = True,
+    templated_args = ["--node_options=--experimental-modules"],
     testonly = True,
     data = RENDERER_RUNTIME_DEPS + [
-        ":renderer",
+        ":renderer_transitive",
     ],
 )
 

@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as yargs from 'yargs';
-import { main } from 'rules_prerender/common/binary';
-import { mdSpacing } from 'rules_prerender/common/formatters';
-import { invoke } from 'rules_prerender/packages/renderer/entry_point';
+import { main } from '../../common/binary.mjs';
+import { mdSpacing } from 'rules_prerender/common/formatters.js';
+import { invoke } from 'rules_prerender/packages/renderer/entry_point.js';
 
 main(async () => {
     // Parse binary options and arguments.

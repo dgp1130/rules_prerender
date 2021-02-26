@@ -1,13 +1,14 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "prerender_annotation",
     srcs = ["prerender_annotation.ts"],
     visibility = ["//visibility:public"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_annotation_test_lib",
     srcs = ["prerender_annotation_test.ts"],
     testonly = True,
@@ -22,7 +23,7 @@ jasmine_node_test(
     deps = [":prerender_annotation_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_annotation_mock",
     srcs = ["prerender_annotation_mock.ts"],
     testonly = True,
@@ -30,7 +31,7 @@ ts_library(
     deps = [":prerender_annotation"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_metadata",
     srcs = ["prerender_metadata.ts"],
     visibility = ["//visibility:public"],

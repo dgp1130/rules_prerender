@@ -1,5 +1,5 @@
-import { parse, HTMLElement, Node, CommentNode } from 'node-html-parser';
-import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import * as htmlLib from 'node-html-parser';
+import { PrerenderAnnotation, parseAnnotation } from '../../common/models/prerender_annotation.js';
 
 /**
  * Parses the given string as HTML and return a tuple of the input HTML with
@@ -14,7 +14,7 @@ export function extract(html: string): [
     string /* strippedHtml */,
     Array<PrerenderAnnotation> /* annotations */,
 ] {
-    const root = parse(html, {
+    const root = htmlLib.parse(html, {
         comment: true,
         blockTextElements: {
             script: true,
@@ -37,7 +37,7 @@ export function extract(html: string): [
  * comment is left alone and nothing is emitted.
  */
 function* stripAnnotations(
-    comments: Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]>,
+    comments: Iterable<[ htmlLib.CommentNode, htmlLib.HTMLElement | undefined /* parent */ ]>,
 ): Iterable<PrerenderAnnotation> {
     for (const [ comment, parent ] of comments) {
         const annotation = parseAnnotation(comment.text);
@@ -53,10 +53,10 @@ function* stripAnnotations(
  * nodes.
  */
 function* walkComments(
-    nodes: Iterable<[ Node, HTMLElement | undefined /* parent */ ]>,
-): Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]> {
+    nodes: Iterable<[ htmlLib.Node, htmlLib.HTMLElement | undefined /* parent */ ]>,
+): Iterable<[ htmlLib.CommentNode, htmlLib.HTMLElement | undefined /* parent */ ]> {
     for (const [ node, parent ] of nodes) {
-        if (node instanceof CommentNode) {
+        if (node instanceof htmlLib.CommentNode) {
             yield [ node, parent ];
         }
     }
@@ -66,10 +66,10 @@ function* walkComments(
  * Returns an {@link Iterable} of all the {@link Node} descendants of the given
  * root and their parent.
  */
-function* walk(root: Node, parent?: HTMLElement):
-        Iterable<[ Node, HTMLElement | undefined /* parent */ ]> {
+function* walk(root: htmlLib.Node, parent?: htmlLib.HTMLElement):
+        Iterable<[ htmlLib.Node, htmlLib.HTMLElement | undefined /* parent */ ]> {
     yield [ root, parent ];
-    if (root instanceof HTMLElement) {
+    if (root instanceof htmlLib.HTMLElement) {
         for (const node of root.childNodes) {
             yield* walk(node, root);
         }

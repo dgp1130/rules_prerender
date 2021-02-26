@@ -1,19 +1,28 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
 nodejs_binary(
     name = "annotation_extractor",
     entry_point = "annotation_extractor.ts",
     visibility = ["//tools/internal:__pkg__"],
-    templated_args = ["--bazel_patch_module_resolver"],
+    templated_args = ["--node_options=--experimental-modules"],
+    # link_workspace_root = True,
     data = [
         ":annotation_extractor_lib",
+        # ":package",
+        "//:package",
         "@npm//yargs",
     ],
 )
 
-ts_library(
+copy_to_bin(
+    name = "package",
+    srcs = ["package.json"],
+)
+
+ts_project(
     name = "annotation_extractor_lib",
     srcs = ["annotation_extractor.ts"],
     deps = [
@@ -28,7 +37,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "annotation_extractor_test_lib",
     srcs = ["annotation_extractor_test.ts"],
     testonly = True,
@@ -49,7 +58,7 @@ jasmine_node_test(
     deps = [":annotation_extractor_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "extractor",
     srcs = ["extractor.ts"],
     deps = [
@@ -58,7 +67,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "extractor_test_lib",
     srcs = ["extractor_test.ts"],
     testonly = True,
@@ -73,7 +82,7 @@ jasmine_node_test(
     deps = [":extractor_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "metadata",
     srcs = ["metadata.ts"],
     deps = [
@@ -82,7 +91,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "metadata_test_lib",
     srcs = ["metadata_test.ts"],
     testonly = True,
