@@ -185,7 +185,7 @@ import { renderMyComponent } from '__main__/my_component/my_component_prerender'
 // Renders HTML pages for the site at build-time.
 // If you aren't familiar with generators and the `yield` looks scary, you could
 // also write this as simply returning an `Array<PrerenderResource>`.
-export default function render(): AsyncGenerator<PrerenderResource, void, void> {
+export default function* render(): Generator<PrerenderResource, void, void> {
     // Generate an HTML page at `/my_page/index.html` with this content:
     yield PrerenderResource.of('/my_page/index.html', `
         <!DOCTYPE html>
