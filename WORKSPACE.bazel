@@ -19,9 +19,14 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.0.0/rules_nodejs-3.0.0.tar.gz"],
 )
 
+local_repository(
+    name = "build_bazel_rules_typescript",
+    path = "third_party/rules_typescript",
+)
+
 # The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
 # It also extracts any Bazel rules distributed in an npm package.
-load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_install", "yarn_install")
 npm_install(
     # Name this npm so that Bazel Label references look like @npm//package
     name = "npm",
@@ -29,6 +34,12 @@ npm_install(
     package_lock_json = "//:package-lock.json",
     # Needed for `rules_postcss` to be able to resolve its NPM dependencies.
     strict_visibility = False,
+)
+
+yarn_install(
+    name = "npm_rules_typescript",
+    package_json = "@build_bazel_rules_typescript//:package.json",
+    yarn_lock = "@build_bazel_rules_typescript//:yarn.lock",
 )
 
 # Load bazel_skylib.
@@ -43,6 +54,18 @@ http_archive(
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 
+load("@build_bazel_rules_typescript//:package.bzl", "rules_typescript_dev_dependencies")
+rules_typescript_dev_dependencies()
+
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+go_rules_dependencies()
+go_register_toolchains()
+
 # Install transitive Bazel dependencies.
-load("//:package.bzl", "rules_prerender_dependencies")
+load(
+    "//:package.bzl",
+    "rules_prerender_dependencies",
+    "rules_prerender_dev_dependencies",
+)
 rules_prerender_dependencies()
+rules_prerender_dev_dependencies()

@@ -1,0 +1,8 @@
+To vendor `rules_typescript`:
+
+1.  Copy https://github.com/bazelbuild/rules_nodejs/tree/b8a4dcd806b8cb50abdd6f0b82c1138cd122e0b3/third_party/github.com/bazelbuild/rules_typescript
+    into `third_party/rules_typescript/`.
+2.  Run: `sed -i "s,@npm//,@npm_rules_typescript//,g" third_party/rules_typescript/**/BUILD.bazel`
+3.  Run: `sed -i "s,@build_bazel_rules_nodejs//packages/,@npm//@bazel/,g" third_party/rules_typescript/**/BUILD.bazel`
+4.  Run: `(cd third_party/rules_typescript/ && yarn)`
+5.  Build: `bazel build @build_bazel_rules_typescript//internal:tsc_wrapped_bin`
