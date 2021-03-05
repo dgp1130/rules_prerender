@@ -179,10 +179,15 @@ web page.
 ```typescript
 // my_page/my_page_prerender.ts
 
+import { PrerenderResource } from 'rules_prerender';
 import { renderMyComponent } from '__main__/my_component/my_component_prerender';
 
-export default function render(): string {
-    return `
+// Renders HTML pages for the site at build-time.
+// If you aren't familiar with generators and the `yield` looks scary, you could
+// also write this as simply returning an `Array<PrerenderResource>`.
+export default function render(): AsyncGenerator<PrerenderResource, void, void> {
+    // Generate an HTML page at `/my_page/index.html` with this content:
+    yield PrerenderResource.of('/my_page/index.html', `
         <!DOCTYPE html>
         <html>
             <head>
@@ -192,7 +197,7 @@ export default function render(): string {
                 ${renderMyComponent('World')}
             </body>
         </html>
-    `;
+    `);
 }
 ```
 
@@ -219,8 +224,6 @@ prerender_multi_page_bundled(
     name = "prerendered_page",
     # Script to invoke the default export of to generate the page.
     src = "my_page_prerender.ts",
-    # The URL path this page to host this page at.
-    path = "/my_page/index.html",
     # Components used during prerendering.
     deps = ["//my_component"],
 )
