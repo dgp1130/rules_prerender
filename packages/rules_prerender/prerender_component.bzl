@@ -45,16 +45,41 @@ def prerender_component(
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+    
+    Outputs:
+        `%{name}`: A compiled prerender component for use by other
+            `prerender_*()` rules/macros. This is not a real target as this
+            actually macro outputs several targets at `%{name}_*`. These are
+            **not** intended to be directly depended upon because it would be
+            very easy to accidentally depend on one part of a component (such as
+            the prerendered HTML) without also depending all the other parts
+            (such as the CSS) for it to work as expected. Instead of using the
+            outputs of this macro directly, use another `prerender_*()`
+            macro/rule to depend on and use this correctly.
+        `%{name}_prerender_for_test`: There is one exception which can be
+            directly depended upon. This is an alias to the `ts_library()`
+            target which compiles the `srcs` of this macro. It does **not**
+            include client side scripts, CSS, or other resources used by the
+            component. It is intended purely for testing purposes to assert that
+            prerender logic works as intended and is marked `testonly`
+            accordingly.
     """
 
+    prerender_lib = "%s_prerender" % name
     ts_library(
-        name = "%s_prerender" % name,
+        name = prerender_lib,
         srcs = srcs,
         tsconfig = tsconfig,
         data = data,
         deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
+    )
+
+    native.alias(
+        name = "%s_prerender_for_test" % name,
+        actual = ":%s" % prerender_lib,
+        testonly = True,
     )
 
     ts_library(

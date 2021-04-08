@@ -23,7 +23,7 @@ ts_library(
     srcs = ["header_test.ts"],
     testonly = True,
     deps = [
-        ":header_prerender",
+        ":header_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
     ],

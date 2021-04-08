@@ -23,7 +23,7 @@ ts_library(
     srcs = ["blog_test.ts"],
     testonly = True,
     deps = [
-        ":blog_page_component_prerender",
+        ":blog_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
     ],

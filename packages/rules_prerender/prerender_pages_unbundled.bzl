@@ -65,6 +65,9 @@ def prerender_pages_unbundled(
             the page.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
+        %{name}_prerender_for_test: An alias to the `ts_library()` target which
+            compiles the `src` of this macro marked as `testonly`. This provides
+            a simple hook for unit testing prerender logic.
     
     Args:
         name: The name of this rule.
@@ -99,9 +102,16 @@ def prerender_pages_unbundled(
         testonly = testonly,
     )
     component_prerender = "%s_prerender" % component
+    component_prerender_for_test = "%s_prerender_for_test" % component
     component_scripts = "%s_scripts" % component
     component_styles = "%s_styles" % component
     component_resources = "%s_resources" % component
+
+    native.alias(
+        name = "%s_prerender_for_test" % name,
+        actual = ":%s" % component_prerender_for_test,
+        testonly = True,
+    )
 
     # Get the generated JS file path for the user provided TypeScript source.
     prerender_js = "%s_prerender_js" % name

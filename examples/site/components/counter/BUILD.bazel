@@ -15,7 +15,7 @@ ts_library(
     srcs = ["counter_prerender_test.ts"],
     testonly = True,
     deps = [
-        ":counter_prerender",
+        ":counter_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
     ],

@@ -74,6 +74,9 @@ def prerender_pages(
             included. CSS is inlined directly in the HTML documents in a
             `<style />` tag. Non-HTML files are included as well, but not
             modified.
+        %{name}_prerender_for_test: An alias to the `ts_library()` target which
+            compiles the `src` of this macro marked as `testonly`. This provides
+            a simple hook for unit testing prerender logic.
     
     Args:
         name: The name of this rule.
@@ -111,6 +114,12 @@ def prerender_pages(
         deps = deps,
         testonly = testonly,
         visibility = visibility,
+    )
+
+    native.alias(
+        name = "%s_prerender_for_test" % name,
+        actual = ":%s_prerender_for_test" % prerender_name,
+        testonly = True,
     )
 
     bundle = "%s_bundle" % name
