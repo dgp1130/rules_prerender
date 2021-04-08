@@ -80,8 +80,8 @@ bzl_library(
 )
 
 bzl_library(
-    name = "prerender_multi_page_bundled",
-    srcs = ["prerender_multi_page_bundled.bzl"],
+    name = "prerender_pages",
+    srcs = ["prerender_pages.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
         ":multi_inject_resources",

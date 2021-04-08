@@ -1,6 +1,6 @@
-load("//:index.bzl", "prerender_multi_page_bundled", "web_resources")
+load("//:index.bzl", "prerender_pages", "web_resources")
 
-prerender_multi_page_bundled(
+prerender_pages(
     name = "about",
     src = "about.ts",
     lib_deps = [

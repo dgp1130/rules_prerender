@@ -1,4 +1,4 @@
-"""Defines `prerender_multi_page_bundled()` functionality."""
+"""Defines `prerender_pages()` functionality."""
 
 load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
@@ -7,7 +7,7 @@ load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_multi_page.bzl", "prerender_multi_page")
 load(":web_resources.bzl", "web_resources")
 
-def prerender_multi_page_bundled(
+def prerender_pages(
     name,
     src,
     tsconfig = None,

@@ -1,6 +1,6 @@
-load("//:index.bzl", "prerender_multi_page_bundled")
+load("//:index.bzl", "prerender_pages")
 
-prerender_multi_page_bundled(
+prerender_pages(
     name = "counter",
     src = "counter.ts",
     lib_deps = [

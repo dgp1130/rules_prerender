@@ -1,7 +1,7 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("//:index.bzl", "prerender_multi_page_bundled", "web_resources_devserver")
+load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 
-prerender_multi_page_bundled(
+prerender_pages(
     name = "page",
     src = "page.ts",
     tsconfig = "tsconfig.json",
