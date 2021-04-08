@@ -1,7 +1,7 @@
-load("//:index.bzl", "extract_single_resource", "prerender_multi_page")
+load("//:index.bzl", "extract_single_resource", "prerender_pages_unbundled")
 load("//tools/goldens:build_defs.bzl", "golden_test")
 
-prerender_multi_page(
+prerender_pages_unbundled(
     name = "single_resource",
     src = "single_resource.ts",
     lib_deps = ["//packages/rules_prerender"],
@@ -18,7 +18,7 @@ golden_test(
     expected = "I'm a single resource!",
 )
 
-prerender_multi_page(
+prerender_pages_unbundled(
     name = "nested_resource",
     src = "nested_resource.ts",
     lib_deps = ["//packages/rules_prerender"],

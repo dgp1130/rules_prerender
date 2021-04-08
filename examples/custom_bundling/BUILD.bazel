@@ -4,14 +4,14 @@ load(
     "//:index.bzl",
     "extract_single_resource",
     "inject_resources",
-    "prerender_multi_page",
+    "prerender_pages_unbundled",
     "web_resources",
     "web_resources_devserver",
 )
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 # Prerender a single HTML file.
-prerender_multi_page(
+prerender_pages_unbundled(
     name = "page",
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],

@@ -1,8 +1,8 @@
 # Custom Bundling
 
-An example which uses `prerender_multi_page()` instead of `prerender_pages()` to
-skip the bundling step. It leaves bundling JavaScript and CSS as a matter for
-the user, who can then leverage `extract_single_resource()`,
+An example which uses `prerender_pages_unbundled()` instead of
+`prerender_pages()` to skip the bundling step. It leaves bundling JavaScript and
+CSS as a matter for the user, who can then leverage `extract_single_resource()`,
 `inject_resources()`, and `web_resources()` to assemble the bundled content
 together.
 

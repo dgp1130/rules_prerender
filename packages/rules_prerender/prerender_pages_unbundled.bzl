@@ -1,4 +1,4 @@
-"""Defines `prerender_multi_page()` functionality."""
+"""Defines `prerender_pages_unbundled()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
@@ -7,7 +7,7 @@ load(":entry_points.bzl", "script_entry_point", "style_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
-def prerender_multi_page(
+def prerender_pages_unbundled(
     name,
     src,
     tsconfig = None,
@@ -127,7 +127,7 @@ def prerender_multi_page(
 
     # Execute the runner to generate annotated resources.
     annotated = "%s_annotated" % name
-    _prerender_multi_page_rule(
+    _prerender_pages_unbundled_rule(
         name = annotated,
         entry_point = ":%s" % prerender_js,
         renderer = ":%s" % binary,
@@ -193,7 +193,7 @@ def prerender_multi_page(
         visibility = visibility,
     )
 
-def _prerender_multi_page_impl(ctx):
+def _prerender_pages_unbundled_impl(ctx):
     # Invoke the renderer and output the content.
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
     ctx.actions.run(
@@ -216,8 +216,8 @@ def _prerender_multi_page_impl(ctx):
         WebResourceInfo(transitive_entries = depset([output_dir])),
     ]
 
-_prerender_multi_page_rule = rule(
-    implementation = _prerender_multi_page_impl,
+_prerender_pages_unbundled_rule = rule(
+    implementation = _prerender_pages_unbundled_impl,
     attrs = {
         "entry_point": attr.label(
             mandatory = True,

@@ -4,7 +4,7 @@ load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
-load(":prerender_multi_page.bzl", "prerender_multi_page")
+load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
 load(":web_resources.bzl", "web_resources")
 
 def prerender_pages(
@@ -24,7 +24,7 @@ def prerender_pages(
 ):
     """Renders multiple resources at build time and bundles client-side resources.
 
-    This provides a higher-level implementation of `prerender_multi_page`,
+    This provides a higher-level implementation of `prerender_pages_unbundled`,
     automatically bundling client-side resources.
 
     This invokes the default export function of the given `src` TypeScript, and
@@ -99,7 +99,7 @@ def prerender_pages(
     """
     # Render the HTML page at `%{name}_page.html`.
     prerender_name = "%s_page" % name
-    prerender_multi_page(
+    prerender_pages_unbundled(
         name = prerender_name,
         src = src,
         tsconfig = tsconfig,

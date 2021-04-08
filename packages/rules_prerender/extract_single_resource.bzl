@@ -11,11 +11,11 @@ def extract_single_resource(name = None, resources = None, out = None):
     load(
         "@npm//rules_prerender:index.bzl",
         "extract_single_resource",
-        "prerender_multi_page",
+        "prerender_pages_unbundled",
     )
 
     # Only generates one file at any path.
-    prerender_multi_page(
+    prerender_pages_unbundled(
         name = "prerendered",
         src = "prerender.ts",
         # ...

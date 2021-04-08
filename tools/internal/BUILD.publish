@@ -26,17 +26,16 @@ alias(
 )
 
 # Renderer is actually a library that gets built into a custom binary on every
-# `prerender_multi_page()` invocation. This target simply represents the
-# `ts_library()` of that package, used as a dep. We can just depend on the whole
-# NPM package instead.
+# invocation. This target simply represents the `ts_library()` of that package,
+# used as a dep. We can just depend on the whole NPM package instead.
 alias(
     name = "renderer",
     actual = "@npm//rules_prerender:rules_prerender__files"
 )
 
 # Renderer is actually a library that gets built into a custom binary on every
-# `prerender_multi_page()` invocation. This target simply represents the
-# compiled JavaScript of that package, used as an entry point.
+# invocation. This target simply represents the compiled JavaScript of that
+# package, used as an entry point.
 alias(
     name = "renderer_js",
     actual = "@npm//rules_prerender/packages/renderer:renderer_js",

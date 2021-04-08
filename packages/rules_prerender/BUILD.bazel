@@ -68,8 +68,8 @@ bzl_library(
 )
 
 bzl_library(
-    name = "prerender_multi_page",
-    srcs = ["prerender_multi_page.bzl"],
+    name = "prerender_pages_unbundled",
+    srcs = ["prerender_pages_unbundled.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
         ":entry_points",
@@ -85,7 +85,7 @@ bzl_library(
     visibility = ["//:__pkg__"],
     deps = [
         ":multi_inject_resources",
-        ":prerender_multi_page",
+        ":prerender_pages_unbundled",
         ":postcss_import_plugin_bzl",
         ":web_resources",
     ],

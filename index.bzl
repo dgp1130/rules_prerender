@@ -13,12 +13,12 @@ load(
     _prerender_component = "prerender_component",
 )
 load(
-    "//packages/rules_prerender:prerender_multi_page.bzl",
-    _prerender_multi_page = "prerender_multi_page",
-)
-load(
     "//packages/rules_prerender:prerender_pages.bzl",
     _prerender_pages = "prerender_pages",
+)
+load(
+    "//packages/rules_prerender:prerender_pages_unbundled.bzl",
+    _prerender_pages_unbundled = "prerender_pages_unbundled",
 )
 load(
     "//packages/rules_prerender:web_resources.bzl",
@@ -32,7 +32,7 @@ load(
 extract_single_resource = _extract_single_resource
 inject_resources = _inject_resources
 prerender_component = _prerender_component
-prerender_multi_page = _prerender_multi_page
+prerender_pages_unbundled = _prerender_pages_unbundled
 prerender_pages = _prerender_pages
 web_resources = _web_resources
 web_resources_devserver = _web_resources_devserver
