@@ -627,3 +627,20 @@ To actually publish a release to NPM, follow these steps:
     [releases](https://github.com/dgp1130/rules_prerender/releases) to edit the
     automatically created release to add a changelog or other relevant
     information.
+
+## Updating `tsc_wrapped` patch
+
+`@bazel/typescript` is patched to load `//packages/tsc_plugin`. The patch itself
+lives at
+[`patches/@bazel+typescript+3.0.0.patch`](patches/@bazel+typescript+3.0.0.patch)
+and is automatically applied via a `postinstall` script. If you want to change
+the patch, the easiest way to do this is by making the edits you want in
+`node_modules/@bazel/typescript/` and then running:
+
+```shell
+npx patch-package@6.4.7 @bazel/typescript && bazel run //path/to/pkg:target
+```
+
+This will update the `.patch` file to reflect your changes to `node_modules/`.
+`bazel` will pick up this change and rerun `npm install` followed by applying
+the patch and then building and running the desired target.

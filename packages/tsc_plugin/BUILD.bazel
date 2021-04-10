@@ -1,0 +1,18 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+ts_library(
+    name = "tsc_plugin",
+    srcs = ["index.ts"],
+    module_name = "rules_prerender_tsc_plugin",
+    visibility = ["//visibility:public"],
+    deps = [":prerender_plugin"],
+)
+
+ts_library(
+    name = "prerender_plugin",
+    srcs = ["prerender_plugin.ts"],
+    deps = [
+        "@npm//typescript",
+        "@npm//@bazel/typescript"
+    ],
+)

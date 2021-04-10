@@ -29,6 +29,7 @@ npm_install(
     package_lock_json = "//:package-lock.json",
     # Needed for `rules_postcss` to be able to resolve its NPM dependencies.
     strict_visibility = False,
+    data = ["//:patches/@bazel+typescript+3.0.0.patch"],
 )
 
 # Load bazel_skylib.

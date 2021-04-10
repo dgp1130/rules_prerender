@@ -71,6 +71,7 @@ def prerender_component(
         srcs = srcs,
         tsconfig = tsconfig,
         data = data,
+        compiler = "@npm//@bazel/typescript/internal:tsc_wrapped_with_rules_prerender_plugin",
         deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
