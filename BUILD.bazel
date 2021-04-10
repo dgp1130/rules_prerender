@@ -24,6 +24,17 @@ bzl_library(
     ],
 )
 
+# Copy to a different directory so this package's `postinstall` script doesn't
+# find them, but user `postinstall` scripts can.
+genrule(
+    name = "patch_release_copy",
+    srcs = ["patches/@bazel+typescript+3.0.0.patch"],
+    outs = ["published_patches/@bazel+typescript+3.0.0.patch"],
+    cmd = """
+        sed "s,@rules_prerender//packages/rules_prerender,@npm//rules_prerender,g" < $< > $@
+    """,
+)
+
 publish_files(
     name = "publish_files",
     files = [
@@ -31,6 +42,7 @@ publish_files(
         "index.bzl",
         "package.bzl",
         "package.json",
+        "published_patches/@bazel+typescript+3.0.0.patch",
     ],
 )
 
@@ -61,6 +73,8 @@ pkg_npm(
         "//packages/renderer:publish_files",
         "//packages/rules_prerender",
         "//packages/rules_prerender:publish_files",
+        "//packages/tsc_plugin",
+        "//packages/tsc_plugin:publish_files",
         "//tools/internal:annotation_extractor",
         "//tools/internal:renderer",
         "//tools/internal:resource_injector",

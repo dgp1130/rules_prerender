@@ -61,6 +61,11 @@ alias(
     actual = "@npm//rules_prerender/bin:style-entry-generator",
 )
 
+alias(
+    name = "tsc_plugin",
+    actual = "@npm//rules_prerender/packages/tsc_plugin:tsc_plugin_js",
+)
+
 postcss_plugin(
     name = "postcss_import_plugin",
     node_require = "postcss-import",

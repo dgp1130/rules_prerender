@@ -10,13 +10,17 @@ exports_files(
 
 ts_library(
     name = "rules_prerender",
-    srcs = ["index.ts"],
+    srcs = [
+        "index.ts",
+        "tsc_plugin.ts",
+    ],
     module_name = "rules_prerender",
     visibility = ["//visibility:public"],
     deps = [
         ":scripts",
         ":styles",
         "//common/models:prerender_resource",
+        "//packages/tsc_plugin",
     ],
 )
 

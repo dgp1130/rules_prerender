@@ -61,6 +61,11 @@ alias(
     actual = "//packages/style_entry_generator",
 )
 
+alias(
+    name = "tsc_plugin",
+    actual = "//packages/tsc_plugin",
+)
+
 postcss_plugin(
     name = "postcss_import_plugin",
     node_require = "postcss-import",

@@ -19,7 +19,7 @@ index fae2141..c63bb03 100755
 +    ],
 +    data = [
 +        "@npm//@bazel/typescript:typescript__files",
-+        "@rules_prerender//packages/tsc_plugin",
++        "@rules_prerender//packages/rules_prerender",
 +    ],
 +    visibility = ["//visibility:public"],
 +)
@@ -43,7 +43,7 @@ index 0000000..ecdacff
 +const strict_deps_1 = require("./strict_deps");
 +const tsconfig_1 = require("./tsconfig");
 +const worker_1 = require("./worker");
-+const { PrerenderPlugin } = require("rules_prerender_tsc_plugin");
++const { PrerenderPlugin } = require("rules_prerender/tsc_plugin");
 +/**
 + * Top-level entry point for tsc_wrapped.
 + */

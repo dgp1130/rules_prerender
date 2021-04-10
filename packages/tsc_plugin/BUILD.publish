@@ -1,0 +1,8 @@
+# load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+
+# js_library(
+#     name = "tsc_plugin_js",
+#     srcs = glob(["**/*.js"]),
+#     package_name = "rules_prerender_tsc_plugin",
+#     visibility = ["//tools/internal:__pkg__"],
+# )
