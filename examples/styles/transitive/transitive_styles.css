@@ -1,3 +1,7 @@
 .transitive > .label {
     color: blue;
 }
+
+.foo-bar {
+    color: green;
+}

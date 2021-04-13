@@ -3,7 +3,10 @@ load("//:index.bzl", "prerender_component")
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
-    styles = ["component_styles.css"],
+    styles = [
+        "component_styles.css",
+        "other_styles.css",
+    ],
     lib_deps = ["//packages/rules_prerender"],
     visibility = ["//examples/styles:__subpackages__"],
     deps = ["//examples/styles/transitive"],
