@@ -1,5 +1,6 @@
 """Defines `prerender_component()` functionality."""
 
+load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
 load(":web_resources.bzl", "web_resources")
@@ -12,6 +13,7 @@ def prerender_component(
     lib_deps = [],
     scripts = [],
     styles = [],
+    css_modules = [],
     resources = [],
     deps = [],
     testonly = None,
@@ -39,7 +41,7 @@ def prerender_component(
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
-            included in the prerendered HTML.
+            included in the prerendered HTML. TODO
         resources: List of `web_resources()` required by this component at
             runtime.
         deps: `prerender_component()` dependencies for this component.
@@ -71,7 +73,7 @@ def prerender_component(
         srcs = srcs,
         tsconfig = tsconfig,
         data = data,
-        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+        deps = lib_deps + css_modules + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )
@@ -92,7 +94,11 @@ def prerender_component(
 
     native.filegroup(
         name = "%s_styles" % name,
-        srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
+        srcs = (
+            styles
+            + ["%s_modules" % absolute(module) for module in css_modules]
+            + ["%s_styles" % absolute(dep) for dep in deps]
+        ),
         testonly = testonly,
         visibility = visibility,
     )
