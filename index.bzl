@@ -1,5 +1,6 @@
 """Re-exports public Starlark symbols."""
 
+load("//packages/rules_prerender:css_module.bzl", _css_module = "css_module")
 load(
     "//packages/rules_prerender:extract_single_resource.bzl",
     _extract_single_resource = "extract_single_resource"
@@ -29,6 +30,7 @@ load(
     _web_resources_devserver = "web_resources_devserver",
 )
 
+css_module = _css_module
 extract_single_resource = _extract_single_resource
 inject_resources = _inject_resources
 prerender_component = _prerender_component

@@ -66,3 +66,9 @@ postcss_plugin(
     node_require = "postcss-import",
     deps = ["@npm//postcss-import"],
 )
+
+postcss_plugin(
+    name = "postcss_modules_plugin",
+    node_require = "postcss-modules",
+    deps = ["@npm//postcss-modules"],
+)

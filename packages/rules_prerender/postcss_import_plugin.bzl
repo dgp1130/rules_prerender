@@ -64,10 +64,16 @@ PLUGIN_CONFIG = """(() => {
                 const importWorkspace = importPath.split('/')[0];
                 const relativeImport = importPath.split('/')
                     .slice(1).join('/');
+                const moduleImport =
+                    relativeImport.split('.').slice(0, -1).join('.')
+                    + '.module.css';
                 const workspacePaths = workspaceMap.get(importWorkspace)
                     .map((path) => `${importWorkspace}/${path}`);
-                const paths = workspacePaths.map((path) =>
-                    `${importOptions.root}/${path}/${relativeImport}`);
+                // TODO: Just module imports?
+                const paths = workspacePaths.flatMap((path) => [
+                    `${importOptions.root}/${path}/${relativeImport}`,
+                    `${importOptions.root}/${path}/${moduleImport}`,
+                ]);
 
                 if (debug) {
                     console.error(`Found possible paths:\\n${

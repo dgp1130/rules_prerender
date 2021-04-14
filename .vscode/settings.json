@@ -26,5 +26,8 @@
     ],
     "files.associations": {
         "BUILD.publish": "starlark"
-    }
+    },
+    "css.lint.validProperties": [
+        "composes"
+    ]
 }
