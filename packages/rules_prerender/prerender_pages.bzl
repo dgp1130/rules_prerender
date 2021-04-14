@@ -1,5 +1,6 @@
 """Defines `prerender_pages()` functionality."""
 
+load("@build_bazel_rules_nodejs//:providers.bzl", "run_node")
 load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
@@ -139,6 +140,7 @@ def prerender_pages(
         )
 
     bundled_css = "%s_styles_bundled.css" % name
+    purged_css = "%s_styles_purged.css" % name if bundle_css else bundled_css
     if bundle_css:
         # Bundle all styles.
         postcss_binary(
@@ -153,13 +155,20 @@ def prerender_pages(
             deps = [":%s_styles" % prerender_name],
         )
 
+        _purge_css(
+            name = "%s_purged" % name,
+            html_dir = ":%s" % prerender_name,
+            css = ":%s" % bundled_css,
+            purged_css = purged_css,
+        )
+
     # Inject bundled JS and CSS into the HTML.
     injected_dir = "%s_injected" % name
     multi_inject_resources(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
         bundle = ":%s" % bundle if bundle_js else None,
-        styles = [bundled_css] if bundle_css else [],
+        styles = [purged_css] if bundle_css else [],
         testonly = testonly,
     )
 
@@ -174,3 +183,60 @@ def prerender_pages(
             ":%s_resources" % prerender_name,
         ],
     )
+
+def _purge_css_impl(ctx):
+    purgecss_output_dir = ctx.actions.declare_directory(
+        "%s_purgecss_output" % ctx.label.name,
+    )
+
+    # Execute PurgeCSS and write to a temporary output directory since that is
+    # all the CLI supports. Usage: https://purgecss.com/CLI.html.
+    run_node(
+        ctx,
+        mnemonic = "PurgeCss",
+        progress_message = "Purging CSS",
+        executable = "_purge_css",
+        arguments = [
+            "--content", "%s/**/*.html" % ctx.file.html_dir.path,
+            "--css", ctx.file.css.path,
+            "--output", purgecss_output_dir.path,
+        ],
+        inputs = [ctx.file.html_dir, ctx.file.css],
+        outputs = [purgecss_output_dir],
+    )
+
+    # Because only one CSS file was input, it will be output with the same name
+    # at the temporary output directory. Copy this to the actual output of the
+    # rule.
+    css_basename = ctx.file.css.path.split("/")[-1]
+    ctx.actions.run_shell(
+        mnemonic = "PurgeCssExtract",
+        progress_message = "Extracting purged CSS",
+        command = "cp $1 $2",
+        arguments = [
+            "%s/%s" % (purgecss_output_dir.path, css_basename),
+            ctx.outputs.purged_css.path,
+        ],
+        inputs = [purgecss_output_dir],
+        outputs = [ctx.outputs.purged_css],
+    )
+
+_purge_css = rule(
+    _purge_css_impl,
+    attrs = {
+        "html_dir": attr.label(
+            allow_single_file = True,
+            mandatory = True,
+        ),
+        "css": attr.label(
+            allow_single_file = True,
+            mandatory = True,
+        ),
+        "purged_css": attr.output(mandatory = True),
+        "_purge_css": attr.label(
+            default = "@npm//purgecss/bin:purgecss",
+            cfg = "exec",
+            executable = True,
+        ),
+    },
+)

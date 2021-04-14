@@ -1,7 +1,9 @@
 """Defines `prerender_component()` functionality."""
 
+load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
+load(":postcss_modules_plugin.bzl", MODULES_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":web_resources.bzl", "web_resources")
 
 def prerender_component(
@@ -66,12 +68,14 @@ def prerender_component(
     """
 
     prerender_lib = "%s_prerender" % name
+    css_modules = "%s_css_modules" % name
     ts_library(
         name = prerender_lib,
         srcs = srcs,
         tsconfig = tsconfig,
         data = data,
-        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+        deps = (lib_deps + [css_modules]
+                + ["%s_prerender" % absolute(dep) for dep in deps]),
         testonly = testonly,
         visibility = visibility,
     )
@@ -90,9 +94,27 @@ def prerender_component(
         visibility = visibility,
     )
 
+    [postcss_binary(
+        name = "%s_%s_css_module" % (name, style),
+        src = style,
+        output_name = "%s.module.css" % ".".join(style.split(".")[:-1]),
+        additional_outputs = ["%s.ts" % style],
+        sourcemap = True,
+        plugins = {
+            "//tools/internal:postcss_modules_plugin": MODULES_PLUGIN_CONFIG,
+        },
+        testonly = testonly,
+    ) for style in styles]
+
+    ts_library(
+        name = css_modules,
+        srcs = ["%s.ts" % style for style in styles],
+        testonly = testonly,
+    )
+
     native.filegroup(
         name = "%s_styles" % name,
-        srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
+        srcs = ["%s.module.css" % ".".join(style.split(".")[:-1]) for style in styles] + ["%s_styles" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

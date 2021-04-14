@@ -178,7 +178,7 @@ def prerender_pages_unbundled(
     style_entry = "%s.css" % client_styles
     style_entry_point(
         name = "%s_entry" % client_styles,
-        metadata = metadata,
+        styles = component_styles,
         output_entry_point = style_entry,
         testonly = testonly,
     )
