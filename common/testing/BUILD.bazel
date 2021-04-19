@@ -177,7 +177,7 @@ ts_library(
     deps = [
         ":effects",
         "@npm//@types/node",
-        "@npm//@types/puppeteer",
+        "@npm//puppeteer",
     ],
 )
 
@@ -191,13 +191,12 @@ ts_library(
         ":puppeteer",
         "@npm//@types/jasmine",
         "@npm//@types/node",
-        "@npm//@types/puppeteer",
+        "@npm//puppeteer",
     ],
 )
 
 jasmine_node_test(
     name = "puppeteer_test",
-    data = ["@npm//puppeteer"],
     deps = [":puppeteer_test_lib"],
 )
 

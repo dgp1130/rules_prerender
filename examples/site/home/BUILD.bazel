@@ -29,15 +29,11 @@ ts_library(
         "//common/testing:devserver",
         "//common/testing:puppeteer",
         "@npm//@types/jasmine",
-        "@npm//@types/puppeteer",
     ],
 )
 
 jasmine_node_test(
     name = "home_test",
-    data = [
-        ":home_devserver",
-        "@npm//puppeteer",
-    ],
+    data = [":home_devserver"],
     deps = [":home_test_lib"],
 )

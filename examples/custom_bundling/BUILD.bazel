@@ -82,9 +82,6 @@ ts_library(
 
 jasmine_node_test(
     name = "test",
-    data = [
-        ":devserver",
-        "@npm//puppeteer",
-    ],
+    data = [":devserver"],
     deps = [":test_lib"],
 )
