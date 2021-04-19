@@ -369,8 +369,19 @@ resource with tools that expect a single file as input, rather than a directory.
 
 ## Development
 
+To get started, simply download / fork the repository and run:
+
+```shell
+bazel run @nodejs//:npm -- ci
+bazel test //...
+```
+
+Prefer using `bazel run @nodejs//:npm -- ...` and
+`bazel run @nodejs//:node -- ...` over using `npm` and `node` directly so they
+are strongly versioned with the repository.
+
 NOTE: If you encounter "Missing inputs" errors from `fsevents` or other optional
-dependencies, consider using `npm ci` instead of `npm install`.
+dependencies, make sure you are using `npm ci` instead of `npm install`.
 See: https://github.com/bazelbuild/rules_nodejs/issues/2395.
 
 There are `bazel` and `ibazel` scripts in `package.json` so you can run any
