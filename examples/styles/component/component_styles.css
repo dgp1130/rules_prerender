@@ -1,3 +1,7 @@
 .component > .label {
     color: green;
 }
+
+.unused {
+    color: black;
+}

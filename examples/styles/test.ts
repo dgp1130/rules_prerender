@@ -15,34 +15,32 @@ describe('styles', () => {
     it('renders with CSS', async () => {
         await page.get().goto(
             `http://${server.get().host}:${server.get().port}/`,
-            {
-                waitUntil: 'load',
-            },
+            { waitUntil: 'load' },
         );
 
         const title = await page.get().title();
         expect(title).toBe('Styling');
 
         const pageLbl = await page.get().$eval(
-                '.page > .label', (el) => el.textContent);
-        expect(pageLbl).toBe('I\'m a page with some CSS!');
+                '[page-label]', (el) => el.textContent);
+        expect(pageLbl).toContain('I\'m a page with some CSS!');
         const pageLblColor = await page.get().$eval(
-                '.page > .label', (el) => getComputedStyle(el).color);
+                '[page-label]', (el) => getComputedStyle(el).color);
         expect(pageLblColor).toBe('rgb(255, 0, 0)'); // Red.
 
         const componentLbl = await page.get().$eval(
-                '.component > .label', (el) => el.textContent);
-        expect(componentLbl).toBe('I\'m a component with some CSS!');
+                '[component-label]', (el) => el.textContent);
+        expect(componentLbl).toContain('I\'m a component with some CSS!');
         const componentLblColor = await page.get().$eval(
-                '.component > .label', (el) => getComputedStyle(el).color);
+                '[component-label]', (el) => getComputedStyle(el).color);
         expect(componentLblColor).toBe('rgb(0, 128, 0)'); // Green.
 
         const transitiveLbl = await page.get().$eval(
-                '.transitive > .label', (el) => el.textContent);
+                '[transitive-label]', (el) => el.textContent);
         expect(transitiveLbl)
-                .toBe('I\'m a transitive component with some CSS!');
+                .toContain('I\'m a transitive component with some CSS!');
         const transitiveLblColor = await page.get().$eval(
-                '.transitive > .label', (el) => getComputedStyle(el).color);
+                '[transitive-label]', (el) => getComputedStyle(el).color);
         expect(transitiveLblColor).toBe('rgb(0, 0, 255)'); // Blue.
 
         const pageContent = await page.get().evaluate(

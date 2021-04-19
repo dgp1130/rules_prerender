@@ -1,9 +1,14 @@
-load("//:index.bzl", "prerender_component")
+load("//:index.bzl", "css_module", "prerender_component")
 
 prerender_component(
     name = "transitive",
     srcs = ["transitive.ts"],
-    styles = ["transitive_styles.css"],
+    css_modules = [":styles"],
     lib_deps = ["//packages/rules_prerender"],
     visibility = ["//examples/styles:__subpackages__"],
+)
+
+css_module(
+    name = "styles",
+    srcs = ["transitive_styles.css"],
 )
