@@ -1,21 +1,21 @@
 @import 'rules_prerender/examples/site/common/theme.css';
 
-[comp-footer] {
+.container {
     background-color: var(--primary-color);
     color: var(--text-color);
 }
 
-[comp-footer] footer {
+.footer {
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 10px var(--page-padding-width);
 }
 
-[comp-footer] a {
+.footer a {
     color: var(--link-color);
     text-decoration: none;
 }
 
-[comp-footer] a:visited, [comp-footer] a:hover {
+.footer a:visited, .footer a:hover {
     text-decoration: underline;
 }

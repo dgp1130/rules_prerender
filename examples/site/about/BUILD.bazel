@@ -1,4 +1,4 @@
-load("//:index.bzl", "prerender_pages", "web_resources")
+load("//:index.bzl", "css_module", "prerender_pages", "web_resources")
 
 prerender_pages(
     name = "about",
@@ -7,11 +7,16 @@ prerender_pages(
         "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
-    styles = ["about.css"],
+    css_modules = [":styles"],
     resources = [":resources"],
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     visibility = ["//examples/site:__pkg__"],
     deps = ["//examples/site/components/base"],
+)
+
+css_module(
+    name = "styles",
+    srcs = ["about.css"],
 )
 
 web_resources(

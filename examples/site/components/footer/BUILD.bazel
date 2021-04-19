@@ -1,24 +1,19 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//:index.bzl", "prerender_component")
+load("//:index.bzl", "css_module", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_component(
     name = "footer",
     srcs = ["footer.ts"],
-    lib_deps = [
-        "//examples/site/common:links",
-        "//packages/rules_prerender",
-    ],
-    styles = [":styles"],
+    css_modules = [":styles"],
+    lib_deps = ["//examples/site/common:links"],
     visibility = ["//examples/site:__subpackages__"],
 )
 
-filegroup(
+css_module(
     name = "styles",
-    srcs = [
-        "footer.css",
-        "//examples/site/common:theme",
-    ],
+    srcs = ["footer.css"],
+    deps = ["//examples/site/common:theme"],
 )
 
 ts_library(

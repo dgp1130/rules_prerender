@@ -10,3 +10,7 @@
     /** Padding between page content and the sides of the viewport. */
     --page-padding-width: 10px;
 }
+
+.highlight {
+    background-color: yellow;
+}

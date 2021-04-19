@@ -1,11 +1,12 @@
-import { PrerenderResource, includeStyle } from 'rules_prerender';
+import { PrerenderResource } from 'rules_prerender';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { srcLink } from 'rules_prerender/examples/site/common/links';
+import styles from 'rules_prerender/examples/site/about/about.css';
 
 /** Renders the about page. */
 export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/about/index.html', baseLayout('About', () => `
-        <article comp-about>
+        <article class="${styles.content}">
             <p>This is the about page. It gives additional background on the
             project and this example.</p>
 
@@ -51,8 +52,6 @@ export default function*(): Generator<PrerenderResource, void, void> {
             faucibus sed dignissim quis, venenatis non mi. Curabitur lacinia
             tincidunt vulputate. Proin non vehicula risus, id pharetra lorem.
             </p>
-
-            ${includeStyle('rules_prerender/examples/site/about/about.css')}
         </article>
     `));
 }

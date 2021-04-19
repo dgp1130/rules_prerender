@@ -1,23 +1,23 @@
 @import 'rules_prerender/examples/site/common/theme.css';
 
-html[comp-base], [comp-base] body {
+.html, .body {
     margin: 0;
     padding: 0;
     height: 100%;
 }
 
-[comp-base] body {
+.body {
     display: flex;
     flex-direction: column;
 }
 
-[comp-base] .main-container {
+.mainContainer {
     flex: 1;
 
     max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
-[comp-base] main {
+.main {
     padding: 10px var(--page-padding-width);
 }
