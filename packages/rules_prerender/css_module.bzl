@@ -6,8 +6,6 @@ load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":postcss_modules_plugin.bzl", MODULES_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 
 # TODO: bzl_library()
-# TODO: `composes`?
-# TODO: Does `deps` actually make sense?
 def css_module(name, srcs, testonly = None, visibility = None, deps = []):
     """Compiles the given CSS sources as CSS modules.
 
@@ -32,7 +30,10 @@ def css_module(name, srcs, testonly = None, visibility = None, deps = []):
             object that maps each source class name to its locally scoped name.
         `%{name}_modules`: INTERNAL - A `filegroup()` of all the compiled CSS
             module files.
+        `%{name}_build_test`: INTERNAL - A test to confirm that all the relevant
+            targets build successfully.
     """
+    sources = "%s_sources" % name
     module_deps = ["%s_modules" % absolute(dep) for dep in deps]
 
     # Convert each CSS file into a TypeScript wrapper that exports its classes.
@@ -48,13 +49,24 @@ def css_module(name, srcs, testonly = None, visibility = None, deps = []):
             "//tools/internal:postcss_modules_plugin": MODULES_PLUGIN_CONFIG,
         },
         testonly = testonly,
-        deps = module_deps,
+        deps = [
+            ":%s" % sources,
+            "@npm//css-modules-loader-core",
+        ],
     ) for src in srcs]
 
     # Compile the CSS module TypeScript wrappers.
     ts_library(
         name = name,
         srcs = ["%s.ts" % src for src in srcs],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+    # Export transitive sources.
+    native.filegroup(
+        name = sources,
+        srcs = srcs + ["%s_sources" % dep for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

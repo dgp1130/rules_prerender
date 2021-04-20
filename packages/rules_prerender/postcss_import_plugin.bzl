@@ -69,7 +69,6 @@ PLUGIN_CONFIG = """(() => {
                     + '.module.css';
                 const workspacePaths = workspaceMap.get(importWorkspace)
                     .map((path) => `${importWorkspace}/${path}`);
-                // TODO: Just module imports?
                 const paths = workspacePaths.flatMap((path) => [
                     `${importOptions.root}/${path}/${relativeImport}`,
                     `${importOptions.root}/${path}/${moduleImport}`,
