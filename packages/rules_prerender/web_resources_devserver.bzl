@@ -8,6 +8,7 @@ def web_resources_devserver(
     resources,
     testonly = None,
     visibility = None,
+    tags = [],
 ):
     """Generates a devserver which serves the provided `web_resources()` target.
 
@@ -20,6 +21,7 @@ def web_resources_devserver(
         resources: The `web_resources()` target to serve.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        tags: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
     # Generate a devserver implementation.
     concatjs_devserver(
@@ -28,4 +30,5 @@ def web_resources_devserver(
         additional_root_paths = [file_path_of(absolute(resources))],
         testonly = testonly,
         visibility = visibility,
+        tags = tags,
     )
