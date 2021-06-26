@@ -1,0 +1,31 @@
+load("//packages/rules_prerender:web_resources.bzl", "web_resources")
+
+web_resources(
+    name = "foo",
+    entries = {
+        "/foo": "empty.txt",
+    },
+)
+
+web_resources(
+    name = "merge_conflict",
+    entries = {
+        # Redeclares `/foo` entry, merge conflict and build error!
+        "/foo": "empty.txt",
+    },
+    # Don't build unless specifically requested. This target will fail, so we
+    # don't want `bazel build //...` to include it.
+    tags = ["manual"],
+    deps = [":foo"],
+)
+
+# Depends on `web_resources()` target with a merge conflict. This target should
+# not be executed, but instead the error should be associated with
+# `:merge_conflict` since that is there the mistake was made.
+web_resources(
+    name = "downstream",
+    # Don't build unless specifically requested. This target will fail, so we
+    # don't want `bazel build //...` to include it.
+    tags = ["manual"],
+    deps = [":merge_conflict"],
+)

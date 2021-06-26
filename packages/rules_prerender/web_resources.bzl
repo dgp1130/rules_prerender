@@ -101,7 +101,7 @@ def _web_resources_impl(ctx):
     entries_args.add("--dest-dir", res_dir.path)
     ctx.actions.run(
         mnemonic = "ResourcePackager",
-        progress_message = "Packing entries",
+        progress_message = "Packing entries (%s)" % ctx.label,
         executable = ctx.executable._packager,
         arguments = [entries_args],
         inputs = ctx.files.file_lbls,
@@ -131,16 +131,17 @@ def _web_resources_impl(ctx):
     # single directory.
     ctx.actions.run(
         mnemonic = "ResourceMerger",
-        progress_message = "Merging resources",
+        progress_message = "Merging resources (%s)" % ctx.label,
         executable = ctx.executable._packager,
         arguments = [merge_args],
         inputs = [res_dir] + transitive_entries_dirs,
         outputs = [dest_dir],
     )
 
+    merged_resources = depset([dest_dir])
     return [
         DefaultInfo(
-            files = depset([dest_dir]),
+            files = merged_resources,
             # Needed to include the directory when used as a `data` input.
             data_runfiles = ctx.runfiles([dest_dir]),
         ),
@@ -149,6 +150,20 @@ def _web_resources_impl(ctx):
                 [res_dir],
                 transitive = transitive_resources,
             ),
+        ),
+        OutputGroupInfo(
+            # Use the super-secret `_validation` action to confirm that the
+            # merged directory can build, even if it isn't used. If a
+            # `web_resources(name = "foo")` target depends on another
+            # `web_resources(name = "bar")` target, then `:bar`'s merged
+            # directory action is never executed, because it is `:foo`'s
+            # responsibility to merge all the resources. However, if `:bar` has
+            # a merge conflict, the error message should be associated with
+            # `:bar`, not `:foo`. This validation action makes `:bar` build its
+            # merged directory anyways just to verify that there were no errors,
+            # even though the output would not be used. Requires the
+            # `--experimental_run_validations` Bazel flag.
+            _validation = merged_resources,
         ),
     ]
 
