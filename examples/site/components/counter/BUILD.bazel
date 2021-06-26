@@ -1,5 +1,10 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//:index.bzl", "prerender_component")
+load(
+    "//:index.bzl",
+    "prerender_component",
+    "prerender_pages",
+    "web_resources_devserver",
+)
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_component(
@@ -8,6 +13,11 @@ prerender_component(
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],
     visibility = ["//examples/site:__subpackages__"],
+)
+
+ts_library(
+    name = "scripts",
+    srcs = ["counter_script.ts"],
 )
 
 ts_library(
@@ -26,7 +36,37 @@ jasmine_node_test(
     deps = [":counter_prerender_test_lib"],
 )
 
+prerender_pages(
+    name = "counter_test_cases",
+    src = "counter_test_cases.ts",
+    testonly = True,
+    lib_deps = ["//packages/rules_prerender"],
+    deps = [":counter"],
+)
+
+web_resources_devserver(
+    name = "counter_test_cases_devserver",
+    resources = ":counter_test_cases",
+    testonly = True,
+)
+
 ts_library(
-    name = "scripts",
-    srcs = ["counter_script.ts"],
+    name = "counter_test_lib",
+    srcs = ["counter_test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "counter_test",
+    data = [
+        ":counter_test_cases_devserver",
+        "@npm//puppeteer",
+    ],
+    deps = [":counter_test_lib"],
 )
