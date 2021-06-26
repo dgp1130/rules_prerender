@@ -1,0 +1,9 @@
+/**
+ * Because this sheet is included in a shadow root, we can use very broad
+ * selectors like `div` and trust that they will be scoped only to the
+ * component DOM
+ */
+
+div {
+    color: red;
+}
