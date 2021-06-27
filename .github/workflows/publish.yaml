@@ -50,6 +50,7 @@ jobs:
     
     # Tag the commit and create a release on GitHub.
     - name: Tag and Create Draft Release
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,6 +60,21 @@ jobs:
         prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         body: https://www.npmjs.com/package/rules_prerender/v/${{ github.event.inputs.version }}
         draft: true
+
+    # Compress the built NPM package into a `.tar.gz` file.
+    - name: Tar Package
+      run: tar -czf rules_prerender-${{ github.event.inputs.version }}.tar.gz dist/bin/pkg/
+
+    # Upload the NPM package to the GitHub release.
+    - name: Upload Package to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rules_prerender-${{ github.event.inputs.version }}.tar.gz
+        asset_name: rules_prerender-${{ github.event.inputs.version }}.tar.gz
+        asset_content_type: application/gzip
 
     # Notify the user that the release is completed.
     - name: Complete
