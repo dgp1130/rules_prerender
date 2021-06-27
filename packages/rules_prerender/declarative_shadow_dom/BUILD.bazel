@@ -1,0 +1,50 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(
+    "//packages/rules_prerender:prerender_component.bzl",
+    "prerender_component",
+)
+load(
+    "//packages/rules_prerender:prerender_component_publish_files.bzl",
+    "prerender_component_publish_files",
+)
+load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:publish.bzl", "publish_files")
+
+publish_files(
+    name = "publish_files",
+    files = [":declarative_shadow_dom_publish_files"],
+    visibility = ["//packages/rules_prerender:__pkg__"],
+)
+
+prerender_component_publish_files(
+    name = "declarative_shadow_dom_publish_files",
+    dep = ":declarative_shadow_dom",
+)
+
+prerender_component(
+    name = "declarative_shadow_dom",
+    srcs = ["declarative_shadow_dom.ts"],
+    scripts = [":declarative_shadow_dom_polyfill"],
+    lib_deps = ["//packages/rules_prerender:scripts"],
+    visibility = ["//:__pkg__"],
+)
+
+ts_library(
+    name = "declarative_shadow_dom_test_lib",
+    srcs = ["declarative_shadow_dom_test.ts"],
+    testonly = True,
+    deps = [
+        ":declarative_shadow_dom_prerender_for_test",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "declarative_shadow_dom_test",
+    deps = [":declarative_shadow_dom_test_lib"],
+)
+
+ts_library(
+    name = "declarative_shadow_dom_polyfill",
+    srcs = ["declarative_shadow_dom_polyfill.ts"],
+)

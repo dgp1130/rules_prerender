@@ -3,6 +3,7 @@ load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("//tools:publish.bzl", "publish_files")
+load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
 
@@ -26,6 +27,20 @@ bzl_library(
     ],
 )
 
+# Re-export the `declarative_shadow_dom` component at the root of the package
+# for easy import by consumers.
+prerender_component(
+    name = "declarative_shadow_dom",
+    srcs = ["declarative_shadow_dom.ts"],
+    visibility = ["//visibility:public"],
+    deps = ["//packages/rules_prerender/declarative_shadow_dom"],
+)
+
+prerender_component_publish_files(
+    name = "declarative_shadow_dom_publish_files",
+    dep = ":declarative_shadow_dom",
+)
+
 publish_files(
     name = "publish_files",
     files = [
@@ -33,6 +48,7 @@ publish_files(
         "index.bzl",
         "package.bzl",
         "package.json",
+        ":declarative_shadow_dom_publish_files",
     ],
 )
 

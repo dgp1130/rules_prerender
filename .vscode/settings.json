@@ -20,6 +20,7 @@
         "readonly",
         "runfile",
         "semver",
+        "shadowroot",
         "testonly",
         "transpiled",
         "tsjs",

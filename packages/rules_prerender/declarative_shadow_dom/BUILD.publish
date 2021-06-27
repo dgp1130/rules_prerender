@@ -1,0 +1,11 @@
+load("@npm//rules_prerender:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "declarative_shadow_dom",
+    srcs = [
+        "declarative_shadow_dom.js",
+        "declarative_shadow_dom.d.ts",
+    ],
+    scripts = ["@npm//rules_prerender:_declarative_shadow_dom_scripts_lib"],
+    visibility = ["@npm//rules_prerender:__pkg__"],
+)
