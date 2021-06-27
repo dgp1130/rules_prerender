@@ -1,0 +1,32 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_resources")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+ts_library(
+    name = "generator",
+    srcs = ["generator.ts"],
+    deps = ["//packages/rules_prerender"],
+)
+
+prerender_resources(
+    name = "prerender",
+    entry_point = "examples/prerender_resources/generator.js",
+    data = [":generator"],
+)
+
+ts_library(
+    name = "generator_test",
+    srcs = ["generator_test.ts"],
+    testonly = True,
+    data = [":prerender"],
+    deps = [
+        "//common:runfiles",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    deps = [":generator_test"],
+)
