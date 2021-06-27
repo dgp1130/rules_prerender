@@ -632,9 +632,9 @@ To actually publish a release to NPM, follow these steps:
         the given semver to NPM.
     *   It will also tag the commit with `releases/${semver}` and push it back
         to the repository.
-    *   Finally, it will create a GitHub release for that tag with a link to NPM
-        for this particular version.
-1.  Once the workflow is complete, consider going to
-    [releases](https://github.com/dgp1130/rules_prerender/releases) to edit the
-    automatically created release to add a changelog or other relevant
-    information.
+    *   Finally, it will create a *draft* GitHub release for that tag with a
+        link to NPM for this particular version.
+1.  Once the workflow is complete, go to
+    [releases](https://github.com/dgp1130/rules_prerender/releases) to update
+    the draft and add a changelog or other relevant information before
+    publishing.

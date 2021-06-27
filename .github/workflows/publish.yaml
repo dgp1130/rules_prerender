@@ -22,8 +22,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    # Checkout the repository.
     - uses: actions/checkout@v2
 
+    # Install NodeJS.
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
@@ -46,7 +49,7 @@ jobs:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
     
     # Tag the commit and create a release on GitHub.
-    - name: Tag and Create Release
+    - name: Tag and Create Draft Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,3 +58,12 @@ jobs:
         release_name: ${{ github.event.inputs.version }}
         prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         body: https://www.npmjs.com/package/rules_prerender/v/${{ github.event.inputs.version }}
+        draft: true
+
+    # Notify the user that the release is completed.
+    - name: Complete
+      run: |
+        echo "Draft release created at ${RELEASE_URL}."
+        echo "Please update the changelog and publish the release."
+      env:
+        RELEASE_URL: https://github.com/dgp1130/rules_prerender/releases/tag/releases%2F{{ github.event.inputs.version }}
