@@ -33,7 +33,9 @@ ts_library(
 # Manually bundle all scripts.
 rollup_bundle(
     name = "bundle",
-    entry_point = ":page_scripts.ts",
+    # TODO: Need to use `_esm_sources()` to pick out the `.mjs` file and depend
+    # on it directly.
+    entry_point = ":page_scripts.mjs",
     config_file = "rollup.config.js",
     link_workspace_root = True,
     silent = True,

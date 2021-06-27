@@ -64,6 +64,7 @@ bzl_library(
     deps = [
         ":web_resources",
         "//common:label",
+        "//common:paths",
     ],
 )
 
@@ -96,6 +97,7 @@ bzl_library(
     visibility = ["//:__pkg__"],
     deps = [
         ":web_resources",
+        "//common:paths",
         "//packages/renderer:build_vars",
     ],
 )

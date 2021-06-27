@@ -1,5 +1,10 @@
 """Defines `prerender_pages()` functionality."""
 
+load(
+    "@build_bazel_rules_nodejs//:providers.bzl",
+    "JSEcmaScriptModuleInfo",
+    "JSModuleInfo",
+)
 load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
@@ -122,18 +127,24 @@ def prerender_pages(
         testonly = True,
     )
 
+    _esm_sources(
+        name = "%s_scripts" % name,
+        dep = "%s_scripts" % prerender_name,
+        testonly = testonly,
+    )
+
     bundle = "%s_bundle" % name
     if bundle_js:
         # Bundle all client-side scripts at `%{name}_bundle.js`.
         rollup_bundle(
             name = bundle,
-            entry_point = ":%s_scripts.ts" % prerender_name,
+            entry_point = ":%s_scripts" % name,
             config_file = "//packages/rules_prerender:rollup-default.config.js",
             link_workspace_root = True,
             silent = True,
             testonly = testonly,
             deps = [
-                ":%s_scripts" % prerender_name,
+                ":%s_scripts" % name,
                 "@npm//@rollup/plugin-node-resolve",
             ],
         )
@@ -174,3 +185,33 @@ def prerender_pages(
             ":%s_resources" % prerender_name,
         ],
     )
+
+def _esm_sources_impl(ctx):
+    providers = []
+
+    # Propagate providers of dependencies.
+    if JSEcmaScriptModuleInfo in ctx.attr.dep:
+        providers.append(ctx.attr.dep[JSEcmaScriptModuleInfo])
+    if JSModuleInfo in ctx.attr.dep:
+        providers.append(ctx.attr.dep[JSModuleInfo])
+
+    # Use direct sources as `DefaultInfo`, prefering `JSEcmaScriptModuleInfo`.
+    if JSEcmaScriptModuleInfo in ctx.attr.dep:
+        providers.append(DefaultInfo(
+            files = ctx.attr.dep[JSEcmaScriptModuleInfo].direct_sources,
+        ))
+    elif JSModuleInfo in ctx.attr.dep:
+        providers.append(
+            DefaultInfo(files = ctx.attr.dep[JSModuleInfo].direct_sources),
+        )
+    else:
+        fail("Dependency (%s) does provides neither JSEcmaScriptModuleInfo nor JSModuleInfo. It must provide at least one." % ctx.attr.dep.label)
+
+    return providers
+
+_esm_sources = rule(
+    implementation = _esm_sources_impl,
+    attrs = {
+        "dep": attr.label(mandatory = True),
+    },
+)

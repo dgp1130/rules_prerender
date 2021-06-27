@@ -1,7 +1,14 @@
 """Defines `prerender_component()` functionality."""
 
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load(
+    "@build_bazel_rules_nodejs//:providers.bzl",
+    "JSModuleInfo",
+    "JSEcmaScriptModuleInfo",
+)
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
+load("//common:paths.bzl", "is_js_file")
 load(":web_resources.bzl", "web_resources")
 
 def prerender_component(
@@ -31,11 +38,14 @@ def prerender_component(
     
     Args:
         name: The name of this rule.
-        srcs: The TypeScript source files for use in prerendering.
+        srcs: The source files for use in prerendering. May be `*.ts` files or
+            `*.js`/`*.mjs`/`*.cjs`. All source files must be JavaScript, or all
+            source files must be TypeScript. However, mixing the two is not
+            allowed. `*.d.ts` files are also allowed in either case.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
-            target. Will be used to compile files in `srcs`.
+            target. Will be used to compile `*.ts` files in `srcs`.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-        lib_deps: `ts_library()` dependencies for the TypeScript source files.
+        lib_deps: Dependencies for the source files.
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
@@ -66,15 +76,31 @@ def prerender_component(
     """
 
     prerender_lib = "%s_prerender" % name
-    ts_library(
-        name = prerender_lib,
-        srcs = srcs,
-        tsconfig = tsconfig,
-        data = data,
-        deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
-        testonly = testonly,
-        visibility = visibility,
-    )
+    if all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
+        ts_library(
+            name = prerender_lib,
+            srcs = srcs,
+            tsconfig = tsconfig,
+            data = data + styles,
+            deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+            testonly = testonly,
+            visibility = visibility,
+        )
+    elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
+        js_library(
+            name = prerender_lib,
+            srcs = srcs + data + styles, # `data` is included in `srcs`.
+            deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+            testonly = testonly,
+            visibility = visibility,
+        )
+    else:
+        fail(" ".join("""
+All sources must be TypeScript (`*.ts`) or all sources must be JavaScript
+(`*.js` / `*.mjs` / `*.cjs`). It is not possible to use some JavaScript sources
+and some TypeScript sources in the same component (excluding `*.d.ts` files,
+which are always allowed).
+        """.strip().split("\n")))
 
     native.alias(
         name = "%s_prerender_for_test" % name,
@@ -82,10 +108,10 @@ def prerender_component(
         testonly = True,
     )
 
-    ts_library(
+    js_reexport(
         name = "%s_scripts" % name,
-        srcs = [],
-        deps = scripts + ["%s_scripts" % absolute(dep) for dep in deps],
+        srcs = scripts,
+        deps = ["%s_scripts" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )
@@ -103,3 +129,71 @@ def prerender_component(
         visibility = visibility,
         deps = resources + ["%s_resources" % absolute(dep) for dep in deps],
     )
+
+def _js_reexport_impl(ctx):
+    for dep in ctx.attr.deps:
+        if JSEcmaScriptModuleInfo in dep:
+            print("%s - %s" % (ctx.label, dep[JSEcmaScriptModuleInfo]))
+    js_srcs = [src for src in ctx.files.srcs if is_js_file(src.path)]
+
+    merged_js_module_info = JSModuleInfo(
+        direct_sources = depset(js_srcs,
+            transitive = [src[JSModuleInfo].direct_sources
+                          for src in ctx.attr.srcs
+                          if JSModuleInfo in src],
+        ),
+        sources = depset(js_srcs,
+            transitive = [dep[JSModuleInfo].sources
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JSModuleInfo in dep],
+        ),
+    )
+
+    merged_js_ecma_script_module_info = JSEcmaScriptModuleInfo(
+        direct_sources = depset(js_srcs,
+            transitive = [src[JSEcmaScriptModuleInfo].direct_sources
+                          for src in ctx.attr.srcs
+                          if JSEcmaScriptModuleInfo in src],
+        ),
+        sources = depset(js_srcs,
+            transitive = [dep[JSEcmaScriptModuleInfo].sources
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JSEcmaScriptModuleInfo in dep],
+        ),
+    )
+
+    # DEBUG
+    output_group_info = OutputGroupInfo(
+        js_module_info_direct_sources = depset(js_srcs,
+            transitive = [src[JSModuleInfo].direct_sources
+                          for src in ctx.attr.srcs
+                          if JSModuleInfo in src],
+        ),
+        js_ecma_script_module_info_direct_sources = depset(js_srcs,
+            transitive = [src[JSEcmaScriptModuleInfo].direct_sources
+                          for src in ctx.attr.srcs
+                          if JSEcmaScriptModuleInfo in src],
+        ),
+    )
+
+    return [
+        merged_js_module_info,
+        merged_js_ecma_script_module_info,
+        output_group_info,
+    ]
+
+# TODO: Rename? It's not really a reexport?
+# TODO: Move to own file?
+js_reexport = rule(
+    implementation = _js_reexport_impl,
+    attrs = {
+        "srcs": attr.label_list(
+            default = [],
+            allow_files = True,
+        ),
+        "deps": attr.label_list(
+            mandatory = True,
+            providers = [JSModuleInfo],
+        ),
+    },
+)
