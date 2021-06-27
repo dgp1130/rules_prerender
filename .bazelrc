@@ -84,7 +84,9 @@ run --incompatible_strict_action_env
 
 # Enable `_validation` actions to confirm targets build correctly even when
 # certain data is not used by the build.
-common --experimental_run_validations
+build --experimental_run_validations
+run --experimental_run_validations
+test --experimental_run_validations
 
 # When running `bazel coverage` --instrument_test_targets needs to be set in order to 
 # collect coverage information from test targets
