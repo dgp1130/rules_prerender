@@ -82,4 +82,4 @@ jobs:
         echo "Draft release created at ${RELEASE_URL}."
         echo "Please update the changelog and publish the release."
       env:
-        RELEASE_URL: https://github.com/dgp1130/rules_prerender/releases/tag/releases%2F{{ github.event.inputs.version }}
+        RELEASE_URL: https://github.com/dgp1130/rules_prerender/releases/tag/releases%2F${{ github.event.inputs.version }}
