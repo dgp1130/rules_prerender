@@ -2,9 +2,10 @@
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
+load("//common:label.bzl", "absolute", "file_path_of")
 load(":entry_points.bzl", "script_entry_point", "style_entry_point")
 load(":prerender_component.bzl", "prerender_component")
+load(":prerender_resources.bzl", "prerender_resources")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
 def prerender_pages_unbundled(
@@ -113,34 +114,13 @@ def prerender_pages_unbundled(
         testonly = True,
     )
 
-    # Get the generated JS file path for the user provided TypeScript source.
-    prerender_js = "%s_prerender_js" % name
-    native.filegroup(
-        name = prerender_js,
-        srcs = [":%s" % component_prerender],
-        testonly = testonly,
-        output_group = "es5_sources",
-    )
-
-    # Create a binary to execute the runner script.
-    binary = "%s_binary" % name
-    nodejs_binary(
-        name = binary,
-        entry_point = "//tools/internal:renderer_js",
-        templated_args = ["--bazel_patch_module_resolver"],
-        testonly = testonly,
-        data = RENDERER_RUNTIME_DEPS + [
-            ":%s" % component_prerender,
-            "//tools/internal:renderer",
-        ],
-    )
-
     # Execute the runner to generate annotated resources.
     annotated = "%s_annotated" % name
-    _prerender_pages_unbundled_rule(
+    js_src = ".ts".join(src.split(".ts")[:-1]) + ".js"
+    prerender_resources(
         name = annotated,
-        entry_point = ":%s" % prerender_js,
-        renderer = ":%s" % binary,
+        entry_point = file_path_of(absolute(js_src)),
+        data = [":%s" % component_prerender],
         testonly = testonly,
     )
 
@@ -202,44 +182,6 @@ def prerender_pages_unbundled(
         testonly = testonly,
         visibility = visibility,
     )
-
-def _prerender_pages_unbundled_impl(ctx):
-    # Invoke the renderer and output the content.
-    output_dir = ctx.actions.declare_directory(ctx.attr.name)
-    ctx.actions.run(
-        mnemonic = "Prerender",
-        progress_message = "Prerendering pages",
-        executable = ctx.executable.renderer,
-        arguments = [
-            "--entry-point", "%s/%s" % (
-                ctx.workspace_name,
-                ctx.file.entry_point.short_path,
-            ),
-            "--output-dir", output_dir.path,
-        ],
-        inputs = [ctx.file.entry_point],
-        outputs = [output_dir],
-    )
-
-    return [
-        DefaultInfo(files = depset([output_dir])),
-        WebResourceInfo(transitive_entries = depset([output_dir])),
-    ]
-
-_prerender_pages_unbundled_rule = rule(
-    implementation = _prerender_pages_unbundled_impl,
-    attrs = {
-        "entry_point": attr.label(
-            mandatory = True,
-            allow_single_file = True,
-        ),
-        "renderer": attr.label(
-            mandatory = True,
-            executable = True,
-            cfg = "exec",
-        ),
-    },
-)
 
 def _multi_extract_annotations_impl(ctx):
     """Invokes the multi annotation extractor and returns the new directory.

@@ -75,7 +75,6 @@ bzl_library(
         ":entry_points",
         ":prerender_component",
         ":web_resources",
-        "//packages/renderer:build_vars",
     ],
 )
 
@@ -88,6 +87,16 @@ bzl_library(
         ":prerender_pages_unbundled",
         ":postcss_import_plugin_bzl",
         ":web_resources",
+    ],
+)
+
+bzl_library(
+    name = "prerender_resources",
+    srcs = ["prerender_resources.bzl"],
+    visibility = ["//:__pkg__"],
+    deps = [
+        ":web_resources",
+        "//packages/renderer:build_vars",
     ],
 )
 

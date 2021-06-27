@@ -21,6 +21,10 @@ load(
     _prerender_pages_unbundled = "prerender_pages_unbundled",
 )
 load(
+    "//packages/rules_prerender:prerender_resources.bzl",
+    _prerender_resources = "prerender_resources",
+)
+load(
     "//packages/rules_prerender:web_resources.bzl",
     _web_resources = "web_resources",
 )
@@ -34,5 +38,6 @@ inject_resources = _inject_resources
 prerender_component = _prerender_component
 prerender_pages_unbundled = _prerender_pages_unbundled
 prerender_pages = _prerender_pages
+prerender_resources = _prerender_resources
 web_resources = _web_resources
 web_resources_devserver = _web_resources_devserver
