@@ -143,13 +143,18 @@ jasmine_node_test(
 ts_library(
     name = "styles",
     srcs = ["styles.ts"],
-    deps = ["//common/models:prerender_annotation"],
+    deps = [
+        "//common:fs",
+        "//common:runfiles",
+        "//common/models:prerender_annotation",
+    ],
 )
 
 ts_library(
     name = "styles_test_lib",
     srcs = ["styles_test.ts"],
     testonly = True,
+    data = ["//packages/rules_prerender/testdata:styles.css"],
     deps = [
         ":styles",
         "@npm//@types/jasmine",

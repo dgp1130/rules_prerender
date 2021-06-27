@@ -1,4 +1,6 @@
+import * as fs from 'rules_prerender/common/fs';
 import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { resolveRunfile } from 'rules_prerender/common/runfiles';
 
 /**
  * Returns a prerender annotation as a string to be included in prerendered
@@ -11,4 +13,17 @@ export function includeStyle(path: string): string {
         path,
     });
     return `<!-- ${annotation} -->`;
+}
+
+/**
+ * Reads the given CSS file at the provided runfiles path and returns it in a
+ * `<style />` tag to be inlined in the document.
+ */
+export async function inlineStyle(path: string): Promise<string> {
+    const styles = await fs.readFile(resolveRunfile(path), 'utf-8');
+    return `
+<style>
+${styles}
+</style>
+    `.trim();
 }
