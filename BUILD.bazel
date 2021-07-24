@@ -3,8 +3,21 @@ load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("//tools:publish.bzl", "publish_files")
+load("@npm//@bazel/typescript:index.bzl", "ts_config")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+)
+
+ts_config(
+    name = "tsconfig_karma",
+    src = "tsconfig.karma.json",
+    visibility = ["//visibility:public"],
+    deps = [":tsconfig"],
+)
 
 bzl_library(
     name = "rules_prerender",

@@ -1,4 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@npm//@bazel/concatjs:index.bzl", "karma_web_test_suite")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
@@ -206,7 +208,8 @@ ts_library(
 
 ts_library(
     name = "declarative_shadow_dom_polyfill_test_lib",
-    srcs = ["declarative_shadow_dom_polyfill_test.ts"],
+    srcs = ["declarative_shadow_dom_polyfill.spec.ts"],
+    tsconfig = "//:tsconfig_karma",
     testonly = True,
     deps = [
         ":declarative_shadow_dom_polyfill",
@@ -214,4 +217,14 @@ ts_library(
     ],
 )
 
-# TODO: Test in Karma.
+js_library(
+    name = "declarative_shadow_dom_polyfill_test_modules",
+    package_name = "declarative_shadow_dom_polyfill_test",
+    testonly = True,
+    named_module_srcs = [":declarative_shadow_dom_polyfill_test_lib"],
+)
+
+karma_web_test_suite(
+    name = "declarative_shadow_dom_polyfill_test",
+    deps = [":declarative_shadow_dom_polyfill_test_modules"],
+)

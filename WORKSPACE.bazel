@@ -15,8 +15,8 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "6142e9586162b179fdd570a55e50d1332e7d9c030efd853453438d607569721d",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.0.0/rules_nodejs-3.0.0.tar.gz"],
+    sha256 = "8f5f192ba02319254aaf2cdcca00ec12eaafeb979a80a1e946773c520ae0a2c9",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.7.0/rules_nodejs-3.7.0.tar.gz"],
 )
 
 # The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
@@ -46,3 +46,22 @@ bazel_skylib_workspace()
 # Install transitive Bazel dependencies.
 load("//:package.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()
+
+# TODO: Upgrade?
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    sha256 = "9bb461d5ef08e850025480bab185fd269242d4e533bca75bfb748001ceb343c3",
+    urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.3/rules_webtesting.tar.gz"],
+)
+
+load(
+    "@io_bazel_rules_webtesting//web:repositories.bzl",
+    "web_test_repositories",
+)
+web_test_repositories()
+
+load(
+    "@io_bazel_rules_webtesting//web/versioned:browsers-0.3.2.bzl",
+    "browser_repositories",
+)
+browser_repositories(chromium = True)
