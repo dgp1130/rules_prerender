@@ -70,7 +70,7 @@ def prerender_component(
         name = prerender_lib,
         srcs = srcs,
         tsconfig = tsconfig,
-        data = data,
+        data = data + styles,
         deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,

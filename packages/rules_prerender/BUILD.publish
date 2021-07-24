@@ -1,4 +1,22 @@
+load(":prerender_component.bzl", "prerender_component")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
 exports_files(
     ["rollup-default.config.js"],
     visibility = ["//visibility:public"],
+)
+
+# TESTME
+# TODO(#39): Don't ship TypeScript code to NPM and compile it on the user's cpu.
+prerender_component(
+    name = "declarative_shadow_dom",
+    srcs = ["declarative_shadow_dom.ts"],
+    scripts = [":declarative_shadow_dom_polyfill"],
+    lib_deps = ["@npm//rules_prerender"],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "declarative_shadow_dom_polyfill",
+    srcs = ["declarative_shadow_dom_polyfill.ts"],
 )
