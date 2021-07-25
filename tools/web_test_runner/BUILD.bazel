@@ -1,0 +1,28 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(":web_test_runner.bzl", "wtr_test")
+
+bzl_library(
+    name = "web_test_runner",
+    srcs = ["web_test_runner.bzl"],
+)
+
+ts_library(
+    name = "lib",
+    srcs = ["lib.ts"],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    deps = [
+        ":lib",
+        "@npm//@esm-bundle/chai",
+        "@npm//@types/mocha",
+    ],
+)
+
+wtr_test(
+    name = "test",
+    deps = [":test_lib"],
+)
