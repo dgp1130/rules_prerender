@@ -1,0 +1,31 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.js"],
+    lib_deps = [
+        ":prerender_lib",
+        "//packages/rules_prerender",
+    ],
+    scripts = [
+        ":component_script",
+        ":component_script_unused",
+    ],
+    visibility = ["//examples/javascript:__pkg__"],
+)
+
+js_library(
+    name = "prerender_lib",
+    srcs = ["prerender_lib.js"],
+)
+
+js_library(
+    name = "component_script",
+    srcs = ["component_script.js"],
+)
+
+js_library(
+    name = "component_script_unused",
+    srcs = ["component_script_unused.js"],
+)
