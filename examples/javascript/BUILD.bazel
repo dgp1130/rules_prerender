@@ -1,0 +1,34 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_pages", "web_resources_devserver")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_pages(
+    name = "page",
+    src = "page.js",
+    bundle_css = False, # Optimization: No CSS styling on this page.
+    lib_deps = ["//packages/rules_prerender"],
+    deps = ["//examples/javascript/component"],
+)
+
+web_resources_devserver(
+    name = "devserver",
+    resources = ":page",
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    testonly = True,
+    deps = [
+        "//common:runfiles",
+        "//common/testing:devserver",
+        "//common/testing:puppeteer",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    data = [":devserver"],
+    deps = [":test_lib"],
+)
