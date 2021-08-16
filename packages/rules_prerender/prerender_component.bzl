@@ -131,31 +131,26 @@ which are always allowed).
     )
 
 def _js_reexport_impl(ctx):
-    for dep in ctx.attr.deps:
-        if JSEcmaScriptModuleInfo in dep:
-            print("%s - %s" % (ctx.label, dep[JSEcmaScriptModuleInfo]))
-    js_srcs = [src for src in ctx.files.srcs if is_js_file(src.path)]
-
+    # TODO: Don't propagate this if the is also returns JSEcmaScriptModuleInfo
+    # because `ts_library()` returns both and we only want one?
     merged_js_module_info = JSModuleInfo(
-        direct_sources = depset(js_srcs,
+        direct_sources = depset([],
             transitive = [src[JSModuleInfo].direct_sources
-                          for src in ctx.attr.srcs
-                          if JSModuleInfo in src],
+                          for src in ctx.attr.srcs],
         ),
-        sources = depset(js_srcs,
+        sources = depset([],
             transitive = [dep[JSModuleInfo].sources
-                          for dep in ctx.attr.srcs + ctx.attr.deps
-                          if JSModuleInfo in dep],
+                          for dep in ctx.attr.srcs + ctx.attr.deps],
         ),
     )
 
     merged_js_ecma_script_module_info = JSEcmaScriptModuleInfo(
-        direct_sources = depset(js_srcs,
+        direct_sources = depset([],
             transitive = [src[JSEcmaScriptModuleInfo].direct_sources
                           for src in ctx.attr.srcs
                           if JSEcmaScriptModuleInfo in src],
         ),
-        sources = depset(js_srcs,
+        sources = depset([],
             transitive = [dep[JSEcmaScriptModuleInfo].sources
                           for dep in ctx.attr.srcs + ctx.attr.deps
                           if JSEcmaScriptModuleInfo in dep],
@@ -164,20 +159,19 @@ def _js_reexport_impl(ctx):
 
     # DEBUG
     output_group_info = OutputGroupInfo(
-        js_module_info_direct_sources = depset(js_srcs,
-            transitive = [src[JSModuleInfo].direct_sources
-                          for src in ctx.attr.srcs
-                          if JSModuleInfo in src],
-        ),
-        js_ecma_script_module_info_direct_sources = depset(js_srcs,
-            transitive = [src[JSEcmaScriptModuleInfo].direct_sources
-                          for src in ctx.attr.srcs
-                          if JSEcmaScriptModuleInfo in src],
-        ),
+        js_module_info_direct_sources = merged_js_module_info.direct_sources,
+        js_module_info_sources = merged_js_module_info.sources,
+        js_ecma_script_module_info_direct_sources = merged_js_ecma_script_module_info.direct_sources,
+        js_ecma_script_module_info_sources = merged_js_ecma_script_module_info.sources,
     )
+
+    # DEBUG
+    # print("%s:\nJSModuleInfo: %s\n\nJSEcmaScriptModuleInfo: %s" % (ctx.label, merged_js_module_info, merged_js_ecma_script_module_info))
 
     return [
         merged_js_module_info,
+        # TODO: `@bazel/rollup@<4.0.0` will *only* use `JSEcmaScriptModuleInfo`
+        # if given and ignore `JSModuleInfo`. 
         merged_js_ecma_script_module_info,
         output_group_info,
     ]
@@ -189,7 +183,7 @@ js_reexport = rule(
     attrs = {
         "srcs": attr.label_list(
             default = [],
-            allow_files = True,
+            providers = [JSModuleInfo],
         ),
         "deps": attr.label_list(
             mandatory = True,

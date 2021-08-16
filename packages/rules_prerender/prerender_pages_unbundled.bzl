@@ -141,18 +141,31 @@ def prerender_pages_unbundled(
     # Generate the entry point importing all included scripts.
     client_scripts = "%s_scripts" % name
     script_entry = "%s.js" % client_scripts
+    script_entry_generator = "%s_entry_gen" % client_scripts
     script_entry_point(
-        name = "%s_entry" % client_scripts,
+        name = script_entry_generator,
         metadata = metadata,
         output_entry_point = script_entry,
+        # Export this file so Rollup can have a direct, label reference to the
+        # entry point, since including the file in a `depset()` with other files
+        # is not good enough.
+        visibility = visibility,
+        testonly = testonly,
+    )
+
+    script_entry_lib = "%s_entry" % client_scripts
+    js_library(
+        name = script_entry_lib,
+        srcs = [":%s" % script_entry_generator],
+        deps = [":%s" % component_scripts],
         testonly = testonly,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
     js_reexport(
         name = client_scripts,
-        srcs = [script_entry],
-        deps = [":%s" % component_scripts],
+        srcs = [":%s" % script_entry_lib],
+        deps = [":%s" % component_scripts], # TODO: Remove?
         testonly = testonly,
         visibility = visibility,
     )
