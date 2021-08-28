@@ -1,5 +1,10 @@
 """Defines `prerender_pages()` functionality."""
 
+load(
+    "@build_bazel_rules_nodejs//:providers.bzl",
+    "JSEcmaScriptModuleInfo",
+    "JSModuleInfo",
+)
 load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
@@ -127,7 +132,7 @@ def prerender_pages(
         # Bundle all client-side scripts at `%{name}_bundle.js`.
         rollup_bundle(
             name = bundle,
-            entry_point = ":%s_scripts.ts" % prerender_name,
+            entry_point = ":%s_scripts.js" % prerender_name,
             config_file = "//packages/rules_prerender:rollup-default.config.js",
             link_workspace_root = True,
             silent = True,

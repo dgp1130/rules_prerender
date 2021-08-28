@@ -1,6 +1,6 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
 load(":entry_points.bzl", "script_entry_point", "style_entry_point")
@@ -58,9 +58,9 @@ def prerender_pages_unbundled(
     Outputs:
         %{name}: A `web_resources()` target containing all the files generated
             by the `src` file at their corresponding locations.
-        %{name}_scripts: A `ts_library()` rule containing all the client-side
+        %{name}_scripts: A `js_library()` rule containing all the client-side
             scripts used by the page. This includes a generated file
-            `%{name}_scripts.ts` which acts as an entry point, importing all
+            `%{name}_scripts.js` which acts as an entry point, importing all
             scripts that were included in the page via `includeScript()`.
         %{name}_styles: A `filegroup()` containing all the CSS styles used by
             the page.
@@ -116,7 +116,11 @@ def prerender_pages_unbundled(
 
     # Execute the runner to generate annotated resources.
     annotated = "%s_annotated" % name
-    js_src = ".ts".join(src.split(".ts")[:-1]) + ".js"
+    js_src = (
+        ".ts".join(src.split(".ts")[:-1]) + ".js"
+        if src.endswith(".ts")
+        else src
+    )
     prerender_resources(
         name = annotated,
         entry_point = file_path_of(absolute(js_src)),
@@ -136,16 +140,20 @@ def prerender_pages_unbundled(
 
     # Generate the entry point importing all included scripts.
     client_scripts = "%s_scripts" % name
-    script_entry = "%s.ts" % client_scripts
+    script_entry = "%s.js" % client_scripts
     script_entry_point(
         name = "%s_entry" % client_scripts,
         metadata = metadata,
         output_entry_point = script_entry,
         testonly = testonly,
+        # Export this file so Rollup can have a direct, label reference to the
+        # entry point, since including the file in a `depset()` with other files
+        # is not good enough.
+        visibility = visibility,
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
-    ts_library(
+    js_library(
         name = client_scripts,
         srcs = [script_entry],
         deps = [":%s" % component_scripts],

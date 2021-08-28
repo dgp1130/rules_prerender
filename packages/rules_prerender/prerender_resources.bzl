@@ -1,6 +1,7 @@
 """Defines `prerender_resources()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//common:paths.bzl", "is_js_file")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":web_resources.bzl", "WebResourceInfo")
 
@@ -60,7 +61,7 @@ def prerender_resources(
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
     # Validate `entry_point`.
-    if "/" not in entry_point or not entry_point.endswith(".js"):
+    if "/" not in entry_point or not is_js_file(entry_point):
         fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
                 + " format: \"path/to/pkg/file.js\"") % entry_point)
 
