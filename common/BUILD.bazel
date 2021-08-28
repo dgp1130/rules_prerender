@@ -3,6 +3,7 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load(":label_test.bzl", "label_test_suite")
+load(":paths_test.bzl", "paths_test_suite")
 
 publish_files(
     name = "publish_files",
@@ -117,6 +118,20 @@ bzl_library(
 )
 
 label_test_suite(name = "label_test")
+
+bzl_library(
+    name = "paths",
+    srcs = ["paths.bzl"],
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "paths_test_lib",
+    srcs = ["paths_test.bzl"],
+    deps = [":paths"],
+)
+
+paths_test_suite(name = "paths_test")
 
 ts_library(
     name = "runfiles",
