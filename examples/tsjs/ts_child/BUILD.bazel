@@ -1,0 +1,7 @@
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "ts_child",
+    srcs = ["ts_child.ts"],
+    visibility = ["//examples/tsjs:__subpackages__"],
+)

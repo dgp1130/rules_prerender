@@ -21,6 +21,7 @@
         "semver",
         "testonly",
         "transpiled",
+        "tsjs",
         "unmocked",
         "unproxied"
     ],
