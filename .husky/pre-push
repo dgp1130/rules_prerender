@@ -1,0 +1,31 @@
+#!/bin/sh
+. "$(dirname "${0}")/_/husky.sh"
+
+# Read all the pushes being done.
+SUCCESS="true"
+while read LOCAL_REF LOCAL_SHA REMOTE_REF REMOTE_SHA; do
+    # Ignore pushes not targeting main.
+    if [ "${REMOTE_REF}" != "refs/heads/main" ]; then
+        continue
+    fi
+
+    # Read all the commits to be pushed.
+    COMMITS_TO_PUSH=$(
+        git log "${REMOTE_SHA}..${LOCAL_SHA}" --pretty=format:"%H" --reverse |
+        cut -f 1
+    )
+
+    # For each commit, lint it. Husky fails if any "untested" commands fails, so
+    # we need to `||` and save the exit code to look at it without prematurely
+    # aborting.
+    if ! echo -n "${COMMITS_TO_PUSH}" |
+        xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" npm run -s -- lint-commit"
+    then
+        SUCCESS="false"
+    fi
+done
+
+# If any commit fails to lint, abort the push.
+if [ "${SUCCESS}" != "true" ]; then
+    exit 1
+fi

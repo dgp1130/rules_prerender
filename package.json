@@ -23,7 +23,10 @@
         "release": "bazel run //:pkg.publish --config release --",
         "lint": "npm run -s eslint -- . --max-warnings 0",
         "lint-fix": "npm run -s lint -- --fix",
-        "eslint": "eslint"
+        "lint-commit": "git diff \"${COMMIT}~1..${COMMIT}\" --name-only | npm run -s -- filter-lintable | xargs -P 8 -L 1 -I {} bash -c \"git show \\\"${COMMIT}:{}\\\" --diff-filter=d | npm run -s -- eslint --stdin --stdin-filename \\\"{}@${COMMIT}\\\"\" --max-warnings 0",
+        "filter-lintable": "grep '\\.js$\\|\\.cjs$\\|\\.mjs$\\|\\.ts$'",
+        "eslint": "eslint",
+        "prepare": "husky install"
     },
     "repository": {
         "type": "git",
@@ -64,6 +67,7 @@
         "@typescript-eslint/parser": "^4.29.3",
         "eslint": "^7.32.0",
         "http-status-codes": "^2.1.4",
+        "husky": "^7.0.2",
         "jasmine": "^3.6.3",
         "puppeteer": "^8.0.0",
         "tree-kill": "^1.2.2",
