@@ -20,7 +20,7 @@ ts_library(
     testonly = True,
     data = [":prerender"],
     deps = [
-        "//common:runfiles",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

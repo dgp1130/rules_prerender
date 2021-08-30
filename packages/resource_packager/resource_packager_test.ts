@@ -1,12 +1,11 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { runfiles } from '@bazel/runfiles';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 import { ProcessResult, execBinary } from 'rules_prerender/common/testing/binary';
 
-const binary = resolveRunfile(
-    'rules_prerender/packages/resource_packager/resource_packager.sh');
+const binary = runfiles.resolvePackageRelative('resource_packager.sh');
 
 async function run({ urlPaths, fileRefs, mergeDirs, destDir }: {
     urlPaths: string[],

@@ -32,9 +32,9 @@ ts_library(
     testonly = True,
     deps = [
         ":config",
-        "//common:runfiles",
         "//common/testing:binary",
         "//common/testing:temp_dir",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

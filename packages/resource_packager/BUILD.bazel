@@ -31,9 +31,9 @@ ts_library(
     srcs = ["resource_packager_test.ts"],
     testonly = True,
     deps = [
-        "//common:runfiles",
         "//common/testing:binary",
         "//common/testing:temp_dir",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

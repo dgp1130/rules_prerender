@@ -25,9 +25,9 @@ ts_library(
     srcs = ["home_test.ts"],
     testonly = True,
     deps = [
-        "//common:runfiles",
         "//common/testing:devserver",
         "//common/testing:puppeteer",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
     ],
 )

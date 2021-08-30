@@ -1,14 +1,13 @@
 import 'jasmine';
 
-import { StatusCodes } from 'http-status-codes';
 import { URL } from 'url';
+import { StatusCodes } from 'http-status-codes';
+import { runfiles } from '@bazel/runfiles';
 import * as http from 'rules_prerender/common/http';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { Server, useDevserver } from 'rules_prerender/common/testing/devserver';
 import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
 
-const devserver = resolveRunfile(
-        'rules_prerender/common/testing/devserver_test_server');
+const devserver = runfiles.resolvePackageRelative('devserver_test_server');
 
 describe('devserver', () => {
     describe('Server', () => {

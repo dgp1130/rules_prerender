@@ -31,10 +31,10 @@ ts_library(
     srcs = ["script_entry_generator_test.ts"],
     testonly = True,
     deps = [
-        "//common:runfiles",
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

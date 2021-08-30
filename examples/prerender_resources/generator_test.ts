@@ -1,10 +1,9 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { runfiles } from '@bazel/runfiles';
 
-const prerenderedDir = resolveRunfile(
-        'rules_prerender/examples/prerender_resources/prerender');
+const prerenderedDir = runfiles.resolvePackageRelative('prerender');
 
 describe('Prerender Resources', () => {
     it('prerenders `hello.txt`', async () => {

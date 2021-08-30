@@ -50,7 +50,7 @@ ts_library(
         ":devserver",
         ":effect_tester",
         "//common:http",
-        "//common:runfiles",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//http-status-codes",

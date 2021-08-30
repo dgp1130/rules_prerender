@@ -1,11 +1,10 @@
 import 'jasmine';
 
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
 import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
-const devserverBinary = resolveRunfile(
-        'rules_prerender/examples/custom_bundling/devserver');
+const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('custom bundling', () => {
     const server = useDevserver(devserverBinary);

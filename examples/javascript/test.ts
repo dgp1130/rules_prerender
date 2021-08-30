@@ -1,11 +1,10 @@
 import 'jasmine';
 
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
 import { useBrowser, usePage, puppeteerTestTimeout } from 'rules_prerender/common/testing/puppeteer';
 
-const devserverBinary = resolveRunfile(
-    'rules_prerender/examples/javascript/devserver');
+const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('JavaScript', () => {
     const server = useDevserver(devserverBinary);

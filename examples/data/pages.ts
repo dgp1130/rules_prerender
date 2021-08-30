@@ -1,12 +1,13 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import { runfiles } from '@bazel/runfiles';
 import { PrerenderResource } from 'rules_prerender';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+
+const content = runfiles.resolvePackageRelative('content/');
 
 export default async function*():
         AsyncGenerator<PrerenderResource, void, void> {
     // Read all files under `content/` in runfiles.
-    const content = resolveRunfile('rules_prerender/examples/data/content/');
     const entries = await fs.readdir(content, { withFileTypes: true });
     const files = entries.filter((entry) => entry.isFile());
 

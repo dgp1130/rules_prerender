@@ -1,13 +1,12 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { runfiles } from '@bazel/runfiles';
 import { InjectorConfig } from 'rules_prerender/packages/resource_injector/config';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
-const injector = resolveRunfile(
-    'rules_prerender/packages/resource_injector/resource_injector.sh');
+const injector = runfiles.resolvePackageRelative('resource_injector.sh');
 
 /** Invokes the resource injector binary. */
 async function run({ inputDir, config, bundle, outputDir }: {

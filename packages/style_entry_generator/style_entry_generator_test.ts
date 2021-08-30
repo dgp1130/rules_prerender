@@ -1,13 +1,13 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
+import { runfiles } from '@bazel/runfiles';
 import { mockPrerenderMetadata, mockStyleMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
-const entryGenerator = resolveRunfile(
-        'rules_prerender/packages/style_entry_generator/style_entry_generator.sh');
+const entryGenerator =
+    runfiles.resolvePackageRelative('style_entry_generator.sh');
 
 /** Invokes the entry generator binary. */
 async function run({ metadata, output }: { metadata: string, output: string }):

@@ -1,12 +1,11 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
+import { runfiles } from '@bazel/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
-const renderer = resolveRunfile(
-        'rules_prerender/packages/renderer/renderer_test_binary.sh');
+const renderer = runfiles.resolvePackageRelative('renderer_test_binary.sh');
 
 /** Invokes the renderer binary. */
 async function run({ entryPoint, outputDir }: {

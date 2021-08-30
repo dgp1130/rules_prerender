@@ -39,9 +39,9 @@ ts_library(
     srcs = ["test.ts"],
     testonly = True,
     deps = [
-        "//common:runfiles",
         "//common/testing:devserver",
         "//common/testing:puppeteer",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

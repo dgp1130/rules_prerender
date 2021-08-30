@@ -1,14 +1,13 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
+import { runfiles } from '@bazel/runfiles';
 import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
-import { resolveRunfile } from 'rules_prerender/common/runfiles';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
 
-const extractor = resolveRunfile(
-    'rules_prerender/packages/annotation_extractor/annotation_extractor.sh');
+const extractor = runfiles.resolvePackageRelative('annotation_extractor.sh');
 
 async function run({ inputDir, outputHtmlDir, outputMetadata }: {
     inputDir: string,
