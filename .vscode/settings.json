@@ -17,6 +17,7 @@
         "prerendering",
         "prerenders",
         "promisified",
+        "readonly",
         "runfile",
         "semver",
         "testonly",

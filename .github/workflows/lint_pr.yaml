@@ -1,0 +1,38 @@
+# Runs the linter on a pull request.
+
+name: Lint PR
+
+on:
+- pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: Install
+      run: npm ci
+
+    # Lint each commit in the given PR.
+    - name: Lint PR
+      run: |
+        # Get all commits in PR.
+        readonly PR_COMMITS=$(
+          git log "${{ github.base_ref }}..${{ github.head_ref }}" --pretty=format:"%H" --reverse |
+          cut -f 1
+        )
+        
+        # Lint each commit.
+        if ! echo -n "${PR_COMMITS}" |
+          xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" npm run -s -- lint-commit"
+        then
+          # One commit failed to lint, fail the GitHub action.
+          exit 1
+        fi

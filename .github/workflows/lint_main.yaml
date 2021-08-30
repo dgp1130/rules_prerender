@@ -1,0 +1,30 @@
+# Runs the linter on push to the `main` branch.
+
+name: Lint main
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: Install
+      run: npm ci
+
+    # Lint the entire repository. This does not take changes into account and
+    # will show existing lint failures as well as new ones, but that's ok for a
+    # codebase of this size as any such failures should be fixed and/or
+    # explicitly ignored.
+    - name: Lint
+      run: npm run lint
