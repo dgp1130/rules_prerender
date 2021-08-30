@@ -117,5 +117,5 @@ async function injectStyle(root: HTMLElement, { path }: InjectStyle):
 
 function assertNever(value: never): never {
     throw new Error(`Unexpected call to \`assertNever()\` with value: ${
-            JSON.stringify(value)}`)
+        JSON.stringify(value)}`);
 }

@@ -9,7 +9,7 @@ describe('EffectTester', () => {
         const resource = { foo: 'bar' };
         const cleanup = jasmine.createSpy('cleanup');
         const init = jasmine.createSpy(
-                'init', () => [ resource, cleanup ] as const).and.callThrough();
+            'init', () => [ resource, cleanup ] as const).and.callThrough();
         
         // Create the effect, should not initialize yet.
         const tester = EffectTester.of(() => useForEach(init));
@@ -55,14 +55,14 @@ describe('EffectTester', () => {
 
         expect(() => EffectTester.of(() => {
             // Multiples calls to `before*()` callbacks.
-            beforeEach(() => {});
-            beforeAll(() => {});
+            beforeEach(() => { /* do nothing */ });
+            beforeAll(() => { /* do nothing */ });
             return effectFake('foo');
         })).toThrowError(/Already have an effect init callback/);
 
         expect(failSpy).toHaveBeenCalled();
         expect(failSpy.calls.first().args[0])
-                .toContain('Already have an effect init callback');
+            .toContain('Already have an effect init callback');
     });
 
     it('fails when given an effect that registers two after callbacks', () => {
@@ -70,18 +70,18 @@ describe('EffectTester', () => {
 
         expect(() => EffectTester.of(() => {
             // One required call to `before*()`.
-            beforeEach(() => {});
+            beforeEach(() => { /* do nothing */ });
 
             // Multiples calls to `after*()` callbacks.
-            afterEach(() => {});
-            afterAll(() => {});
+            afterEach(() => { /* do nothing */ });
+            afterAll(() => { /* do nothing */ });
 
             return effectFake('foo');
         })).toThrowError(/Already have an effect cleanup callback/);
 
         expect(failSpy).toHaveBeenCalled();
         expect(failSpy.calls.first().args[0])
-                .toContain('Already have an effect cleanup callback');
+            .toContain('Already have an effect cleanup callback');
     });
 
     it('fails when given an effect that does not register a before callback', () => {
@@ -108,10 +108,10 @@ describe('EffectTester', () => {
         });
 
         await expectAsync(tester.initialize()).toBeRejectedWithError(
-                /EffectTester does not support `done\(\)` callbacks/);
+            /EffectTester does not support `done\(\)` callbacks/);
 
         expect(failSpy).toHaveBeenCalledTimes(1);
         expect(failSpy.calls.first().args[0])
-                .toContain('EffectTester does not support `done()` callbacks');
+            .toContain('EffectTester does not support `done()` callbacks');
     });
 });

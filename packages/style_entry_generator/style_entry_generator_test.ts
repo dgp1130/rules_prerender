@@ -29,7 +29,7 @@ describe('style_entry_generator', () => {
             ],
         });
         await fs.writeFile(`${tmpDir.get()}/metadata.json`,
-                JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
+            JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
         
         const { code, stdout, stderr } = await run({
             metadata: `${tmpDir.get()}/metadata.json`,

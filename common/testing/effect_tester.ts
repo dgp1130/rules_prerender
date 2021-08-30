@@ -119,7 +119,7 @@ export class EffectTester<T> {
 
         return new EffectTester({
             effect,
-            init: init!,
+            init,
             destroy: cleanup,
         });
     }
@@ -156,7 +156,7 @@ export class EffectTester<T> {
 
 // Stub implementation of Jasmine `done()` functions. It only fails the test to
 // be explicitly clear that using callbacks is not supported.
-function done() {
+function done(): never {
     failAndThrow('EffectTester does not support `done()` callbacks in Jasmine'
             + '`before*()` / `after*()` callbacks.');
 }

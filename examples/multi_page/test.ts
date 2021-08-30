@@ -41,7 +41,7 @@ describe('multi_page', () => {
             ]);
 
             const replaced = await page.get().$eval(
-                    '#replace', (el) => el.textContent);
+                '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
         }, puppeteerTestTimeout);
     });
@@ -62,7 +62,7 @@ describe('multi_page', () => {
             expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
 
             const replaced = await page.get().$eval(
-                    '#replace', (el) => el.textContent);
+                '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
         }, puppeteerTestTimeout);
     });
@@ -83,7 +83,7 @@ describe('multi_page', () => {
             expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
 
             const replaced = await page.get().$eval(
-                    '#replace', (el) => el.textContent);
+                '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
         }, puppeteerTestTimeout);
     });
@@ -104,7 +104,7 @@ describe('multi_page', () => {
             expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
 
             const replaced = await page.get().$eval(
-                    '#replace', (el) => el.textContent);
+                '#replace', (el) => el.textContent);
             expect(replaced).toBe('This text rendered by page JavaScript!');
         }, puppeteerTestTimeout);
     });

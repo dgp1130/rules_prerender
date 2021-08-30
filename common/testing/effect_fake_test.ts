@@ -15,6 +15,7 @@ describe('effect_fake', () => {
             const fake = effectFake('foo');
 
             // Expect to be assignable in types.
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const effect: Effect<string> = fake;
 
             expect().nothing();

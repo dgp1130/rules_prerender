@@ -5,7 +5,8 @@ import { PrerenderMetadata, ScriptMetadata } from 'rules_prerender/common/models
 describe('prerender_metadata', () => {
     describe('PrerenderMetadata', () => {
         it('requires scripts', () => {
-            // @ts-expect-error
+            // @ts-expect-error from missing `scripts`.
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const metadata: PrerenderMetadata = {
                 // No scripts.
             };
@@ -16,7 +17,8 @@ describe('prerender_metadata', () => {
 
     describe('ScriptMetadata', () => {
         it('requires a path', () => {
-            // @ts-expect-error
+            // @ts-expect-error fro missing `path`.
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const metadata: ScriptMetadata = {
                 // No path.
             };

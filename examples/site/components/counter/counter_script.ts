@@ -43,18 +43,18 @@ export class Counter extends HTMLElement {
         this.removeListeners();
     }
 
-    private render() {
+    private render(): void {
         const text = this.querySelector('[label]');
         if (!text) throw new Error('No `[label]` element to render to!');
         text.textContent = `The current count is: ${this.value}.`;
     }
 
-    private onDecrement() {
+    private onDecrement(): void {
         this.value--;
         this.render();
     }
 
-    private onIncrement() {
+    private onIncrement(): void {
         this.value++;
         this.render();
     }

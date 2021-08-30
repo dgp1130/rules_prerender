@@ -11,7 +11,7 @@ if (document.readyState === 'complete'
     });
 }
 
-function update() {
+function update(): void {
     // Overwrite a prerendered HTML element with different content.
     const el = document.getElementById('replace');
     if (!el) throw new Error('Could not find `#replace` element.');

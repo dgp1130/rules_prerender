@@ -48,7 +48,7 @@ describe('injector', () => {
             { type: 'script', path: '/baz.js' },
         ];
         await fs.writeFile(`${tmpDir.get()}/config.json`,
-                JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
+            JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,
@@ -155,7 +155,7 @@ describe('injector', () => {
             { type: 'style', path: `${tmpDir.get()}/baz.css` },
         ];
         await fs.writeFile(`${tmpDir.get()}/config.json`,
-                JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
+            JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,
@@ -232,7 +232,7 @@ describe('injector', () => {
             { type: 'script', path: '/baz.js' },
         ];
         await fs.writeFile(`${tmpDir.get()}/config.json`,
-                JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
+            JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,
@@ -348,7 +348,7 @@ describe('injector', () => {
             { type: 'script', path: '/foo.js' },
         ];
         await fs.writeFile(`${tmpDir.get()}/config.json`,
-                JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
+            JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,
@@ -378,7 +378,7 @@ describe('injector', () => {
             { type: 'script', path: '/foo.js' },
         ];
         await fs.writeFile(`${tmpDir.get()}/config.json`,
-                JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
+            JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,

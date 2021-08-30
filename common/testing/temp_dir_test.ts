@@ -19,7 +19,7 @@ describe('temp_dir', () => {
             env['TEST_TMPDIR'] = 'test-tmpDir';
 
             const mkdtemp = jasmine.createSpy('mkdtemp')
-                    .and.resolveTo('test-tmpDir/useTempDir-foo');
+                .and.resolveTo('test-tmpDir/useTempDir-foo');
             const rmdir = jasmine.createSpy('rmdir').and.resolveTo();
 
             const tester = EffectTester.of(() => useTempDir({

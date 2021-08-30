@@ -26,7 +26,7 @@ describe('components', () => {
         expect(component).not.toBeNull();
 
         const componentText = await component!.$eval(
-                '.content', (el) => el.textContent);
+            '.content', (el) => el.textContent);
         expect(componentText).toBe(`I'm a component!`);
 
         const tsDep = await component!.$eval('.ts-dep', (el) => el.textContent);
@@ -42,8 +42,8 @@ describe('components', () => {
         expect(transitive).not.toBeNull();
 
         const transitiveText = await transitive!.$eval(
-                '.content', (el) => el.textContent);
+            '.content', (el) => el.textContent);
         expect(transitiveText?.trim()).toBe(
-                `I'm a component which is depended upon transitively!`);
+            `I'm a component which is depended upon transitively!`);
     }, puppeteerTestTimeout);
 });

@@ -101,13 +101,14 @@ describe('annotation_extractor', () => {
 
         const metadata = JSON.parse(
             await fs.readFile(`${tmpDir.get()}/metadata.json`,
-            { encoding: 'utf8' },
-        )) as PrerenderMetadata;
+                { encoding: 'utf8' },
+            ),
+        ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
             scripts: jasmine.arrayWithExactContents([
                 mockScriptMetadata({ path: 'foo.js' }),
                 mockScriptMetadata({ path: 'bar.js' }),
-            ]) as any,
+            ]) as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         }));
     });
 
@@ -154,8 +155,9 @@ describe('annotation_extractor', () => {
 
         const metadata = JSON.parse(
             await fs.readFile(`${tmpDir.get()}/metadata.json`,
-            { encoding: 'utf8' },
-        )) as PrerenderMetadata;
+                { encoding: 'utf8' },
+            ),
+        ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
             scripts: [
                 mockScriptMetadata({ path: 'foo.js' }),
@@ -212,8 +214,9 @@ describe('annotation_extractor', () => {
 
         const metadata = JSON.parse(
             await fs.readFile(`${tmpDir.get()}/metadata.json`,
-            { encoding: 'utf8' },
-        )) as PrerenderMetadata;
+                { encoding: 'utf8' },
+            ),
+        ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
             scripts: [
                 mockScriptMetadata({ path: 'foo.js' }),
@@ -258,8 +261,9 @@ Annotation should **not** be processed.
 
         const metadata = JSON.parse(
             await fs.readFile(`${tmpDir.get()}/metadata.json`,
-            { encoding: 'utf8' },
-        )) as PrerenderMetadata;
+                { encoding: 'utf8' },
+            ),
+        ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
             scripts: [],
         }));

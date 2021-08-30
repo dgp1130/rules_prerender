@@ -5,6 +5,7 @@ import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotatio
 describe('prerender_annotation', () => {
     describe('PrerenderAnnotation', () => {
         it('is a union of the `type` attribute', () => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const annotation: PrerenderAnnotation = {
                 // @ts-expect-error Not a known type attribute.
                 type: 'not-a-valid-type',
@@ -22,14 +23,14 @@ describe('prerender_annotation', () => {
             });
 
             expect(annotation)
-                    .toBe(`bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"./foo/bar/baz.js"}`);
+                .toBe('bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"./foo/bar/baz.js"}');
         });
     });
 
     describe('parseAnnotation()', () => {
         it('returns the parsed annotation', () => {
             const annotation = parseAnnotation(
-                    'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"./foo/bar/baz.js"}');
+                'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"./foo/bar/baz.js"}');
             expect(annotation).toEqual({
                 type: 'script',
                 path: './foo/bar/baz.js',
@@ -56,8 +57,8 @@ describe('prerender_annotation', () => {
 
         it('throws when not given valid JSON', () => {
             expect(() => parseAnnotation(
-                    'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - not JSON'))
-                    .toThrow();
+                'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - not JSON'))
+                .toThrow();
         });
     });
 

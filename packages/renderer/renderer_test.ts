@@ -47,15 +47,15 @@ module.exports = function* () {
         expect(stderr).toBe('');
 
         const foo = await fs.readFile(
-                `${tmpDir.get()}/output/foo.html`, 'utf8');
+            `${tmpDir.get()}/output/foo.html`, 'utf8');
         expect(foo).toBe('foo');
 
         const bar = await fs.readFile(
-                `${tmpDir.get()}/output/bar.html`, 'utf8');
+            `${tmpDir.get()}/output/bar.html`, 'utf8');
         expect(bar).toBe('bar');
             
         const world = await fs.readFile(
-                `${tmpDir.get()}/output/hello/world.html`, 'utf8');
+            `${tmpDir.get()}/output/hello/world.html`, 'utf8');
         expect(world).toBe('Hello, World!');
     });
 
@@ -87,15 +87,15 @@ module.exports = () => {
         expect(stderr).toBe('');
 
         const foo = await fs.readFile(
-                `${tmpDir.get()}/output/foo.html`, 'utf8');
+            `${tmpDir.get()}/output/foo.html`, 'utf8');
         expect(foo).toBe('foo');
 
         const bar = await fs.readFile(
-                `${tmpDir.get()}/output/bar.html`, 'utf8');
+            `${tmpDir.get()}/output/bar.html`, 'utf8');
         expect(bar).toBe('bar');
             
         const world = await fs.readFile(
-                `${tmpDir.get()}/output/hello/world.html`, 'utf8');
+            `${tmpDir.get()}/output/hello/world.html`, 'utf8');
         expect(world).toBe('Hello, World!');
     });
 
@@ -125,15 +125,15 @@ module.exports = async function* () {
         expect(stderr).toBe('');
 
         const foo = await fs.readFile(
-                `${tmpDir.get()}/output/foo.html`, 'utf8');
+            `${tmpDir.get()}/output/foo.html`, 'utf8');
         expect(foo).toBe('foo');
 
         const bar = await fs.readFile(
-                `${tmpDir.get()}/output/bar.html`, 'utf8');
+            `${tmpDir.get()}/output/bar.html`, 'utf8');
         expect(bar).toBe('bar');
             
         const world = await fs.readFile(
-                `${tmpDir.get()}/output/hello/world.html`, 'utf8');
+            `${tmpDir.get()}/output/hello/world.html`, 'utf8');
         expect(world).toBe('Hello, World!');
     });
 
@@ -153,7 +153,7 @@ module.exports = 'Hello, World!'; // Not a function...
         expect(stdout).toBe('');
         expect(stderr).toContain(`${tmpDir.get()}/foo.js`);
         expect(stderr).toContain(
-                'provided a default export that was not a function');
+            'provided a default export that was not a function');
         
         // No output files should be written.
         const outputFiles = await fs.readdir(`${tmpDir.get()}/output`, {

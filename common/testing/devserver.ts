@@ -141,9 +141,9 @@ export class Server {
                     // Dying will throw an error with no exit code, make sure
                     // the signal matches instead.
                     if (err.signal && err.signal !== signal) {
-                        fail(`Devserver did not die gracefully. Died with`
+                        fail('Devserver did not die gracefully. Died with'
                             + ` ${err.signal}, expected signal ${signal}:\n${
-                            err}\n\nSTDERR:\n${err.stderr}`);
+                                err}\n\nSTDERR:\n${err.stderr}`);
                     }
                 }
             },

@@ -36,6 +36,7 @@
 import 'jasmine';
 
 // Not `undefined` or `null`.
+// eslint-disable-next-line @typescript-eslint/ban-types
 type Defined = string | number | boolean | symbol | object;
 
 /**
@@ -97,7 +98,8 @@ class EffectImpl<T> {
  *     will fail the test if used when not ready.
  */
 export function useForEach<T extends Defined>(
-        init: () => MaybePromise<UseResult<T>>): Effect<T> {
+    init: () => MaybePromise<UseResult<T>>,
+): Effect<T> {
     return useValue({
         init,
         beforeFn: beforeEach,
@@ -119,7 +121,8 @@ export function useForEach<T extends Defined>(
  *     will fail the test if used when not ready.
  */
 export function useForAll<T extends Defined>(
-        init: () => MaybePromise<UseResult<T>>): Effect<T> {
+    init: () => MaybePromise<UseResult<T>>,
+): Effect<T> {
     return useValue({
         init,
         beforeFn: beforeAll,

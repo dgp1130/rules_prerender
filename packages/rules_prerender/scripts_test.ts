@@ -8,7 +8,7 @@ describe('scripts', () => {
             const annotation = includeScript('./foo/bar/baz.js');
 
             expect(annotation)
-                    .toBe(`<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"./foo/bar/baz.js"} -->`)
+                .toBe(`<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"./foo/bar/baz.js"} -->`);
         });
     });
 });

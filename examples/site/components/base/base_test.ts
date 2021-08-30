@@ -23,7 +23,7 @@ describe('base', () => {
             // Callback should be placed under `<main />` tag.
             const main = fragment.querySelector('body main');
             const mainChildren = main.childNodes
-                    .filter((node) => node.nodeType === NodeType.ELEMENT_NODE);
+                .filter((node) => node.nodeType === NodeType.ELEMENT_NODE);
             expect(mainChildren.length).toBe(1);
             expect((mainChildren[0] as HTMLElement).id).toBe('content');
         });

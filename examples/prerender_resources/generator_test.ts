@@ -8,14 +8,14 @@ const prerenderedDir = runfiles.resolvePackageRelative('prerender');
 describe('Prerender Resources', () => {
     it('prerenders `hello.txt`', async () => {
         const content = await fs.readFile(
-                `${prerenderedDir}/hello.txt`, 'utf-8');
+            `${prerenderedDir}/hello.txt`, 'utf-8');
 
         expect(content).toBe('Hello, World!');
     });
 
     it('prerenders `goodbye.txt`', async () => {
         const content = await fs.readFile(
-                `${prerenderedDir}/goodbye.txt`, 'utf-8');
+            `${prerenderedDir}/goodbye.txt`, 'utf-8');
 
         expect(content).toBe('Goodbye, World!');
     });

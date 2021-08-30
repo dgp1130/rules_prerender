@@ -10,7 +10,8 @@
  *     will be included in the output.
  */
 export function unique<T>(
-        items: Array<T>, equals: (first: T, second: T) => boolean): Set<T> {
+    items: Array<T>, equals: (first: T, second: T) => boolean,
+): Set<T> {
     // For each item in the input, include it only if every preceding item is
     // not equivalent. We don't need to check following items because the first
     // item of an equivalent pair is always valid to include. The second item

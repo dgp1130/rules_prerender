@@ -83,7 +83,7 @@ describe('puppeteer', () => {
 
             // Execute effect, should not be initialized yet.
             const tester = EffectTester.of(
-                    () => usePage(effectFake(mockBrowser)));
+                () => usePage(effectFake(mockBrowser)));
             expect(mockBrowser.newPage).not.toHaveBeenCalled();
 
             // Initialize to simulate test start, should launch a browser.

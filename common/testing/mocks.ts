@@ -29,7 +29,7 @@ export function unmockedFunc(name: string): (...args: unknown[]) => never {
     const fn = unmockedFuncs.get(name);
     if (fn) return fn;
 
-    const unmocked = (...args: unknown[]) => {
+    const unmocked = (...args: unknown[]): never => {
         return fail(`Called unmocked function: \`${name}()\` with args:\n${
             JSON.stringify(args, null /* replacer */, 4 /* tabSize */)
         }.`) as never;

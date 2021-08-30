@@ -10,7 +10,7 @@ export const repo = new URL('https://github.com/dgp1130/rules_prerender/');
  * @param branch The branch to link to, defaults to the mainline branch.
  * @return A {@link URL} object pointing to the specified source file on GitHub.
  */
-export function srcLink(path: string, branch: string = 'main'): URL {
+export function srcLink(path: string, branch = 'main'): URL {
     if (!path.startsWith('/')) {
         throw new Error(`Path \`${path}\` must start with a slash.`);
     }

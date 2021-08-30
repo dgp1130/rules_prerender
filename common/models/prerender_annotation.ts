@@ -43,7 +43,9 @@ export function parseAnnotation(comment: string): PrerenderAnnotation|undefined 
  *     represent the same annotation.
  */
 export function annotationsEqual(
-        first: PrerenderAnnotation, second: PrerenderAnnotation): boolean {
+    first: PrerenderAnnotation,
+    second: PrerenderAnnotation,
+): boolean {
     if (first.type !== second.type) return false;
 
     switch (first.type) {

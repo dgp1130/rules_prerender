@@ -4,9 +4,7 @@ import { main as mainReal } from 'rules_prerender/common/binary';
 
 // Wrap `main`'s type to return its `Promise` to easily `await` it.
 function main(...args: Parameters<typeof mainReal>): Promise<void> {
-    // @ts-ignore Actually returns a `Promise`, but this is not specified in its
-    // type.
-    return mainReal(...args);
+    return mainReal(...args) as unknown as Promise<void>;
 }
 
 const originalArgs = process.argv;
@@ -33,7 +31,7 @@ describe('binary', () => {
             const consoleErrorSpy = spyOn(console, 'error');
 
             const callback = jasmine.createSpy('callback')
-                    .and.rejectWith(new Error('RAM exploded.'));
+                .and.rejectWith(new Error('RAM exploded.'));
             await main(callback);
 
             expect(console.error).toHaveBeenCalledTimes(1);
@@ -46,7 +44,7 @@ describe('binary', () => {
             const consoleErrorSpy = spyOn(console, 'error');
 
             const callback = jasmine.createSpy('callback')
-                    .and.rejectWith('RAM exploded.');
+                .and.rejectWith('RAM exploded.');
             await main(callback);
 
             expect(console.error).toHaveBeenCalledTimes(1);

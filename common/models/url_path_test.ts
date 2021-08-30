@@ -12,7 +12,7 @@ describe('UrlPath', () => {
 
         it('throws when given an invalid path', () => {
             expect(() => UrlPath.of('foo/bar/baz.html')).toThrowError(
-                    'UrlPath (foo/bar/baz.html) must start with a "/".');
+                'UrlPath (foo/bar/baz.html) must start with a "/".');
         });
     });
 });

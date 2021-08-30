@@ -54,11 +54,13 @@ export async function invoke(entryPoint: string): Promise<
 }
 
 function isIterable(input: unknown): input is Iterable<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((input as any)[Symbol.iterator]) return true;
     return false;
 }
 
 function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((input as any)[Symbol.asyncIterator]) return true;
     return false;
 }

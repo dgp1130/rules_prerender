@@ -110,7 +110,7 @@ function validateMap(entries: Iterable<[ UrlPath, FileRef ]>):
         if (!urlPath.startsWith('/')) {
             throw new Error(
                 `URL paths must be absolute (start with a slash), but \`${
-                urlPath}\` does not.`);
+                    urlPath}\` does not.`);
         }
     }
     return map;

@@ -16,6 +16,7 @@ describe('http', () => {
                         nodeHttp.ClientRequest => {
                     cb(mockRes);
                     return mockReq;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }) as any,
             );
 
@@ -40,10 +41,8 @@ describe('http', () => {
                 ),
             } as unknown as nodeHttp.ClientRequest;
             spyOn(nodeHttp, 'get').and.callFake(
-                ((url: URL, cb: (res: nodeHttp.IncomingMessage) => void):
-                        nodeHttp.ClientRequest => {
-                    return mockReq;
-                }) as any,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (() => mockReq) as any,
             );
 
             const error = new Error('Network issue.');

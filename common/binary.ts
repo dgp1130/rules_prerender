@@ -20,7 +20,5 @@ export function main(impl: (args: string[]) => Promise<number>): void {
         process.exit(code);
     });
 
-    // @ts-ignore Return promise for testing purposes but don't document this in
-    // the type because it shouldn't be used normally.
-    return result;
+    return result as unknown as void;
 }

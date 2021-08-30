@@ -16,7 +16,7 @@ export class PrerenderResource {
     }
 
     /** The URL path of the resource. */
-    public get path() {
+    public get path(): string {
         return this.urlPath.path;
     }
 

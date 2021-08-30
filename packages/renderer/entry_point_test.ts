@@ -19,6 +19,7 @@ describe('entry_point', () => {
 
             const rendered = await invoke('foo.js');
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>))
                 .toEqual([
@@ -41,6 +42,7 @@ describe('entry_point', () => {
 
             const rendered = await invoke('foo.js');
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>))
                 .toEqual([
@@ -63,6 +65,7 @@ describe('entry_point', () => {
 
             const rendered = await invoke('foo.js');
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.asyncIterator]).toBeDefined();
             const renderedArray = await asyncIterableToArray(
                 rendered as AsyncIterable<PrerenderResource>);
@@ -84,7 +87,7 @@ describe('entry_point', () => {
             spyOn(importLib, 'dynamicImport').and.resolveTo('not an object');
 
             await expectAsync(invoke('foo.js')).toBeRejectedWithError(
-                    /did not export a CommonJS module/);
+                /did not export a CommonJS module/);
         });
 
         it('throws an error if no default export is found', async () => {
@@ -94,7 +97,7 @@ describe('entry_point', () => {
             });
 
             await expectAsync(invoke('foo.js')).toBeRejectedWithError(
-                    /did not provide a default export/);
+                /did not provide a default export/);
         });
 
         it('throws an error if the default export is not a function', async () => {
@@ -103,7 +106,7 @@ describe('entry_point', () => {
             });
 
             await expectAsync(invoke('foo.js')).toBeRejectedWithError(
-                    /provided a default export that was not a function/);
+                /provided a default export that was not a function/);
         });
 
         it('propagates an error from the default export function', async () => {

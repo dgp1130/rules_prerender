@@ -7,7 +7,8 @@ import { PrerenderMetadata, ScriptMetadata, StyleMetadata } from 'rules_prerende
 
 /** Mocks the {@link PrerenderMetadata} object with the given overrides. */
 export function mockPrerenderMetadata(
-        overrides: Partial<PrerenderMetadata> = {}): PrerenderMetadata {
+    overrides: Partial<PrerenderMetadata> = {},
+): PrerenderMetadata {
     return {
         scripts: [],
         styles: [],

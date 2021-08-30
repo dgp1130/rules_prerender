@@ -29,7 +29,7 @@ describe('devserver', () => {
 
             it('rejects on sever startup error', async () => {
                 await expectAsync(Server.spawn('does/not/exist'))
-                        .toBeRejected();
+                    .toBeRejected();
             });
         });
 
@@ -60,7 +60,7 @@ describe('devserver', () => {
                 kill: jasmine.createSpy('kill'),
             };
             spyOn(Server, 'spawn')
-                    .and.resolveTo(mockServer as unknown as Server);
+                .and.resolveTo(mockServer as unknown as Server);
 
             const tester = EffectTester.of(() => useDevserver('path/to/bin'));
             expect(Server.spawn).not.toHaveBeenCalled();

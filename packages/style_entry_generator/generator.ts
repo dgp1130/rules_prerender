@@ -11,6 +11,6 @@ import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metad
  */
 export function generateEntryPoint(metadata: PrerenderMetadata): string {
     return metadata.styles
-            .map((style) => `@import '${style.path}';`)
-            .join('\n');
+        .map((style) => `@import '${style.path}';`)
+        .join('\n');
 }

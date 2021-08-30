@@ -5,7 +5,7 @@ describe('effects', () => {
     describe('useForEach()', () => {
         const init = jasmine.createSpy('init', () => [
             'foo' /* value */,
-            () => { init.calls.reset() } /* cleanup */,
+            () => { init.calls.reset(); } /* cleanup */,
         ] as const).and.callThrough();
         const used = useForEach(init);
 
@@ -30,7 +30,7 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `undefined` value', () => {
-            // @ts-expect-error
+            // @ts-expect-error for `undefined` value.
             () => useForEach(() => [
                 undefined /* value */,
                 undefined /* cleanup */,
@@ -40,7 +40,7 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `null` value', () => {
-            // @ts-expect-error
+            // @ts-expect-error for `null` value.
             () => useForEach(() => [
                 null /* value */,
                 undefined /* cleanup */,
@@ -53,7 +53,7 @@ describe('effects', () => {
     describe('useForAll()', () => {
         const init = jasmine.createSpy('init', () => [
             'foo' /* value */,
-            () => { init.calls.reset() } /* cleanup */,
+            () => { init.calls.reset(); } /* cleanup */,
         ] as const).and.callThrough();
         const used = useForAll(init);
 
@@ -78,7 +78,7 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `undefined` value', () => {
-            // @ts-expect-error
+            // @ts-expect-error for `undefined` value.
             () => useForAll(() => [
                 undefined /* value */,
                 undefined /* cleanup */,
@@ -88,7 +88,7 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `null` value', () => {
-            // @ts-expect-error
+            // @ts-expect-error for `null` value.
             () => useForAll(() => [
                 null /* value */,
                 undefined /* cleanup */,

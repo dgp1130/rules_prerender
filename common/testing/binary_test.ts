@@ -17,7 +17,7 @@ exit 0
             await fs.chmod(`${tmpDir.get()}/foo.sh`, 0o777);
 
             const { code, stdout, stderr } = await execBinary(
-                    `${tmpDir.get()}/foo.sh`, [ 'foo', 'bar' ]);
+                `${tmpDir.get()}/foo.sh`, [ 'foo', 'bar' ]);
             
             expect(code).toBe(0);
             expect(stdout).toBe('stdout data: foo\n');
@@ -33,7 +33,7 @@ exit 1
             await fs.chmod(`${tmpDir.get()}/foo.sh`, 0o777);
 
             const { code, stdout, stderr } = await execBinary(
-                    `${tmpDir.get()}/foo.sh`, [ 'foo', 'bar' ]);
+                `${tmpDir.get()}/foo.sh`, [ 'foo', 'bar' ]);
             
             expect(code).toBe(1);
             expect(stdout).toBe('stdout data: foo\n');
