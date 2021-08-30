@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=http://json.schemastore.org/eslintrc
+
+env:
+  es2021: true
+  browser: true
+  node: true
+  jasmine: true
+
+extends:
+- 'eslint:recommended'
+
+ignorePatterns:
+- bazel-out/
+- dist/
+- external/
+
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaVersion: 12
+  sourceType: module
+
+plugins:
+- '@typescript-eslint'
+
+rules:
+  indent:
+  - error
+  - 4
+  - SwitchCase: 1
+  linebreak-style:
+  - error
+  - unix
+  quotes:
+  - error
+  - single
+  - allowTemplateLiterals: true
+  semi:
+  - error
+  - always
+  no-constant-condition:
+  - error
+  - checkLoops: false # `while (true) { /* ... */ }` is ok.
+
+# Enable TypeScript rules only for `*.ts` files.
+overrides:
+- files:
+  - "**/*.ts"
+  - "**/*.d.ts"
+  extends:
+  - 'plugin:@typescript-eslint/recommended'
+- files:
+  - "**/*_test.ts"
+  - "**/test.ts"
+  rules:
+    # Disable non-null assertions in test files.
+    '@typescript-eslint/no-non-null-assertion':
+    - off

@@ -20,7 +20,10 @@
         "ibazel": "ibazel",
         "build": "bazel build //...",
         "test": "bazel test //...",
-        "release": "bazel run //:pkg.publish --config release --"
+        "release": "bazel run //:pkg.publish --config release --",
+        "lint": "npm run -s eslint -- . --max-warnings 0",
+        "lint-fix": "npm run -s lint -- --fix",
+        "eslint": "eslint"
     },
     "repository": {
         "type": "git",
@@ -57,6 +60,9 @@
         "@types/jasmine": "^3.6.2",
         "@types/node": "^14.14.13",
         "@types/yargs": "^15.0.11",
+        "@typescript-eslint/eslint-plugin": "^4.29.3",
+        "@typescript-eslint/parser": "^4.29.3",
+        "eslint": "^7.32.0",
         "http-status-codes": "^2.1.4",
         "jasmine": "^3.6.3",
         "puppeteer": "^8.0.0",
