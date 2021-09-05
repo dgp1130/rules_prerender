@@ -12,9 +12,14 @@ describe('prerender_component_publish_files()', () => {
         const expectedFiles = [
             'component.js',
             'component.d.ts',
+            'prerender_dep.js',
+            'prerender_dep.d.ts',
             'script.mjs',
             'script.d.ts',
             'scripts.externs.js',
+            'script_dep.mjs',
+            'script_dep.d.ts',
+            'script_dep.externs.js',
             'style.css',
         ];
 

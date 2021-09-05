@@ -12,13 +12,25 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
+    lib_deps = [":prerender_dep"],
     scripts = [":scripts"],
     styles = ["style.css"],
 )
 
 ts_library(
+    name = "prerender_dep",
+    srcs = ["prerender_dep.ts"],
+)
+
+ts_library(
     name = "scripts",
     srcs = ["script.ts"],
+    deps = [":script_dep"],
+)
+
+ts_library(
+    name = "script_dep",
+    srcs = ["script_dep.ts"],
 )
 
 prerender_component_publish_files(
