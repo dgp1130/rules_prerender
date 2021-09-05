@@ -5,49 +5,70 @@
 # plugin is loaded.
 PLUGIN_CONFIG = """(() => {
     const { promises: fs } = require('fs');
-    const { env } = require('process');
+    const path = require('path');
+    const { cwd, env } = require('process');
 
     // Print extra logs when debugging.
     const debug = env['COMPILATION_MODE'] === 'dbg';
-
-    // CWD is in the primary workspace under the execroot. The execroot contains
-    // all workspaces with files in this execution.
-    const workspaceRoot = '..';
 
     // Generate a Map<string, string[]> mapping workspace names to their
     // associated paths, including all configurations files might be in.
     const workspaceMapPromise = (async () => {
         // Find all workspaces available to this tool.
-        const workspaces = await fs.readdir(workspaceRoot);
+        const primaryWorkspaceName = cwd().split('/').slice(-1)[0];
+        /**
+         * NOTE: "External workspaces" in this context refers to other packages
+         * installed from NPM via the `node_repositories()` rule. They are
+         * *technically* all under a single workspace (`npm`), but here we're
+         * treating each NPM package as a separate external workspace. Will this
+         * hard dependency on `npm` bite us in the future? Probably.
+         */
+        const externalWorkspaceRoot = 'external/npm/';
+        const externalWorkspaceNames = (await fs.readdir(externalWorkspaceRoot))
+            .filter((workspace) => workspace !== 'node_modules');
+        if (debug) {
+            console.error(`Primary workspace name: ${primaryWorkspaceName}`);
+            console.error(`External workspace names: ${
+                externalWorkspaceNames.join(', ')}`);
+        }
 
-        // Find all roots within each workspace.
-        return new Map(await Promise.all(workspaces.map(
-            // Read all directories under `bazel-out/`.
-            (workspace) => fs.readdir(`${workspaceRoot}/${workspace}/bazel-out`)
-                .then((cfgs) => [
-                    // Map the workspace to all its roots.
-                    workspace,
-                    [
-                        '.', // Source root.
-                        // The `bin/` and `genfiles/` paths under each
-                        // configuration in the workspace.
-                        ...cfgs.map((cfg) => `bazel-out/${cfg}`)
-                            .flatMap((cfg) => [
-                                `${cfg}/bin`,
-                                `${cfg}/genfiles`,
-                            ]),
-                    ],
-                ]),
-        )));
+        // Get all the configurations present in the primary workspace.
+        const cfgs = await fs.readdir('bazel-out');
+        const primaryWorkspaceRoots = [
+            '.',
+            ...(cfgs.flatMap((cfg) => [
+                `bazel-out/${cfg}/bin`,
+                `bazel-out/${cfg}/genfiles`,
+            ]))
+        ];
+
+        // Build a map of workspace name => possible root directories.
+        /** type WorkspaceMap = Map<string, string[]>; */
+        const workspaceMap = new Map(Object.entries(Object.assign({}, ...[
+            // Map the primary workspace all its configurations.
+            { [primaryWorkspaceName]: primaryWorkspaceRoots },
+
+            // Map each external workspace to its single root.
+            ...externalWorkspaceNames.map((name) => ({
+                [name]: [ `${externalWorkspaceRoot}/${name}` ],
+            })),
+        ])));
+
+        if (debug) {
+            console.error('Workspace root map:');
+            for (const [ name, roots ] of workspaceMap) {
+                console.error(`${name} => ${roots.join(', ')}`);
+            }
+        }
+
+        return workspaceMap;
     })();
 
     // Return the list of arguments to be passed to the postcss-import
     // plugin. See: https://github.com/postcss/postcss-import#options.
     return [
         {
-            root: workspaceRoot,
             async resolve(importPath, baseDir, importOptions) {
-                const workspaceMap = await workspaceMapPromise;
                 if (debug) {
                     console.error(`Resolving \\`${importPath}\\` at \\`${
                         baseDir}\\` with options:`, importOptions);
@@ -60,14 +81,15 @@ PLUGIN_CONFIG = """(() => {
                         + ` \\`__main__\\` if not set).`);
                 }
 
+                const { root } = importOptions;
+
                 // Look up the workspace paths and resolve against them.
+                const workspaceMap = await workspaceMapPromise;
                 const importWorkspace = importPath.split('/')[0];
                 const relativeImport = importPath.split('/')
                     .slice(1).join('/');
-                const workspacePaths = workspaceMap.get(importWorkspace)
-                    .map((path) => `${importWorkspace}/${path}`);
-                const paths = workspacePaths.map((path) =>
-                    `${importOptions.root}/${path}/${relativeImport}`);
+                const paths = workspaceMap.get(importWorkspace)
+                    .map((importPath) => path.join(root, importPath, relativeImport));
 
                 if (debug) {
                     console.error(`Found possible paths:\\n${

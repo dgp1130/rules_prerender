@@ -15,6 +15,7 @@ describe('prerender_component_publish_files()', () => {
             'script.mjs',
             'script.d.ts',
             'scripts.externs.js',
+            'style.css',
         ];
 
         const actualFiles = await fs.readdir(root);

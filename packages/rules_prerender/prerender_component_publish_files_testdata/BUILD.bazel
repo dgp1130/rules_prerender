@@ -13,6 +13,7 @@ prerender_component(
     name = "component",
     srcs = ["component.ts"],
     scripts = [":scripts"],
+    styles = ["style.css"],
 )
 
 ts_library(

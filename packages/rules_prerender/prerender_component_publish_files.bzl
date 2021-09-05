@@ -54,6 +54,7 @@ def prerender_component_publish_files(
             ":%s" % prerender_js,
             "%s_scripts" % absolute_name, # script `*.d.ts` files.
             ":%s" % scripts_js,
+            "%s_styles" % absolute_name, # style `*.css` files.
         ],
         testonly = testonly,
         **kwargs
