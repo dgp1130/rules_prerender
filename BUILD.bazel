@@ -17,6 +17,7 @@ bzl_library(
         "//packages/rules_prerender:extract_single_resource",
         "//packages/rules_prerender:inject_resources",
         "//packages/rules_prerender:prerender_component",
+        "//packages/rules_prerender:prerender_component_publish_files",
         "//packages/rules_prerender:prerender_pages",
         "//packages/rules_prerender:prerender_pages_unbundled",
         "//packages/rules_prerender:prerender_resources",

@@ -71,6 +71,7 @@ bzl_library(
 bzl_library(
     name = "prerender_component_publish_files",
     srcs = ["prerender_component_publish_files.bzl"],
+    visibility = ["//:__pkg__"],
     deps = ["//common:label"],
 )
 
