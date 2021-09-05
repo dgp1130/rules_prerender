@@ -21,10 +21,16 @@ describe('prerender_component_publish_files()', () => {
             'script_dep.d.ts',
             'script_dep.externs.js',
             'style.css',
+            'component_resources', // from `resources` attribute.
         ];
 
         const actualFiles = await fs.readdir(root);
 
         expect(actualFiles.sort()).toEqual(expectedFiles.sort());
+
+        // Separately test for the resources directory.
+        const expectedResources = [ 'resource.txt' ];
+        const actualResources = await fs.readdir(`${root}/component_resources`);
+        expect(actualResources.sort()).toEqual(expectedResources.sort());
     });
 });
