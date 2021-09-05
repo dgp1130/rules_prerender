@@ -1,0 +1,27 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load(
+    "//packages/rules_prerender:prerender_component.bzl",
+    "prerender_component",
+)
+load(
+    "//packages/rules_prerender:prerender_component_publish_files.bzl",
+    "prerender_component_publish_files",
+)
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    scripts = [":scripts"],
+)
+
+ts_library(
+    name = "scripts",
+    srcs = ["script.ts"],
+)
+
+prerender_component_publish_files(
+    name = "component_publish_files",
+    dep = ":component",
+    visibility = ["//packages/rules_prerender:__pkg__"],
+)

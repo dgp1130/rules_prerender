@@ -69,6 +69,28 @@ bzl_library(
 )
 
 bzl_library(
+    name = "prerender_component_publish_files",
+    srcs = ["prerender_component_publish_files.bzl"],
+    deps = ["//common:label"],
+)
+
+ts_library(
+    name = "prerender_component_publish_files_test_lib",
+    srcs = ["prerender_component_publish_files_test.ts"],
+    data = ["//packages/rules_prerender/prerender_component_publish_files_testdata:component_publish_files"],
+    deps = [
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_component_publish_files_test",
+    deps = [":prerender_component_publish_files_test_lib"],
+)
+
+bzl_library(
     name = "prerender_pages_unbundled",
     srcs = ["prerender_pages_unbundled.bzl"],
     visibility = ["//:__pkg__"],

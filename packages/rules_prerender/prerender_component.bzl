@@ -3,6 +3,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load(
     "@build_bazel_rules_nodejs//:providers.bzl",
+    "DeclarationInfo",
     "JSModuleInfo",
     "JSEcmaScriptModuleInfo",
 )
@@ -131,6 +132,24 @@ which are always allowed).
     )
 
 def _js_reexport_impl(ctx):
+    merged_declaration_info = DeclarationInfo(
+        declarations = depset([],
+            transitive = [src[DeclarationInfo].declarations
+                          for src in ctx.attr.srcs
+                          if DeclarationInfo in src],
+        ),
+        transitive_declarations = depset([],
+            transitive = [dep[DeclarationInfo].transitive_declarations
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if DeclarationInfo in dep],
+        ),
+        type_blocklisted_declarations = depset([],
+            transitive = [dep[DeclarationInfo].type_blocklisted_declarations
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if DeclarationInfo in dep],
+        ),
+    )
+
     merged_js_module_info = JSModuleInfo(
         direct_sources = depset([],
             transitive = [src[JSModuleInfo].direct_sources
@@ -161,6 +180,8 @@ def _js_reexport_impl(ctx):
     )
 
     return [
+        DefaultInfo(files = merged_declaration_info.declarations),
+        merged_declaration_info,
         merged_js_module_info,
         merged_js_ecma_script_module_info,
         output_group_info,
