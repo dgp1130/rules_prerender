@@ -27,6 +27,6 @@
         "unproxied"
     ],
     "files.associations": {
-        "BUILD.publish": "starlark"
+        "BUILD.publish": "bazel"
     }
 }
