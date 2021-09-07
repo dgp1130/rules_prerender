@@ -15,11 +15,22 @@ while read LOCAL_REF LOCAL_SHA REMOTE_REF REMOTE_SHA; do
         cut -f 1
     )
 
-    # For each commit, lint it. Husky fails if any "untested" commands fails, so
-    # we need to `||` and save the exit code to look at it without prematurely
-    # aborting.
+    # For each commit, lint it.
     if ! echo -n "${COMMITS_TO_PUSH}" |
-        xargs -L 1 -I {} bash -c "COMMIT=\"{}\" npm run -s -- lint-commit"
+        xargs -L 1 -I {} bash -c "
+            # Use script to capture colorized and styled output to a variable.
+            OUTPUT=\$(
+                script /dev/null --quiet --return --command \\
+                    \"COMMIT=\"{}\" npm run -s -- lint-commit\"
+            )
+
+            # Print lint output with the commit hash it was linting.
+            if [ \"\${?}\" != \"0\" ]; then
+                echo \"Linting commit {} failed:\"
+                echo \"\${OUTPUT}\"
+                exit 1
+            fi
+        "
     then
         SUCCESS="false"
     fi
