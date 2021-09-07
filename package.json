@@ -25,8 +25,7 @@
         "lint-fix": "npm run -s lint -- --fix",
         "lint-commit": "git diff \"${COMMIT}~1..${COMMIT}\" --name-only | npm run -s -- filter-lintable | xargs -P 8 -L 1 -I {} bash -c \"git show \\\"${COMMIT}:{}\\\" --diff-filter=d | npm run -s -- eslint --stdin --stdin-filename \\\"{}\\\"\" --max-warnings 0 --report-unused-disable-directives",
         "filter-lintable": "grep '\\.js$\\|\\.cjs$\\|\\.mjs$\\|\\.ts$'",
-        "eslint": "eslint",
-        "prepare": "husky install"
+        "eslint": "eslint"
     },
     "repository": {
         "type": "git",
