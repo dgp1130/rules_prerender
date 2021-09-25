@@ -9,9 +9,11 @@ prerender_pages(
     ],
     styles = ["about.css"],
     resources = [":resources"],
-    bundle_js = False, # Optimization: No client-side JavaScript on this page.
     visibility = ["//examples/site:__pkg__"],
-    deps = ["//examples/site/components/base"],
+    deps = [
+        "//:declarative_shadow_dom",
+        "//examples/site/components/base",
+    ],
 )
 
 web_resources(
