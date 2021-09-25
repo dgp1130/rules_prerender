@@ -27,6 +27,7 @@ describe('puppeteer', () => {
             await tester.initialize();
             expect(puppeteer.launch).toHaveBeenCalledOnceWith({
                 headless: true, // Defaults to headless.
+                args: ['--enable-experimental-web-platform-features'],
                 timeout: jasmine.any(Number),
             });
             expect(mockBrowser.close).not.toHaveBeenCalled();
@@ -57,6 +58,7 @@ describe('puppeteer', () => {
             await tester.initialize();
             expect(puppeteer.launch).toHaveBeenCalledOnceWith({
                 headless: false, // Should run GUI because $DISPLAY is set.
+                args: ['--enable-experimental-web-platform-features'],
                 timeout: jasmine.any(Number),
             });
             expect(mockBrowser.close).not.toHaveBeenCalled();

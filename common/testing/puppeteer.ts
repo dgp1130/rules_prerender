@@ -37,6 +37,8 @@ export function useBrowser(): Effect<Browser> {
 
         const browser = await launch({
             headless,
+            // Needed for headless declarative shadow DOM.
+            args: ['--enable-experimental-web-platform-features'],
             // Timeout a little bit before Jasmine will so we get a Chrome
             // timeout error rather than a Jasmine timeout error, which is a
             // little more specific about where the problem could be.
