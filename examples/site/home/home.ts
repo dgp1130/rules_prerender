@@ -3,8 +3,9 @@ import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { repo, srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the entire home page. */
-export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', baseLayout('Home', () => `
+export default async function*():
+        AsyncGenerator<PrerenderResource, void, void> {
+    yield PrerenderResource.of('/index.html', await baseLayout('Home', () => `
         <div comp-home>
             <article>
                 <p>This is the home page of a really cool site built with

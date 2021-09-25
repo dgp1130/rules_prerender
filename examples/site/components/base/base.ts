@@ -1,6 +1,6 @@
+import { includeStyle } from 'rules_prerender';
 import { renderHeader } from 'rules_prerender/examples/site/components/header/header';
 import { renderFooter } from 'rules_prerender/examples/site/components/footer/footer';
-import { includeStyle } from 'rules_prerender';
 
 /**
  * Provides a basic structure for an HTML page.
@@ -10,24 +10,25 @@ import { includeStyle } from 'rules_prerender';
  *     document. Will be wrapped in a `<main />` tag, so need to add one in the
  *     callback.
  */
-export function baseLayout(title: string, main: () => string): string {
+export async function baseLayout(
+    title: string,
+    main: () => string | Promise<string>,
+): Promise<string> {
     return `
-        <!DOCTYPE html>
-        <html comp-base>
-            <head>
-                <title>${title}</title>
-                <meta charset="utf-8">
-            </head>
-            <body>
-                ${renderHeader()}
-                <div class="main-container">
-                    <main>
-                        ${main()}
-                    </main>
-                </div>
-                ${renderFooter()}
-            </body>
-            ${includeStyle('rules_prerender/examples/site/components/base/base.css')}
-        </html>
+<!DOCTYPE html>
+<html comp-base>
+    <head>
+        <title>${title}</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        ${renderHeader()}
+        <div class="main-container">
+            <main>${await main()}</main>
+        </div>
+        ${renderFooter()}
+        ${includeStyle('rules_prerender/examples/site/components/base/base.css')}
+    </body>
+</html>
     `;
 }

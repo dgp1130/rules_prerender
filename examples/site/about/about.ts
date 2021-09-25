@@ -3,8 +3,9 @@ import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the about page. */
-export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/about/index.html', baseLayout('About', () => `
+export default async function*():
+        AsyncGenerator<PrerenderResource, void, void> {
+    yield PrerenderResource.of('/about/index.html', await baseLayout('About', () => `
         <article comp-about>
             <p>This is the about page. It gives additional background on the
             project and this example.</p>

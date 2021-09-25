@@ -44,8 +44,9 @@ export default async function*():
 }
 
 /** Generate and return a resource with the list of posts at the given path. */
-function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
-    return PrerenderResource.of(path, baseLayout('Blog', () => `
+async function generatePostList(path: string, posts: PostMeta[]):
+        Promise<PrerenderResource> {
+    return PrerenderResource.of(path, await baseLayout('Blog', () => `
         <article>
             <p>Check out some blog posts! Each of these pages is authored as
             simple markdown. They are each generated into a full HTML page,
@@ -68,7 +69,7 @@ async function generatePost({ urlPath, title, fileName }: PostMeta):
     });
     const link = srcLink(`/examples/site/blog/posts/${fileName}`);
 
-    return PrerenderResource.of(urlPath, baseLayout(title, () => `
+    return PrerenderResource.of(urlPath, await baseLayout(title, () => `
         <article>
             <p>This post generated from <a href="${link}">${fileName}</a>.</p>
 
