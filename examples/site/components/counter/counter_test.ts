@@ -17,18 +17,20 @@ describe('Counter', () => {
             `http://${devserver.get().host}:${devserver.get().port}/zero.html`,
             { waitUntil: 'load' },
         );
-        
-        const counter = (await page.get().$('site-counter'))!;
+
+        const counter = (await page.get()
+            .evaluateHandle(`document.querySelector('site-counter').shadowRoot`)
+        ).asElement()!;
 
         const initialLbl =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(initialLbl).toBe('The current count is: 0.');
 
         const incrementBtn = (await counter.$('[increment]'))!;
         await incrementBtn.click();
 
         const incrementedLabel =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(incrementedLabel).toBe('The current count is: 1.');
     }, puppeteerTestTimeout);
 
@@ -38,17 +40,19 @@ describe('Counter', () => {
             { waitUntil: 'load' },
         );
         
-        const counter = (await page.get().$('site-counter'))!;
+        const counter = (await page.get()
+            .evaluateHandle(`document.querySelector('site-counter').shadowRoot`)
+        ).asElement()!;
 
         const initialLbl =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(initialLbl).toBe('The current count is: 0.');
 
         const decrementBtn = (await counter.$('[decrement]'))!;
         await decrementBtn.click();
 
         const decrementedLabel =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(decrementedLabel).toBe('The current count is: -1.');
     }, puppeteerTestTimeout);
 
@@ -58,10 +62,12 @@ describe('Counter', () => {
             { waitUntil: 'load' },
         );
         
-        const counter = (await page.get().$('site-counter'))!;
+        const counter = (await page.get()
+            .evaluateHandle(`document.querySelector('site-counter').shadowRoot`)
+        ).asElement()!;
 
         const initialLbl =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(initialLbl).toBe('The current count is: 4.');
 
         // Increment to confirm that the initialized value is actually used.
@@ -69,7 +75,7 @@ describe('Counter', () => {
         await incrementBtn.click();
 
         const incrementedLabel =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(incrementedLabel).toBe('The current count is: 5.');
     }, puppeteerTestTimeout);
 
@@ -79,10 +85,12 @@ describe('Counter', () => {
             { waitUntil: 'load' },
         );
         
-        const counter = (await page.get().$('site-counter'))!;
+        const counter = (await page.get()
+            .evaluateHandle(`document.querySelector('site-counter').shadowRoot`)
+        ).asElement()!;
 
         const initialLbl =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(initialLbl).toBe('The current count is: -7.');
 
         // Increment to confirm that the initialized value is actually used.
@@ -90,7 +98,7 @@ describe('Counter', () => {
         await incrementBtn.click();
 
         const incrementedLabel =
-                await counter.$eval('[label]', (el) => el.textContent);
+            await counter.$eval('[label]', (el) => el.textContent);
         expect(incrementedLabel).toBe('The current count is: -6.');
     }, puppeteerTestTimeout);
 });

@@ -9,6 +9,7 @@
  * initial value. Defaults to `0` if not given.
  */
 export class Counter extends HTMLElement {
+    public shadowRoot!: ShadowRoot; // Assume shadow root is defined.
     private value!: number;
     private removeListeners!: () => void;
 
@@ -19,9 +20,9 @@ export class Counter extends HTMLElement {
         this.value = initial ? parseInt(initial) : 0;
 
         // Find the increment and decrement buttons in the prerendered DOM.
-        const decrementBtn = this.querySelector('button[decrement]');
+        const decrementBtn = this.shadowRoot.querySelector('button[decrement]');
         if (!decrementBtn) throw new Error('No `button[decrement]` element!');
-        const incrementBtn = this.querySelector('button[increment]');
+        const incrementBtn = this.shadowRoot.querySelector('button[increment]');
         if (!incrementBtn) throw new Error('No `button[increment]` element!');
 
         // Attach event listeners.
@@ -44,7 +45,7 @@ export class Counter extends HTMLElement {
     }
 
     private render(): void {
-        const text = this.querySelector('[label]');
+        const text = this.shadowRoot.querySelector('[label]');
         if (!text) throw new Error('No `[label]` element to render to!');
         text.textContent = `The current count is: ${this.value}.`;
     }
