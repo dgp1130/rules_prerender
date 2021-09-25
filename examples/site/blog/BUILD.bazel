@@ -6,7 +6,6 @@ prerender_pages(
     name = "blog",
     src = "blog.ts",
     data = glob(["posts/*.md"]),
-    bundle_js = False, # Optimization: No client-side JavaScript on these pages.
     visibility = ["//examples/site:__pkg__"],
     lib_deps = [
         "//packages/rules_prerender",
@@ -15,7 +14,10 @@ prerender_pages(
         "@npm//@types/markdown-it",
         "@npm//@types/node",
     ],
-    deps = ["//examples/site/components/base"],
+    deps = [
+        "//:declarative_shadow_dom",
+        "//examples/site/components/base",
+    ],
 )
 
 ts_library(

@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import mdLib from 'markdown-it';
 import { PrerenderResource } from 'rules_prerender';
+import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
 import { srcLink } from 'rules_prerender/examples/site/common/links';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 
@@ -47,17 +48,21 @@ export default async function*():
 async function generatePostList(path: string, posts: PostMeta[]):
         Promise<PrerenderResource> {
     return PrerenderResource.of(path, await baseLayout('Blog', () => `
-        <article>
-            <p>Check out some blog posts! Each of these pages is authored as
-            simple markdown. They are each generated into a full HTML page,
-            leveraging shared components and infrastructure.</p>
+<article>
+    <template shadowroot="open">
+        ${polyfillDeclarativeShadowDom()}
 
-            <ul>
-                ${posts.map(({ title, urlPath: path }) => `
-                    <li><a href="${path}">${title}</a></li>
-                `).join('')}
-            </ul>
-        </article>
+        <p>Check out some blog posts! Each of these pages is authored as simple
+        markdown. They are each generated into a full HTML page, leveraging
+        shared components and infrastructure.</p>
+
+        <ul>
+            ${posts.map(({ title, urlPath: path }) => `
+                <li><a href="${path}">${title}</a></li>
+            `).join('')}
+        </ul>
+    </template>
+</article>
     `.trim()));
 }
 
@@ -70,10 +75,14 @@ async function generatePost({ urlPath, title, fileName }: PostMeta):
     const link = srcLink(`/examples/site/blog/posts/${fileName}`);
 
     return PrerenderResource.of(urlPath, await baseLayout(title, () => `
-        <article>
-            <p>This post generated from <a href="${link}">${fileName}</a>.</p>
+<article>
+    <template shadowroot="open">
+        ${polyfillDeclarativeShadowDom()}
 
-            ${mdLib().render(markdown)}
-        </article>
+        <p>This post generated from <a href="${link}">${fileName}</a>.</p>
+
+        ${mdLib().render(markdown)}
+    </template>
+</article>
     `));
 }
