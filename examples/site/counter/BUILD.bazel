@@ -9,6 +9,7 @@ prerender_pages(
     ],
     visibility = ["//examples/site:__pkg__"],
     deps = [
+        "//:declarative_shadow_dom",
         "//examples/site/components/base",
         "//examples/site/components/counter",
     ],
