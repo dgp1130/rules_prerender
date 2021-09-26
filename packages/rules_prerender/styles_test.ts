@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { includeStyle, inlineStyleLegacy } from 'rules_prerender/packages/rules_prerender/styles';
+import { includeStyle, inlineStyle, inlineStyleLegacy } from 'rules_prerender/packages/rules_prerender/styles';
 
 describe('styles', () => {
     describe('includeStyle()', () => {
@@ -8,7 +8,16 @@ describe('styles', () => {
             const annotation = includeStyle('foo/bar/baz.css');
 
             expect(annotation)
-                .toBe('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"style","path":"foo/bar/baz.css"} -->');
+                .toBe('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"style","injection":"bundle","path":"foo/bar/baz.css"} -->');
+        });
+    });
+
+    describe('includeStyle()', () => {
+        it('returns a style annotation in an HTML comment', () => {
+            const annotation = inlineStyle('foo/bar/baz.css');
+
+            expect(annotation)
+                .toBe('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"style","injection":"inline","path":"foo/bar/baz.css"} -->');
         });
     });
 

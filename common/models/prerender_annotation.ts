@@ -56,6 +56,7 @@ export function annotationsEqual(
         } case 'style': {
             const sec = second as StyleAnnotation;
             if (first.path !== sec.path) return false;
+            if (first.injection !== sec.injection) return false;
             return true;
         } default: {
             return assertNever(first);
@@ -89,6 +90,15 @@ export interface StyleAnnotation {
 
     /** A path to the CSS file to include. */
     readonly path: string;
+
+    /** How the CSS file should be injected into the page. */
+    readonly injection: StyleInjection;
+}
+
+/** What strategy to use to inject a style into the page. */
+export enum StyleInjection {
+    Bundle = 'bundle',
+    Inline = 'inline',
 }
 
 function assertNever(value: never): never {

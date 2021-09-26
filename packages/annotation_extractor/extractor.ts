@@ -1,8 +1,8 @@
 import { parse, HTMLElement, Node, CommentNode } from 'node-html-parser';
-import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, parseAnnotation, StyleInjection } from 'rules_prerender/common/models/prerender_annotation';
 
 /**
- * Parses the given string as HTML and return a tuple of the input HTML with
+ * Parses the given string as HTML and returns a tuple of the input HTML with
  * annotation comments removed and a list of those parsed annotations.
  * 
  * @param html The HTML string to parse.
@@ -43,7 +43,15 @@ function* stripAnnotations(
         const annotation = parseAnnotation(comment.text);
         if (!annotation) continue;
         if (!parent) throw new Error('Found comment node with no parent.');
-        parent.removeChild(comment);
+        
+        // We usually remove the annotation because it is no longer necessary,
+        // however an inline style will need to be injected back at this
+        // specific location, so we leave the annotation in that case.
+        if (annotation.type !== 'style'
+                || annotation.injection !== StyleInjection.Inline) {
+            parent.removeChild(comment);
+        }
+
         yield annotation;
     }
 }

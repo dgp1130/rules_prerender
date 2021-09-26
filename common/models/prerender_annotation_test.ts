@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation, StyleInjection } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('prerender_annotation', () => {
     describe('PrerenderAnnotation', () => {
@@ -71,15 +71,27 @@ describe('prerender_annotation', () => {
         });
 
         it('returns `true` when given two equivalent `StyleAnnotations`', () => {
-            const first: StyleAnnotation = { type: 'style', path: 'foo.css' };
-            const second: StyleAnnotation = { type: 'style', path: 'foo.css' };
+            const first: StyleAnnotation = {
+                type: 'style',
+                path: 'foo.css',
+                injection: StyleInjection.Bundle,
+            };
+            const second: StyleAnnotation = {
+                type: 'style',
+                path: 'foo.css',
+                injection: StyleInjection.Bundle,
+            };
 
             expect(annotationsEqual(first, second)).toBeTrue();
         });
 
         it('returns `false` when given different subtypes of `PrerenderAnnotation`', () => {
             const first: ScriptAnnotation = { type: 'script', path: 'foo' };
-            const second: StyleAnnotation = { type: 'style', path: 'foo' };
+            const second: StyleAnnotation = {
+                type: 'style',
+                path: 'foo',
+                injection: StyleInjection.Bundle,
+            };
 
             expect(annotationsEqual(first, second)).toBeFalse();
         });
@@ -92,8 +104,31 @@ describe('prerender_annotation', () => {
         });
 
         it('returns `false` when given different `StyleAnnotations`', () => {
-            const first: StyleAnnotation = { type: 'style', path: 'foo.css' };
-            const second: StyleAnnotation = { type: 'style', path: 'bar.css' };
+            const first: StyleAnnotation = {
+                type: 'style',
+                path: 'foo.css',
+                injection: StyleInjection.Bundle,
+            };
+            const second: StyleAnnotation = {
+                type: 'style',
+                path: 'bar.css',
+                injection: StyleInjection.Bundle,
+            };
+
+            expect(annotationsEqual(first, second)).toBeFalse();
+        });
+
+        it('returns `false` when given different `StyleAnnotation` injections', () => {
+            const first: StyleAnnotation = {
+                type: 'style',
+                path: 'foo.css',
+                injection: StyleInjection.Bundle,
+            };
+            const second: StyleAnnotation = {
+                type: 'style',
+                path: 'foo.css',
+                injection: StyleInjection.Inline,
+            };
 
             expect(annotationsEqual(first, second)).toBeFalse();
         });
