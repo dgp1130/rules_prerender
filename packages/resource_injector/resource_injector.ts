@@ -12,7 +12,10 @@ main(async () => {
         'input-dir': inputDir,
         config: configFile,
         bundle,
+        dep: deps,
         'output-dir': outputDir,
+        'inline-root': inlineRoot,
+        workspace,
     } = yargs.usage(mdSpacing(`
             Injects web resources specified by the config file into all the HTML
             files within the input directory and writes them to the same
@@ -53,6 +56,23 @@ main(async () => {
             description: mdSpacing(`
                 Path to the output directory to write the output files to.
             `),
+        })
+        .option('dep', {
+            type: 'string',
+            description: mdSpacing(`
+                Path to a CSS dependency that may be inlined into the page.
+            `),
+        })
+        .array('dep')
+        .option('inline-root', {
+            type: 'string',
+            required: true,
+            description: 'Root directory of all inline styles.',
+        })
+        .option('workspace', {
+            type: 'string',
+            required: true,
+            description: 'The workspace this target is executing in.',
         })
         .argv;
 
@@ -100,7 +120,7 @@ main(async () => {
             });
 
             // Inject the requested resources into the HTML content.
-            const output = await inject(input, config);
+            const output = await inject(input, config, new Set(deps), inlineRoot, workspace);
 
             // Write the output HTML to the corresponding location in the
             // output directory.

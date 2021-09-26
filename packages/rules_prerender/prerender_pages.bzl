@@ -165,7 +165,10 @@ def prerender_pages(
         input_dir = ":%s" % prerender_name,
         bundle = ":%s" % bundle if bundle_js else None,
         styles = [bundled_css] if bundle_css else [],
+        # TODO: Handle different configuration?
+        inline_root = "%s/%s_inlineable" % (native.package_name(), prerender_name),
         testonly = testonly,
+        deps = [":%s_inlineable" % prerender_name],
     )
 
     # Output a resources directory of the HTML, bundled JavaScript, and any

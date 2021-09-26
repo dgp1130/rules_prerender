@@ -40,9 +40,9 @@ function* stripAnnotations(
     comments: Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]>,
 ): Iterable<PrerenderAnnotation> {
     for (const [ comment, parent ] of comments) {
+        if (!parent) throw new Error('Found comment node with no parent.');
         const annotation = parseAnnotation(comment.text);
         if (!annotation) continue;
-        if (!parent) throw new Error('Found comment node with no parent.');
         
         // We usually remove the annotation because it is no longer necessary,
         // however an inline style will need to be injected back at this

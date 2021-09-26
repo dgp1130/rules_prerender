@@ -219,11 +219,15 @@ def prerender_pages_unbundled(
     # step.
     # TODO: Maybe we should process the entry point now as it could be more
     # optimal?
+    # TODO: Maybe we should process each source file in the
+    # `prerender_component()` so they have consistent paths and make file
+    # resolution easier? That would prevent a single style from being used in
+    # multiple components however.
     inlineable_styles = "%s_inlineable" % name
     postcss_multi_binary(
         name = inlineable_styles,
         srcs = [":%s" % inlineable_styles_filegroup],
-        output_pattern = "{rule}/{name}",
+        output_pattern = "{rule}/{dir}/{name}",
         sourcemap = True,
         plugins = {
             "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,

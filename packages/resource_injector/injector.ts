@@ -1,6 +1,8 @@
+import * as path from 'path';
+import { HTMLElement, parse, CommentNode, Node } from 'node-html-parser';
 import * as fs from 'rules_prerender/common/fs';
-import { HTMLElement, parse } from 'node-html-parser';
 import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packages/resource_injector/config';
+import { parseAnnotation, StyleInjection } from 'rules_prerender/common/models/prerender_annotation';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the
@@ -13,8 +15,13 @@ import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packa
  *     injected into the HTML document.
  * @returns A new HTML document with all the resources injected into it.
  */
-export async function inject(html: string, config: InjectorConfig):
-        Promise<string> {
+export async function inject(
+    html: string,
+    config: InjectorConfig,
+    deps: Set<string>,
+    inlineRoot: string,
+    workspace: string,
+): Promise<string> {
     // Parse input HTML.
     const root = parse(html, {
         comment: true,
@@ -40,6 +47,8 @@ export async function inject(html: string, config: InjectorConfig):
             }
         }
     }
+
+    await injectInlineStyles(root, deps, inlineRoot, workspace);
 
     // Return the new document.
     return root.toString();
@@ -113,6 +122,93 @@ async function injectStyle(root: HTMLElement, { path }: InjectStyle):
 
     // Insert a trailing newline so subsequent insertions look a little better.
     style.insertAdjacentHTML('afterend', '\n');
+}
+
+async function injectInlineStyles(
+    root: HTMLElement,
+    deps: Set<string>,
+    inlineRoot: string,
+    workspace: string,
+): Promise<void> {
+    const depMap = genDepMap(deps, inlineRoot, workspace);
+
+    for (const [ comment, parent ] of walkComments(walk(root))) {
+        if (!parent) throw new Error('Found comment node with no parent.');
+        const annotation = parseAnnotation(comment.text);
+        if (!annotation) continue; // Ignore if not an annotation.
+
+        // Ignore annotations that aren't inline style injections.
+        if (annotation.type !== 'style'
+                || annotation.injection !== StyleInjection.Inline) {
+            continue;
+        }
+
+        // Replace the annotation with the an inline `<style></style>` tag.
+        const path = depMap.get(annotation.path);
+        if (!path) throw new Error(`Failed to resolve inline style \`${
+            annotation.path}\`. Possible files include:\n${
+            Array.from(depMap.entries()).map(([rootRelative]) => rootRelative).join('\n')}`);
+        const css = await fs.readFile(depMap.get(annotation.path)!, 'utf8');
+        const style = new HTMLElement('style', {}, undefined, parent);
+        style.set_content(css);
+        parent.exchangeChild(comment, style);
+    }
+}
+
+/**
+ * Filters the given {@link Iterable} of {@link Node} to limit to only comment
+ * nodes.
+ */
+function* walkComments(
+    nodes: Iterable<[ Node, HTMLElement | undefined /* parent */ ]>,
+): Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]> {
+    for (const [ node, parent ] of nodes) {
+        if (node instanceof CommentNode) {
+            yield [ node, parent ];
+        }
+    }
+}
+
+/**
+ * Returns an {@link Iterable} of all the {@link Node} descendants of the given
+ * root and their parent.
+ */
+function* walk(root: Node, parent?: HTMLElement):
+        Iterable<[ Node, HTMLElement | undefined /* parent */ ]> {
+    yield [ root, parent ];
+    if (root instanceof HTMLElement) {
+        for (const node of root.childNodes) {
+            yield* walk(node, root);
+        }
+    }
+}
+
+function genDepMap(
+    deps: Set<string>,
+    inlineRoot: string,
+    workspace: string,
+): Map<string, string> {
+    const depMap = new Map<string, string>();
+
+    for (const dep of deps) {
+        // TODO: External dependencies.
+        const rootRelative = dep.startsWith('bazel-out')
+            ? dep.split('/').slice(3).join('/')
+            : dep;
+        if (!rootRelative.startsWith(inlineRoot)) {
+            throw new Error(`CSS dependency \`${dep}\` is not under inline root \`${inlineRoot}\`.`);
+        }
+        const inlineRootRelative = rootRelative.slice(inlineRoot.length);
+        const execrootRelative = path.join(workspace, inlineRootRelative);
+
+        // Check for duplicates.
+        const existing = depMap.get(execrootRelative);
+        if (existing) throw new Error(`Multiple files resolved root-relative paths to ${rootRelative}: \`${existing}\` and \`${dep}\`. Only one is allowed.`);
+
+        depMap.set(execrootRelative, dep);
+    }
+
+    return depMap;
 }
 
 function assertNever(value: never): never {

@@ -23,6 +23,9 @@ def _multi_inject_resources_impl(ctx):
     if ctx.attr.bundle:
         args.add("--bundle", ctx.file.bundle.path)
     args.add("--output-dir", output_dir.path)
+    args.add_all(ctx.files.deps, before_each = "--dep") # TODO: Filter out sourcemaps.
+    args.add("--inline-root", ctx.attr.inline_root)
+    args.add("--workspace", ctx.workspace_name)
     ctx.actions.run(
         mnemonic = "MultiInjectResources",
         progress_message = "Injecting resources into multiple pages",
@@ -30,7 +33,7 @@ def _multi_inject_resources_impl(ctx):
         arguments = [args],
         inputs = [ctx.file.input_dir, config] +
                  ([ctx.file.bundle] if ctx.file.bundle else []) +
-                 ctx.files.styles,
+                 ctx.files.styles + ctx.files.deps,
         outputs = [output_dir],
     )
 
@@ -49,6 +52,8 @@ multi_inject_resources = rule(
         "bundle": attr.label(allow_single_file = True),
         "scripts": attr.string_list(),
         "styles": attr.label_list(allow_files = True),
+        "inline_root": attr.string(mandatory = True),
+        "deps": attr.label_list(),
         "_injector": attr.label(
             default = "//tools/internal:resource_injector",
             executable = True,
