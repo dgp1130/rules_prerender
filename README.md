@@ -378,7 +378,9 @@ bazel test //...
 
 Prefer using `bazel run @nodejs//:npm -- ...` and
 `bazel run @nodejs//:node -- ...` over using `npm` and `node` directly so they
-are strongly versioned with the repository.
+are strongly versioned with the repository. Alternatively, you can install
+[`nvm`](https://github.com/nvm-sh/nvm) and run `nvm use` to switch the `node`
+and `npm` commands to use the correct versions in this repository.
 
 NOTE: If you encounter "Missing inputs" errors from `fsevents` or other optional
 dependencies, make sure you are using `npm ci` instead of `npm install`.
