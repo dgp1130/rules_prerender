@@ -182,6 +182,12 @@ def prerender_pages_unbundled(
         visibility = visibility,
     )
 
+    # TODO: Inlined styles are listed in metadata.json. Need a way to get them
+    # into `postcss_multi_binary()`'s entry points. But execution-time entry
+    # points doesn't seem to be supported? Maybe postcss could support
+    # analysis-time entry points and dump all the inlined CSS files into their
+    # own directory, then `args.add_all()` as a workaround?
+
     # Reexport all transitive resources at `%{name}_resources`.
     output_resources = "%s_resources" % name
     web_resources(
