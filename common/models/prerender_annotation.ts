@@ -74,10 +74,10 @@ export type PrerenderAnnotation = ScriptAnnotation | StyleAnnotation;
  * HTML page.
  */
 export interface ScriptAnnotation {
-    type: 'script';
+    readonly type: 'script';
 
     /** A path to the JavaScript file to include. */
-    path: string;
+    readonly path: string;
 }
 
 /**
@@ -85,10 +85,10 @@ export interface ScriptAnnotation {
  * page.
  */
 export interface StyleAnnotation {
-    type: 'style',
+    readonly type: 'style';
 
     /** A path to the CSS file to include. */
-    path: string;
+    readonly path: string;
 }
 
 function assertNever(value: never): never {
