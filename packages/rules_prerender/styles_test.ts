@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { includeStyle, inlineStyle } from 'rules_prerender/packages/rules_prerender/styles';
+import { includeStyle, inlineStyleLegacy } from 'rules_prerender/packages/rules_prerender/styles';
 
 describe('styles', () => {
     describe('includeStyle()', () => {
@@ -12,9 +12,9 @@ describe('styles', () => {
         });
     });
 
-    describe('inlineStyle()', () => {
+    describe('inlineStyleLegacy()', () => {
         it('resolves to a `<style />` element with the runfiles content of the given file path', async () => {
-            const styles = await inlineStyle(
+            const styles = await inlineStyleLegacy(
                 'rules_prerender/packages/rules_prerender/testdata/styles.css');
             expect(styles).toBe(`
 <style>
@@ -25,8 +25,8 @@ describe('styles', () => {
         });
 
         it('rejects when the given file path is not found in runfiles', async () => {
-            await expectAsync(inlineStyle('rules_prerender/does/not/exist.css'))
-                .toBeRejected();
+            await expectAsync(inlineStyleLegacy(
+                'rules_prerender/does/not/exist.css')).toBeRejected();
         });
     });
 });
