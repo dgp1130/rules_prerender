@@ -31,13 +31,21 @@ describe('Declarative Shadow DOM', () => {
             { waitUntil: 'load' },
         );
 
-        const shadowDiv = await page.get().evaluateHandle(
-            'document.querySelector("#component").shadowRoot.querySelector("div")');
-        expect(await shadowDiv.evaluate((el) => el.textContent))
-            .toBe('Shadow content');
-        const shadowDivColor =
-                await shadowDiv.evaluate((el) => getComputedStyle(el).color);
-        expect(shadowDivColor).toBe('rgb(255, 0, 0)'); // Red.
+        const shadowRedDiv = await page.get().evaluateHandle(
+            'document.querySelector("#component").shadowRoot.querySelector("div.red")');
+        expect(await shadowRedDiv.evaluate((el) => el.textContent))
+            .toBe('Red shadow content');
+        const shadowRedDivColor =
+                await shadowRedDiv.evaluate((el) => getComputedStyle(el).color);
+        expect(shadowRedDivColor).toBe('rgb(255, 0, 0)'); // Red.
+
+        const shadowBlueDiv = await page.get().evaluateHandle(
+            'document.querySelector("#component").shadowRoot.querySelector("div.blue")');
+        expect(await shadowBlueDiv.evaluate((el) => el.textContent))
+            .toBe('Blue shadow content');
+        const shadowBlueDivColor =
+                await shadowBlueDiv.evaluate((el) => getComputedStyle(el).color);
+        expect(shadowBlueDivColor).toBe('rgb(0, 0, 255)'); // Blue.
 
         const lightDivText = await page.get().$eval(
             '#component div', (el) => el.textContent);

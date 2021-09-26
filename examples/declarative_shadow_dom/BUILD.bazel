@@ -17,7 +17,10 @@ prerender_pages(
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
-    styles = ["component.css"],
+    styles = [
+        "component.css",
+        "dep.css",
+    ],
     lib_deps = ["//packages/rules_prerender"],
     deps = ["//:declarative_shadow_dom"],
 )

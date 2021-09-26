@@ -4,6 +4,10 @@
  * component DOM
  */
 
-div {
+/* Test that `@import` resolve correctly for inlined styles. */
+/* TODO: This breaks declarative light DOM until it is properly inlined. */
+@import 'rules_prerender/examples/declarative_shadow_dom/dep.css';
+
+.red {
     color: red;
 }

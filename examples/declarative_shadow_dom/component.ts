@@ -17,7 +17,8 @@ export async function renderComponent(lightDom: string): Promise<string> {
 
                 <!-- Shadow DOM content, styled with the associated style
                 sheet. -->
-                <div>Shadow content</div>
+                <div class="red">Red shadow content</div>
+                <div class="blue">Blue shadow content</div>
 
                 <!-- Slot to insert the associated light DOM. -->
                 <slot></slot>
