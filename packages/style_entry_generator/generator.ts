@@ -1,7 +1,8 @@
+import { StyleInjection } from 'rules_prerender/common/models/prerender_annotation';
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 /**
- * Generates a CSS entry point which imports all the styles in the given
+ * Generates a CSS entry point which imports all the styles bundled in the given
  * {@link PrerenderMetadata} object.
  * 
  * @param metadata Contains all the styles to import in the resulting entry
@@ -11,6 +12,7 @@ import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metad
  */
 export function generateEntryPoint(metadata: PrerenderMetadata): string {
     return metadata.styles
+        .filter((style) => style.injection === StyleInjection.Bundle)
         .map((style) => `@import '${style.path}';`)
         .join('\n');
 }

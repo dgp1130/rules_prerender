@@ -1,3 +1,5 @@
+import { StyleInjection } from 'rules_prerender/common/models/prerender_annotation';
+
 /** Metadata about a prerendered HTML file. */
 export interface PrerenderMetadata {
     /** Scripts to include. */
@@ -17,4 +19,7 @@ export interface ScriptMetadata {
 export interface StyleMetadata {
     /** The path of the style to include. */
     readonly path: string;
+
+    /** The injection strategy for this CSS file. */
+    readonly injection: StyleInjection;
 }

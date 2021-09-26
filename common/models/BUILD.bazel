@@ -34,6 +34,7 @@ ts_library(
     name = "prerender_metadata",
     srcs = ["prerender_metadata.ts"],
     visibility = ["//visibility:public"],
+    deps = [":prerender_annotation"],
 )
 
 ts_library(
@@ -56,7 +57,10 @@ ts_library(
     srcs = ["prerender_metadata_mock.ts"],
     testonly = True,
     visibility = ["//visibility:public"],
-    deps = [":prerender_metadata"],
+    deps = [
+        ":prerender_annotation",
+        ":prerender_metadata",
+    ],
 )
 
 ts_library(

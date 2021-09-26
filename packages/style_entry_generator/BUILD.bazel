@@ -49,7 +49,10 @@ jasmine_node_test(
 ts_library(
     name = "generator",
     srcs = ["generator.ts"],
-    deps = ["//common/models:prerender_metadata"],
+    deps = [
+        "//common/models:prerender_annotation",
+        "//common/models:prerender_metadata",
+    ],
 )
 
 ts_library(
@@ -58,6 +61,7 @@ ts_library(
     testonly = True,
     deps = [
         ":generator",
+        "//common/models:prerender_annotation",
         "//common/models:prerender_metadata_mock",
         "@npm//@types/jasmine",
     ],
