@@ -1,9 +1,11 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
+load("@npm//@bazel/postcss:index.bzl", "postcss_multi_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
 load(":entry_points.bzl", "script_entry_point", "style_entry_point")
+load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
@@ -187,6 +189,48 @@ def prerender_pages_unbundled(
     # points doesn't seem to be supported? Maybe postcss could support
     # analysis-time entry points and dump all the inlined CSS files into their
     # own directory, then `args.add_all()` as a workaround?
+
+    # `postcss_multi_binary()` requires at least one input CSS file, but we
+    # can't know if any files will be included or not. So we always generate one
+    # empty one and just ignore it.
+    empty_style = "%s_rules_prerender_empty_css_file_do_not_depend_or_else" % name
+    native.genrule(
+        name = empty_style,
+        srcs = [],
+        outs = ["%s.css" % empty_style],
+        cmd = "touch $@",
+        testonly = testonly,
+    )
+
+    # Merge empty style with deps so `postcss_multi_binary()` won't know there's
+    # a target that might not generate any CSS files.
+    inlineable_styles_filegroup = "%s_inlineable_filegroup" % name
+    native.filegroup(
+        name = inlineable_styles_filegroup,
+        srcs = [
+            ":%s" % component_styles,
+            ":%s" % empty_style,
+        ],
+        testonly = testonly,
+    )
+
+    # Process every style as an entry point in case they are inlined later.
+    # Don't include the generated entry point becuase that's used at the bundle
+    # step.
+    # TODO: Maybe we should process the entry point now as it could be more
+    # optimal?
+    inlineable_styles = "%s_inlineable" % name
+    postcss_multi_binary(
+        name = inlineable_styles,
+        srcs = [":%s" % inlineable_styles_filegroup],
+        output_pattern = "{rule}/{name}",
+        sourcemap = True,
+        plugins = {
+            "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
+        },
+        testonly = testonly,
+        deps = [":%s" % component_styles],
+    )
 
     # Reexport all transitive resources at `%{name}_resources`.
     output_resources = "%s_resources" % name
