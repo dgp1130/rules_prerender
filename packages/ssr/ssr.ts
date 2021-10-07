@@ -1,0 +1,52 @@
+import * as fs from 'rules_prerender/common/fs';
+import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+
+// TODO: Accept a path and read from it or just accept a file to begin with?
+export async function* render(path: string):
+        AsyncGenerator<string, void, void> {
+    const html = await fs.readFile(path, 'utf8'); // TODO: Binary? Read in chunks?
+    const chunks = parseHtml(html);
+    for (const chunk of chunks) {
+        if (typeof chunk === 'string') {
+            yield chunk;
+        } else {
+            const { component, data } = chunk;
+            yield renderComponent(component, data);
+        }
+    }
+}
+
+// TODO: `data` as `JsonSerializable`?
+function renderComponent(component: string, data: unknown): string {
+    return `<div>Rendered ${component}</div>`;
+}
+
+// TODO: Something more sophisticated?
+const annotationExtractor =
+    /<!--(?<annotation> *bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - [^\n]*)-->/g;
+function* parseHtml(html: string):
+        Generator<string | SsrAnnotation, void, void> {
+    let lastIndex = 0;
+    let match: RegExpExecArray | null = null;
+    while ((match = annotationExtractor.exec(html)) !== null) {
+        // Emit previous prerendered chunk.
+        yield html.slice(lastIndex, match.index);
+
+        // Parse annotation and emit it.
+        const annotationText = match.groups?.['annotation'] as string;
+        const annotation = parseAnnotation(annotationText);
+        if (!annotation) {
+            throw new Error(`Failed to parse annotation: ${
+                annotationText} at index ${match.index}-${
+                annotationExtractor.lastIndex}`);
+        }
+        if (annotation.type !== 'ssr') {
+            throw new Error(`Found a non-SSR annotation: ${annotationText}.`);
+        }
+        yield annotation;
+        lastIndex = annotationExtractor.lastIndex;
+    }
+
+    // Emit final prerendered chunk.
+    yield html.slice(lastIndex);
+}

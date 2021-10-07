@@ -57,6 +57,12 @@ export function annotationsEqual(
             const sec = second as StyleAnnotation;
             if (first.path !== sec.path) return false;
             return true;
+        } case 'ssr': {
+            const sec = second as SsrAnnotation;
+            if (first.component !== sec.component) return false;
+            // TODO: Better deep equals?
+            if (JSON.stringify(first.data) !== JSON.stringify(sec.data)) return false;
+            return true;
         } default: {
             return assertNever(first);
         }
@@ -67,7 +73,10 @@ export function annotationsEqual(
  * An annotation to be used by the build process to include external resources
  * in the final generated HTML page.
  */
-export type PrerenderAnnotation = ScriptAnnotation | StyleAnnotation;
+export type PrerenderAnnotation =
+    | ScriptAnnotation
+    | StyleAnnotation
+    | SsrAnnotation;
 
 /**
  * An annotation of a JavaScript resource to be included in the final generated
@@ -89,6 +98,15 @@ export interface StyleAnnotation {
 
     /** A path to the CSS file to include. */
     readonly path: string;
+}
+
+export interface SsrAnnotation {
+    readonly type: 'ssr';
+
+    readonly component: string;
+
+    // TODO: `data` as `JsonSerializable`?
+    readonly data: unknown;
 }
 
 function assertNever(value: never): never {

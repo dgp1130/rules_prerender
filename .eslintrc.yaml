@@ -40,6 +40,8 @@ rules:
   no-constant-condition:
   - error
   - checkLoops: false # `while (true) { /* ... */ }` is ok.
+  require-yield:
+  - off
 
 # Enable TypeScript rules only for `*.ts` files.
 overrides:
