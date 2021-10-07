@@ -19,16 +19,45 @@ export async function* render(path: string):
             if (!comp) {
                 throw new Error(`Failed to resolve component "${component}", was it registered?`);
             }
-            yield await comp.render();
+            yield* normalize(comp.render());
         }
     }
 }
 
+/** TODO */
+async function* normalize<T>(
+    input: T | Promise<T> | Generator<T, void, void> | AsyncGenerator<T, void, void>,
+): AsyncGenerator<T, void, void> {
+    if (typeof input === 'string') {
+        yield input; // Special case string, which is technically `Iterable`.
+    } else if (input instanceof Promise) {
+        yield await input;
+    } else if (isIterable(input)) { // TODO: Doesn't match renderer's implementation?
+        yield* input as Generator<T, void, void>;
+    } else if (isAsyncIterable(input)) {
+        yield* input as AsyncGenerator<T, void, void>;
+    } else {
+        yield input;
+    }
+}
+
+function isIterable(input: unknown): input is Iterable<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((input as any)[Symbol.iterator]) return true;
+    return false;
+}
+
+function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((input as any)[Symbol.asyncIterator]) return true;
+    return false;
+}
+
 // TODO: Something more sophisticated?
-const annotationExtractor =
-    /<!--(?<annotation> *bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - [^\n]*)-->/g;
 function* parseHtml(html: string):
-        Generator<string | SsrAnnotation, void, void> {
+        Generator<string | SsrAnnotation, void, void> {    
+    const annotationExtractor =
+        /<!--(?<annotation> *bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - [^\n]*)-->/g;
     let lastIndex = 0;
     let match: RegExpExecArray | null = null;
     while ((match = annotationExtractor.exec(html)) !== null) {
