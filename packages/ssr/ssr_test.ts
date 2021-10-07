@@ -7,17 +7,19 @@ describe('ssr', () => {
     describe('render()', () => {
         it('renders the given path', async () => {
             spyOn(fs, 'readFile').and.resolveTo(`
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
     <head>
         <title>Test</title>
     </head>
     <body>
-        <div>First chunk</div>
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type": "ssr", "component": "foo", "data": {}} -->
-        <div>Second chunk</div>
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type": "ssr", "component": "bar", "data": {}} -->
-        <div>Third chunk</div>
+        <ul>
+            <li>First chunk</li>
+            <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type": "ssr", "component": "foo", "data": {}} -->
+            <li>Second chunk</li>
+            <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type": "ssr", "component": "bar", "data": {}} -->
+            <li>Third chunk</li>
+        </ul>
     </body>
 </html>
             `.trim());
@@ -25,17 +27,19 @@ describe('ssr', () => {
             const rendered = await concatAll(render('/foo.html'));
 
             expect(rendered).toBe(`
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
     <head>
         <title>Test</title>
     </head>
     <body>
-        <div>First chunk</div>
-        <div>Rendered foo</div>
-        <div>Second chunk</div>
-        <div>Rendered bar</div>
-        <div>Third chunk</div>
+        <ul>
+            <li>First chunk</li>
+            <li>Rendered foo</li>
+            <li>Second chunk</li>
+            <li>Rendered bar</li>
+            <li>Third chunk</li>
+        </ul>
     </body>
 </html>
             `.trim());

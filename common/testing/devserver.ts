@@ -122,7 +122,7 @@ export class Server {
         // instead. `await`-ing here propagates such an error to the caller of
         // `spawn()` rather than triggering an uncaught rejection.
         await Promise.race([
-            untilHealthy(new URL(`http://localhost:${port}/`)),
+            untilHealthy(new URL(`http://localhost:${port}/index.html`)), // DEBUG
             serverPromise,
         ]);
     

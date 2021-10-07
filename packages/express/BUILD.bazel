@@ -1,0 +1,61 @@
+# TODO: Separate `package.json` files for each package so only this depends on
+# `express`.
+
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+ts_library(
+    name = "express",
+    srcs = ["express.ts"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//packages/ssr",
+        "@npm//@types/express",
+        "@npm//@types/node",
+        "@npm//express",
+    ],
+)
+
+ts_library(
+    name = "express_test_lib",
+    srcs = ["express_test.ts"],
+    testonly = True,
+    data = [":express_test_server"],
+    deps = [
+        "//common/testing:devserver",
+        "@npm//axios",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/node",
+        "@npm//@types/jasmine",
+        "@npm//node-html-parser",
+    ],
+)
+
+jasmine_node_test(
+    name = "express_test",
+    deps = [":express_test_lib"],
+)
+
+ts_library(
+    name = "express_test_server_lib",
+    srcs = ["express_test_server.ts"],
+    testonly = True,
+    data = ["//packages/express/testdata"],
+    deps = [
+        ":express",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/express",
+        "@npm//@types/yargs",
+        "@npm//express",
+        "@npm//yargs",
+    ],
+)
+
+nodejs_binary(
+    name = "express_test_server",
+    entry_point = ":express_test_server.ts",
+    data = [":express_test_server_lib"],
+    templated_args = ["--bazel_patch_module_resolver"],
+    testonly = True,
+)

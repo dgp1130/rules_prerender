@@ -5,12 +5,12 @@ import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
 const componentMap = new ComponentMap();
 componentMap.register('foo', (data) => ({
     render() {
-        return '<div>Rendered foo</div>';
+        return '<li>Rendered foo</li>';
     }
 }));
 componentMap.register('bar', (data) => ({
     render() {
-        return '<div>Rendered bar</div>';
+        return '<li>Rendered bar</li>';
     }
 }));
 

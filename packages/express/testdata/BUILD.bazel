@@ -1,0 +1,6 @@
+filegroup(
+    name = "testdata",
+    srcs = glob(["**"]),
+    testonly = True,
+    visibility = ["//packages/express:__pkg__"],
+)
