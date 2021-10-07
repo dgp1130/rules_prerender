@@ -10,7 +10,15 @@ registerComponent('foo', (data) => {
 });
 
 registerComponent('bar', (data) => ({
-    render() {
+    async render() {
+        await timeout(3_000); // Simulate a very slow component.
+
         return '<li>Rendered bar</li>';
     }
 }));
+
+function timeout(millis: number): Promise<void> {
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(), millis);
+    });
+}

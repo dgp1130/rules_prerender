@@ -26,9 +26,9 @@ describe('ssr', () => {
             <li>First chunk</li>
             <li>Foo component says "Hello, World!"</li>
             <li>Second chunk</li>
+            <li>Rendered bar</li>
             <li>Foo component says "Hello, Another World!"</li>
             <li>Third chunk</li>
-            <li>Rendered bar</li>
         </ul>
     </body>
 </html>

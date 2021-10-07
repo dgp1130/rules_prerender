@@ -19,7 +19,7 @@ export async function* render(path: string):
             if (!comp) {
                 throw new Error(`Failed to resolve component "${component}", was it registered?`);
             }
-            yield comp.render();
+            yield await comp.render();
         }
     }
 }
