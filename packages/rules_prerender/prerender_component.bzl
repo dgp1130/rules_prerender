@@ -21,6 +21,7 @@ def prerender_component(
     scripts = [],
     styles = [],
     resources = [],
+    ssr = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -53,6 +54,7 @@ def prerender_component(
             included in the prerendered HTML.
         resources: List of `web_resources()` required by this component at
             runtime.
+        ssr: TODO
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -129,6 +131,14 @@ which are always allowed).
         testonly = testonly,
         visibility = visibility,
         deps = resources + ["%s_resources" % absolute(dep) for dep in deps],
+    )
+
+    _js_reexport(
+        name = "%s_ssr" % name,
+        srcs = ssr,
+        deps = ["%s_ssr" % absolute(dep) for dep in deps],
+        testonly = testonly,
+        visibility = visibility,
     )
 
 def _js_reexport_impl(ctx):

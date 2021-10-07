@@ -59,3 +59,16 @@ nodejs_binary(
     templated_args = ["--bazel_patch_module_resolver"],
     testonly = True,
 )
+
+ts_library(
+    name = "host",
+    srcs = ["host.ts"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":express",
+        "@npm//@types/express",
+        "@npm//@types/yargs",
+        "@npm//express",
+        "@npm//yargs",
+    ],
+)

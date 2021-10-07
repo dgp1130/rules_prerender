@@ -16,6 +16,7 @@ ts_library(
     visibility = ["//visibility:public"],
     deps = [
         ":scripts",
+        ":ssr",
         ":styles",
         "//common/models:prerender_resource",
     ],
@@ -166,6 +167,12 @@ ts_library(
 jasmine_node_test(
     name = "scripts_test",
     deps = [":scripts_test_lib"],
+)
+
+ts_library(
+    name = "ssr",
+    srcs = ["ssr.ts"],
+    deps = ["//common/models:prerender_annotation"],
 )
 
 ts_library(

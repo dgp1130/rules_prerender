@@ -43,7 +43,7 @@ function* stripAnnotations(
         const annotation = parseAnnotation(comment.text);
         if (!annotation) continue;
         if (!parent) throw new Error('Found comment node with no parent.');
-        parent.removeChild(comment);
+        if (annotation.type !== 'ssr') parent.removeChild(comment);
         yield annotation;
     }
 }

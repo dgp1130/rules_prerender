@@ -3,16 +3,7 @@ import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/pr
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
 
 const componentMap = new ComponentMap();
-componentMap.register('foo', (data) => ({
-    render() {
-        return '<li>Rendered foo</li>';
-    }
-}));
-componentMap.register('bar', (data) => ({
-    render() {
-        return '<li>Rendered bar</li>';
-    }
-}));
+export const registerComponent = componentMap.register.bind(componentMap);
 
 // TODO: Accept a path and read from it or just accept a file to begin with?
 export async function* render(path: string):

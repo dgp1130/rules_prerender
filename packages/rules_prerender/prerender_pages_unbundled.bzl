@@ -1,6 +1,7 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:providers.bzl", "JSModuleInfo")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
 load(":entry_points.bzl", "script_entry_point", "style_entry_point")
@@ -17,6 +18,7 @@ def prerender_pages_unbundled(
     scripts = [],
     styles = [],
     resources = [],
+    ssr = [],
     deps = [],
     testonly = None,
     visibility = None,
@@ -66,6 +68,7 @@ def prerender_pages_unbundled(
             the page.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
+        %{name}_ssr: TODO
         %{name}_prerender_for_test: An alias to the `ts_library()` target which
             compiles the `src` of this macro marked as `testonly`. This provides
             a simple hook for unit testing prerender logic.
@@ -84,6 +87,7 @@ def prerender_pages_unbundled(
             prerendered HTML files.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
+        ssr: TODO
         deps: `prerender_component()` dependencies for the generated pages.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
@@ -99,6 +103,7 @@ def prerender_pages_unbundled(
         scripts = scripts,
         styles = styles,
         resources = resources,
+        ssr = ssr,
         deps = deps,
         testonly = testonly,
     )
@@ -190,6 +195,39 @@ def prerender_pages_unbundled(
         testonly = testonly,
         visibility = visibility,
     )
+
+    _ssr_entry_point(
+        name = "%s_ssr_entry_point" % name,
+        output = "%s_ssr.js" % name,
+        dep = ":%s_ssr" % component,
+        testonly = testonly,
+    )
+
+    js_library(
+        name = "%s_ssr" % name,
+        srcs = ["%s_ssr.js" % name],
+        deps = [":%s_ssr" % component],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+def _ssr_entry_point_impl(ctx):
+    files = [source for source in ctx.attr.dep[JSModuleInfo].direct_sources.to_list()]
+    # TODO: Support files from other workspaces.
+    imports = ["require('%s/%s');" % (ctx.workspace_name, file.short_path) for file in files]
+
+    ctx.actions.write(ctx.outputs.output, "\n".join(imports))
+
+_ssr_entry_point = rule(
+    implementation = _ssr_entry_point_impl,
+    attrs = {
+        "dep": attr.label(
+            mandatory = True,
+            providers = [JSModuleInfo],
+        ),
+        "output": attr.output(mandatory = True),
+    },
+)
 
 def _multi_extract_annotations_impl(ctx):
     """Invokes the multi annotation extractor and returns the new directory.

@@ -1,5 +1,6 @@
 """Defines `prerender_pages()` functionality."""
 
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load(
     "@build_bazel_rules_nodejs//:providers.bzl",
     "JSEcmaScriptModuleInfo",
@@ -21,6 +22,7 @@ def prerender_pages(
     scripts = [],
     styles = [],
     resources = [],
+    ssr = [],
     deps = [],
     bundle_js = True,
     bundle_css = True,
@@ -97,6 +99,7 @@ def prerender_pages(
             prerendered HTML files.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
+        ssr: TODO
         deps: `prerender_component()` dependencies for the generated pages.
         bundle_js: Whether or not to bundle and inject JavaScript files.
             Defaults to `True`.
@@ -116,6 +119,7 @@ def prerender_pages(
         scripts = scripts,
         styles = styles,
         resources = resources,
+        ssr = ssr,
         deps = deps,
         testonly = testonly,
         visibility = visibility,
@@ -178,4 +182,37 @@ def prerender_pages(
             ":%s" % injected_dir,
             ":%s_resources" % prerender_name,
         ],
+    )
+
+    native.genrule(
+        name = "%s_server_entry_point" % name,
+        srcs = [],
+        outs = ["%s_server.js" % name],
+        cmd = """
+            echo "const {{ runfiles }} = require('@bazel/runfiles');" >> $@
+            echo "require('rules_prerender/{package}/{prerender_name}_ssr.js');" >> $@
+            echo "const {{ main }} = require('rules_prerender/packages/express/host');" >> $@
+            echo "" >> $@
+            echo "main(runfiles.resolvePackageRelative('{name}'));" >> $@
+        """.format(
+            package = native.package_name(),
+            name = name,
+            prerender_name = prerender_name
+        ),
+        testonly = testonly,
+    )
+
+    nodejs_binary(
+        name = "%s_server" % name,
+        entry_point = "%s_server.js" % name,
+        data = [
+            ":%s" % name, # Application files to serve.
+            ":%s_ssr" % prerender_name, # Prerender library.
+            # Include dependencies for entry point.
+            "//packages/express:host",
+            "@npm//@bazel/runfiles",
+        ],
+        templated_args = ["--bazel_patch_module_resolver"],
+        testonly = testonly,
+        visibility = visibility,
     )
