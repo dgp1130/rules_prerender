@@ -10,10 +10,11 @@ export default function* (): Generator<PrerenderResource, void, void> {
     <body>
         <ul>
             <li>First chunk</li>
-            ${ssr('foo', {})}
+            ${ssr('foo', { name: 'World' })}
             <li>Second chunk</li>
-            ${ssr('bar', {})}
+            ${ssr('foo', { name: 'Another World' })}
             <li>Third chunk</li>
+            ${ssr('bar', {})}
         </ul>
     </body>
 </html>
