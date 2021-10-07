@@ -1,0 +1,36 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_pages")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+prerender_pages(
+    name = "site",
+    src = "prerender.ts",
+    ssr = [":ssr"],
+    bundle_js = False, # Optimization: No client-side JavaScript on this page.
+    bundle_css = False, # Optimization: No CSS styling on this page.
+    lib_deps = ["//packages/rules_prerender"],
+)
+
+ts_library(
+    name = "ssr",
+    srcs = ["ssr.ts"],
+    deps = ["//packages/ssr"],
+)
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    data = [":site_server"],
+    testonly = True,
+    deps = [
+        "//common/testing:devserver",
+        "@npm//axios",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    deps = [":test_lib"],
+)
