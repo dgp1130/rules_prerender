@@ -6,6 +6,7 @@ ts_library(
     srcs = ["ssr.ts"],
     visibility = ["//visibility:public"],
     deps = [
+        ":component_map",
         "//common:fs",
         "//common/models:prerender_annotation",
     ],
@@ -25,4 +26,24 @@ ts_library(
 jasmine_node_test(
     name = "ssr_test",
     deps = [":ssr_test_lib"],
+)
+
+ts_library(
+    name = "component_map",
+    srcs = ["component_map.ts"],
+    deps = [
+        ":ssr_component",
+        ":factory_map",
+    ],
+)
+
+ts_library(
+    name = "factory_map",
+    srcs = ["factory_map.ts"],
+    deps = [":ssr_component"],
+)
+
+ts_library(
+    name = "ssr_component",
+    srcs = ["ssr_component.ts"],
 )

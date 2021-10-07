@@ -1,5 +1,18 @@
 import * as fs from 'rules_prerender/common/fs';
 import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
+
+const componentMap = new ComponentMap();
+componentMap.register('foo', (data) => ({
+    render() {
+        return '<div>Rendered foo</div>';
+    }
+}));
+componentMap.register('bar', (data) => ({
+    render() {
+        return '<div>Rendered bar</div>';
+    }
+}));
 
 // TODO: Accept a path and read from it or just accept a file to begin with?
 export async function* render(path: string):
@@ -11,14 +24,13 @@ export async function* render(path: string):
             yield chunk;
         } else {
             const { component, data } = chunk;
-            yield renderComponent(component, data);
+            const comp = componentMap.resolve(component, data);
+            if (!comp) {
+                throw new Error(`Failed to resolve component "${component}", was it registered?`);
+            }
+            yield comp.render();
         }
     }
-}
-
-// TODO: `data` as `JsonSerializable`?
-function renderComponent(component: string, data: unknown): string {
-    return `<div>Rendered ${component}</div>`;
 }
 
 // TODO: Something more sophisticated?
