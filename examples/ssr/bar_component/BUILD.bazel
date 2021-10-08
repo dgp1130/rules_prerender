@@ -1,0 +1,17 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "bar_component",
+    srcs = ["bar_prerender.ts"],
+    ssr = [":bar_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+    visibility = ["//examples/ssr:__subpackages__"],
+    deps = ["//examples/ssr/foo_component"],
+)
+
+ts_library(
+    name = "bar_ssr",
+    srcs = ["bar_ssr.ts"],
+    deps = ["//packages/ssr"],
+)

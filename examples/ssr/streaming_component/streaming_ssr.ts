@@ -1,16 +1,15 @@
-import { JsonObject } from 'rules_prerender/common/models/json';
 import { SsrComponent, registerComponent } from 'rules_prerender/packages/ssr/ssr';
 
-class BarComponent implements SsrComponent {
+class StreamingSsrComponent implements SsrComponent {
     public async *render(): AsyncGenerator<string, void, void> {
-        for (let i = 0; i < 5; ++i) {
+        for (let i = 0; i < 10; ++i) {
             await timeout(50); // Simulate a slow action.
-            yield `<li>Rendered bar ${i}</li>`;
+            yield `<li>Streaming ${i}</li>`;
         }
     }
 }
 
-registerComponent('bar', (data) => new BarComponent());
+registerComponent('streaming', () => new StreamingSsrComponent());
 
 function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {

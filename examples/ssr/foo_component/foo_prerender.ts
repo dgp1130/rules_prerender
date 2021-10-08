@@ -1,6 +1,6 @@
 import { ssr } from 'rules_prerender';
 
-export function prerenderComponent(name: string): string {
+export function prerenderFoo(name: string): string {
     return `
 <ul>
     <li>Foo header</li>

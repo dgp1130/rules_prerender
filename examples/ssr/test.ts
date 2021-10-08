@@ -11,7 +11,7 @@ describe('ssr', () => {
 
     it('is server-side rendered', async () => {
         const res = await axios.get<string>(
-            `http://${devserver.get().host}:${devserver.get().port}/index.html`,
+            `http://${devserver.get().host}:${devserver.get().port}/foo.html`,
             { responseType: 'text' },
         );
 
@@ -23,17 +23,66 @@ describe('ssr', () => {
     </head>
     <body>
         <ul>
-            <li>First chunk</li>
-            <ul>
     <li>Foo header</li>
     <li>Foo component says hello via SSR to World</li>
     <li>Foo footer</li>
 </ul>
-            <li>Second chunk</li>
-            <li>Rendered bar 0</li><li>Rendered bar 1</li><li>Rendered bar 2</li><li>Rendered bar 3</li><li>Rendered bar 4</li>
-            <li>Foo component says hello via SSR to Another World</li>
-            <li>Third chunk</li>
-        </ul>
+    </body>
+</html>
+        `.trim());
+    });
+
+    it('composes an SSR component', async () => {
+        const res = await axios.get<string>(
+            `http://${devserver.get().host}:${devserver.get().port}/bar.html`,
+            { responseType: 'text' },
+        );
+
+        expect(res.data.trim()).toBe(`<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <ul>
+    <li>Bar header</li>
+    <ul>
+    <li>Foo header</li>
+    <li>Foo component says hello via SSR to Bar</li>
+    <li>Foo footer</li>
+</ul>
+    <li>Bar SSR</li>
+    <li>Bar footer</li>
+</ul>
+    </body>
+</html>
+        `.trim());
+    });
+
+    it('streams data', async () => {
+        const res = await axios.get<string>(
+            `http://${devserver.get().host}:${devserver.get().port}/bar.html`,
+            { responseType: 'text' },
+        );
+
+        // TODO: Assert that data was streamed.
+        expect(res.data.trim()).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <ul>
+    <li>Bar header</li>
+    <ul>
+    <li>Foo header</li>
+    <li>Foo component says hello via SSR to Bar</li>
+    <li>Foo footer</li>
+</ul>
+    <li>Bar SSR</li>
+    <li>Bar footer</li>
+</ul>
     </body>
 </html>
         `.trim());
