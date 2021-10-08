@@ -1,4 +1,8 @@
-export type SsrFactory = (data: unknown) => SsrComponent;
+import { JsonObject } from 'rules_prerender/common/models/json';
+
+export type SsrFactory<PrerenderedData extends JsonObject>
+    = (data: PrerenderedData) => SsrComponent;
+
 export interface SsrComponent {
     // TODO: Request input?
     render():

@@ -14,7 +14,10 @@ prerender_pages(
 ts_library(
     name = "ssr",
     srcs = ["ssr.ts"],
-    deps = ["//packages/ssr"],
+    deps = [
+        "//packages/ssr",
+        "//common/models:json",
+    ],
 )
 
 ts_library(

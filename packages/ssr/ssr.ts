@@ -2,6 +2,8 @@ import * as fs from 'rules_prerender/common/fs';
 import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
 
+export { SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
+
 const componentMap = new ComponentMap();
 export const registerComponent = componentMap.register.bind(componentMap);
 

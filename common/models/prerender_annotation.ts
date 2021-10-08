@@ -1,3 +1,5 @@
+import { JsonObject } from 'rules_prerender/common/models/json';
+
 const prefix = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
 
 /**
@@ -105,8 +107,7 @@ export interface SsrAnnotation {
 
     readonly component: string;
 
-    // TODO: `data` as `JsonSerializable`?
-    readonly data: unknown;
+    readonly data: JsonObject;
 }
 
 function assertNever(value: never): never {

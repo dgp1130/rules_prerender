@@ -172,7 +172,10 @@ jasmine_node_test(
 ts_library(
     name = "ssr",
     srcs = ["ssr.ts"],
-    deps = ["//common/models:prerender_annotation"],
+    deps = [
+        "//common/models:json",
+        "//common/models:prerender_annotation",
+    ],
 )
 
 ts_library(

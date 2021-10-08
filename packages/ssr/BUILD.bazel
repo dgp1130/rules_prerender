@@ -7,6 +7,7 @@ ts_library(
     visibility = ["//visibility:public"],
     deps = [
         ":component_map",
+        ":ssr_component",
         "//common:fs",
         "//common/models:prerender_annotation",
     ],
@@ -34,16 +35,21 @@ ts_library(
     deps = [
         ":ssr_component",
         ":factory_map",
+        "//common/models:json",
     ],
 )
 
 ts_library(
     name = "factory_map",
     srcs = ["factory_map.ts"],
-    deps = [":ssr_component"],
+    deps = [
+        ":ssr_component",
+        "//common/models:json",
+    ],
 )
 
 ts_library(
     name = "ssr_component",
     srcs = ["ssr_component.ts"],
+    deps = ["//common/models:json"],
 )

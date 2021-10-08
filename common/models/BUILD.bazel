@@ -2,9 +2,16 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 ts_library(
+    name = "json",
+    srcs = ["json.ts"],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
     name = "prerender_annotation",
     srcs = ["prerender_annotation.ts"],
     visibility = ["//visibility:public"],
+    deps = [":json"],
 )
 
 ts_library(

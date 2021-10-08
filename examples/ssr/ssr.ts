@@ -1,22 +1,41 @@
-import { registerComponent } from 'rules_prerender/packages/ssr/ssr';
+import { JsonObject } from 'rules_prerender/common/models/json';
+import { SsrComponent, registerComponent } from 'rules_prerender/packages/ssr/ssr';
 
-registerComponent('foo', (data) => {
-    const { name } = data as { name: string };
-    return {
-        render(): string {
-            return `<li>Foo component says "Hello, ${name}!"</li>`;
-        }
-    };
-});
+interface FooPrerenderedData extends JsonObject {
+    name: string;
+}
 
-registerComponent('bar', (data) => ({
-    async *render(): AsyncGenerator<string, void, void> {
+class FooComponent implements SsrComponent {
+    private constructor(private name: string) { }
+
+    public static fromPrerendered({ name }: FooPrerenderedData): FooComponent {
+        return new FooComponent(name);
+    }
+
+    public static fromSsr(name: string): FooComponent {
+        return new FooComponent(name);
+    }
+
+    public render(): string {
+        return `<li>Foo component says "Hello, ${this.name}!"</li>`;
+    }
+}
+
+registerComponent<FooPrerenderedData>(
+    'foo', (data) => FooComponent.fromPrerendered(data));
+
+class BarComponent implements SsrComponent {
+    public async *render(): AsyncGenerator<string, void, void> {
+        yield FooComponent.fromSsr('bar').render(); // Call another component.
+
         for (let i = 0; i < 5; ++i) {
             await timeout(50); // Simulate a slow action.
             yield `<li>Rendered bar ${i}</li>`;
         }
     }
-}));
+}
+
+registerComponent('bar', (data) => new BarComponent());
 
 function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {
