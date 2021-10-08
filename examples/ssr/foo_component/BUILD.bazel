@@ -2,16 +2,16 @@ load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//:index.bzl", "prerender_component")
 
 prerender_component(
-    name = "component",
-    srcs = ["component_prerender.ts"],
-    ssr = [":ssr"],
+    name = "foo_component",
+    srcs = ["foo_prerender.ts"],
+    ssr = [":foo_ssr"],
     visibility = ["//examples/ssr:__pkg__"],
     lib_deps = ["//packages/rules_prerender"],
 )
 
 ts_library(
-    name = "ssr",
-    srcs = ["component_ssr.ts"],
+    name = "foo_ssr",
+    srcs = ["foo_ssr.ts"],
     deps = [
         "//common/models:json",
         "//packages/rules_prerender",

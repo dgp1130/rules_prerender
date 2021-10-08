@@ -1,4 +1,4 @@
-import { prerenderComponent } from 'rules_prerender/examples/ssr/component/component_prerender';
+import { prerenderComponent } from 'rules_prerender/examples/ssr/foo_component/foo_prerender';
 import { PrerenderResource, ssr } from 'rules_prerender';
 
 export default function* (): Generator<PrerenderResource, void, void> {
