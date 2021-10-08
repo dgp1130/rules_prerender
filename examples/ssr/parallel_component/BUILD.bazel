@@ -1,0 +1,19 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "parallel_component",
+    srcs = ["parallel_prerender.ts"],
+    ssr = [":parallel_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+    visibility = ["//examples/ssr:__subpackages__"],
+)
+
+ts_library(
+    name = "parallel_ssr",
+    srcs = ["parallel_ssr.ts"],
+    deps = [
+        "//common/models:json",
+        "//packages/ssr",
+    ],
+)

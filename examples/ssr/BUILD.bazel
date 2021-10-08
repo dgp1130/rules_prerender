@@ -11,6 +11,7 @@ prerender_pages(
     deps = [
         "//examples/ssr/bar_component",
         "//examples/ssr/foo_component",
+        "//examples/ssr/parallel_component",
         "//examples/ssr/streaming_component",
     ],
 )

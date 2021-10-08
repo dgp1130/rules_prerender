@@ -11,19 +11,37 @@ export const registerComponent = componentMap.register.bind(componentMap);
 export async function* render(path: string):
         AsyncGenerator<string, void, void> {
     const html = await fs.readFile(path, 'utf8'); // TODO: Binary? Read in chunks?
-    const chunks = parseHtml(html);
-    for (const chunk of chunks) {
+    yield* preload(parseHtml(html));
+}
+
+async function* preload(chunks: Generator<string | SsrAnnotation, void, void>):
+        AsyncGenerator<string, void, void> {
+    // Pull all the chunks into memory to start SSR execution in parallel.
+    const loadingChunks = Array.from(chunks).map((chunk) => {
+        if (typeof chunk === 'string') {
+            return chunk;
+        } else {
+            return renderComponent(chunk);
+        }
+    });
+
+    // Yield the chunks in order now that they've already started loading.
+    for (const chunk of loadingChunks) {
         if (typeof chunk === 'string') {
             yield chunk;
         } else {
-            const { component, data } = chunk;
-            const comp = componentMap.resolve(component, data);
-            if (!comp) {
-                throw new Error(`Failed to resolve component "${component}", was it registered?`);
-            }
-            yield* normalize(comp.render());
+            yield* chunk;
         }
     }
+}
+
+function renderComponent({ component, data }: SsrAnnotation):
+        AsyncGenerator<string, void, void> {
+    const comp = componentMap.resolve(component, data);
+    if (!comp) {
+        throw new Error(`Failed to resolve component "${component}", was it registered?`);
+    }
+    return normalize(comp.render());
 }
 
 /** TODO */
