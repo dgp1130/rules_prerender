@@ -135,8 +135,7 @@ which are always allowed).
 
     _js_reexport(
         name = "%s_ssr" % name,
-        srcs = ssr,
-        deps = ["%s_ssr" % absolute(dep) for dep in deps],
+        srcs = ssr + ["%s_ssr" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

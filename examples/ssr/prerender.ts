@@ -1,3 +1,4 @@
+import { prerenderComponent } from 'rules_prerender/examples/ssr/component/component_prerender';
 import { PrerenderResource, ssr } from 'rules_prerender';
 
 export default function* (): Generator<PrerenderResource, void, void> {
@@ -10,7 +11,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
     <body>
         <ul>
             <li>First chunk</li>
-            ${ssr('foo', { name: 'World' })}
+            ${prerenderComponent('World')}
             <li>Second chunk</li>
             ${ssr('bar', {})}
             ${ssr('foo', { name: 'Another World' })}
