@@ -1,0 +1,19 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "request_component",
+    srcs = ["request_prerender.ts"],
+    ssr = [":request_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+    visibility = ["//examples/ssr:__subpackages__"],
+)
+
+ts_library(
+    name = "request_ssr",
+    srcs = ["request_ssr.ts"],
+    deps = [
+        "//packages/express",
+        "@npm//@types/express",
+    ],
+)

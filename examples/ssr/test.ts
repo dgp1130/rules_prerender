@@ -97,14 +97,14 @@ describe('ssr', () => {
         // Test times out in 2 seconds, but it takes 1 second to reach each item
         // in the list. To pass, server must be parallelized, or else it would
         // take a minimum of 10 seconds to render and the test would time out!
-        expect(res.data.trim()).toBe(`<!DOCTYPE html>
+        expect(res.data.trim()).toBe(`
+<!DOCTYPE html>
 <html>
     <head>
         <title>Test</title>
     </head>
     <body>
-        
-<ul>
+        <ul>
     <li>Parallel header</li>
     <li>Parallel 0</li>
 <li>Parallel 1</li>
@@ -118,9 +118,30 @@ describe('ssr', () => {
 <li>Parallel 9</li>
     <li>Parallel footer</li>
 </ul>
-    
     </body>
 </html>
         `.trim());
     }, 2_000 /* timeout */);
+
+    it('server-side renders using the HTTP request as input', async () => {
+        const res = await axios.get<string>(
+            `http://${devserver.get().host}:${devserver.get().port}/request.html?name=foo`,
+            { responseType: 'text' },
+        );
+
+        expect(res.data.trim()).toBe(`<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <ul>
+    <li>Request header</li>
+    <li>The \`?name\` query parameter is "foo"</li>
+    <li>Request footer</li>
+</ul>
+    </body>
+</html>
+        `.trim());
+    });
 });

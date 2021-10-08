@@ -7,7 +7,7 @@ export function prerenderParallel(): string {
     ${times(10, (index) => ssr('parallel', { index })).join('\n')}
     <li>Parallel footer</li>
 </ul>
-    `;
+    `.trim();
 }
 
 function times<T>(iterations: number, cb: (index: number) => T): T[] {

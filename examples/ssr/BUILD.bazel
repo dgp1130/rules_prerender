@@ -12,6 +12,7 @@ prerender_pages(
         "//examples/ssr/bar_component",
         "//examples/ssr/foo_component",
         "//examples/ssr/parallel_component",
+        "//examples/ssr/request_component",
         "//examples/ssr/streaming_component",
     ],
 )

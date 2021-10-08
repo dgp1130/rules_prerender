@@ -3,6 +3,7 @@ import { prerenderBar } from 'rules_prerender/examples/ssr/bar_component/bar_pre
 import { prerenderFoo } from 'rules_prerender/examples/ssr/foo_component/foo_prerender';
 import { prerenderStreaming } from 'rules_prerender/examples/ssr/streaming_component/streaming_prerender';
 import { prerenderParallel } from 'rules_prerender/examples/ssr/parallel_component/parallel_prerender';
+import { prerenderRequest } from 'rules_prerender/examples/ssr/request_component/request_prerender';
 
 export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', page(`
@@ -15,6 +16,8 @@ export default function* (): Generator<PrerenderResource, void, void> {
     ${prerenderStreaming()}
     <li>Fourth chunk (parallel)</li>
     ${prerenderParallel()}
+    <li>Fifth chunk (request)</li>
+    ${prerenderRequest()}
 </ul>
     `).trim());
 
@@ -22,6 +25,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/bar.html', page(prerenderBar()));
     yield PrerenderResource.of('/streaming.html', page(prerenderStreaming()));
     yield PrerenderResource.of('/parallel.html', page(prerenderParallel()));
+    yield PrerenderResource.of('/request.html', page(prerenderRequest()));
 }
 
 function page(content: string): string {
