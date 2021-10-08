@@ -107,7 +107,7 @@ export interface SsrAnnotation {
 
     readonly component: string;
 
-    readonly data: JsonObject;
+    readonly data?: JsonObject;
 }
 
 function assertNever(value: never): never {

@@ -13,7 +13,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
             <li>First chunk</li>
             ${prerenderComponent('World')}
             <li>Second chunk</li>
-            ${ssr('bar', {})}
+            ${ssr('bar')}
             ${ssr('foo', { name: 'Another World' })}
             <li>Third chunk</li>
         </ul>
