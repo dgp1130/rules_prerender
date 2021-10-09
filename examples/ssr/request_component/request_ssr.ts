@@ -1,8 +1,7 @@
-import type { Request } from 'express';
-import { ExpressComponent, registerExpressComponent } from 'rules_prerender/packages/express/express';
+import { ExpressComponent, ExpressContext, registerExpressComponent } from 'rules_prerender/packages/express/express';
 
 class RequestSsrComponent implements ExpressComponent {
-    public render(req: Request): string {
+    public render({ req }: ExpressContext): string {
         const name = req.query.name;
         if (!name) {
             return `<li>The \`?name\` query parameter is unset</li>`;

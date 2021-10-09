@@ -12,8 +12,5 @@ prerender_component(
 ts_library(
     name = "request_ssr",
     srcs = ["request_ssr.ts"],
-    deps = [
-        "//packages/express",
-        "@npm//@types/express",
-    ],
+    deps = ["//packages/express"],
 )

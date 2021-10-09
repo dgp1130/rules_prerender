@@ -5,10 +5,8 @@ import { SsrComponent, SsrFactory } from 'rules_prerender/packages/ssr/ssr_compo
 export class ComponentMap {
     private map: Map<string, FactoryMap> = new Map();
 
-    public resolve<SsrParams extends unknown[]>(
-        component: string,
-        data?: JsonObject,
-    ): SsrComponent<SsrParams> | undefined {
+    public resolve<Context>(component: string, data?: JsonObject):
+            SsrComponent<Context> | undefined {
         const factoryMap = this.map.get(component);
         if (!factoryMap) return undefined;
 
@@ -17,15 +15,15 @@ export class ComponentMap {
 
     public register<
         PrerenderedData extends JsonObject | undefined,
-        SsrParams extends unknown[] = [],
+        Context = void,
     >(
         component: string,
-        factory: SsrFactory<PrerenderedData, SsrParams>,
+        factory: SsrFactory<PrerenderedData, Context>,
     ): void {
         if (this.map.has(component)) {
             throw new Error(`Registered component "${component}" twice.`);
         }
-        const fac = factory as SsrFactory<JsonObject | undefined, SsrParams>;
+        const fac = factory as SsrFactory<JsonObject | undefined, Context>;
         this.map.set(component, FactoryMap.from(fac));
     }
 }

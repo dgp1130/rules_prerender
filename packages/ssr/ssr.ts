@@ -8,22 +8,22 @@ const componentMap = new ComponentMap();
 export const registerComponent = componentMap.register.bind(componentMap);
 
 // TODO: Accept a path and read from it or just accept a file to begin with?
-export async function* render(path: string, params: unknown[]):
+export async function* render(path: string, ctx: unknown):
         AsyncGenerator<string, void, void> {
     const html = await fs.readFile(path, 'utf8'); // TODO: Binary? Read in chunks?
-    yield* preload(parseHtml(html), params);
+    yield* preload(parseHtml(html), ctx);
 }
 
 async function* preload(
     chunks: Generator<string | SsrAnnotation, void, void>,
-    params: unknown[],
+    ctx: unknown,
 ): AsyncGenerator<string, void, void> {
     // Pull all the chunks into memory to start SSR execution in parallel.
     const loadingChunks = Array.from(chunks).map((chunk) => {
         if (typeof chunk === 'string') {
             return chunk;
         } else {
-            return renderComponent(chunk, ...params);
+            return renderComponent(chunk, ctx);
         }
     });
 
@@ -37,15 +37,13 @@ async function* preload(
     }
 }
 
-function renderComponent(
-    { component, data }: SsrAnnotation,
-    ...params: unknown[]
-): AsyncGenerator<string, void, void> {
-    const comp = componentMap.resolve<unknown[]>(component, data);
+function renderComponent({ component, data }: SsrAnnotation, ctx: unknown):
+        AsyncGenerator<string, void, void> {
+    const comp = componentMap.resolve<unknown>(component, data);
     if (!comp) {
         throw new Error(`Failed to resolve component "${component}", was it registered?`);
     }
-    return normalize(comp.render(...params));
+    return normalize(comp.render(ctx));
 }
 
 /** TODO */

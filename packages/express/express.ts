@@ -3,12 +3,14 @@ import { Request, Response, NextFunction } from 'express';
 import { SsrComponent, SsrFactory, registerComponent, render } from 'rules_prerender/packages/ssr/ssr';
 import { JsonObject } from 'rules_prerender/common/models/json';
 
-type ExpressSsrParams = [ Request ];
-export type ExpressComponent = SsrComponent<ExpressSsrParams>;
+export interface ExpressContext {
+    req: Request;
+}
+export type ExpressComponent = SsrComponent<ExpressContext>;
 
 export function registerExpressComponent<
     PrerenderData extends JsonObject | undefined
->(component: string, factory: SsrFactory<PrerenderData, [ Request ]>): void {
+>(component: string, factory: SsrFactory<PrerenderData, ExpressContext>): void {
     registerComponent(component, factory);
 }
 
@@ -22,8 +24,8 @@ export function ssr(webRoot: string): Middleware {
         const filePath = path.join(webRoot, reqPath);
 
         // Render the file at that path and write it to the response.
-        const ssrParams: ExpressSsrParams = [ req ];
-        for await (const chunk of render(filePath, ssrParams)) {
+        const ctx: ExpressContext = { req };
+        for await (const chunk of render(filePath, ctx)) {
             res.write(chunk);
         }
         res.end();

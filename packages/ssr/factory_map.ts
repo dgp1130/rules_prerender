@@ -3,10 +3,10 @@ import { SsrFactory, SsrComponent } from 'rules_prerender/packages/ssr/ssr_compo
 
 export class FactoryMap<
     PrerenderedData extends JsonObject | undefined = JsonObject | undefined,
-    SsrParams extends unknown[] = [],
+    Context = unknown,
 > {
-    private factory: SsrFactory<PrerenderedData, SsrParams>;
-    private map: Map<unknown, SsrComponent<SsrParams>> = new Map();
+    private factory: SsrFactory<PrerenderedData, Context>;
+    private map: Map<unknown, SsrComponent<Context>> = new Map();
 
     private constructor({ factory }: { factory: SsrFactory<PrerenderedData> }) {
         this.factory = factory;
@@ -18,7 +18,7 @@ export class FactoryMap<
         return new FactoryMap({ factory });
     }
 
-    public resolve(data?: PrerenderedData): SsrComponent<SsrParams> {
+    public resolve(data?: PrerenderedData): SsrComponent<Context> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const component = this.map.get(data) ?? this.factory(data as any);
         this.map.set(data, component);

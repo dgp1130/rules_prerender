@@ -2,12 +2,12 @@ import { JsonObject } from 'rules_prerender/common/models/json';
 
 export type SsrFactory<
     PrerenderedData extends JsonObject | undefined = JsonObject | undefined,
-    SsrParams extends unknown[] = [],
-> = (data: PrerenderedData) => SsrComponent<SsrParams>;
+    Context = unknown,
+> = (data: PrerenderedData) => SsrComponent<Context>;
 
-export interface SsrComponent<Parameters extends unknown[] = []> {
+export interface SsrComponent<Context = void> {
     // TODO: Request input?
-    render(...params: Parameters):
+    render(params: Context):
         | string
         | Promise<string>
         | Generator<string, void, void>
