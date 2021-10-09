@@ -3,11 +3,9 @@ import { createAnnotation } from 'rules_prerender/common/models/prerender_annota
 
 /** TODO */
 export function ssr(component: string, data?: JsonObject): string {
-    const annotation = createAnnotation({
+    return createAnnotation({
         type: 'ssr',
         component,
         data,
     });
-
-    return `<!-- ${annotation} -->`;
 }

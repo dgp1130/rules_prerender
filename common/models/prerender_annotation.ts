@@ -1,6 +1,6 @@
 import { JsonObject } from 'rules_prerender/common/models/json';
 
-const prefix = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
+const privateLabel = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
 
 /**
  * Creates an annotation comment and returns it, should be rendered directly
@@ -11,7 +11,11 @@ const prefix = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
  *     tooling.
  */
 export function createAnnotation(annotation: PrerenderAnnotation): string {
-    return `${prefix} - ${JSON.stringify(annotation)}`;
+    return `
+<template label=${privateLabel}>
+    ${JSON.stringify(annotation, null, 4)}
+</template>
+    `.trim();
 }
 
 /**
@@ -19,21 +23,15 @@ export function createAnnotation(annotation: PrerenderAnnotation): string {
  * the leading `<!--` or trailing `-->` of an HTML comment. Returns `undefined`
  * if the comment does not appear to be an annotation.
  * 
- * @param comment The comment to parse an annotation from.
+ * @param annotation The comment to parse an annotation from.
  * @returns The parsed annotation or `undefined` if the comment does not appear
  *     to be an annotation.
  * @throws If the parsed annotation does not contain valid JSON. This is
  *     indicative of an annotation creation error, so this is effectively an
  *     assertion error.
  */
-export function parseAnnotation(comment: string): PrerenderAnnotation|undefined {
-    if (!comment.trim().startsWith(prefix)) {
-        return undefined;
-    }
-    const separatorIndex = comment.indexOf('-');
-    if (separatorIndex === -1) return undefined;
-    const json = comment.substring(separatorIndex + 1).trim();
-    return JSON.parse(json) as PrerenderAnnotation;
+export function parseAnnotation(annotation: string): PrerenderAnnotation {
+    return JSON.parse(annotation) as PrerenderAnnotation;
 }
 
 /**

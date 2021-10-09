@@ -73,7 +73,7 @@ main(async () => {
         });
 
         // Extract annotations from the HTML.
-        const [ outputHtml, newAnnotations ] = extract(contents);
+        const [ outputHtml, newAnnotations ] = extract(contents, new Set(['ssr']));
         annotations.push(...newAnnotations);
     
         // Write the output HTML file to disk. Don't `await` these directly in

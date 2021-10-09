@@ -75,32 +75,85 @@ function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
     return false;
 }
 
-// TODO: Something more sophisticated?
+const templateOpenTag = `<template label=bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE>`;
+const templateCloseTag = '</template>';
 function* parseHtml(html: string):
-        Generator<string | SsrAnnotation, void, void> {    
-    const annotationExtractor =
-        /<!--(?<annotation> *bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - [^\n]*)-->/g;
-    let lastIndex = 0;
-    let match: RegExpExecArray | null = null;
-    while ((match = annotationExtractor.exec(html)) !== null) {
-        // Emit previous prerendered chunk.
-        yield html.slice(lastIndex, match.index);
+        Generator<string | SsrAnnotation, void, void> {
+    while (true) {
+        const openIndex = html.search(templateOpenTag);
+        if (openIndex === -1) {
+            yield html; // Trailing chunk.
+            return;
+        }
 
-        // Parse annotation and emit it.
-        const annotationText = match.groups?.['annotation'] as string;
-        const annotation = parseAnnotation(annotationText);
-        if (!annotation) {
-            throw new Error(`Failed to parse annotation: ${
-                annotationText} at index ${match.index}-${
-                annotationExtractor.lastIndex}`);
+        yield html.slice(0, openIndex); // Leading chunk.
+        html = html.slice(openIndex); // Move `html` to first `<template>`.
+
+        // How many layers of templates we are currently nested under.
+        let nestCount = 0;
+
+        // The remaining HTML to parse and its index in the input html.
+        let remainingHtmlIndex = 0;
+        let remainingHtml = html;
+        while (true) {
+            // Find the next open or close tag.
+            const nextOpenIndex = remainingHtml.search(templateOpenTag);
+            const nextCloseIndex = remainingHtml.search(templateCloseTag);
+
+            // eslint-disable-next-line no-inner-declarations
+            function isOpenTag(): boolean {
+                if (nextOpenIndex === -1 && nextCloseIndex === -1) {
+                    throw new Error(`Failed to find closing \`</template>\` tag in ${html}.`);
+                } else if (nextCloseIndex === -1) {
+                    return true; // Only found an open tag.
+                } else if (nextOpenIndex === -1) {
+                    return false; // Only found a close tag.
+                } else if (nextOpenIndex < nextCloseIndex) {
+                    return true; // Found both, close tag is first.
+                } else {
+                    return false; // Found both, and close tag is first.
+                }
+            }
+
+            if (isOpenTag()) {
+                nestCount++;
+
+                const templateContentStart = nextOpenIndex + templateOpenTag.length;
+                remainingHtmlIndex += templateContentStart;
+                remainingHtml = remainingHtml.slice(templateContentStart);
+            } else {
+                nestCount--;
+
+                const templateEnd = nextCloseIndex + templateCloseTag.length;
+                remainingHtmlIndex += templateEnd;
+                remainingHtml = remainingHtml.slice(templateEnd);
+            }
+    
+            if (nestCount === 0) {
+                // Matched the close tag to the original open tag. The whole
+                // thing is a single template.
+
+                // `html` already starts at `<template>...`
+                const templateStart = 0;
+                // `remainingHtml` has parsed the whole `<template>...</template>`.
+                const templateEnd = remainingHtmlIndex;
+
+                // Extract the content.
+                const templateContentStart = templateStart + templateOpenTag.length;
+                const templateContentEnd = templateEnd - templateCloseTag.length;
+                const annotationContent = html.slice(templateContentStart, templateContentEnd);
+
+                // Parse the annotation.
+                const annotation = parseAnnotation(annotationContent.trim());
+                if (annotation.type !== 'ssr') {
+                    throw new Error(`Unexpected non-ssr annotation: ${annotationContent}`);
+                }
+                yield annotation;
+
+                // Continue parsing from the end of this template.
+                html = html.slice(templateEnd);
+                break;
+            }
         }
-        if (annotation.type !== 'ssr') {
-            throw new Error(`Found a non-SSR annotation: ${annotationText}.`);
-        }
-        yield annotation;
-        lastIndex = annotationExtractor.lastIndex;
     }
-
-    // Emit final prerendered chunk.
-    yield html.slice(lastIndex);
 }

@@ -1,5 +1,7 @@
-import { parse, HTMLElement, Node, CommentNode } from 'node-html-parser';
+import { parse, HTMLElement, Node } from 'node-html-parser';
 import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+
+type PrerenderType = PrerenderAnnotation['type'];
 
 /**
  * Parses the given string as HTML and return a tuple of the input HTML with
@@ -10,7 +12,7 @@ import { PrerenderAnnotation, parseAnnotation } from 'rules_prerender/common/mod
  *     all annotation comments removed. The second element is a list of
  *     parsed annotations found within the input HTML.
  */
-export function extract(html: string): [
+export function extract(html: string, typesToKeep: Set<PrerenderType> = new Set()): [
     string /* strippedHtml */,
     Array<PrerenderAnnotation> /* annotations */,
 ] {
@@ -26,7 +28,10 @@ export function extract(html: string): [
 
     // Read all annotations from the HTML **and** remove the comments they come
     // from. This actually applies a side effect of modifying the document.
-    const annotations = Array.from(stripAnnotations(walkComments(walk(root))));
+    const annotations = Array.from(stripAnnotations(
+        walkTemplates(walk(root)),
+        typesToKeep,
+    ));
 
     return [ root.toString(), annotations ];
 }
@@ -37,13 +42,13 @@ export function extract(html: string): [
  * comment is left alone and nothing is emitted.
  */
 function* stripAnnotations(
-    comments: Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]>,
+    els: Iterable<[ HTMLElement, HTMLElement | undefined /* parent */ ]>,
+    typesToKeep: Set<PrerenderType> = new Set(),
 ): Iterable<PrerenderAnnotation> {
-    for (const [ comment, parent ] of comments) {
-        const annotation = parseAnnotation(comment.text);
-        if (!annotation) continue;
-        if (!parent) throw new Error('Found comment node with no parent.');
-        if (annotation.type !== 'ssr') parent.removeChild(comment);
+    for (const [ el, parent ] of els) {
+        const annotation = parseAnnotation(el.rawText);
+        if (!parent) throw new Error('Found annotation with no parent element.');
+        if (!typesToKeep.has(annotation.type)) parent.removeChild(el);
         yield annotation;
     }
 }
@@ -52,13 +57,13 @@ function* stripAnnotations(
  * Filters the given {@link Iterable} of {@link Node} to limit to only comment
  * nodes.
  */
-function* walkComments(
-    nodes: Iterable<[ Node, HTMLElement | undefined /* parent */ ]>,
-): Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]> {
-    for (const [ node, parent ] of nodes) {
-        if (node instanceof CommentNode) {
-            yield [ node, parent ];
-        }
+function* walkTemplates(
+    nodes: Iterable<[ HTMLElement, HTMLElement | undefined /* parent */ ]>,
+): Iterable<[ HTMLElement, HTMLElement | undefined /* parent */ ]> {
+    for (const [ el, parent ] of nodes) {
+        if (el.tagName !== 'template') continue;
+        if (el.getAttribute('label') !== 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE') continue;
+        yield [ el, parent ];
     }
 }
 
@@ -67,9 +72,9 @@ function* walkComments(
  * root and their parent.
  */
 function* walk(root: Node, parent?: HTMLElement):
-        Iterable<[ Node, HTMLElement | undefined /* parent */ ]> {
-    yield [ root, parent ];
+        Iterable<[ HTMLElement, HTMLElement | undefined /* parent */ ]> {
     if (root instanceof HTMLElement) {
+        yield [ root, parent ];
         for (const node of root.childNodes) {
             yield* walk(node, root);
         }
