@@ -1,0 +1,35 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "composition_component",
+    srcs = ["composition_prerender.ts"],
+    ssr = [":composition_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+    visibility = ["//examples/ssr:__subpackages__"],
+    deps = [":composed_component"],
+)
+
+ts_library(
+    name = "composition_ssr",
+    srcs = ["composition_ssr.ts"],
+    deps = [
+        "//common/models:json",
+        "//packages/express",
+        # TODO: Dep should go through `prerender_component()`?
+        ":composed_ssr",
+    ],
+)
+
+prerender_component(
+    name = "composed_component",
+    srcs = ["composed_prerender.ts"],
+    ssr = [":composed_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+)
+
+ts_library(
+    name = "composed_ssr",
+    srcs = ["composed_ssr.ts"],
+    deps = ["//packages/express"],
+)

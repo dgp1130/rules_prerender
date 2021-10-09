@@ -1,6 +1,7 @@
 import * as fs from 'rules_prerender/common/fs';
 import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
+import { SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
 
 export { SsrComponent, SsrFactory } from 'rules_prerender/packages/ssr/ssr_component';
 
@@ -73,6 +74,35 @@ function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((input as any)[Symbol.asyncIterator]) return true;
     return false;
+}
+
+export function parseOnlySlot<Context = unknown>(slot: string):
+        SsrComponent<Context> {
+    const chunks = Array.from(parseHtml(slot));
+    const annotations =
+        chunks.filter((chunk) => typeof chunk !== 'string') as SsrAnnotation[];
+    if (annotations.length === 0) {
+        throw new Error(`Found no slots in content:\n${slot}`);
+    } else if (annotations.length > 1) {
+        throw new Error(`Found multiple slots in content:\n${slot}`);
+    }
+
+    return {
+        // TODO: Handle async, generators, etc.
+        render: (ctx: Context): string => {
+            const textChunks = chunks.map((chunk) => {
+                if (typeof chunk === 'string') {
+                    return chunk;
+                } else {
+                    const { component, data } = chunk;
+                    const ssrComponent = componentMap.resolve(component, data);
+                    if (!ssrComponent) throw new Error(`Failed to resolve component: "${component}".`);
+                    return ssrComponent.render(ctx);
+                }
+            });
+            return textChunks.join('');
+        },
+    };
 }
 
 const templateOpenTag = `<template label=bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE>`;

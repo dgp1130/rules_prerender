@@ -10,6 +10,7 @@ prerender_pages(
     lib_deps = ["//packages/rules_prerender"],
     deps = [
         "//examples/ssr/bar_component",
+        "//examples/ssr/composition_component",
         "//examples/ssr/foo_component",
         "//examples/ssr/parallel_component",
         "//examples/ssr/request_component",

@@ -4,6 +4,7 @@ import { prerenderFoo } from 'rules_prerender/examples/ssr/foo_component/foo_pre
 import { prerenderStreaming } from 'rules_prerender/examples/ssr/streaming_component/streaming_prerender';
 import { prerenderParallel } from 'rules_prerender/examples/ssr/parallel_component/parallel_prerender';
 import { prerenderRequest } from 'rules_prerender/examples/ssr/request_component/request_prerender';
+import { prerenderComposition } from 'rules_prerender/examples/ssr/composition_component/composition_prerender';
 
 export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', page(`
@@ -18,6 +19,8 @@ export default function* (): Generator<PrerenderResource, void, void> {
     ${prerenderParallel()}
     <li>Fifth chunk (request)</li>
     ${prerenderRequest()}
+    <li>Sixth chunk (composition)</li>
+    ${prerenderComposition()}
 </ul>
     `).trim());
 
@@ -26,6 +29,8 @@ export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/streaming.html', page(prerenderStreaming()));
     yield PrerenderResource.of('/parallel.html', page(prerenderParallel()));
     yield PrerenderResource.of('/request.html', page(prerenderRequest()));
+    yield PrerenderResource.of(
+        '/composition.html', page(prerenderComposition()));
 }
 
 function page(content: string): string {

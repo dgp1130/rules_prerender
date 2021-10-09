@@ -144,4 +144,32 @@ describe('ssr', () => {
 </html>
         `.trim());
     });
+
+    it('composes SSR and SSG content', async () => {
+        const res = await axios.get<string>(
+            `http://${devserver.get().host}:${devserver.get().port}/composition.html`,
+            { responseType: 'text' },
+        );
+
+        expect(res.data.trim()).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <ul>
+    <li>Composition header</li>
+    <li>SSR: Composition</li>
+            <ul>
+    <li>Composed header</li>
+    <li>SSR: Composed</li>
+    <li>Composed footer</li>
+</ul>
+    <li>Composition footer</li>
+</ul>
+    </body>
+</html>
+        `.trim());
+    });
 });
