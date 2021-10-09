@@ -1,4 +1,4 @@
-import { ExpressComponent, parseOnlySlot, registerExpressComponent } from 'rules_prerender/packages/express/express';
+import { ExpressComponent, Slotted, parseOnlySlot, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
 import { JsonObject } from 'rules_prerender/common/models/json';
 import { ComposedSsrComponent } from 'rules_prerender/examples/ssr/composition_component/composed_ssr';
 
@@ -7,20 +7,18 @@ interface PrerenderData extends JsonObject {
 }
 
 class CompositionSsrComponent implements ExpressComponent {
-    private constructor(private composed: ComposedSsrComponent) { }
+    private constructor(private composed: Slotted<ComposedSsrComponent>) { }
 
     public static fromPrerendered({ composed }: PrerenderData):
             CompositionSsrComponent {
-        // TODO: Cast is wrong, the type is wrapped.
-        const composedComponent = parseOnlySlot(composed) as ComposedSsrComponent;
+        const composedComponent =
+            parseOnlySlot(composed) as Slotted<ComposedSsrComponent>;
         return new CompositionSsrComponent(composedComponent);
     }
 
-    public render(): string {
-        return `
-            <li>SSR: Composition</li>
-            ${this.composed.render()}
-        `.trim();
+    public *render(ctx: ExpressContext): Generator<string, void, void> {
+        yield `<li>SSR: Composition</li>`;
+        yield* this.composed.render(ctx);
     }
 }
 

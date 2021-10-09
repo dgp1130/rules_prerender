@@ -3,11 +3,12 @@ import { Request, Response, NextFunction } from 'express';
 import { SsrComponent, SsrFactory, parseOnlySlot as ssrParseOnlySlot, registerComponent, render } from 'rules_prerender/packages/ssr/ssr';
 import { JsonObject } from 'rules_prerender/common/models/json';
 
+export { Slotted } from 'rules_prerender/packages/ssr/ssr';
+
 export interface ExpressContext {
     req: Request;
 }
 export type ExpressComponent = SsrComponent<ExpressContext>;
-
 export function registerExpressComponent<
     PrerenderData extends JsonObject | undefined
 >(component: string, factory: SsrFactory<PrerenderData, ExpressContext>): void {

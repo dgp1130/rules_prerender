@@ -76,8 +76,33 @@ function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
     return false;
 }
 
+// Wraps a component with a slotted type, meaning one with a render function
+// using the same arguments but the return type is collapsed into a
+// `Generator<string, void, void>` or an `AsyncGenerator<string, void, void>`
+// depending on the async-ness of the real return type. It must be a generator
+// because there may be build-time prerendered content to emit before and after
+// the SSR component itself.
+export type Slotted<Component extends SsrComponent<unknown>> =
+    Component extends SsrComponent<infer Context>
+        ? Omit<SsrComponent<Context>, 'render'> & {
+            render(ctx: Context): ReturnType<Component['render']> extends string
+                ? Generator<string, void, void>
+                : ReturnType<Component['render']> extends Generator<string, void, void>
+                    ? Generator<string, void, void>
+                    : ReturnType<Component['render']> extends AsyncGenerator<string, void, void>
+                        ? AsyncGenerator<string, void, void>
+                        : ReturnType<Component['render']> extends Promise<string>
+                            ? AsyncGenerator<string, void, void>
+                            : Generator<string, void, void> | AsyncGenerator<string, void, void>;
+        } : never;
+    
+// Parse the given slotted content, find the only SSR reference in it, resolve
+// that reference, and return a "slotted" version of the component. The
+// "slotted" version wraps the SSR component into a generator, which emits all
+// the prerendered content in order with the SSR content inserted at the
+// appropriate position.
 export function parseOnlySlot<Context = unknown>(slot: string):
-        SsrComponent<Context> {
+        Slotted<SsrComponent<Context>> {
     const chunks = Array.from(parseHtml(slot));
     const annotations =
         chunks.filter((chunk) => typeof chunk !== 'string') as SsrAnnotation[];
@@ -87,20 +112,67 @@ export function parseOnlySlot<Context = unknown>(slot: string):
         throw new Error(`Found multiple slots in content:\n${slot}`);
     }
 
+    // Resolve the component, but leave the annotation in `chunks` because we
+    // need to render the component at the correct point in the sequence.
+    const [ annotation ] = annotations;
+    const { component, data } = annotation;
+    const ssrComponent = componentMap.resolve(component, data);
+    if (!ssrComponent) throw new Error(`Failed to resolve component: "${component}".`);
+
     return {
-        // TODO: Handle async, generators, etc.
-        render: (ctx: Context): string => {
-            const textChunks = chunks.map((chunk) => {
-                if (typeof chunk === 'string') {
-                    return chunk;
-                } else {
-                    const { component, data } = chunk;
-                    const ssrComponent = componentMap.resolve(component, data);
-                    if (!ssrComponent) throw new Error(`Failed to resolve component: "${component}".`);
-                    return ssrComponent.render(ctx);
-                }
-            });
-            return textChunks.join('');
+        render(ctx: Context):
+                | Generator<string, void, void>
+                | AsyncGenerator<string, void, void> {
+            const renderedComponent = ssrComponent.render(ctx);
+
+            // Emit the rendered component in line with its prerendered chunks
+            // according to its return type. When we find the annotation in the
+            // `chunks` array, we yield the SSR content, since that is the
+            // appropriate time.
+            if (typeof renderedComponent === 'string') {
+                return (function* (): Generator<string, void, void> {
+                    for (const chunk of chunks) {
+                        if (typeof chunk === 'string') {
+                            yield chunk;
+                        } else {
+                            yield renderedComponent;
+                        }
+                    }
+                })();
+            } else if (isIterable(renderedComponent)) {
+                return (function* (): Generator<string, void, void> {
+                    for (const chunk of chunks) {
+                        if (typeof chunk === 'string') {
+                            yield chunk;
+                        } else {
+                            yield* renderedComponent;
+                        }
+                    }
+                })();
+            } else if (renderedComponent instanceof Promise) {
+                return (async function* (): AsyncGenerator<string, void, void> {
+                    for (const chunk of chunks) {
+                        if (typeof chunk === 'string') {
+                            yield chunk;
+                        } else {
+                            yield await renderedComponent;
+                        }
+                    }
+                })();
+            } else if (isAsyncIterable(renderedComponent)) {
+                return (async function* (): AsyncGenerator<string, void, void> {
+                    for (const chunk of chunks) {
+                        if (typeof chunk === 'string') {
+                            yield chunk;
+                        } else {
+                            yield* renderedComponent;
+                        }
+                    }
+                })();
+            } else {
+                throw new Error(`Component ${component} returned a value that could not be converted into a generator: ${
+                    JSON.stringify(renderedComponent, null, 4)}`);
+            }
         },
     };
 }

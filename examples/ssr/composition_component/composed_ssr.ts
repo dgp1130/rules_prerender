@@ -1,7 +1,8 @@
-import { ExpressComponent, registerExpressComponent } from 'rules_prerender/packages/express/express';
+import { ExpressComponent, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
 
 export class ComposedSsrComponent implements ExpressComponent {
-    public render(): string {
+    // TODO: Handle unused context.
+    public render(ctx: ExpressContext): string {
         return `<li>SSR: Composed</li>`;
     }
 }
