@@ -1,11 +1,11 @@
 import { ssr } from 'rules_prerender';
 
-export function prerenderParallel(): string {
+export function prerenderConcurrent(): string {
     return `
 <ul>
-    <li>Parallel header</li>
-    ${times(10, (index) => ssr('parallel', { index })).join('\n')}
-    <li>Parallel footer</li>
+    <li>Concurrent header</li>
+    ${times(10, (index) => ssr('concurrent', { index })).join('\n')}
+    <li>Concurrent footer</li>
 </ul>
     `.trim();
 }

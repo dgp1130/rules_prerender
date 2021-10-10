@@ -19,7 +19,7 @@ async function* preload(
     chunks: Generator<string | SsrAnnotation, void, void>,
     ctx: unknown,
 ): AsyncGenerator<string, void, void> {
-    // Pull all the chunks into memory to start SSR execution in parallel.
+    // Pull all the chunks into memory to start SSR execution concurrently.
     const loadingChunks = Array.from(chunks).map((chunk) => {
         if (typeof chunk === 'string') {
             return chunk;

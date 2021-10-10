@@ -88,15 +88,16 @@ describe('ssr', () => {
         `.trim());
     });
 
-    it('renders components in parallel', async () => {
+    it('renders components concurrently', async () => {
         const res = await axios.get<string>(
-            `http://${devserver.get().host}:${devserver.get().port}/parallel.html`,
+            `http://${devserver.get().host}:${devserver.get().port}/concurrent.html`,
             { responseType: 'text' },
         );
 
         // Test times out in 2 seconds, but it takes 1 second to reach each item
-        // in the list. To pass, server must be parallelized, or else it would
-        // take a minimum of 10 seconds to render and the test would time out!
+        // in the list. To pass, components must render concurrently, or else it
+        // would take a minimum of 10 seconds to render and the test would time
+        // out!
         expect(res.data.trim()).toBe(`
 <!DOCTYPE html>
 <html>
@@ -105,18 +106,18 @@ describe('ssr', () => {
     </head>
     <body>
         <ul>
-    <li>Parallel header</li>
-    <li>Parallel 0</li>
-<li>Parallel 1</li>
-<li>Parallel 2</li>
-<li>Parallel 3</li>
-<li>Parallel 4</li>
-<li>Parallel 5</li>
-<li>Parallel 6</li>
-<li>Parallel 7</li>
-<li>Parallel 8</li>
-<li>Parallel 9</li>
-    <li>Parallel footer</li>
+    <li>Concurrent header</li>
+    <li>Concurrent 0</li>
+<li>Concurrent 1</li>
+<li>Concurrent 2</li>
+<li>Concurrent 3</li>
+<li>Concurrent 4</li>
+<li>Concurrent 5</li>
+<li>Concurrent 6</li>
+<li>Concurrent 7</li>
+<li>Concurrent 8</li>
+<li>Concurrent 9</li>
+    <li>Concurrent footer</li>
 </ul>
     </body>
 </html>

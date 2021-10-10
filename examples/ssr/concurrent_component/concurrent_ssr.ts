@@ -5,24 +5,24 @@ interface PrerenderData extends JsonObject {
     index: number;
 }
 
-class ParallelSsrComponent implements SsrComponent {
+class ConcurrentSsrComponent implements SsrComponent {
     private constructor(private index: number) { }
 
     public static fromPrerender({ index }: PrerenderData):
-            ParallelSsrComponent {
-        return new ParallelSsrComponent(index);
+            ConcurrentSsrComponent {
+        return new ConcurrentSsrComponent(index);
     }
 
     public async render(): Promise<string> {
         // Wait a sizeable length of time. Must render a lot of these components
-        // in parallel for a reasonable experience.
+        // concurrently for a reasonable experience.
         await timeout(1_000);
 
-        return `<li>Parallel ${this.index}</li>`;
+        return `<li>Concurrent ${this.index}</li>`;
     }
 }
 
-registerComponent('parallel', ParallelSsrComponent.fromPrerender);
+registerComponent('concurrent', ConcurrentSsrComponent.fromPrerender);
 
 function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {
