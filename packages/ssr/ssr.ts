@@ -82,18 +82,19 @@ function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
 // depending on the async-ness of the real return type. It must be a generator
 // because there may be build-time prerendered content to emit before and after
 // the SSR component itself.
-export type Slotted<Component extends SsrComponent<unknown>> =
-    Component extends SsrComponent<infer Context>
+export type Slotted<Component extends SsrComponent<unknown, unknown[]>> =
+    Component extends SsrComponent<infer Context, infer Params>
         ? Omit<SsrComponent<Context>, 'render'> & {
-            render(ctx: Context): ReturnType<Component['render']> extends string
-                ? Generator<string, void, void>
-                : ReturnType<Component['render']> extends Generator<string, void, void>
+            render(ctx: Context, ...params: Params):
+                ReturnType<Component['render']> extends string
                     ? Generator<string, void, void>
-                    : ReturnType<Component['render']> extends AsyncGenerator<string, void, void>
-                        ? AsyncGenerator<string, void, void>
-                        : ReturnType<Component['render']> extends Promise<string>
+                    : ReturnType<Component['render']> extends Generator<string, void, void>
+                        ? Generator<string, void, void>
+                        : ReturnType<Component['render']> extends AsyncGenerator<string, void, void>
                             ? AsyncGenerator<string, void, void>
-                            : Generator<string, void, void> | AsyncGenerator<string, void, void>;
+                            : ReturnType<Component['render']> extends Promise<string>
+                                ? AsyncGenerator<string, void, void>
+                                : Generator<string, void, void> | AsyncGenerator<string, void, void>;
         } : never;
     
 // Parse the given slotted content, find the only SSR reference in it, resolve
@@ -101,8 +102,10 @@ export type Slotted<Component extends SsrComponent<unknown>> =
 // "slotted" version wraps the SSR component into a generator, which emits all
 // the prerendered content in order with the SSR content inserted at the
 // appropriate position.
-export function parseOnlySlot<Context = unknown>(slot: string):
-        Slotted<SsrComponent<Context>> {
+export function parseOnlySlot<
+    Context = unknown,
+    Params extends unknown[] = unknown[],
+>(slot: string): Slotted<SsrComponent<Context, Params>> {
     const chunks = Array.from(parseHtml(slot));
     const annotations =
         chunks.filter((chunk) => typeof chunk !== 'string') as SsrAnnotation[];
@@ -120,10 +123,10 @@ export function parseOnlySlot<Context = unknown>(slot: string):
     if (!ssrComponent) throw new Error(`Failed to resolve component: "${component}".`);
 
     return {
-        render(ctx: Context):
+        render(ctx: Context, ...params: Params):
                 | Generator<string, void, void>
                 | AsyncGenerator<string, void, void> {
-            const renderedComponent = ssrComponent.render(ctx);
+            const renderedComponent = ssrComponent.render(ctx, ...params);
 
             // Emit the rendered component in line with its prerendered chunks
             // according to its return type. When we find the annotation in the

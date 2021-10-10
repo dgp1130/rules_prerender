@@ -5,9 +5,11 @@ export type SsrFactory<
     Context = unknown,
 > = (data: PrerenderedData) => SsrComponent<Context>;
 
-export interface SsrComponent<Context = void> {
-    // TODO: Request input?
-    render(params: Context):
+export interface SsrComponent<
+    Context = void,
+    Params extends unknown[] = unknown[],
+> {
+    render(ctx: Context, ...params: Params):
         | string
         | Promise<string>
         | Generator<string, void, void>

@@ -18,7 +18,7 @@ class CompositionSsrComponent implements ExpressComponent {
 
     public *render(ctx: ExpressContext): Generator<string, void, void> {
         yield `<li>SSR: Composition</li>`;
-        yield* this.composed.render(ctx);
+        yield* this.composed.render(ctx, 'Composition');
     }
 }
 

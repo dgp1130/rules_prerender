@@ -2,8 +2,8 @@ import { ExpressComponent, registerExpressComponent, ExpressContext } from 'rule
 
 export class ComposedSsrComponent implements ExpressComponent {
     // TODO: Handle unused context.
-    public render(ctx: ExpressContext): string {
-        return `<li>SSR: Composed</li>`;
+    public render(ctx: ExpressContext, name: string): string {
+        return `<li>SSR: Composed from ${name}</li>`;
     }
 }
 

@@ -162,7 +162,7 @@ describe('ssr', () => {
     <li>Composition header</li>
     <li>SSR: Composition</li><ul>
     <li>Composed header</li>
-    <li>SSR: Composed</li>
+    <li>SSR: Composed from Composition</li>
     <li>Composed footer</li>
 </ul>
     <li>Composition footer</li>
