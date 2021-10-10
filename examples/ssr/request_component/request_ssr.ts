@@ -1,6 +1,8 @@
 import { ExpressComponent, ExpressContext, registerExpressComponent } from 'rules_prerender/packages/express/express';
 
 class RequestSsrComponent implements ExpressComponent {
+    public readonly name = 'request';
+
     public render({ req }: ExpressContext): string {
         const name = req.query.name;
         if (!name) {

@@ -6,7 +6,9 @@ interface PrerenderData extends JsonObject {
 }
 
 class FooSsrComponent implements SsrComponent {
-    private constructor(private name: string) { }
+    private constructor(private inputName: string) { }
+
+    public readonly name = 'foo';
 
     public static fromPrerendered({ name }: PrerenderData): FooSsrComponent {
         return new FooSsrComponent(name);
@@ -17,7 +19,7 @@ class FooSsrComponent implements SsrComponent {
     }
 
     public render(): string {
-        return `<li>Foo component says hello via SSR to ${this.name}</li>`;
+        return `<li>Foo component says hello via SSR to ${this.inputName}</li>`;
     }
 }
 

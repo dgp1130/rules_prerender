@@ -30,7 +30,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/concurrent.html', page(prerenderConcurrent()));
     yield PrerenderResource.of('/request.html', page(prerenderRequest()));
     yield PrerenderResource.of(
-        '/composition.html', page(prerenderComposition()));
+        '/composition.html', page(prerenderComposition().toString()));
 }
 
 function page(content: string): string {

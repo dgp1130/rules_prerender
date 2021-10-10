@@ -10,6 +10,7 @@ ts_library(
         ":ssr_component",
         "//common:fs",
         "//common/models:prerender_annotation",
+        "//packages/rules_prerender",
         "@npm//@types/node",
     ],
 )
@@ -52,5 +53,6 @@ ts_library(
 ts_library(
     name = "ssr_component",
     srcs = ["ssr_component.ts"],
+    visibility = ["//packages/rules_prerender:__pkg__"],
     deps = ["//common/models:json"],
 )

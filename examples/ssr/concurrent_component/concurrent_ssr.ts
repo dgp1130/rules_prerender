@@ -8,6 +8,8 @@ interface PrerenderData extends JsonObject {
 class ConcurrentSsrComponent implements SsrComponent {
     private constructor(private index: number) { }
 
+    public readonly name = 'concurrent';
+
     public static fromPrerender({ index }: PrerenderData):
             ConcurrentSsrComponent {
         return new ConcurrentSsrComponent(index);

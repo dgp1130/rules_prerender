@@ -1,8 +1,9 @@
-import { ssr } from 'rules_prerender';
+import { ssr, slottable, Slottable } from 'rules_prerender';
 import { prerenderComposed } from 'rules_prerender/examples/ssr/composition_component/composed_prerender';
+import type { CompositionSsrComponent } from 'rules_prerender/examples/ssr/composition_component/composition_ssr';
 
-export function prerenderComposition(): string {
-    return `
+export function prerenderComposition(): Slottable<CompositionSsrComponent> {
+    return slottable('composition', `
 <ul>
     <li>Composition header</li>
     ${ssr('composition', {
@@ -10,5 +11,5 @@ export function prerenderComposition(): string {
     })}
     <li>Composition footer</li>
 </ul>
-    `.trim();
+    `.trim());
 }

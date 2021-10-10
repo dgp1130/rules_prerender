@@ -1,18 +1,19 @@
-import { ExpressComponent, Slotted, parseOnlySlot, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
+import { ExpressComponent, Slotted, Slottable, parseOnlySlot, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
 import { JsonObject } from 'rules_prerender/common/models/json';
 import { ComposedSsrComponent } from 'rules_prerender/examples/ssr/composition_component/composed_ssr';
 
 interface PrerenderData extends JsonObject {
-    composed: string;
+    composed: Slottable<ComposedSsrComponent>;
 }
 
-class CompositionSsrComponent implements ExpressComponent {
+export class CompositionSsrComponent implements ExpressComponent {
     private constructor(private composed: Slotted<ComposedSsrComponent>) { }
+
+    public readonly name = 'composition';
 
     public static fromPrerendered({ composed }: PrerenderData):
             CompositionSsrComponent {
-        const composedComponent =
-            parseOnlySlot(composed) as Slotted<ComposedSsrComponent>;
+        const composedComponent = parseOnlySlot(composed);
         return new CompositionSsrComponent(composedComponent);
     }
 

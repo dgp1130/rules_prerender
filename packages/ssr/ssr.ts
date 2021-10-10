@@ -1,9 +1,11 @@
 import * as path from 'path';
 import * as fs from 'rules_prerender/common/fs';
 import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { Branded } from 'rules_prerender/packages/rules_prerender';
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
 import { SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
 
+export { Slottable } from 'rules_prerender/packages/rules_prerender';
 export { SsrComponent, SsrFactory } from 'rules_prerender/packages/ssr/ssr_component';
 
 const componentMap = new ComponentMap();
@@ -90,36 +92,35 @@ function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
 // because there may be build-time prerendered content to emit before and after
 // the SSR component itself.
 export type Slotted<Component extends SsrComponent<unknown, unknown[]>> =
-    Component extends SsrComponent<infer Context, infer Params>
-        ? Omit<SsrComponent<Context>, 'render'> & {
-            render(ctx: Context, ...params: Params):
-                ReturnType<Component['render']> extends string
+    Omit<Component, 'render'> & {
+        render(...params: Parameters<Component['render']>):
+            ReturnType<Component['render']> extends string
+                ? Generator<string, void, void>
+                : ReturnType<Component['render']> extends Generator<string, void, void>
                     ? Generator<string, void, void>
-                    : ReturnType<Component['render']> extends Generator<string, void, void>
-                        ? Generator<string, void, void>
-                        : ReturnType<Component['render']> extends AsyncGenerator<string, void, void>
+                    : ReturnType<Component['render']> extends AsyncGenerator<string, void, void>
+                        ? AsyncGenerator<string, void, void>
+                        : ReturnType<Component['render']> extends Promise<string>
                             ? AsyncGenerator<string, void, void>
-                            : ReturnType<Component['render']> extends Promise<string>
-                                ? AsyncGenerator<string, void, void>
-                                : Generator<string, void, void> | AsyncGenerator<string, void, void>;
-        } : never;
-    
+                            : Generator<string, void, void> | AsyncGenerator<string, void, void>
+    }
+;
+
 // Parse the given slotted content, find the only SSR reference in it, resolve
 // that reference, and return a "slotted" version of the component. The
 // "slotted" version wraps the SSR component into a generator, which emits all
 // the prerendered content in order with the SSR content inserted at the
 // appropriate position.
-export function parseOnlySlot<
-    Context = unknown,
-    Params extends unknown[] = unknown[],
->(slot: string): Slotted<SsrComponent<Context, Params>> {
-    const chunks = Array.from(parseHtml(slot));
+export function parseOnlySlot<Component extends keyof SsrComponentMap>(
+    { _value: content }: Branded<Component, string>,
+): Slotted<SsrComponentMap[Component][1]> {
+    const chunks = Array.from(parseHtml(content));
     const annotations =
         chunks.filter((chunk) => typeof chunk !== 'string') as SsrAnnotation[];
     if (annotations.length === 0) {
-        throw new Error(`Found no slots in content:\n${slot}`);
+        throw new Error(`Found no slots in content:\n${content}`);
     } else if (annotations.length > 1) {
-        throw new Error(`Found multiple slots in content:\n${slot}`);
+        throw new Error(`Found multiple slots in content:\n${content}`);
     }
 
     // Resolve the component, but leave the annotation in `chunks` because we
@@ -129,8 +130,9 @@ export function parseOnlySlot<
     const ssrComponent = componentMap.resolve(component, data);
     if (!ssrComponent) throw new Error(`Failed to resolve component: "${component}".`);
 
-    return {
-        render(ctx: Context, ...params: Params):
+    const result = {
+        name: ssrComponent.name,
+        render(ctx: unknown, ...params: unknown[]):
                 | Generator<string, void, void>
                 | AsyncGenerator<string, void, void> {
             const renderedComponent = ssrComponent.render(ctx, ...params);
@@ -185,6 +187,8 @@ export function parseOnlySlot<
             }
         },
     };
+
+    return result as unknown as Slotted<SsrComponentMap[Component][1]>;
 }
 
 const templateOpenTag = `<template label=bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE>`;

@@ -9,6 +9,7 @@ export interface SsrComponent<
     Context = void,
     Params extends unknown[] = unknown[],
 > {
+    readonly name: string;
     render(ctx: Context, ...params: Params):
         | string
         | Promise<string>
