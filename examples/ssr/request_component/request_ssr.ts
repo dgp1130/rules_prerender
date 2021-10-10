@@ -12,3 +12,9 @@ class RequestSsrComponent implements ExpressComponent {
 }
 
 registerExpressComponent('request', () => new RequestSsrComponent());
+
+declare global {
+    interface SsrComponentMap {
+        'request': [ undefined, RequestSsrComponent ];
+    }
+}

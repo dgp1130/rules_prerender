@@ -24,3 +24,9 @@ class CompositionSsrComponent implements ExpressComponent {
 
 registerExpressComponent(
     'composition', CompositionSsrComponent.fromPrerendered);
+
+declare global {
+    interface SsrComponentMap {
+        'composition': [ PrerenderData, CompositionSsrComponent ];
+    }
+}

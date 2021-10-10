@@ -11,6 +11,12 @@ class StreamingSsrComponent implements SsrComponent {
 
 registerComponent('streaming', () => new StreamingSsrComponent());
 
+declare global {
+    interface SsrComponentMap {
+        'streaming': [ undefined, StreamingSsrComponent ];
+    }
+}
+
 function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(() => resolve(), millis);

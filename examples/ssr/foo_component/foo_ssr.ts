@@ -22,3 +22,11 @@ class FooSsrComponent implements SsrComponent {
 }
 
 registerComponent('foo', FooSsrComponent.fromPrerendered);
+
+declare global {
+    interface SsrComponentMap {
+        'foo': [ PrerenderData, FooSsrComponent ];
+    }
+}
+
+export {}; // DEBUG

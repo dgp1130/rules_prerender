@@ -6,7 +6,7 @@ export function prerenderBar(): string {
 <ul>
     <li>Bar header</li>
     ${prerenderFoo('Bar')}
-    ${ssr('bar')}
+    ${ssr('bar', undefined)}
     <li>Bar footer</li>
 </ul>
     `.trim();

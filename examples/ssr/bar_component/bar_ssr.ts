@@ -7,3 +7,9 @@ class BarSsrComponent implements SsrComponent {
 }
 
 registerComponent('bar', () => new BarSsrComponent());
+
+declare global {
+    interface SsrComponentMap {
+        'bar': [ undefined, BarSsrComponent ];
+    }
+}

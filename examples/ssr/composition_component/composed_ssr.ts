@@ -8,3 +8,9 @@ export class ComposedSsrComponent implements ExpressComponent {
 }
 
 registerExpressComponent('composed', () => new ComposedSsrComponent());
+
+declare global {
+    interface SsrComponentMap {
+        'composed': [ undefined, ComposedSsrComponent ];
+    }
+}

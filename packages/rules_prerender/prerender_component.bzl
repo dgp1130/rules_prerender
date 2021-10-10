@@ -78,6 +78,13 @@ def prerender_component(
             accordingly.
     """
 
+    ssr_type_reexport = "%s_ssr_types" % name
+    _type_reexport(
+        name = ssr_type_reexport,
+        deps = ssr,
+        testonly = testonly,
+    )
+
     prerender_lib = "%s_prerender" % name
     if all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
         ts_library(
@@ -85,7 +92,9 @@ def prerender_component(
             srcs = srcs,
             tsconfig = tsconfig,
             data = data + styles,
-            deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+            deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps] + [
+                ":%s" % ssr_type_reexport,
+            ],
             testonly = testonly,
             visibility = visibility,
         )
@@ -93,7 +102,9 @@ def prerender_component(
         js_library(
             name = prerender_lib,
             srcs = srcs + data + styles, # `data` is included in `srcs`.
-            deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+            deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps] + [
+                ":%s" % ssr_type_reexport,
+            ],
             testonly = testonly,
             visibility = visibility,
         )
@@ -221,4 +232,30 @@ _js_reexport = rule(
             with `ts_library()` re-export it is not possible to re-export only
             some of the given targets.
     """,
+)
+
+def _type_reexport_impl(ctx):
+    return DeclarationInfo(
+        declarations = depset([],
+            transitive = [dep[DeclarationInfo].declarations
+                          for dep in ctx.attr.deps],
+        ),
+        transitive_declarations = depset([],
+            transitive = [dep[DeclarationInfo].transitive_declarations
+                          for dep in  ctx.attr.deps],
+        ),
+        type_blocklisted_declarations = depset([],
+            transitive = [dep[DeclarationInfo].type_blocklisted_declarations
+                          for dep in ctx.attr.deps],
+        ),
+    )
+
+_type_reexport = rule(
+    implementation = _type_reexport_impl,
+    attrs = {
+        "deps": attr.label_list(
+            mandatory = True,
+            providers = [DeclarationInfo],
+        ),
+    },
 )

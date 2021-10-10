@@ -24,6 +24,12 @@ class ConcurrentSsrComponent implements SsrComponent {
 
 registerComponent('concurrent', ConcurrentSsrComponent.fromPrerender);
 
+declare global {
+    interface SsrComponentMap {
+        'concurrent': [ PrerenderData, ConcurrentSsrComponent ];
+    }
+}
+
 function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(() => resolve(), millis);
