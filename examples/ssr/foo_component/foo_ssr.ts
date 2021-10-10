@@ -21,4 +21,4 @@ class FooSsrComponent implements SsrComponent {
     }
 }
 
-registerComponent<PrerenderData>('foo', FooSsrComponent.fromPrerendered);
+registerComponent('foo', FooSsrComponent.fromPrerendered);

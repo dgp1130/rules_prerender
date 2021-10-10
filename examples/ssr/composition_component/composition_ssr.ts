@@ -22,5 +22,5 @@ class CompositionSsrComponent implements ExpressComponent {
     }
 }
 
-registerExpressComponent<PrerenderData>(
+registerExpressComponent(
     'composition', CompositionSsrComponent.fromPrerendered);

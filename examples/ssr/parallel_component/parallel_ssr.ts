@@ -22,8 +22,7 @@ class ParallelSsrComponent implements SsrComponent {
     }
 }
 
-registerComponent<PrerenderData>(
-    'parallel', ParallelSsrComponent.fromPrerender);
+registerComponent('parallel', ParallelSsrComponent.fromPrerender);
 
 function timeout(millis: number): Promise<void> {
     return new Promise((resolve) => {
