@@ -4,7 +4,7 @@ export function prerenderStreaming(): string {
     return `
 <ul>
     <li>Streaming header</li>
-    ${ssr('streaming', undefined /* data */)}
+    ${ssr('streaming')}
     <li>Streaming footer</li>
 </ul>
     `.trim();

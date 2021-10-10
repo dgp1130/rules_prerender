@@ -4,7 +4,7 @@ export function prerenderRequest(): string {
     return `
 <ul>
     <li>Request header</li>
-    ${ssr('request', undefined /* data */)}
+    ${ssr('request')}
     <li>Request footer</li>
 </ul>
     `.trim();

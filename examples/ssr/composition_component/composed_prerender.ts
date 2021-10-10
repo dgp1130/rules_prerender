@@ -4,7 +4,7 @@ export function prerenderComposed(): string {
     return `
 <ul>
     <li>Composed header</li>
-    ${ssr('composed', undefined)}
+    ${ssr('composed')}
     <li>Composed footer</li>
 </ul>
     `.trim();

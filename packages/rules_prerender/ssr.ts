@@ -5,10 +5,12 @@ declare global {
     interface SsrComponentMap { }
 }
 
-/** TODO: `data` optional based on prerender data of component? */
+/** TODO */
 export function ssr<Component extends keyof SsrComponentMap>(
     component: Component,
-    data: SsrComponentMap[Component][0],
+    ...[ data ]: undefined extends SsrComponentMap[Component][0]
+        ? [] | [ undefined ]
+        : [ SsrComponentMap[Component][0] ]
 ): string {
     return createAnnotation({
         type: 'ssr',
