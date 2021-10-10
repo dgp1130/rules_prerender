@@ -9,6 +9,7 @@ ts_library(
         ":component_map",
         ":ssr_component",
         "//common:fs",
+        "//common/models:json",
         "//common/models:prerender_annotation",
         "//packages/rules_prerender",
         "@npm//@types/node",
@@ -37,22 +38,17 @@ ts_library(
     deps = [
         ":ssr_component",
         ":factory_map",
-        "//common/models:json",
     ],
 )
 
 ts_library(
     name = "factory_map",
     srcs = ["factory_map.ts"],
-    deps = [
-        ":ssr_component",
-        "//common/models:json",
-    ],
+    deps = [":ssr_component"],
 )
 
 ts_library(
     name = "ssr_component",
     srcs = ["ssr_component.ts"],
     visibility = ["//packages/rules_prerender:__pkg__"],
-    deps = ["//common/models:json"],
 )

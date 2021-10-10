@@ -1,8 +1,8 @@
 import * as path from 'path';
 import { Request, Response, NextFunction } from 'express';
 import { SsrComponent, SsrFactory, registerComponent, render } from 'rules_prerender/packages/ssr/ssr';
-import { JsonObject } from 'rules_prerender/common/models/json';
 
+// TODO: Remove parseOnlySlot?
 export { Slotted, Slottable, parseOnlySlot } from 'rules_prerender/packages/ssr/ssr';
 
 export interface ExpressContext {
@@ -10,7 +10,7 @@ export interface ExpressContext {
 }
 export type ExpressComponent = SsrComponent<ExpressContext>;
 export function registerExpressComponent<
-    PrerenderData extends JsonObject | undefined
+    PrerenderData extends {} | undefined
 >(component: string, factory: SsrFactory<PrerenderData, ExpressContext>): void {
     registerComponent(component, factory);
 }

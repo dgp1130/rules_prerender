@@ -1,3 +1,4 @@
+import { JsonObject } from 'rules_prerender/common/models/json';
 import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import { SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
 
@@ -11,14 +12,28 @@ export function ssr<Component extends keyof SsrComponentMap>(
     component: Component,
     ...[ data ]: undefined extends SsrComponentMap[Component][0]
         ? [] | [ undefined ]
-        : [ SsrComponentMap[Component][0] ]
+        : [ DeepSlottableData<SsrComponentMap[Component][0]> ]
 ): string {
     return createAnnotation({
         type: 'ssr',
         component,
-        data,
+        data: data as JsonObject,
     });
 }
+
+// TODO: Make this more flexible.
+type DeepSlottableData<Data extends {} | undefined> = {
+    [Key in keyof Data]: SlottableData<Data[Key]>;
+};
+type SlottableData<SlottedData extends {} | undefined> =
+    // Technically this should be a `Slotted<Component>`, but `Slotted` just
+    // wraps the implementation, the type is (relatively) unchanged. Matching on
+    // An `SsrComponent` directly is a bit simpler and avoids a weird dependency
+    // on `Slotted`.
+    SlottedData extends SsrComponent<unknown, unknown[]>
+        ? Branded<SlottedData['name'], string>
+        : SlottedData
+;
 
 export type Branded<Brand extends string, Value> = {
     _brand: Brand;

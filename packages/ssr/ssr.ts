@@ -1,9 +1,10 @@
 import * as path from 'path';
 import * as fs from 'rules_prerender/common/fs';
 import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { Branded } from 'rules_prerender/packages/rules_prerender';
+import { Branded, Slottable } from 'rules_prerender/packages/rules_prerender';
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
 import { SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
+import { JsonObject } from 'rules_prerender/common/models/json';
 
 export { Slottable } from 'rules_prerender/packages/rules_prerender';
 export { SsrComponent, SsrFactory } from 'rules_prerender/packages/ssr/ssr_component';
@@ -47,9 +48,34 @@ async function* preload(
     }
 }
 
+function parseSlots(data: JsonObject): Record<string, unknown> {
+    return Object.fromEntries(Object.entries(data).map(([ key, value ]) => {
+        if (typeof value !== 'object') return [ key, value ];
+        if (Array.isArray(value)) return [ key, value ];
+        if (value === null) return [ key, value ];
+
+        if (isSlottable(value)) {
+            const slot = parseOnlySlot(
+                value as Branded<keyof SsrComponentMap, string>,
+            );
+            return [ key, slot ];
+        } else {
+            return [ key, value ];
+        }
+    }));
+}
+
+function isSlottable(value: Record<string, unknown>):
+        value is Slottable<SsrComponent<unknown, unknown[]>> {
+    if (typeof value['_brand'] !== 'string') return false;
+    if (typeof value['_value'] !== 'string') return false;
+    return true;
+}
+
 function renderComponent({ component, data }: SsrAnnotation, ctx: unknown):
         AsyncGenerator<string, void, void> {
-    const comp = componentMap.resolve<unknown>(component, data);
+    const slottedData = data ? parseSlots(data) : data;
+    const comp = componentMap.resolve<unknown>(component, slottedData);
     if (!comp) {
         throw new Error(`Failed to resolve component "${component}", was it registered?`);
     }

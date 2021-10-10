@@ -14,7 +14,6 @@ ts_library(
     name = "composition_ssr",
     srcs = ["composition_ssr.ts"],
     deps = [
-        "//common/models:json",
         "//packages/express",
         # TODO: Dep should go through `prerender_component()`?
         ":composed_ssr",

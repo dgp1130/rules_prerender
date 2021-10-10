@@ -1,9 +1,8 @@
-import { ExpressComponent, Slotted, Slottable, parseOnlySlot, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
-import { JsonObject } from 'rules_prerender/common/models/json';
+import { ExpressComponent, Slotted, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
 import { ComposedSsrComponent } from 'rules_prerender/examples/ssr/composition_component/composed_ssr';
 
-interface PrerenderData extends JsonObject {
-    composed: Slottable<ComposedSsrComponent>;
+interface PrerenderData {
+    composed: Slotted<ComposedSsrComponent>;
 }
 
 export class CompositionSsrComponent implements ExpressComponent {
@@ -13,8 +12,7 @@ export class CompositionSsrComponent implements ExpressComponent {
 
     public static fromPrerendered({ composed }: PrerenderData):
             CompositionSsrComponent {
-        const composedComponent = parseOnlySlot(composed);
-        return new CompositionSsrComponent(composedComponent);
+        return new CompositionSsrComponent(composed);
     }
 
     public *render(ctx: ExpressContext): Generator<string, void, void> {

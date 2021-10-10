@@ -1,8 +1,8 @@
-import { JsonObject } from 'rules_prerender/common/models/json';
 import { SsrFactory, SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
 
 export class FactoryMap<
-    PrerenderedData extends JsonObject | undefined = JsonObject | undefined,
+    PrerenderedData extends Record<string, unknown> | undefined =
+        Record<string, unknown> | undefined,
     Context = unknown,
 > {
     private factory: SsrFactory<PrerenderedData, Context>;
@@ -12,7 +12,7 @@ export class FactoryMap<
         this.factory = factory;
     }
 
-    public static from<PrerenderedData extends JsonObject | undefined>(
+    public static from<PrerenderedData extends Record<string, unknown> | undefined>(
         factory: SsrFactory<PrerenderedData>,
     ): FactoryMap<PrerenderedData> {
         return new FactoryMap({ factory });

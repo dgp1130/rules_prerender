@@ -1,7 +1,6 @@
-import { JsonObject } from 'rules_prerender/common/models/json';
-
 export type SsrFactory<
-    PrerenderedData extends JsonObject | undefined = JsonObject | undefined,
+    PrerenderedData extends Record<string, unknown> | undefined =
+        Record<string, unknown> | undefined,
     Context = unknown,
 > = (data: PrerenderedData) => SsrComponent<Context>;
 

@@ -10,7 +10,6 @@ ts_library(
     srcs = ["express.ts"],
     visibility = ["//visibility:public"],
     deps = [
-        "//common/models:json",
         "//packages/ssr",
         "@npm//@types/express",
         "@npm//@types/node",
