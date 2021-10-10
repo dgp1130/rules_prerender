@@ -10,6 +10,7 @@ ts_library(
         ":ssr_component",
         "//common:fs",
         "//common/models:prerender_annotation",
+        "@npm//@types/node",
     ],
 )
 

@@ -10,7 +10,6 @@ const { port } = yargs.option('port', {
 }).argv;
 
 const app = express();
-// TODO: `/` -> `/index.html`.
 app.get('/**.html', ssr(runfiles.resolvePackageRelative('testdata')));
 
 app.listen(port, () => {

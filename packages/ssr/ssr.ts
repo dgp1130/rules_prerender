@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as fs from 'rules_prerender/common/fs';
 import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
@@ -9,9 +10,15 @@ const componentMap = new ComponentMap();
 export const registerComponent = componentMap.register.bind(componentMap);
 
 // TODO: Accept a path and read from it or just accept a file to begin with?
-export async function* render(path: string, ctx: unknown):
+export async function* render(inputPath: string, ctx: unknown):
         AsyncGenerator<string, void, void> {
-    const html = await fs.readFile(path, 'utf8'); // TODO: Binary? Read in chunks?
+    const stat = await fs.stat(inputPath);
+    if (!stat.isDirectory() && !stat.isFile()) {
+        throw new Error(`Requested page ${inputPath} is not a file or directory.`);
+    }
+    const filePath =
+        stat.isDirectory() ? path.join(inputPath, 'index.html') : inputPath;
+    const html = await fs.readFile(filePath, 'utf8'); // TODO: Binary? Read in chunks?
     yield* preload(parseHtml(html), ctx);
 }
 
