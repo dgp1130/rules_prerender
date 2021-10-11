@@ -1,0 +1,33 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "list_component",
+    srcs = ["list_prerender.ts"],
+    ssr = [":list_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+    visibility = ["//examples/ssr:__pkg__"],
+    deps = [":list_item_component"],
+)
+
+ts_library(
+    name = "list_ssr",
+    srcs = ["list_ssr.ts"],
+    deps = [
+        ":list_item_ssr",
+        "//packages/express",
+    ],
+)
+
+prerender_component(
+    name = "list_item_component",
+    srcs = ["list_item_prerender.ts"],
+    ssr = [":list_item_ssr"],
+    lib_deps = ["//packages/rules_prerender"],
+)
+
+ts_library(
+    name = "list_item_ssr",
+    srcs = ["list_item_ssr.ts"],
+    deps = ["//packages/express"],
+)

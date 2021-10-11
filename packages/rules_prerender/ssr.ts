@@ -10,10 +10,11 @@ declare global {
 /** TODO */
 export function ssr<Component extends keyof SsrComponentMap>(
     component: Component,
-    ...[ data ]: undefined extends SsrComponentMap[Component][0]
+    ...args: undefined extends SsrComponentMap[Component][0]
         ? [] | [ undefined ]
         : [ DeepSlottableData<SsrComponentMap[Component][0]> ]
 ): string {
+    const [ data ] = args;
     return createAnnotation({
         type: 'ssr',
         component,
@@ -21,18 +22,26 @@ export function ssr<Component extends keyof SsrComponentMap>(
     });
 }
 
-// TODO: Make this more flexible.
-type DeepSlottableData<Data extends {} | undefined> = {
-    [Key in keyof Data]: SlottableData<Data[Key]>;
-};
-type SlottableData<SlottedData extends {} | undefined> =
+type DeepSlottableData<Data> =
+    Data extends []
+        ? []
+        : Data extends [ infer Head, ...infer Tail ]
+        ? [ SlottableData<Head>, ...DeepSlottableData<Tail> ]
+        : Data extends unknown[]
+            ? DeepSlottableData<Data[number]>[]
+            : SlottableData<Data> extends never
+                ? Data extends {}
+                    ? { [Key in keyof Data]: DeepSlottableData<Data[Key]> }
+                    : Data
+            : SlottableData<Data>;
+type SlottableData<SlottedData> =
     // Technically this should be a `Slotted<Component>`, but `Slotted` just
     // wraps the implementation, the type is (relatively) unchanged. Matching on
     // An `SsrComponent` directly is a bit simpler and avoids a weird dependency
     // on `Slotted`.
     SlottedData extends SsrComponent<unknown, unknown[]>
         ? Branded<SlottedData['name'], string>
-        : SlottedData
+        : never
 ;
 
 export type Branded<Brand extends string, Value> = {

@@ -13,6 +13,7 @@ prerender_pages(
         "//examples/ssr/composition_component",
         "//examples/ssr/concurrent_component",
         "//examples/ssr/foo_component",
+        "//examples/ssr/list_component",
         "//examples/ssr/request_component",
         "//examples/ssr/streaming_component",
     ],

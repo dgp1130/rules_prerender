@@ -172,4 +172,27 @@ describe('ssr', () => {
 </html>
         `.trim());
     });
+
+    it('supports SSR of an array of dependency components', async () => {
+        const res = await axios.get<string>(
+            `http://${devserver.get().host}:${devserver.get().port}/list.html`,
+            { responseType: 'text' },
+        );
+
+        expect(res.data.trim()).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <ul>
+    <li>List header</li>
+    <ul><li>List item header</li><li>SSR: List item: 0</li><li>SSR: List item: 1</li><li>SSR: List item: 2</li><li>SSR: List item: 3</li><li>SSR: List item: 4</li><li>SSR: List item: 5</li><li>SSR: List item: 6</li><li>SSR: List item: 7</li><li>SSR: List item: 8</li><li>SSR: List item: 9</li><li>List item footer</li></ul>
+    <li>List footer</li>
+</ul>
+    </body>
+</html>
+        `.trim());
+    });
 });

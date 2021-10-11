@@ -3,6 +3,7 @@ import { prerenderBar } from 'rules_prerender/examples/ssr/bar_component/bar_pre
 import { prerenderComposition } from 'rules_prerender/examples/ssr/composition_component/composition_prerender';
 import { prerenderConcurrent } from 'rules_prerender/examples/ssr/concurrent_component/concurrent_prerender';
 import { prerenderFoo } from 'rules_prerender/examples/ssr/foo_component/foo_prerender';
+import { prerenderList } from 'rules_prerender/examples/ssr/list_component/list_prerender';
 import { prerenderRequest } from 'rules_prerender/examples/ssr/request_component/request_prerender';
 import { prerenderStreaming } from 'rules_prerender/examples/ssr/streaming_component/streaming_prerender';
 
@@ -21,6 +22,8 @@ export default function* (): Generator<PrerenderResource, void, void> {
     ${prerenderRequest()}
     <li>Sixth chunk (composition)</li>
     ${prerenderComposition()}
+    <li>Seventh chunk (list)</li>
+    ${prerenderList()}
 </ul>
     `).trim());
 
@@ -31,6 +34,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/request.html', page(prerenderRequest()));
     yield PrerenderResource.of(
         '/composition.html', page(prerenderComposition().toString()));
+    yield PrerenderResource.of('/list.html', page(prerenderList().toString()));
 }
 
 function page(content: string): string {

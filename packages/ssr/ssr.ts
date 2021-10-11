@@ -4,7 +4,7 @@ import { parseAnnotation, SsrAnnotation } from 'rules_prerender/common/models/pr
 import { Branded, Slottable } from 'rules_prerender/packages/rules_prerender';
 import { ComponentMap } from 'rules_prerender/packages/ssr/component_map';
 import { SsrComponent } from 'rules_prerender/packages/ssr/ssr_component';
-import { JsonObject } from 'rules_prerender/common/models/json';
+import { JsonArray, JsonObject, JsonValue } from 'rules_prerender/common/models/json';
 
 export { Slottable } from 'rules_prerender/packages/rules_prerender';
 export { SsrComponent, SsrFactory } from 'rules_prerender/packages/ssr/ssr_component';
@@ -48,21 +48,27 @@ async function* preload(
     }
 }
 
-function parseSlots(data: JsonObject): Record<string, unknown> {
-    return Object.fromEntries(Object.entries(data).map(([ key, value ]) => {
-        if (typeof value !== 'object') return [ key, value ];
-        if (Array.isArray(value)) return [ key, value ];
-        if (value === null) return [ key, value ];
-
-        if (isSlottable(value)) {
-            const slot = parseOnlySlot(
-                value as Branded<keyof SsrComponentMap, string>,
-            );
-            return [ key, slot ];
+function parseSlots(data: JsonArray):
+    | typeof data
+    | Array<Slotted<SsrComponent<unknown, unknown[]>>>;
+function parseSlots(data: JsonObject):
+    | typeof data
+    | Slotted<SsrComponent<unknown, unknown[]>>
+    | Record<string, Slotted<SsrComponent<unknown, unknown[]>>>;
+function parseSlots(data: JsonValue): typeof data;
+function parseSlots(data: JsonValue): unknown {
+    if (Array.isArray(data)) {
+        return data.map((value) => parseSlots(value));
+    } else if (typeof data === 'object' && data !== null) {
+        if (isSlottable(data)) {
+            return parseOnlySlot(data as Branded<keyof SsrComponentMap, string>);
         } else {
-            return [ key, value ];
+            return Object.fromEntries(Object.entries(data)
+                .map(([ key, value ]) => [ key, parseSlots(value) ]));
         }
-    }));
+    } else {
+        return data;
+    }
 }
 
 function isSlottable(value: Record<string, unknown>):
