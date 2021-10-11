@@ -2,8 +2,7 @@ import * as path from 'path';
 import { Request, Response, NextFunction } from 'express';
 import { SsrComponent, SsrFactory, registerComponent, render } from 'rules_prerender/packages/ssr/ssr';
 
-// TODO: Remove parseOnlySlot?
-export { Slotted, Slottable, parseOnlySlot } from 'rules_prerender/packages/ssr/ssr';
+export { Slotted, Slottable } from 'rules_prerender/packages/ssr/ssr';
 
 export interface ExpressContext {
     req: Request;

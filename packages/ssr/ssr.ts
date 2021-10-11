@@ -137,7 +137,7 @@ export type Slotted<Component extends SsrComponent<unknown, unknown[]>> =
 // "slotted" version wraps the SSR component into a generator, which emits all
 // the prerendered content in order with the SSR content inserted at the
 // appropriate position.
-export function parseOnlySlot<Component extends keyof SsrComponentMap>(
+function parseOnlySlot<Component extends keyof SsrComponentMap>(
     { _value: content }: Branded<Component, string>,
 ): Slotted<SsrComponentMap[Component][1]> {
     const chunks = Array.from(parseHtml(content));
