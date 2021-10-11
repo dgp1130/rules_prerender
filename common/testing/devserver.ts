@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { execFile as execFileCb, ChildProcess } from 'child_process';
+import { execFile as execFileCb, ChildProcess, ExecException } from 'child_process';
 import { StatusCodes } from 'http-status-codes';
 import killTree from 'tree-kill';
 import net from 'net';
@@ -137,7 +137,8 @@ export class Server {
                 // Wait for the devserver to die.
                 try {
                     await serverPromise;
-                } catch (err) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } catch (err: any) {
                     // Dying will throw an error with no exit code, make sure
                     // the signal matches instead.
                     if (err.signal && err.signal !== signal) {
@@ -164,7 +165,7 @@ async function findPort(): Promise<number> {
         server.close();
         throw new Error('Failed to find a port.');
     }
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
         server.close(() => {
             resolve();
         });
@@ -200,7 +201,7 @@ async function ping(url: URL): Promise<boolean> {
  * Kills the given process ID (and all its children) with the provided signal.
  */
 async function killServer(pid: number, signal: Signal): Promise<void> {
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         killTree(pid, signal, (err) => {
             if (err) reject(err);
             else resolve();

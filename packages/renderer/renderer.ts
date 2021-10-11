@@ -37,7 +37,7 @@ main(async () => {
     try {
         resources = await invoke(entryPoint);
     } catch (err) {
-        console.error(err.message);
+        console.error((err as Error).message);
         return 1;
     }
 
