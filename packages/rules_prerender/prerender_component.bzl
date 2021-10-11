@@ -54,7 +54,7 @@ def prerender_component(
             included in the prerendered HTML.
         resources: List of `web_resources()` required by this component at
             runtime.
-        ssr: TODO
+        ssr: List of server-side JavaScript libraries containing SSR components.
         deps: `prerender_component()` dependencies for this component.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.

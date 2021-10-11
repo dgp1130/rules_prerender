@@ -99,7 +99,7 @@ def prerender_pages(
             prerendered HTML files.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
-        ssr: TODO
+        ssr: List of server-side JavaScript libraries containing SSR components.
         deps: `prerender_component()` dependencies for the generated pages.
         bundle_js: Whether or not to bundle and inject JavaScript files.
             Defaults to `True`.

@@ -68,7 +68,10 @@ def prerender_pages_unbundled(
             the page.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
-        %{name}_ssr: TODO
+        %{name}_ssr: A `js_library()` rule containing all the server-side NodeJS
+            scripts used by the server. Includes a generated file
+            `%{name}_ssr.js` which imports all the SSR files directly depended
+            upon by a `prerender_component()`.
         %{name}_prerender_for_test: An alias to the `ts_library()` target which
             compiles the `src` of this macro marked as `testonly`. This provides
             a simple hook for unit testing prerender logic.
@@ -87,7 +90,7 @@ def prerender_pages_unbundled(
             prerendered HTML files.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
-        ssr: TODO
+        ssr: List of server-side JavaScript libraries containing SSR components.
         deps: `prerender_component()` dependencies for the generated pages.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
