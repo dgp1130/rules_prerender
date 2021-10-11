@@ -42,6 +42,14 @@ rules:
   - checkLoops: false # `while (true) { /* ... */ }` is ok.
   require-yield:
   - off
+  '@typescript-eslint/ban-types':
+  - error
+  - types:
+      # Allow `{}` type because it is useful enough to avoid requiring an
+      # exemption each time. Generally prefer `Record<string, unknown>`, but
+      # that is not always the correct answer.
+      "{}": false
+    extendDefaults: true
 
 # Enable TypeScript rules only for `*.ts` files.
 overrides:
