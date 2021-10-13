@@ -122,7 +122,7 @@ export class Server {
         // instead. `await`-ing here propagates such an error to the caller of
         // `spawn()` rather than triggering an uncaught rejection.
         await Promise.race([
-            untilHealthy(new URL(`http://localhost:${port}/index.html`)), // DEBUG
+            untilHealthy(new URL(`http://localhost:${port}/index.html`)),
             serverPromise,
         ]);
     
@@ -191,7 +191,9 @@ async function untilHealthy(url: URL): Promise<void> {
 async function ping(url: URL): Promise<boolean> {
     try {
         const res = await http.get(url);
-        return res?.statusCode === StatusCodes.OK;
+        if (!res.statusCode) return false;
+        // HTTP 2XX and HTTP 3XX mean the server is ready.
+        return res.statusCode >= 200 && res.statusCode < 400;
     } catch (err) {
         return false;
     }
