@@ -14,10 +14,6 @@ class FooSsrComponent implements SsrComponent {
         return new FooSsrComponent(name);
     }
 
-    public static fromSsr(name: string): FooSsrComponent {
-        return new FooSsrComponent(name);
-    }
-
     public render(): string {
         return `<li>Foo component says hello via SSR to ${this.inputName}</li>`;
     }
@@ -30,5 +26,3 @@ declare global {
         'foo': [ PrerenderData, FooSsrComponent ];
     }
 }
-
-export {}; // DEBUG
