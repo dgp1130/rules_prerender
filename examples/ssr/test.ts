@@ -3,6 +3,7 @@ import 'jasmine';
 import { runfiles } from '@bazel/runfiles';
 import axios from 'axios';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
+import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
 
 const server = runfiles.resolvePackageRelative('site_server.sh');
 
@@ -20,7 +21,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/foo.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>Foo header</li>
@@ -42,7 +44,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/bar.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>Bar header</li>
@@ -71,7 +74,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/bar.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>Bar header</li>
@@ -103,7 +107,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/concurrent.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>Concurrent header</li>
@@ -134,7 +139,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/request.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>Request header</li>
@@ -157,7 +163,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/composition.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>Composition header</li>
@@ -184,7 +191,8 @@ describe('ssr', () => {
 <html>
     <head>
         <title>Test</title>
-    </head>
+    <script src="/list.js" async defer></script>
+</head>
     <body>
         <ul>
     <li>List header</li>
@@ -194,5 +202,25 @@ describe('ssr', () => {
     </body>
 </html>
         `.trim());
+    });
+
+    describe('with Puppeteer', () => {
+        const browser = useBrowser();
+        const page = usePage(browser);
+
+        it('mixes SSG, SSR, and CSR content', async () => {
+            await page.get().goto(
+                `http://${devserver.get().host}:${devserver.get().port}/mixed.html`,
+                { waitUntil: 'load' },
+            );
+    
+            const listItems = await page.get()
+                .$$eval('li', (list) => list.map((el) => el.textContent));
+            expect(listItems).toEqual([
+                'SSG: Mixed',
+                'SSR: Mixed',
+                'CSR: Mixed',
+            ]);
+        }, puppeteerTestTimeout);
     });
 });

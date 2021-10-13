@@ -8,11 +8,10 @@ import { createAnnotation } from 'rules_prerender/common/models/prerender_annota
  * CSS file in the final bundle for the page.
  */
 export function includeStyle(path: string): string {
-    const annotation = createAnnotation({
+    return createAnnotation({
         type: 'style',
         path,
     });
-    return `<!-- ${annotation} -->`;
 }
 
 /**

@@ -6,9 +6,8 @@ import { createAnnotation } from 'rules_prerender/common/models/prerender_annota
  * client-side JavaScript file in the final bundle for the page.
  */
 export function includeScript(path: string): string {
-    const annotation = createAnnotation({
+    return createAnnotation({
         type: 'script',
         path,
     });
-    return `<!-- ${annotation} -->`;
 }

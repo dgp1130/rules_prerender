@@ -1,4 +1,4 @@
-import { JsonObject } from 'rules_prerender/common/models/json';
+import { JsonObject, JsonValue } from 'rules_prerender/common/models/json';
 
 const privateLabel = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
 
@@ -13,9 +13,99 @@ const privateLabel = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
 export function createAnnotation(annotation: PrerenderAnnotation): string {
     return `
 <template label=${privateLabel}>
-    ${JSON.stringify(annotation, null, 4)}
+    ${JSON.stringify(escape(annotation), null, 4)}
 </template>
     `.trim();
+}
+
+function escape(annotation: PrerenderAnnotation): PrerenderAnnotation {
+    switch (annotation.type) {
+        case 'ssr':
+            return {
+                ...annotation,
+                data: (
+                    annotation.data !== undefined
+                        ? escapeSsrData(annotation.data)
+                        : undefined
+                ) as JsonObject,
+            };
+        default:
+            return annotation;
+    }
+}
+
+function escapeSsrData(data: JsonValue): JsonValue {
+    if (data === null) return data; // Ignore `null`.
+    if (typeof data !== 'object') return data; // Ignore primitives.
+
+    // Escape each value of an array.
+    if (Array.isArray(data)) return data.map((value) => escapeSsrData(value));
+
+    // Must be an object, check if it is a slottable string.
+    if (isSlottable(data)) {
+        return {
+            ...data,
+            // TODO: Something more sophisticated.
+            // Escape the slottable value by breaking `</template>`. This
+            // prevents an HTML parser from seeing a nested template and
+            // believing it to be the end of an outer template.
+            _value: data._value
+                .replace('<template', '<\\\\template')
+                .replace('</template>', '<\\\\/template>'),
+        };
+    }
+
+    // Not a slottable string, escape each property in it.
+    return Object.fromEntries(Object.entries(data)
+        .map(([ key, value ]) => [ key, escapeSsrData(value) ]));
+}
+
+function unescape(annotation: PrerenderAnnotation): PrerenderAnnotation {
+    switch (annotation.type) {
+        case 'ssr':
+            return {
+                ...annotation,
+                data: (
+                    annotation.data !== undefined
+                        ? unescapeSsrData(annotation.data)
+                        : undefined
+                ) as JsonObject,
+            };
+        default:
+            return annotation;
+    }
+}
+
+function unescapeSsrData(data: JsonValue): JsonValue {
+    if (data === null) return data; // Ignore `null`.
+    if (typeof data !== 'object') return data; // Ignore primitives.
+
+    // Unescape each value of an array.
+    if (Array.isArray(data)) return data.map((value) => unescapeSsrData(value));
+
+    // Must be an object, check if it is a slottable string.
+    if (isSlottable(data)) {
+        return {
+            ...data,
+            // Unescape the slottable value by fixing `</template>`. This
+            // prevents an HTML parser from seeing a nested template and
+            // believing it to be the end of an outer template.
+            _value: data._value
+                .replace('<\\\\template', '<template')
+                .replace('<\\\\/template>', '</template>'),
+        };
+    }
+
+    // Not a slottable string, escape each property in it.
+    return Object.fromEntries(Object.entries(data)
+        .map(([ key, value ]) => [ key, unescapeSsrData(value) ]));
+}
+
+function isSlottable(value: Record<string, unknown>):
+        value is { _brand: string, _value: string } {
+    if (typeof value['_brand'] !== 'string') return false;
+    if (typeof value['_value'] !== 'string') return false;
+    return true;
 }
 
 /**
@@ -31,7 +121,7 @@ export function createAnnotation(annotation: PrerenderAnnotation): string {
  *     assertion error.
  */
 export function parseAnnotation(annotation: string): PrerenderAnnotation {
-    return JSON.parse(annotation) as PrerenderAnnotation;
+    return unescape(JSON.parse(annotation) as PrerenderAnnotation);
 }
 
 /**

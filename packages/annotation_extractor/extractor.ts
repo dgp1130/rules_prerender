@@ -61,7 +61,7 @@ function* walkTemplates(
     nodes: Iterable<[ HTMLElement, HTMLElement | undefined /* parent */ ]>,
 ): Iterable<[ HTMLElement, HTMLElement | undefined /* parent */ ]> {
     for (const [ el, parent ] of nodes) {
-        if (el.tagName !== 'template') continue;
+        if (el.tagName?.toLowerCase() !== 'template') continue;
         if (el.getAttribute('label') !== 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE') continue;
         yield [ el, parent ];
     }
