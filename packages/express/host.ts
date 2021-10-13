@@ -11,7 +11,8 @@ export function main(webRoot: string): void {
     
     const app = express();
     
-    app.get(['/**.html', '/', '/**/'], ssr(webRoot));
+    app.get(['/**.html', '/', '/**/$'], ssr(webRoot));
+    app.get(['/**.js', '/**.css'], express.static(webRoot));
     
     app.listen(port, () => {
         console.log(`Listening on port ${port}...`);
