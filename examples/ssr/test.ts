@@ -216,16 +216,22 @@ describe('ssr', () => {
     
             const listItems = await page.get()
                 .$$eval('li', (list) => list.map((el) => el.textContent));
+            expect(listItems.length).toBe(6);
 
-            expect(listItems.length).toBe(3);
             expect(listItems[0])
                 .toBe('SSG: Built in Bazel workspace `rules_prerender`.');
+            expect(listItems[3])
+                .toBe('SSG: Built in Bazel workspace `rules_prerender`.');
+
             // Health check can count as a request, and the server is longer
             // lived than one test. We don't care which request number it was.
             expect(listItems[1]).toMatch(/SSR: This was request #[0-9]+\./);
+            expect(listItems[4]).toMatch(/SSR: This was request #[0-9]+\./);
+
             // Viewport width is dependent on Puppeteer, could hard-code it, but
             // don't care that much.
             expect(listItems[2]).toMatch(/CSR: Viewport width is [0-9]+px\./);
+            expect(listItems[5]).toMatch(/CSR: Viewport width is [0-9]+px\./);
         }, puppeteerTestTimeout);
     });
 });

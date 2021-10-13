@@ -12,7 +12,8 @@ function onReadyStateChanged(): void {
 }
 
 function replace(): void {
-    const el = document.getElementById('mixed-replace');
-    if (!el) throw new Error('Failed to find element `#mixed-replace`.');
-    el.innerText = `CSR: Viewport width is ${window.innerWidth}px.`;
+    const els = Array.from(document.getElementsByClassName('mixed-replace'));
+    for (const el of els) {
+        el.textContent = `CSR: Viewport width is ${window.innerWidth}px.`;
+    }
 }

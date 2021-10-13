@@ -16,7 +16,10 @@ prerender_component(
 ts_library(
     name = "mixed_ssr",
     srcs = ["mixed_ssr.ts"],
-    deps = ["//packages/express"],
+    deps = [
+        "//packages/express",
+        "@npm//@types/express",
+    ],
 )
 
 ts_library(
