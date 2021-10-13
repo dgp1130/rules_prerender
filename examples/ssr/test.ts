@@ -167,13 +167,13 @@ describe('ssr', () => {
 </head>
     <body>
         <ul>
-    <li>Composition header</li>
-    <li>SSR: Composition</li><ul>
-    <li>Composed header</li>
-    <li>SSR: Composed from Composition</li>
-    <li>Composed footer</li>
+    <li>SSG: Outer component header</li>
+    <li>SSR: Outer component</li><ul>
+    <li>SSG: Inner component header</li>
+    <li>SSR: Inner component called by Outer component</li>
+    <li>SSG: Inner component footer</li>
 </ul>
-    <li>Composition footer</li>
+    <li>SSG: Outer component footer</li>
 </ul>
     </body>
 </html>

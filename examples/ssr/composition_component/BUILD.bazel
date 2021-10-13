@@ -3,32 +3,32 @@ load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "composition_component",
-    srcs = ["composition_prerender.ts"],
-    ssr = [":composition_ssr"],
+    srcs = ["outer_prerender.ts"],
+    ssr = [":outer_ssr"],
     lib_deps = ["//packages/rules_prerender"],
     visibility = ["//examples/ssr:__subpackages__"],
-    deps = [":composed_component"],
+    deps = [":inner_component"],
 )
 
 ts_library(
-    name = "composition_ssr",
-    srcs = ["composition_ssr.ts"],
+    name = "outer_ssr",
+    srcs = ["outer_ssr.ts"],
     deps = [
         "//packages/express",
         # TODO: Dep should go through `prerender_component()`?
-        ":composed_ssr",
+        ":inner_ssr",
     ],
 )
 
 prerender_component(
-    name = "composed_component",
-    srcs = ["composed_prerender.ts"],
-    ssr = [":composed_ssr"],
+    name = "inner_component",
+    srcs = ["inner_prerender.ts"],
+    ssr = [":inner_ssr"],
     lib_deps = ["//packages/rules_prerender"],
 )
 
 ts_library(
-    name = "composed_ssr",
-    srcs = ["composed_ssr.ts"],
+    name = "inner_ssr",
+    srcs = ["inner_ssr.ts"],
     deps = ["//packages/express"],
 )

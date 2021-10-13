@@ -1,18 +1,18 @@
 import { ExpressComponent, registerExpressComponent, ExpressContext } from 'rules_prerender/packages/express/express';
 
-export class ComposedSsrComponent implements ExpressComponent {
-    public readonly name = 'composed';
+export class InnerSsrComponent implements ExpressComponent {
+    public readonly name = 'inner';
 
     // TODO: Handle unused context.
     public render(ctx: ExpressContext, name: string): string {
-        return `<li>SSR: Composed from ${name}</li>`;
+        return `<li>SSR: Inner component called by ${name}</li>`;
     }
 }
 
-registerExpressComponent('composed', () => new ComposedSsrComponent());
+registerExpressComponent('inner', () => new InnerSsrComponent());
 
 declare global {
     interface SsrComponentMap {
-        'composed': [ undefined, ComposedSsrComponent ];
+        'inner': [ undefined, InnerSsrComponent ];
     }
 }
