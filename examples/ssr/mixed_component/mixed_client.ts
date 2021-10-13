@@ -14,5 +14,5 @@ function onReadyStateChanged(): void {
 function replace(): void {
     const el = document.getElementById('mixed-replace');
     if (!el) throw new Error('Failed to find element `#mixed-replace`.');
-    el.innerText = 'CSR: Mixed';
+    el.innerText = `CSR: Viewport width is ${window.innerWidth}px.`;
 }

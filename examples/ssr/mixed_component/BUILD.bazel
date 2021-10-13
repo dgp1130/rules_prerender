@@ -6,7 +6,10 @@ prerender_component(
     srcs = ["mixed_prerender.ts"],
     ssr = [":mixed_ssr"],
     scripts = [":mixed_client"],
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//packages/rules_prerender",
+        "@npm//@types/node",
+    ],
     visibility = ["//examples/ssr:__pkg__"],
 )
 
