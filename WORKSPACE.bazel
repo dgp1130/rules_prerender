@@ -19,6 +19,13 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.0.0/rules_nodejs-4.0.0.tar.gz"],
 )
 
+local_repository(
+    name = "build_bazel_rules_postcss",
+    path = "/home/dparker/Source/rules_postcss",
+)
+load("@build_bazel_rules_postcss//:package.bzl", "rules_postcss_dependencies")
+rules_postcss_dependencies()
+
 # The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
 # It also extracts any Bazel rules distributed in an npm package.
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")

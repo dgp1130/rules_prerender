@@ -5,7 +5,8 @@ load(
     "JSEcmaScriptModuleInfo",
     "JSModuleInfo",
 )
-load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
+load("@npm//@bazel/postcss:index.bzl", "postcss_binary", "postcss_multi_binary")
+# load("@build_bazel_rules_postcss//:index.bzl", "postcss_multi_binary") # TODO: Use published version.
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
@@ -145,12 +146,26 @@ def prerender_pages(
 
     bundled_css = "%s_styles_bundled.css" % name
     if bundle_css:
-        # Bundle all styles.
+        # Bundle main style entry point.
         postcss_binary(
             name = "%s_styles" % name,
             src = ":%s_styles.css" % prerender_name,
             sourcemap = True,
             output_name = bundled_css,
+            plugins = {
+                "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
+            },
+            testonly = testonly,
+            deps = [":%s_styles" % prerender_name],
+        )
+
+        # Bundle any inlined styles.
+        # TODO: Multilines args are broken now?
+        postcss_multi_binary(
+            name = "%s_inline_styles" % name,
+            srcs = ":%s_styles_inline_entry" % prerender_name,
+            sourcemap = True,
+            output_pattern = "unused", # TODO
             plugins = {
                 "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
             },

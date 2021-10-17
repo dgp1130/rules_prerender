@@ -1,0 +1,25 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+nodejs_binary(
+    name = "collect_inline_styles",
+    entry_point = ":collect_inline_styles.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+    data = [
+        ":collect_inline_styles_lib",
+        "@npm//yargs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "collect_inline_styles_lib",
+    srcs = ["collect_inline_styles.ts"],
+    deps = [
+        "//common:binary",
+        "//common/models:prerender_annotation",
+        "//common/models:prerender_metadata",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)

@@ -182,6 +182,15 @@ def prerender_pages_unbundled(
         visibility = visibility,
     )
 
+    _inline_style_entry_points(
+        name = "%s_inline_entry" % client_styles,
+        metadata = ":%s" % metadata,
+        styles = [":%s" % component_styles],
+        testonly = testonly,
+        # TODO: Better public API abstraction? Can we merge with the normal entry point?
+        visibility = visibility,
+    )
+
     # Reexport all transitive resources at `%{name}_resources`.
     output_resources = "%s_resources" % name
     web_resources(
@@ -249,4 +258,40 @@ _multi_extract_annotations = rule(
         ),
     },
     doc = """Extracts annotations from HTML files in the provided directory.""",
+)
+
+def _inline_style_entry_points_impl(ctx):
+    output_dir = ctx.actions.declare_directory(ctx.attr.name)
+
+    ctx.actions.run(
+        mnemonic = "InlineStyleEntryPoints",
+        progress_message = "Collecting inline style entry points",
+        executable = ctx.executable._collect_inline_styles,
+        arguments = [
+            "--metadata", ctx.file.metadata.path,
+            "--output", output_dir.path,
+        ],
+        inputs = [ctx.file.metadata] + ctx.files.styles,
+        outputs = [output_dir],
+    )
+
+    return DefaultInfo(files = depset([output_dir]))
+
+_inline_style_entry_points = rule(
+    implementation = _inline_style_entry_points_impl,
+    attrs = {
+        "metadata": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+        ),
+        "styles": attr.label_list(
+            mandatory = True,
+            allow_files = True,
+        ),
+        "_collect_inline_styles": attr.label(
+            default = "//packages/collect_inline_styles",
+            cfg = "exec",
+            executable = True,
+        ),
+    },
 )

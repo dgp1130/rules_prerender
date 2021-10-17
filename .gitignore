@@ -4,3 +4,4 @@ node_modules
 
 # Generated package from `bazel run //:pkg.pack`
 rules_prerender-*.tgz
+rules_postcss/
