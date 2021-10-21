@@ -1,5 +1,5 @@
 load("//:index.bzl", "extract_single_resource", "prerender_pages_unbundled")
-load("//tools/goldens:build_defs.bzl", "golden_test")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 prerender_pages_unbundled(
     name = "single_resource",
@@ -12,10 +12,10 @@ extract_single_resource(
     out = "single_resource.txt",
 )
 
-golden_test(
+diff_test(
     name = "single_resource_test",
-    actual = "single_resource.txt",
-    expected = "I'm a single resource!",
+    file1 = "single_resource.txt",
+    file2 = "single_resource_expected.txt",
 )
 
 prerender_pages_unbundled(
@@ -29,8 +29,8 @@ extract_single_resource(
     out = "nested_resource.txt",
 )
 
-golden_test(
+diff_test(
     name = "nested_resource_test",
-    actual = "nested_resource.txt",
-    expected = "I'm a nested resource!",
+    file1 = "nested_resource.txt",
+    file2 = "nested_resource_expected.txt",
 )
