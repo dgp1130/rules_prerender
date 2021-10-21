@@ -1,4 +1,5 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
@@ -64,10 +65,22 @@ bzl_library(
     srcs = ["prerender_component.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
+        ":rules_nodejs_bzl",
         ":web_resources",
         "//common:label",
         "//common:paths",
+        "@npm//@bazel/typescript:bzl",
     ],
+)
+
+bzl_library(
+    name = "typescript_bzl",
+    srcs = ["@npm//@bazel/typescript:typescript__files"],
+)
+
+bzl_library(
+    name = "rules_nodejs_bzl",
+    srcs = ["@build_bazel_rules_nodejs//:bzl"],
 )
 
 bzl_library(
@@ -136,7 +149,10 @@ bzl_library(
     name = "web_resources",
     srcs = ["web_resources.bzl"],
     visibility = ["//:__pkg__"],
-    deps = ["//common:label"],
+    deps = [
+        "//common:label",
+        "@bazel_skylib//lib:collections",
+    ],
 )
 
 bzl_library(

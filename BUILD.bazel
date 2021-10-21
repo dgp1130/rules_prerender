@@ -2,6 +2,7 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
@@ -25,6 +26,14 @@ bzl_library(
         "//packages/rules_prerender:web_resources",
         "//packages/rules_prerender:web_resources_devserver",
     ],
+)
+
+stardoc(
+    name = "stardoc",
+    input = "index.bzl",
+    out = "stardoc.md",
+    symbol_names = ["prerender_component"],
+    deps = [":rules_prerender"],
 )
 
 # Re-export the `declarative_shadow_dom` component at the root of the package
