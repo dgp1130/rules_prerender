@@ -12,7 +12,7 @@ to the `bin` directory of `package.json`.
 
 This package serves as a singular location where tools and infrastructure can be
 referenced when needed at runtime in a user project. A sibling `BUILD.bazel`
-file defines the same tools asthey will be loaded at build time in this
+file defines the same tools as they will be loaded at build time in this
 repository for local contributors.
 """
 
