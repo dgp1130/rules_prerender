@@ -1,0 +1,4 @@
+# .bazelrc configuration for CI jobs.
+
+# Cache to a path maintained by the CI runner.
+build --disk_cache ~/.gh-actions-cache/bazel/

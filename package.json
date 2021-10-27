@@ -20,6 +20,7 @@
         "ibazel": "ibazel",
         "build": "bazel build //...",
         "test": "bazel test //...",
+        "test-ci": "bazel --bazelrc .ci.bazelrc test //...",
         "release": "bazel run //:pkg.publish --config release --",
         "lint": "npm run -s eslint -- . --max-warnings 0 --report-unused-disable-directives",
         "lint-fix": "npm run -s lint -- --fix",

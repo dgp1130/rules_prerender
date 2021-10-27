@@ -18,6 +18,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: ~/.gh-actions-cache/bazel/
+        key: bazel
+
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
@@ -29,4 +35,4 @@ jobs:
 
     # Build and test the entire repository.
     - name: Test
-      run: npm test
+      run: npm run -s test-ci
