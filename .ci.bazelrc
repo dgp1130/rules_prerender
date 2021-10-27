@@ -1,5 +1,12 @@
 # .bazelrc configuration for CI jobs.
 
+# Don't stop on first test failure, run as many as possible.
+test --keep_going
+
+# Don't build targets not needed for tests. `build_test()` should be used if a
+# target should be verified as buildable on CI.
+test --build_tests_only
+
 # Cache to a path maintained by the CI runner.
 build --disk_cache ~/.gh-actions-cache/bazel/
 
