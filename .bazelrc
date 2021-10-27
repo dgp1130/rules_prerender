@@ -135,6 +135,7 @@ build --incompatible_require_linker_input_cc_api
 build --incompatible_restrict_string_escapes
 build --incompatible_run_shell_command_string
 build --incompatible_strict_action_env
+build --incompatible_struct_has_no_methods
 build --incompatible_top_level_aspects_require_providers
 build --incompatible_use_cc_configure_from_rules_cc
 build --incompatible_use_platforms_repo_for_constraints

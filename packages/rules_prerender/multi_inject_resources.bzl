@@ -12,7 +12,7 @@ def _multi_inject_resources_impl(ctx):
 
     # Write the configuration to a file.
     config = ctx.actions.declare_file("%s_config.json" % ctx.attr.name)
-    ctx.actions.write(config, _encode_json(injections))
+    ctx.actions.write(config, json.encode_indent(injections, indent = "  "))
 
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
 
@@ -56,8 +56,3 @@ multi_inject_resources = rule(
         ),
     },
 )
-
-def _encode_json(value):
-    """Hack to serialize the given value as JSON."""
-    json = struct(value = value).to_json()
-    return json[len("{\"value\":"):-len("}")]
