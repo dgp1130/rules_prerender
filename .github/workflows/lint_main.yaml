@@ -9,22 +9,19 @@ on:
 
 jobs:
   lint:
+    # Includes `bazelisk`.
+    # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#:~:text=Bazel%204.2.1-,Bazelisk,-1.10.1
     runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-
     - name: Install
-      run: npm ci
+      run: bazel run @nodejs//:npm -- ci
 
     # Lint the entire repository. This does not take changes into account and
     # will show existing lint failures as well as new ones, but that's ok for a
     # codebase of this size as any such failures should be fixed and/or
     # explicitly ignored.
     - name: Lint
-      run: npm run lint
+      run: bazel run @nodejs//:npm -- run lint

@@ -20,8 +20,6 @@
         "ibazel": "ibazel",
         "build": "bazel build //...",
         "test": "bazel test //...",
-        "test-ci": "bazel --bazelrc .ci.bazelrc test //...",
-        "release": "bazel --bazelrc .ci.bazelrc run //:pkg.publish --config release --",
         "lint": "npm run -s eslint -- . --max-warnings 0 --report-unused-disable-directives",
         "lint-fix": "npm run -s lint -- --fix",
         "lint-commit": "git diff \"${COMMIT}~1..${COMMIT}\" --name-only | npm run -s -- filter-lintable | xargs -P 8 -L 1 -I {} bash -c \"git show \\\"${COMMIT}:{}\\\" --diff-filter=d | npm run -s -- eslint --stdin --stdin-filename \\\"{}\\\"\" --max-warnings 0 --report-unused-disable-directives",

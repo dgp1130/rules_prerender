@@ -7,18 +7,15 @@ on:
 
 jobs:
   lint:
+    # Includes `bazelisk`.
+    # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#:~:text=Bazel%204.2.1-,Bazelisk,-1.10.1
     runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-
     - name: Install
-      run: npm ci
+      run: bazel run @nodejs//:npm -- ci
 
     # Lint each commit in the given PR.
     - name: Lint PR
@@ -31,7 +28,7 @@ jobs:
         
         # Lint each commit.
         if ! echo -n "${PR_COMMITS}" |
-          xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" npm run -s -- lint-commit"
+          xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" bazel run @nodejs//:npm -- run -s -- lint-commit"
         then
           # One commit failed to lint, fail the GitHub action.
           exit 1

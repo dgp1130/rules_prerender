@@ -20,6 +20,8 @@ on:
 
 jobs:
   publish:
+    # Includes `bazelisk`.
+    # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#:~:text=Bazel%204.2.1-,Bazelisk,-1.10.1
     runs-on: ubuntu-20.04
 
     steps:
@@ -27,28 +29,21 @@ jobs:
     # Checkout the repository.
     - uses: actions/checkout@v2
 
-    # Install NodeJS.
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-        registry-url: 'https://registry.npmjs.org'
-
     # Install the package, including Bazel.
     - name: Install
-      run: npm ci
+      run: bazel run @nodejs//:npm -- ci
 
     # Build and test the entire repository.
     - name: Test
-      run: npm run -s test-ci
-    
+      run: bazel --bazelrc .ci.bazelrc test //...
+
     # Publish the package.
     - name: Publish
-      run: npm run release
+      run: bazel --bazelrc .ci.bazelrc run //:pkg.publish --config release
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
-    
+
     # Tag the commit and create a release on GitHub.
     - name: Tag and Create Draft Release
       id: create_release

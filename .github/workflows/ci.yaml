@@ -13,6 +13,8 @@ on:
 
 jobs:
   test:
+    # Includes `bazelisk`.
+    # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#:~:text=Bazel%204.2.1-,Bazelisk,-1.10.1
     runs-on: ubuntu-20.04
 
     steps:
@@ -21,21 +23,18 @@ jobs:
     - name: Cache
       uses: actions/cache@v2
       with:
-        path: ~/.gh-actions-cache/bazel/
+        path: |
+          ~/.gh-actions-cache/bazel/
+          node_modules/
         key: bazel
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
 
     # Install the package, including Bazel.
     - name: Install
-      run: npm ci
+      run: bazel run @nodejs//:npm -- ci
 
     # Build and test the entire repository.
     - name: Test
-      run: npm run -s test-ci
+      run: bazel --bazelrc .ci.bazelrc test //...
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
