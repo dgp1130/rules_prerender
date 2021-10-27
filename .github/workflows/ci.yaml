@@ -36,3 +36,9 @@ jobs:
     # Build and test the entire repository.
     - name: Test
       run: npm run -s test-ci
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: bazel.profile.gz
+        path: bazel.profile.gz
