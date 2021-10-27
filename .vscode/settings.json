@@ -5,6 +5,7 @@
     "javascript.preferences.importModuleSpecifier": "non-relative",
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "cSpell.words": [
+        "bazelrc",
         "concatjs",
         "deduplicated",
         "deduplicates",
