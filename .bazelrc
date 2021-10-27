@@ -92,6 +92,56 @@ test --experimental_run_validations
 # collect coverage information from test targets
 coverage --instrument_test_targets
 
+# Set all currently passing "incompatible" flags, to prevent regressions when
+# upgrading to the next Bazel version which may require them.
+build --incompatible_always_check_depset_elements
+build --incompatible_avoid_conflict_dlls
+build --incompatible_config_setting_private_default_visibility
+build --incompatible_default_to_explicit_init_py
+build --incompatible_depset_for_libraries_to_link_getter
+build --incompatible_disable_depset_items
+build --incompatible_disable_expand_if_all_available_in_flag_set
+build --incompatible_disable_native_android_rules
+build --incompatible_disable_third_party_license_checking
+build --incompatible_disallow_empty_glob
+build --incompatible_disallow_legacy_javainfo
+build --incompatible_disallow_legacy_py_provider
+build --incompatible_do_not_split_linking_cmdline
+build --incompatible_dont_enable_host_nonhost_crosstool_features
+build --incompatible_enable_android_toolchain_resolution
+build --incompatible_enforce_config_setting_visibility
+build --incompatible_exclusive_test_sandboxed
+build --incompatible_force_strict_header_check_from_starlark
+build --incompatible_java_common_parameters
+build --incompatible_legacy_local_fallback
+build --incompatible_linkopts_to_linklibs
+build --incompatible_make_thinlto_command_lines_standalone
+build --incompatible_merge_genfiles_directory
+build --incompatible_new_actions_api
+build --incompatible_no_attr_license
+build --incompatible_no_implicit_file_export
+build --incompatible_objc_compile_info_migration
+build --incompatible_objc_provider_remove_compile_info
+build --incompatible_prohibit_aapt1
+build --incompatible_py2_outputs_are_suffixed
+build --incompatible_py3_is_default
+build --incompatible_remote_output_paths_relative_to_input_root
+build --incompatible_remote_results_ignore_disk
+build --incompatible_remote_symlinks
+build --incompatible_remove_cpu_and_compiler_attributes_from_cc_toolchain
+build --incompatible_remove_legacy_whole_archive
+build --incompatible_require_ctx_in_configure_features
+build --incompatible_require_linker_input_cc_api
+build --incompatible_restrict_string_escapes
+build --incompatible_run_shell_command_string
+build --incompatible_strict_action_env
+build --incompatible_top_level_aspects_require_providers
+build --incompatible_use_cc_configure_from_rules_cc
+build --incompatible_use_platforms_repo_for_constraints
+build --incompatible_use_python_toolchains
+build --incompatible_validate_top_level_header_inclusions
+build --incompatible_visibility_private_attributes_at_definition
+
 # Load any settings specific to the current user.
 # .bazelrc.user should appear in .gitignore so that settings are not shared with team members
 # This needs to be last statement in this
