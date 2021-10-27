@@ -40,7 +40,7 @@ jobs:
 
     # Build and test the entire repository.
     - name: Test
-      run: npm test
+      run: npm run -s test-ci
     
     # Publish the package.
     - name: Publish
