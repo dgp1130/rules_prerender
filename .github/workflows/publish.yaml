@@ -15,6 +15,7 @@ on:
         description: |
           Whether or not to mark the GitHub release as a prerelease. Possible
           values: "true", "false".
+        required: false
         default: "false"
 
 jobs:
