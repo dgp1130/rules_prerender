@@ -1,3 +1,4 @@
+load("@npm//@bazel/cypress:index.bzl", "cypress_web_test")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools:jasmine.bzl", "jasmine_node_test")
@@ -46,4 +47,30 @@ jasmine_node_test(
     name = "test",
     data = [":devserver"],
     deps = [":test_lib"],
+)
+
+ts_library(
+    name = "cypress_test_lib",
+    srcs = ["cypress_test.ts"],
+    testonly = True,
+    deps = ["@npm//cypress"],
+)
+
+ts_library(
+    name = "cypress_plugins",
+    srcs = ["cypress_plugins.ts"],
+    testonly = True,
+    data = [":devserver"],
+    deps = [
+        "//common/testing:devserver",
+        "@npm//@bazel/runfiles",
+    ],
+)
+
+cypress_web_test(
+    name = "cypress_test",
+    srcs = [":cypress_test_lib"],
+    config_file = "cypress.json",
+    plugin_file = ":cypress_plugins",
+    templated_args = ["--bazel_patch_module_resolver"],
 )

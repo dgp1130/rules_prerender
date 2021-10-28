@@ -97,6 +97,7 @@ export class Server {
      *     server.
      */
     public static async spawn(binary: string, {
+        port: inputPort,
         stdout = (data) => console.error(
             prependLine('[devserver - stdout] ', data)),
         stderr = (data) => console.error(
@@ -104,11 +105,12 @@ export class Server {
         onError = (data) => console.error(
             prependLine('[devserver - onError] ', data.message)),
     }: {
+        port?: number,
         stdout?: (data: string) => void,
         stderr?: (data: string) => void,
         onError?: (data: Error) => void,
     } = {}): Promise<Server> {
-        const port = await findPort();
+        const port = inputPort ?? await findPort();
 
         const serverPromise = execFile(binary, [ '--port', port.toString() ]);
         const server = serverPromise.child;

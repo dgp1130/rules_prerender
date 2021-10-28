@@ -44,6 +44,13 @@ http_archive(
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 
+load("@npm//@bazel/cypress:index.bzl", "cypress_repositories")
+cypress_repositories(
+    name = "cypress",
+    version = "8.7.0",
+    linux_sha256 = "4c9e72c23e42fdd3021c7f3fd42037215a46e4deb62cae461635867b4351bbcf",
+)
+
 # Install transitive Bazel dependencies.
 load("//:package.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()
