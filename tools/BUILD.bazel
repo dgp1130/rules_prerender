@@ -6,6 +6,21 @@ bzl_library(
     name = "jasmine",
     srcs = ["jasmine.bzl"],
     visibility = ["//visibility:public"],
+    deps = [
+        ":jasmine_node_test",
+        ":jasmine_web_test_suite",
+    ],
+)
+
+bzl_library(
+    name = "jasmine_node_test",
+    srcs = ["jasmine_web_test_suite.bzl"],
+)
+
+bzl_library(
+    name = "jasmine_web_test_suite",
+    srcs = ["jasmine_web_test_suite.bzl"],
+    deps = [":jasmine_node_test"],
 )
 
 bzl_library(

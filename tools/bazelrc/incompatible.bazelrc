@@ -17,7 +17,6 @@ build:incompatible --incompatible_disable_depset_items
 build:incompatible --incompatible_disable_expand_if_all_available_in_flag_set
 build:incompatible --incompatible_disable_native_android_rules
 build:incompatible --incompatible_disable_third_party_license_checking
-build:incompatible --incompatible_disallow_empty_glob
 build:incompatible --incompatible_disallow_legacy_javainfo
 build:incompatible --incompatible_disallow_legacy_py_provider
 build:incompatible --incompatible_do_not_split_linking_cmdline
@@ -49,7 +48,6 @@ build:incompatible --incompatible_require_linker_input_cc_api
 build:incompatible --incompatible_restrict_string_escapes
 build:incompatible --incompatible_run_shell_command_string
 build:incompatible --incompatible_strict_action_env
-build:incompatible --incompatible_struct_has_no_methods
 build:incompatible --incompatible_top_level_aspects_require_providers
 build:incompatible --incompatible_use_cc_configure_from_rules_cc
 build:incompatible --incompatible_use_platforms_repo_for_constraints

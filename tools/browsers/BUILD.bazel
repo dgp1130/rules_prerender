@@ -1,0 +1,40 @@
+# Extends `rules_webtesting` browsers to modify them for easier debugging when
+# the debug flag is set. Most notably, this includes removing the `--headless`
+# flag, making the browser more easily inspectable.
+# See: https://github.com/bazelbuild/rules_webtesting/issues/324
+
+load("@io_bazel_rules_webtesting//web:web.bzl", "custom_browser")
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+
+# Whether to use the debug versions of browsers or the "normal" version if not.
+bool_flag(
+    name = "use_debug_browsers",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "use_debug_browsers_config",
+    flag_values = {":use_debug_browsers": "True"},
+)
+
+custom_browser(
+    # Note: This name is load-bearing by matching with the wrapped version. If
+    # this name is changed, it should also be updated here:
+    # //tools:jasmine_web_test_suite.bzl%_DEFAULT_WEB_TEST_SUITE_TAGS
+    name = "chromium-local",
+    browser = "@io_bazel_rules_webtesting//browsers:chromium-local",
+    metadata = select({
+        "//conditions:default": "chromium_local.json",
+        ":use_debug_browsers_config": "chromium_local_debug.json",
+    }),
+    visibility = ["//visibility:public"],
+    tags = ["native"],
+    environment = select({
+        "//conditions:default": None,
+        ":use_debug_browsers_config": {
+            # This is necessary to be compatible with a Windows Xserver when
+            # running in WSL2.
+            "LIBGL_ALWAYS_INDIRECT": "1",
+        },
+    }),
+)

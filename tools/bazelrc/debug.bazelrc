@@ -26,6 +26,7 @@ test:debug --test_env=DISPLAY
 
 # Sets the environment variable $LIBGL_ALWAYS_INDIRECT=1 to the test. This is
 # necessary to be compatible with a Windows Xserver when running in WSL2.
+# TODO: Remove when WebDriver is the only supported e2e testing tool.
 test:debug --test_env=LIBGL_ALWAYS_INDIRECT=1
 
 # Rules may change their build outputs if the compilation mode is set to `dbg`.

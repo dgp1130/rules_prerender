@@ -7,6 +7,9 @@ test:ci --keep_going
 # target should be verified as buildable on CI.
 test:ci --build_tests_only
 
+# Skip tests not fit for CI.
+test:ci --test_tag_filters=-noci
+
 # Cache to a path maintained by the CI runner.
 build:ci --disk_cache ~/.gh-actions-cache/bazel/
 
