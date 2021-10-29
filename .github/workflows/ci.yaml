@@ -43,7 +43,7 @@ jobs:
 
     # Build and test the entire repository.
     - name: Test
-      run: bazel --bazelrc .ci.bazelrc test //...
+      run: bazel test //... --config ci
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2

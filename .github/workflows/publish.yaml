@@ -35,11 +35,11 @@ jobs:
 
     # Build and test the entire repository.
     - name: Test
-      run: bazel --bazelrc .ci.bazelrc test //...
+      run: bazel test //... --config ci
 
     # Publish the package.
     - name: Publish
-      run: bazel --bazelrc .ci.bazelrc run //:pkg.publish --config release
+      run: bazel run //:pkg.publish --config ci --config release
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}

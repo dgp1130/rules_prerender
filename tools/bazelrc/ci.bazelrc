@@ -1,0 +1,17 @@
+# .bazelrc configuration for CI jobs. Use with `--config ci`.
+
+# Don't stop on first test failure, run as many as possible.
+test:ci --keep_going
+
+# Don't build targets not needed for tests. `build_test()` should be used if a
+# target should be verified as buildable on CI.
+test:ci --build_tests_only
+
+# Cache to a path maintained by the CI runner.
+build:ci --disk_cache ~/.gh-actions-cache/bazel/
+
+# Tweak the UI to work better with the GitHub log viewer.
+build:ci --show_progress_rate_limit 5 --curses yes --color yes --terminal_columns 140 --show_timestamps --verbose_failures --announce_rc
+
+# Profile the build.
+build:ci --profile bazel.profile.gz --experimental_generate_json_trace_profile --experimental_profile_cpu_usage --experimental_json_trace_compression
