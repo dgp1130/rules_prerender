@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { execFile as execFileCb, ChildProcess } from 'child_process';
+import { execFile as execFileCb, ChildProcess, ExecException } from 'child_process';
 import { StatusCodes } from 'http-status-codes';
 import killTree from 'tree-kill';
 import net from 'net';
@@ -137,9 +137,10 @@ export class Server {
                 // Wait for the devserver to die.
                 try {
                     await serverPromise;
-                } catch (err) {
+                } catch (error) {
                     // Dying will throw an error with no exit code, make sure
                     // the signal matches instead.
+                    const err = error as ExecException & { stderr: string };
                     if (err.signal && err.signal !== signal) {
                         fail('Devserver did not die gracefully. Died with'
                             + ` ${err.signal}, expected signal ${signal}:\n${

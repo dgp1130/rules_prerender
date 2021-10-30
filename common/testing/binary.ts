@@ -43,7 +43,17 @@ export async function execBinary(binary: string, args?: string[]):
         return { code: 0, stdout, stderr };
     } catch (err) {
         // The error object thrown has the relevant data on it.
-        const { code, stdout, stderr} = err;
+        const { code, stdout, stderr } = err as ChildProcessError;
         return { code, stdout, stderr };
     }
+}
+
+/**
+ * Node consistently throws an error of this structure, but it is not an
+ * official type.
+ */
+interface ChildProcessError {
+    code: number;
+    stdout: string;
+    stderr: string;
 }
