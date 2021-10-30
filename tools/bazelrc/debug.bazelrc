@@ -1,0 +1,40 @@
+# .bazelrc configuration for debugging targets in the repository. Use with
+# `--config debug` or `--config debug-resolve`.
+
+# Stream stdout/stderr output from each test in real-time.
+test:debug --test_output=streamed
+
+# Run one test at a time.
+test:debug --test_strategy=exclusive
+
+# Prevent long running tests from timing out
+test:debug --test_timeout=9999
+
+# Always run tests
+test:debug --nocache_test_results
+
+# Pass the --inspect-brk option to all tests which enables the node inspector.
+# See https://nodejs.org/de/docs/guides/debugging-getting-started/#command-line-options.
+run:debug -- --node_options=--inspect-brk
+test:debug --test_arg=--node_options=--inspect-brk
+
+# Passes the $DISPLAY environment variable from the host. This allows graphical
+# tools like Chrome to connect to the host Xserver and show a GUI to the user.
+# This is particularly useful for debugging Puppeteer tests. Make sure $DISPLAY
+# is set to a good value (consider testing with `xclock` if this doesn't work).
+test:debug --test_env=DISPLAY
+
+# Sets the environment variable $LIBGL_ALWAYS_INDIRECT=1 to the test. This is
+# necessary to be compatible with a Windows Xserver when running in WSL2.
+test:debug --test_env=LIBGL_ALWAYS_INDIRECT=1
+
+# Rules may change their build outputs if the compilation mode is set to `dbg`.
+# For example, mininfiers such as terser may make their output more human
+# readable when this is set. Rules will pass `COMPILATION_MODE` to
+# `nodejs_binary()` executables via the actions.run env attribute.
+build:debug --compilation_mode=dbg
+
+# `rules_nodejs` rules will output verbose logs, mostly about resolving JS
+# files. This is only enabled with `--config debug-resolve`.
+test:debug-resolve --define=VERBOSE_LOGS=1
+run:debug-resolve --define=VERBOSE_LOGS=1
