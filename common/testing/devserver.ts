@@ -8,6 +8,7 @@ import { URL } from 'url';
 import { promisify } from 'util';
 import * as http from 'rules_prerender/common/http';
 import { Effect, useForAll } from 'rules_prerender/common/testing/effects';
+import { TestServer } from 'rules_prerender/common/testing/test_server';
 
 type Signal = Parameters<ChildProcess['kill']>[0];
 const execFile = promisify(execFileCb);
@@ -21,14 +22,14 @@ const execFile = promisify(execFileCb);
  * 
  * ```typescript
  * describe('test suite', () => {
- *   // Handles initialization and cleanup automatically.
- *   const server = useDevserver('path/to/devserver/binary');
- * 
- *   it('is alive', async () => {
- *     const res = await fetch(
- *         `http://${server.get().host}:${server.get().port}/`);
- *     expect(res.status).toBe(200);
- *   });
+ *     // Handles initialization and cleanup automatically.
+ *     const server = useDevserver('path/to/devserver/binary');
+ *
+ *     it('is alive', async () => {
+ *         const res = await fetch(
+ *             `http://${server.get().host}:${server.get().port}/`);
+ *         expect(res.status).toBe(200);
+ *     });
  * });
  * ```
  * 
@@ -37,7 +38,7 @@ const execFile = promisify(execFileCb);
  * @return A proxied {@link Server} instance usable for tests.
  */
 export function useDevserver(...args: Parameters<typeof Server.spawn>):
-        Effect<Server> {
+        Effect<DevServer> {
     return useForAll(async () => {
         const server = await Server.spawn(...args);
 
@@ -48,12 +49,20 @@ export function useDevserver(...args: Parameters<typeof Server.spawn>):
     });
 }
 
+/** A simpler extension of `TestServer` which includes a `url`. */
+export interface DevServer extends TestServer {
+    /** A full URL of the devserver. */
+    readonly url: string;
+}
+
 /** A running devserver instance. */
-export class Server {
+export class Server implements DevServer {
     /** The host the server is running on (typically 'localhost'). */
     public readonly host: string;
     /** The port the server is running on. */
     public readonly port: number;
+    /** The base path of the server. */
+    public readonly basePath: `/${string}` = '/';
     /** Kills the child process executing the devserver. */
     public readonly kill: () => Promise<void>;
 
@@ -73,6 +82,11 @@ export class Server {
         this.host = host;
         this.port = port;
         this.kill = kill;
+    }
+
+    /** The full URL of the base path of the server. */
+    public get url(): string {
+        return `http://${this.host}:${this.port}${this.basePath}`;
     }
 
     /**

@@ -1,6 +1,6 @@
 load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:jasmine.bzl", "jasmine_node_test", "jasmine_web_test_suite")
 
 ts_library(
     name = "binary",
@@ -34,6 +34,7 @@ ts_library(
     visibility = ["//visibility:public"],
     deps = [
         ":effects",
+        ":test_server",
         "//common:http",
         "@npm//@types/jasmine",
         "@npm//@types/node",
@@ -226,4 +227,66 @@ ts_library(
 jasmine_node_test(
     name = "temp_dir_test",
     deps = [":temp_dir_test_lib"],
+)
+
+ts_library(
+    name = "test_server",
+    srcs = ["test_server.ts"],
+    testonly = True,
+)
+
+ts_library(
+    name = "test_server_test_lib",
+    srcs = ["test_server_test.ts"],
+    testonly = True,
+    deps = [
+        ":test_server",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "test_server_test",
+    deps = [":test_server_test_lib"],
+)
+
+ts_library(
+    name = "webdriver",
+    srcs = ["webdriver.ts"],
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":effects",
+        ":test_server",
+        "@npm//@types/node",
+        "@npm//webdriverio",
+    ],
+)
+
+ts_library(
+    name = "webdriver_test_lib",
+    srcs = ["webdriver_test.ts"],
+    testonly = True,
+    deps = [
+        ":devserver",
+        ":webdriver",
+        "effect_tester",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
+        "@npm//webdriverio",
+    ],
+)
+
+concatjs_devserver(
+    name = "webdriver_test_server",
+    testonly = True,
+    static_files = ["webdriver_test_page.html"],
+    additional_root_paths = ["rules_prerender/common/testing"],
+)
+
+jasmine_web_test_suite(
+    name = "webdriver_test",
+    browsers = ["//tools/browsers:chromium-local"],
+    data = [":webdriver_test_server"],
+    deps = [":webdriver_test_lib"],
 )

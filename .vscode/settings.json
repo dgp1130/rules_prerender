@@ -26,7 +26,8 @@
         "transpiled",
         "tsjs",
         "unmocked",
-        "unproxied"
+        "unproxied",
+        "webdriverio"
     ],
     "files.associations": {
         "BUILD.publish": "bazel"
