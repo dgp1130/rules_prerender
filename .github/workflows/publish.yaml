@@ -37,7 +37,8 @@ jobs:
     - name: Test
       run: bazel test //... --config ci
 
-    # Publish the package.
+    # Publish the package. Use the CI configuration to reuse the existing cache
+    # and have a more polished output.
     - name: Publish
       run: bazel run //:pkg.publish --config ci --config release
       env:

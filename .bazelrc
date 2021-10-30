@@ -7,6 +7,7 @@
 # Import `.bazelrc` files definining specific `--config` flags.
 import %workspace%/tools/bazelrc/ci.bazelrc
 import %workspace%/tools/bazelrc/debug.bazelrc
+import %workspace%/tools/bazelrc/release.bazelrc
 
 # Cache action outputs on disk so they persist across output_base and bazel shutdown (eg. changing branches)
 build --disk_cache=~/.cache/bazel-disk-cache
@@ -30,11 +31,6 @@ build --symlink_prefix=dist/
 #   'streamed' to output logs for all tests in real time
 #     (this will force tests to be executed locally one at a time regardless of --test_strategy value).
 test --test_output=errors
-
-# Configuration for release builds. This should optimize its builds and stamp
-# them with the version number for the NPM package defined as
-# $BAZEL_RULES_PRERENDER_VERSION. This environment variable *must* be specified.
-build:release -c opt --stamp --workspace_status_command "tools/bazel_stamp_vars.sh \"${BAZEL_RULES_PRERENDER_VERSION}\""
 
 # Turn off legacy external runfiles
 # This prevents accidentally depending on this feature, which Bazel will remove.

@@ -1,0 +1,14 @@
+# .bazelrc configuration for releasing `rules_prerender`. Use with
+# `--config release`.
+
+# Configuration for release builds. This should optimize its builds and stamp
+# them with the version number for the NPM package defined as
+# $BAZEL_RULES_PRERENDER_VERSION. This environment variable *must* be specified.
+
+# Optimize builds for release.
+build:release -c opt
+
+# Stamp builds with the version number of the NPM package in the
+# `${BAZEL_RULES_PRERENDER_VERSION}` environment variable. This value *must* be
+# specified to release.
+build:release --stamp --workspace_status_command "tools/bazel_stamp_vars.sh \"${BAZEL_RULES_PRERENDER_VERSION}\""
