@@ -1,5 +1,5 @@
 import { env } from 'process';
-import { Browser, Page, launch } from 'puppeteer';
+import puppeteer, { Browser, Page } from 'puppeteer';
 import { Effect, useForEach, useForAll } from 'rules_prerender/common/testing/effects';
 
 /**
@@ -35,7 +35,7 @@ export function useBrowser(): Effect<Browser> {
         // likely explicitly passed this and is trying to debug a test.
         const headless = !env['DISPLAY'];
 
-        const browser = await launch({
+        const browser = await puppeteer.launch({
             headless,
             // Needed for headless declarative shadow DOM.
             args: ['--enable-experimental-web-platform-features'],

@@ -164,7 +164,7 @@ async function findPort(): Promise<number> {
         server.close();
         throw new Error('Failed to find a port.');
     }
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
         server.close(() => {
             resolve();
         });
@@ -200,7 +200,7 @@ async function ping(url: URL): Promise<boolean> {
  * Kills the given process ID (and all its children) with the provided signal.
  */
 async function killServer(pid: number, signal: Signal): Promise<void> {
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
         killTree(pid, signal, (err) => {
             if (err) reject(err);
             else resolve();
