@@ -107,7 +107,13 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
  */
 function* zip<First, Second>(firsts: First[], seconds: Second[]):
         Iterable<[ First, Second ]> {
-    for (let index = 0; index < firsts.length; index++) {
-        yield [ firsts[index], seconds[index] ];
+    if (firsts.length !== seconds.length) {
+        throw new Error(`Zipped arrays must be the same length, got:\n${
+            firsts.join(', ')}\n\n${seconds.join(', ')}`);
+    }
+    for (const [ index, first ] of firsts.entries()) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const second = seconds[index]!;
+        yield [ first, second ];
     }
 }

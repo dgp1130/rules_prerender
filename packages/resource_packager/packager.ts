@@ -38,6 +38,7 @@ export async function pack(destDir: string, resources: ResourceMap):
             .map(([ urlPath, fileRef ]) => [
                 fileRef, // Source.
                 `${destDir}/${urlPath.slice(1)}`, // Destination.
-            ]).map(([ src, dest ]) => fs.copyFile(src, dest)),
+            ] as const)
+            .map(([ src, dest ]) => fs.copyFile(src, dest)),
     );
 }

@@ -9,7 +9,7 @@
  * initial value. Defaults to `0` if not given.
  */
 export class Counter extends HTMLElement {
-    public shadowRoot!: ShadowRoot; // Assume shadow root is defined.
+    public override shadowRoot!: ShadowRoot; // Assume shadow root is defined.
     private value!: number;
     private removeListeners!: () => void;
 

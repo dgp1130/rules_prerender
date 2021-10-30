@@ -27,7 +27,8 @@ export default async function*():
     // Get metadata for each post.
     const postsMeta: PostMeta[] = posts.map((post) => {
         const baseName = post.name.split('.').slice(0, -1).join('.');
-        const title = `${baseName[0].toUpperCase()}${baseName.slice(1)}`;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const title = `${baseName[0]!.toUpperCase()}${baseName.slice(1)}`;
         return {
             fileName: post.name,
             title: title,

@@ -121,9 +121,8 @@ function validateMap(entries: Iterable<[ UrlPath, FileRef ]>):
  * pairs of the same item in both slots.
  */
 function* nonEquivalentPairs<T>(items: T[]): Iterable<[ T, T ]> {
-    for (let i = 0; i < items.length; ++i) {
-        const first = items[i];
-        for (const second of items.slice(i + 1)) {
+    for (const [ index, first ] of items.entries()) {
+        for (const second of items.slice(index + 1)) {
             yield [ first, second ];
         }
     }
