@@ -1,0 +1,58 @@
+# .bazelrc configuration which enables all currently supported
+# `--incompatible_*` flags. Use with `--config incompatible`.
+
+# These represent breaking changes coming to Bazel which are not yet required.
+# Any flag which is currently supported in the repository should be added to
+# this list where it will be run on CI to prevent regressions that will be need
+# to be fixed later. We don't use these by default, because they cause analysis
+# thrashing, since they are only applied on `build` and its infeasible to figure
+# out the full set of `bazel` commands each flag supports.
+
+build:incompatible --incompatible_always_check_depset_elements
+build:incompatible --incompatible_avoid_conflict_dlls
+build:incompatible --incompatible_config_setting_private_default_visibility
+build:incompatible --incompatible_default_to_explicit_init_py
+build:incompatible --incompatible_depset_for_libraries_to_link_getter
+build:incompatible --incompatible_disable_depset_items
+build:incompatible --incompatible_disable_expand_if_all_available_in_flag_set
+build:incompatible --incompatible_disable_native_android_rules
+build:incompatible --incompatible_disable_third_party_license_checking
+build:incompatible --incompatible_disallow_empty_glob
+build:incompatible --incompatible_disallow_legacy_javainfo
+build:incompatible --incompatible_disallow_legacy_py_provider
+build:incompatible --incompatible_do_not_split_linking_cmdline
+build:incompatible --incompatible_dont_enable_host_nonhost_crosstool_features
+build:incompatible --incompatible_enable_android_toolchain_resolution
+build:incompatible --incompatible_enforce_config_setting_visibility
+build:incompatible --incompatible_exclusive_test_sandboxed
+build:incompatible --incompatible_force_strict_header_check_from_starlark
+build:incompatible --incompatible_java_common_parameters
+build:incompatible --incompatible_legacy_local_fallback
+build:incompatible --incompatible_linkopts_to_linklibs
+build:incompatible --incompatible_make_thinlto_command_lines_standalone
+build:incompatible --incompatible_merge_genfiles_directory
+build:incompatible --incompatible_new_actions_api
+build:incompatible --incompatible_no_attr_license
+build:incompatible --incompatible_no_implicit_file_export
+build:incompatible --incompatible_objc_compile_info_migration
+build:incompatible --incompatible_objc_provider_remove_compile_info
+build:incompatible --incompatible_prohibit_aapt1
+build:incompatible --incompatible_py2_outputs_are_suffixed
+build:incompatible --incompatible_py3_is_default
+build:incompatible --incompatible_remote_output_paths_relative_to_input_root
+build:incompatible --incompatible_remote_results_ignore_disk
+build:incompatible --incompatible_remote_symlinks
+build:incompatible --incompatible_remove_cpu_and_compiler_attributes_from_cc_toolchain
+build:incompatible --incompatible_remove_legacy_whole_archive
+build:incompatible --incompatible_require_ctx_in_configure_features
+build:incompatible --incompatible_require_linker_input_cc_api
+build:incompatible --incompatible_restrict_string_escapes
+build:incompatible --incompatible_run_shell_command_string
+build:incompatible --incompatible_strict_action_env
+build:incompatible --incompatible_struct_has_no_methods
+build:incompatible --incompatible_top_level_aspects_require_providers
+build:incompatible --incompatible_use_cc_configure_from_rules_cc
+build:incompatible --incompatible_use_platforms_repo_for_constraints
+build:incompatible --incompatible_use_python_toolchains
+build:incompatible --incompatible_validate_top_level_header_inclusions
+build:incompatible --incompatible_visibility_private_attributes_at_definition

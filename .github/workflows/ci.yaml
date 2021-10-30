@@ -41,9 +41,10 @@ jobs:
     - name: Install
       run: bazel run @nodejs//:npm -- ci
 
-    # Build and test the entire repository.
+    # Build and test the entire repository. Include all supported
+    # `--incompatible_*` flags to avoid regressions.
     - name: Test
-      run: bazel test //... --config ci
+      run: bazel test //... --config incompatible --config ci
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
