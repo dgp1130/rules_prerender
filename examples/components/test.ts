@@ -2,48 +2,36 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('components', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     it('renders', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}/`,
-            {
-                waitUntil: 'load',
-            },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const title = await page.get().title();
-        expect(title).toBe('Components');
+        expect(await browser.getTitle()).toBe('Components');
 
-        const component = await page.get().$('.component');
+        const component = await browser.$('.component');
         expect(component).not.toBeNull();
+        expect(await component.$('.content').getText())
+            .toBe(`I'm a component!`);
+        expect(await component.$('.ts-dep').getText())
+            .toBe(`I'm a simple TypeScript dependency!`);
 
-        const componentText = await component!.$eval(
-            '.content', (el) => el.textContent);
-        expect(componentText).toBe(`I'm a component!`);
-
-        const tsDep = await component!.$eval('.ts-dep', (el) => el.textContent);
-        expect(tsDep).toBe(`I'm a simple TypeScript dependency!`);
-
-        const dep = await component!.$('.dep');
+        const dep = await component.$('.dep');
         expect(dep).not.toBeNull();
+        expect(await dep.$('.content').getText())
+            .toBe(`I'm a component dependency!`);
 
-        const depText = await dep!.$eval('.content', (el) => el.textContent);
-        expect(depText).toBe(`I'm a component dependency!`);
 
-        const transitive = await dep!.$('.transitive');
+        const transitive = await dep.$('.transitive');
         expect(transitive).not.toBeNull();
-
-        const transitiveText = await transitive!.$eval(
-            '.content', (el) => el.textContent);
-        expect(transitiveText?.trim()).toBe(
-            `I'm a component which is depended upon transitively!`);
-    }, puppeteerTestTimeout);
+        expect(await transitive.$('.content').getText())
+            .toBe(`I'm a component which is depended upon transitively!`);
+    }, webDriverTestTimeout);
 });
