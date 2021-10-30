@@ -1,49 +1,46 @@
 import 'jasmine';
+import 'webdriverio'; // For global `WebdriverIO` namespace.
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('Declarative Shadow DOM', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     it('attaches the declarative shadow root to its host', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}/`,
-            { waitUntil: 'load' },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const title = await page.get().title();
-        expect(title).toBe('Declarative Shadow DOM');
+        expect(await browser.getTitle()).toBe('Declarative Shadow DOM');
 
-        const shadowRoot = await page.get().evaluateHandle(
-            'document.querySelector("#component").shadowRoot');
-        expect(shadowRoot).toBeTruthy();
-    });
+        const component = await browser.$('#component');
+        expect(await component.shadow$('div').getText()).toBe('Shadow content');
+    }, webDriverTestTimeout);
 
     it('scopes CSS to the shadow root', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}/`,
-            { waitUntil: 'load' },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const shadowDiv = await page.get().evaluateHandle(
-            'document.querySelector("#component").shadowRoot.querySelector("div")');
-        expect(await shadowDiv.evaluate((el) => el.textContent))
-            .toBe('Shadow content');
-        const shadowDivColor =
-                await shadowDiv.evaluate((el) => getComputedStyle(el).color);
-        expect(shadowDivColor).toBe('rgb(255, 0, 0)'); // Red.
+        const shadowContent = await browser.$('#component').shadow$('div');
+        const shadowContentColor = await getColor(browser, shadowContent);
+        expect(shadowContentColor).toBe('rgb(255, 0, 0)'); // Red.
 
-        const lightDivText = await page.get().$eval(
-            '#component div', (el) => el.textContent);
-        expect(lightDivText).toBe('Light content');
-        const lightDivColor = await page.get().$eval(
-            '#component div', (el) => getComputedStyle(el).color);
-        expect(lightDivColor).toBe('rgb(0, 0, 0)'); // Black (default).
-    }, puppeteerTestTimeout);
+        const lightContent = await browser.$('#component div');
+        const lightContentColor = await getColor(browser, lightContent);
+        expect(lightContentColor).toBe('rgb(0, 0, 0)'); // Black (default).
+    }, webDriverTestTimeout);
 });
+
+async function getColor(
+    browser: WebdriverIO.Browser,
+    element: WebdriverIO.Element,
+): Promise<string> {
+    return await browser.execute(
+        (el) => getComputedStyle(el).color,
+        element as unknown as HTMLElement, // Gets converted a DOM node.
+    );
+}
