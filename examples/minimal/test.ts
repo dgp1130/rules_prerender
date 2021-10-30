@@ -2,33 +2,21 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('minimal', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     it('renders', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}/`,
-            {
-                waitUntil: 'load',
-            },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const title = await page.get().title();
-        expect(title).toBe('Minimal');
-
-        const hello = await page.get().$eval('#hello', (el) => el.textContent);
-        expect(hello).toBe('Hello, World!');
-
-        const foo = await page.get().$eval('#foo', (el) => el.textContent);
-        expect(foo).toBe('foo');
-
-        const bar = await page.get().$eval('#bar', (el) => el.textContent);
-        expect(bar).toBe('bar');
-    }, puppeteerTestTimeout);
+        expect(await browser.getTitle()).toBe('Minimal');
+        expect(await browser.$('#hello').getText()).toBe('Hello, World!');
+        expect(await browser.$('#foo').getText()).toBe('foo');
+        expect(await browser.$('#bar').getText()).toBe('bar');
+    }, webDriverTestTimeout);
 });
