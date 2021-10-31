@@ -2,43 +2,29 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('Scripts', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     it('renders with scripts', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}/`,
-            {
-                waitUntil: 'load',
-            },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const title = await page.get().title();
-        expect(title).toBe('Scripts');
-
-        const replaced = await page.get().$eval(
-            '#replace', (el) => el.textContent);
-        expect(replaced).toBe('This text rendered by page JavaScript!');
-
-        const componentReplaced = await page.get().$eval(
-            '#component-replace', (el) => el.textContent);
-        expect(componentReplaced)
+        expect(await browser.getTitle()).toBe('Scripts');
+        expect(await browser.$('#replace').getText())
+            .toBe('This text rendered by page JavaScript!');
+        expect(await browser.$('#component-replace').getText())
             .toBe('This text rendered by component JavaScript!');
-
-        const transitiveReplaced = await page.get().$eval(
-            '#transitive-replace', (el) => el.textContent);
-        expect(transitiveReplaced)
+        expect(await browser.$('#transitive-replace').getText())
             .toBe('This text rendered by transitive JavaScript!');
 
-        const pageContent = await page.get().evaluate(
-            () => document.body.innerHTML);
-        expect(pageContent).not.toContain(
-            'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE');
-    }, puppeteerTestTimeout);
+        // Note: This is a stringified representation of the current DOM,
+        // **not** the original source downloaded from the server.
+        expect(await browser.getPageSource())
+            .not.toContain('bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE');
+    }, webDriverTestTimeout);
 });
