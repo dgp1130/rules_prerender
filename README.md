@@ -413,7 +413,7 @@ You can also use `npm run build` and `npm test` to build and test everything.
 Most tests are run in [Jasmine](https://jasmine.github.io/) using
 [`jasmine_node_test()`](https://www.npmjs.com/package/@bazel/jasmine#jasmine_node_test).
 These tests run in a Node Jasmine environment with no available browser (unless
-they depend on Puppeteer). The test can be executed with a simple
+they depend on WebDriverIO). The test can be executed with a simple
 `bazel test //path/to/pkg:target`.
 
 ### Debugging Tests
@@ -432,17 +432,16 @@ in order to stop execution programmatically and then set interactive breakpoints
 via the DevTools debugger itself. Otherwise most files are not loaded at the
 time `--inspect-brk` stops execution.
 
-### Debugging WebDriver and Puppeteer tests
+### Debugging WebDriver tests
 
 End-to-end tests using a real browser are done with WebDriver using
-[`jasmine_web_test_suite()`](./tools/jasmine_web_test_suite.bzl) or
-[Puppeteer](https://www.npmjs.com/package/puppeteer) in a `jasmine_node_test()`.
+[`jasmine_web_test_suite()`](./tools/jasmine_web_test_suite.bzl).
 
-When debugging a test that launches Chrome via Puppeteer and using
-`--config debug`, the browser will open non-headless, giving you the opportunity
-to visually inspect the page under test and debug it directly. This is done via
-an X server, so make sure the `$DISPLAY` variable is set. For example, if
-debugging over SSH, you'll need to enable X11 forwarding.
+When executing WebDriver tests and using `--config debug`, the browser will open
+non-headless, giving you the opportunity to visually inspect the page under test
+and debug it directly. This is done via an X server, so make sure the `$DISPLAY`
+variable is set. For example, if debugging over SSH, you'll need to enable X11
+forwarding.
 
 When using [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 there is also some additional configuration required. WSL 2 does not currently
@@ -464,9 +463,9 @@ debug end-to-end tests in WSL 2, you need to:
     Consider adding it to your `~/.bashrc` so you don't have to remember to do
     this.
 
-Then running a `bazel test --config debug //path/to/pkg:target` for a WebDriver
-or Puppeteer test should open Chrome visually and give you an opportunity to
-debug and inspect the page.
+Then running a `bazel test //path/to/pkg:target --config debug` for a WebDriver
+test should open Chrome visually and give you an opportunity to debug and
+inspect the page.
 
 ### Mocking
 
