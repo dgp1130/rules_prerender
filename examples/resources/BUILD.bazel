@@ -5,7 +5,7 @@ load(
     "web_resources",
     "web_resources_devserver",
 )
-load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
     name = "page",
@@ -39,14 +39,15 @@ ts_library(
     testonly = True,
     deps = [
         "//common/testing:devserver",
-        "//common/testing:puppeteer",
+        "//common/testing:webdriver",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
     ],
 )
 
-jasmine_node_test(
+jasmine_web_test_suite(
     name = "test",
+    browsers = ["//tools/browsers:chromium-local"],
     data = [":devserver"],
     deps = [":test_lib"],
 )

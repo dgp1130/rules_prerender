@@ -2,40 +2,32 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('resources', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     it('renders with resources', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}`,
-            { waitUntil: 'load' },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const title = await page.get().title();
-        expect(title).toBe('Resources');
+        expect(await browser.getTitle()).toBe('Resources');
 
-        const pageImageLoaded = await page.get().$eval(
-            'img[src="/favicon.ico"]',
-            (img) => (img as HTMLImageElement).complete,
-        );
+        const pageImageLoaded = await browser.$('img[src="/favicon.ico"]')
+            .getProperty('complete');
         expect(pageImageLoaded).toBeTrue();
 
-        const componentImageLoaded = await page.get().$eval(
-            'img[src="/images/component.png"]',
-            (img) => (img as HTMLImageElement).complete,
-        );
+        const componentImageLoaded =
+            await browser.$('img[src="/images/component.png"]')
+                .getProperty('complete');
         expect(componentImageLoaded).toBeTrue();
 
-        const transitiveImageLoaded = await page.get().$eval(
-            'img[src="/images/transitive.png"]',
-            (img) => (img as HTMLImageElement).complete,
-        );
+        const transitiveImageLoaded =
+            await browser.$('img[src="/images/transitive.png"]')
+                .getProperty('complete');
         expect(transitiveImageLoaded).toBeTrue();
-    }, puppeteerTestTimeout);
+    }, webDriverTestTimeout);
 });
