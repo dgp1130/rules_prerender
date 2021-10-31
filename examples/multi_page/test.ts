@@ -2,110 +2,76 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { puppeteerTestTimeout, useBrowser, usePage } from 'rules_prerender/common/testing/puppeteer';
+import { getColor, useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('multi_page', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     describe('index page', () => {
         it('renders', async () => {
-            await page.get().goto(
-                `http://${server.get().host}:${server.get().port}/`,
-                { waitUntil: 'load' },
-            );
+            const browser = wd.get();
+            await browser.url('/');
 
-            const headerLbl = await page.get()
-                .$eval('h2', (el) => el.textContent);
-            expect(headerLbl).toBe('Multi-Page');
+            expect(await browser.$('h2').getText()).toBe('Multi-Page');
+            expect(await getColor(browser, browser.$('h2')))
+                .toBe('rgb(255, 0, 0)'); // Red.
 
-            const headerColor = await page.get()
-                .$eval('h2', (el) => getComputedStyle(el).color);
-            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
-
-            const iconLoaded = await page.get().$eval(
-                'img[src="/logo.png"]',
-                (img) => (img as HTMLImageElement).complete,
-            );
+            const iconLoaded = await browser.$('img[src="/logo.png"]')
+                .getProperty('complete');
             expect(iconLoaded).toBeTrue();
 
-            const links = await page.get().$$eval(
-                'nav a', (els) => els.map((el) => el.getAttribute('href')));
+            const links = await browser.$$('nav a')
+                .map((el) => el.getAttribute('href'));
             expect(links).toEqual([
                 '/foo.html',
                 '/bar.html',
                 '/hello/world.html',
             ]);
 
-            const replaced = await page.get().$eval(
-                '#replace', (el) => el.textContent);
-            expect(replaced).toBe('This text rendered by page JavaScript!');
-        }, puppeteerTestTimeout);
+            expect(await browser.$('#replace').getText())
+                .toBe('This text rendered by page JavaScript!');
+        }, webDriverTestTimeout);
     });
 
     describe('foo page', () => {
         it('renders', async () => {
-            await page.get().goto(
-                `http://${server.get().host}:${server.get().port}/foo.html`,
-                { waitUntil: 'load' },
-            );
+            const browser = wd.get();
+            await browser.url('/foo.html');
 
-            const headerLbl = await page.get()
-                .$eval('h2', (el) => el.textContent);
-            expect(headerLbl).toBe('Foo');
-
-            const headerColor = await page.get()
-                .$eval('h2', (el) => getComputedStyle(el).color);
-            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
-
-            const replaced = await page.get().$eval(
-                '#replace', (el) => el.textContent);
-            expect(replaced).toBe('This text rendered by page JavaScript!');
-        }, puppeteerTestTimeout);
+            expect(await browser.$('h2').getText()).toBe('Foo');
+            expect(await getColor(browser, browser.$('h2')))
+                .toBe('rgb(255, 0, 0)'); // Red.
+            expect(await browser.$('#replace').getText())
+                .toBe('This text rendered by page JavaScript!');
+        }, webDriverTestTimeout);
     });
 
     describe('bar page', () => {
         it('renders', async () => {
-            await page.get().goto(
-                `http://${server.get().host}:${server.get().port}/bar.html`,
-                { waitUntil: 'load' },
-            );
+            const browser = wd.get();
+            await browser.url('/bar.html');
 
-            const headerLbl = await page.get()
-                .$eval('h2', (el) => el.textContent);
-            expect(headerLbl).toBe('Bar');
-
-            const headerColor = await page.get()
-                .$eval('h2', (el) => getComputedStyle(el).color);
-            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
-
-            const replaced = await page.get().$eval(
-                '#replace', (el) => el.textContent);
-            expect(replaced).toBe('This text rendered by page JavaScript!');
-        }, puppeteerTestTimeout);
+            expect(await browser.$('h2').getText()).toBe('Bar');
+            expect(await getColor(browser, browser.$('h2')))
+                .toBe('rgb(255, 0, 0)'); // Red.
+            expect(await browser.$('#replace').getText())
+                .toBe('This text rendered by page JavaScript!');
+        }, webDriverTestTimeout);
     });
 
     describe('hello world page', () => {
         it('renders', async () => {
-            await page.get().goto(
-                `http://${server.get().host}:${server.get().port}/hello/world.html`,
-                { waitUntil: 'load' },
-            );
+            const browser = wd.get();
+            await browser.url('/hello/world.html');
 
-            const headerLbl = await page.get()
-                .$eval('h2', (el) => el.textContent);
-            expect(headerLbl).toBe('Hello, World!');
-
-            const headerColor = await page.get()
-                .$eval('h2', (el) => getComputedStyle(el).color);
-            expect(headerColor).toBe('rgb(255, 0, 0)'); // Red.
-
-            const replaced = await page.get().$eval(
-                '#replace', (el) => el.textContent);
-            expect(replaced).toBe('This text rendered by page JavaScript!');
-        }, puppeteerTestTimeout);
+            expect(await browser.$('h2').getText()).toBe('Hello, World!');
+            expect(await getColor(browser, browser.$('h2')))
+                .toBe('rgb(255, 0, 0)'); // Red.
+            expect(await browser.$('#replace').getText())
+                .toBe('This text rendered by page JavaScript!');
+        }, webDriverTestTimeout);
     });
 });
