@@ -2,31 +2,22 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useBrowser, usePage, puppeteerTestTimeout } from 'rules_prerender/common/testing/puppeteer';
+import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
 describe('JavaScript', () => {
-    const server = useDevserver(devserverBinary);
-    const browser = useBrowser();
-    const page = usePage(browser);    
+    const devserver = useDevserver(devserverBinary);
+    const wd = useWebDriver(devserver);
 
     it('renders component', async () => {
-        await page.get().goto(
-            `http://${server.get().host}:${server.get().port}`,
-            { waitUntil: 'load' },
-        );
+        const browser = wd.get();
+        await browser.url('/');
 
-        const title = await page.get().title();
-        expect(title).toBe('JavaScript');
-
-        const prerendered =
-            await page.get().$eval('#component', (el) => el.textContent);
-        expect(prerendered).toBe('Hello from a JS component!');
-
-        const replaced = await page.get().$eval(
-            '#component-replace', (el) => el.textContent);
-        expect(replaced)
+        expect(await browser.getTitle()).toBe('JavaScript');
+        expect(await browser.$('#component').getText())
+            .toBe('Hello from a JS component!');
+        expect(await browser.$('#component-replace').getText())
             .toBe('This text rendered by component JavaScript: "Hello, World!"');
-    }, puppeteerTestTimeout);
+    }, webDriverTestTimeout);
 });
