@@ -171,37 +171,6 @@ jasmine_node_test(
 )
 
 ts_library(
-    name = "puppeteer",
-    srcs = ["puppeteer.ts"],
-    visibility = ["//visibility:public"],
-    testonly = True,
-    deps = [
-        ":effects",
-        "@npm//@types/node",
-        "@npm//puppeteer",
-    ],
-)
-
-ts_library(
-    name = "puppeteer_test_lib",
-    srcs = ["puppeteer_test.ts"],
-    testonly = True,
-    deps = [
-        ":effect_fake",
-        ":effect_tester",
-        ":puppeteer",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//puppeteer",
-    ],
-)
-
-jasmine_node_test(
-    name = "puppeteer_test",
-    deps = [":puppeteer_test_lib"],
-)
-
-ts_library(
     name = "temp_dir",
     srcs = ["temp_dir.ts"],
     testonly = True,
