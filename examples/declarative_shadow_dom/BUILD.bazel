@@ -37,7 +37,6 @@ ts_library(
         "//common/testing:webdriver",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
-        "@npm//webdriverio",
     ],
 )
 

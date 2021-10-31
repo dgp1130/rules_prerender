@@ -1,6 +1,6 @@
 import 'webdriverio'; // For global `WebdriverIO` namespace.
 
-import { remote } from 'webdriverio';
+import { remote, ChainablePromiseElement } from 'webdriverio';
 import { env } from 'process';
 import { Effect, useForAll } from 'rules_prerender/common/testing/effects';
 import { TestServer } from 'rules_prerender/common/testing/test_server';
@@ -98,4 +98,20 @@ async function createSession(baseUrl?: string): Promise<WebdriverIO.Browser> {
         // Whether or not we run headless is not defined here, but is actually
         // defined by the test browser being used at the Blaze layer.
     });
+}
+
+/**
+ * Returns the color of the given element in rgb format like "rgb(255, 0, 0)".
+ */
+export async function getColor(
+    browser: WebdriverIO.Browser,
+    elementPromise: WebdriverIO.Element
+        | ChainablePromiseElement<WebdriverIO.Element>
+        | ChainablePromiseElement<Promise<WebdriverIO.Element>>,
+): Promise<string> {
+    return await browser.execute(
+        (el) => getComputedStyle(el).color,
+        // Gets converted a DOM when passed in as an argument.
+        (await elementPromise) as unknown as HTMLElement,
+    );
 }

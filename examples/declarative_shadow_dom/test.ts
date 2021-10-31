@@ -1,9 +1,8 @@
 import 'jasmine';
-import 'webdriverio'; // For global `WebdriverIO` namespace.
 
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
+import { getColor, useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
@@ -25,22 +24,12 @@ describe('Declarative Shadow DOM', () => {
         const browser = wd.get();
         await browser.url('/');
 
-        const shadowContent = await browser.$('#component').shadow$('div');
-        const shadowContentColor = await getColor(browser, shadowContent);
+        const shadowContentColor =
+            await getColor(browser, browser.$('#component').shadow$('div'));
         expect(shadowContentColor).toBe('rgb(255, 0, 0)'); // Red.
 
-        const lightContent = await browser.$('#component div');
-        const lightContentColor = await getColor(browser, lightContent);
+        const lightContentColor =
+            await getColor(browser, browser.$('#component div'));
         expect(lightContentColor).toBe('rgb(0, 0, 0)'); // Black (default).
     }, webDriverTestTimeout);
 });
-
-async function getColor(
-    browser: WebdriverIO.Browser,
-    element: WebdriverIO.Element,
-): Promise<string> {
-    return await browser.execute(
-        (el) => getComputedStyle(el).color,
-        element as unknown as HTMLElement, // Gets converted a DOM node.
-    );
-}
