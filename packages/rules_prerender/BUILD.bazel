@@ -26,6 +26,7 @@ publish_files(
     files = glob(["**/*.bzl"]) + [
         "rollup-default.config.js",
         "//packages/rules_prerender/declarative_shadow_dom:publish_files",
+        "//packages/rules_prerender/tools:publish_files",
     ],
     visibility = ["//:__pkg__"],
 )

@@ -1,6 +1,6 @@
 # Annotation Extractor
 
-An Bazel tool for processing annotations in a prerendered HTML file. User code
+A Bazel tool for processing annotations in a prerendered HTML file. User code
 may use `includeScript('some/file.js')` directly in an HTML template. This
 simply inserts an HTML comment which looks like:
 

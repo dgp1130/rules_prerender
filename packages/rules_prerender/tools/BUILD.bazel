@@ -1,0 +1,9 @@
+load("//tools:publish.bzl", "publish_files")
+
+publish_files(
+    name = "publish_files",
+    files = [
+        "//packages/rules_prerender/tools/annotation_extractor:publish_files",
+    ],
+    visibility = ["//packages/rules_prerender:__pkg__"],
+)

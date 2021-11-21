@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
+import { extract } from 'rules_prerender/packages/rules_prerender/tools/annotation_extractor/extractor';
 
 describe('extractor', () => {
     describe('extract()', () => {

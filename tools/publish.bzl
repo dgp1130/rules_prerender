@@ -39,9 +39,49 @@ def publish_files(name, files = [], testonly = None, **kwargs):
         testonly = testonly,
     )
 
+    _collect_publishable_files(
+        name = "%s_deps" % name,
+        deps = files,
+        testonly = testonly,
+    )
+
     native.filegroup(
         name = name,
-        srcs = files + ["BUILD"],
+        srcs = [
+            "BUILD",
+            ":%s_deps" % name,
+        ],
         testonly = testonly,
         **kwargs
     )
+
+def _collect_publishable_files_impl(ctx):
+    default_info_files = [dep[DefaultInfo].files for dep in ctx.attr.deps]
+    default_info_runfiles = _merge_all_runfiles(
+        ctx,
+        [dep[DefaultInfo].default_runfiles for dep in ctx.attr.deps],
+    ).files
+
+    return DefaultInfo(
+        files = depset([], transitive = default_info_files + [default_info_runfiles]),
+    )
+
+_collect_publishable_files = rule(
+    implementation = _collect_publishable_files_impl,
+    attrs = {
+        "deps": attr.label_list(
+            mandatory = True,
+            allow_files = True,
+        ),
+    },
+    doc = """
+        Collects all the transitive files of the given dependencies and returns
+        them in `DefaultInfo`.
+    """,
+)
+
+def _merge_all_runfiles(ctx, runfiles_list):
+    result = ctx.runfiles()
+    for runfiles in runfiles_list:
+        result = result.merge(runfiles)
+    return result

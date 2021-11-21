@@ -79,7 +79,6 @@ pkg_npm(
         "//packages/renderer:publish_files",
         "//packages/rules_prerender",
         "//packages/rules_prerender:publish_files",
-        "//tools/internal:annotation_extractor",
         "//tools/internal:renderer",
         "//tools/internal:resource_injector",
         "//tools/internal:resource_packager",

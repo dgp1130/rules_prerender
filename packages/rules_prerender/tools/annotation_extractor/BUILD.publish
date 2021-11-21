@@ -1,0 +1,5 @@
+alias(
+    name = "annotation_extractor",
+    actual = "@npm//rules_prerender/bin:annotation-extractor",
+    visibility = ["//visibility:public"],
+)

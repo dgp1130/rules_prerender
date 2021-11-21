@@ -1,11 +1,18 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:publish.bzl", "publish_files")
+
+publish_files(
+    name = "publish_files",
+    files = [":annotation_extractor"],
+    visibility = ["//packages/rules_prerender/tools:__pkg__"],
+)
 
 nodejs_binary(
     name = "annotation_extractor",
     entry_point = "annotation_extractor.ts",
-    visibility = ["//tools/internal:__pkg__"],
+    visibility = ["//visibility:public"],
     templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":annotation_extractor_lib",
