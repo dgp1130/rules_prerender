@@ -1,5 +1,7 @@
 {
     "recommendations": [
-        "dbaeumer.vscode-eslint"
+        "bazelbuild.vscode-bazel",
+        "dbaeumer.vscode-eslint",
+        "devondcarew.bazel-code"
     ]
 }
