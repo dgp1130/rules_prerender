@@ -1,0 +1,17 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+
+alias(
+    name = "script_entry_generator_rs",
+    actual = ":script_entry_generator",
+)
+
+rust_binary(
+    name = "script_entry_generator",
+    srcs = ["script_entry_generator.rs"],
+    deps = [":generator"],
+)
+
+rust_library(
+    name = "generator",
+    srcs = ["generator.rs"],
+)
