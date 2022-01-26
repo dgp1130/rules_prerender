@@ -2,5 +2,8 @@ dist
 bazel-out
 node_modules
 
+# Used by Rust language server
+target
+
 # Generated package from `bazel run //:pkg.pack`
 rules_prerender-*.tgz

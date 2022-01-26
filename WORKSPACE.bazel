@@ -76,6 +76,10 @@ http_archive(
 load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 rust_repositories()
 
+# Load Cargo workspace dependencies.
+load("//cargo:crates.bzl", "raze_fetch_remote_crates")
+raze_fetch_remote_crates()
+
 # Install transitive Bazel dependencies.
 load("//:package.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()

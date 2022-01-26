@@ -8,7 +8,10 @@ alias(
 rust_binary(
     name = "script_entry_generator",
     srcs = ["script_entry_generator.rs"],
-    deps = [":generator"],
+    deps = [
+        ":generator",
+        "//cargo:clap",
+    ],
 )
 
 rust_library(

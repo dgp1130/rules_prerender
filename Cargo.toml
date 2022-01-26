@@ -1,0 +1,13 @@
+[package]
+name = "rules_prerender"
+version = "0.0.0"
+
+[lib]
+path = "fake_lib.rs"
+
+[dependencies]
+clap = { version = "3.0.12" }
+
+[package.metadata.raze]
+workspace_path = "//cargo"
+genmode = "Remote"
