@@ -1,20 +1,10 @@
 extern crate clap;
-extern crate serde;
 extern crate serde_json;
 
 use std::fs;
 use clap::{App, arg};
-use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
-struct PrerenderMetadata {
-    scripts: Vec<ScriptMetadata>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct ScriptMetadata {
-    path: String,
-}
+use prerender_metadata::PrerenderMetadata;
 
 fn main() {
     // Parse arguments.
@@ -32,5 +22,10 @@ fn main() {
     let metadata: PrerenderMetadata = serde_json::from_str(&metadata_json)
         .expect(&format!("Failed to parse PrerenderMetadata from JSON file: {}", metadata_path));
 
-    println!("Generating {} from:\n{:?}", output_path, metadata);
+    // Generate an entry point from prerender metadata.
+    let entry_point_content = generator::generate_entry_point(metadata);
+
+    // Write the entry point to the output file.
+    fs::write(output_path, entry_point_content)
+        .expect(&format!("Failed to write to output file: {}", output_path));
 }

@@ -10,8 +10,8 @@ rust_binary(
     srcs = ["script_entry_generator.rs"],
     deps = [
         ":generator",
+        ":prerender_metadata",
         "//cargo:clap",
-        "//cargo:serde",
         "//cargo:serde_json",
     ],
 )
@@ -19,4 +19,11 @@ rust_binary(
 rust_library(
     name = "generator",
     srcs = ["generator.rs"],
+    deps = [":prerender_metadata"],
+)
+
+rust_library(
+    name = "prerender_metadata",
+    srcs = ["prerender_metadata.rs"],
+    deps = ["//cargo:serde"],
 )
