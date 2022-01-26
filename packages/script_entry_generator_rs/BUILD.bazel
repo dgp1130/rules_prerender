@@ -11,6 +11,8 @@ rust_binary(
     deps = [
         ":generator",
         "//cargo:clap",
+        "//cargo:serde",
+        "//cargo:serde_json",
     ],
 )
 
