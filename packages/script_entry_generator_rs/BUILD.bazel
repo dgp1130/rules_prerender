@@ -1,4 +1,4 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
 
 alias(
     name = "script_entry_generator_rs",
@@ -16,14 +16,40 @@ rust_binary(
     ],
 )
 
+rust_test(
+    name = "script_entry_generator_test",
+    srcs = ["script_entry_generator_test.rs"],
+    data = [":script_entry_generator"],
+    deps = [
+        ":prerender_metadata",
+        "//cargo:serde_json",
+        "//cargo:tempdir",
+    ],
+)
+
 rust_library(
     name = "generator",
     srcs = ["generator.rs"],
     deps = [":prerender_metadata"],
 )
 
+rust_test(
+    name = "generator_test",
+    srcs = ["generator_test.rs"],
+    deps = [
+        ":generator",
+        ":prerender_metadata",
+    ],
+)
+
 rust_library(
     name = "prerender_metadata",
     srcs = ["prerender_metadata.rs"],
     deps = ["//cargo:serde"],
+)
+
+rust_test(
+    name = "prerender_metadata_test",
+    srcs = ["prerender_metadata_test.rs"],
+    deps = [":prerender_metadata"],
 )

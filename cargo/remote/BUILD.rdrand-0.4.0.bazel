@@ -26,44 +26,19 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # ISC from expression "ISC"
 ])
 
 # Generated Targets
-# buildifier: disable=out-of-order-load
-# buildifier: disable=load-on-top
-load(
-    "@rules_rust//cargo:cargo_build_script.bzl",
-    "cargo_build_script",
-)
 
-cargo_build_script(
-    name = "libc_build_script",
-    srcs = glob(["**/*.rs"]),
-    build_script_env = {
-    },
-    crate_features = [
-        "default",
-        "std",
-    ],
-    crate_root = "build.rs",
-    data = glob(["**"]),
-    edition = "2015",
-    rustc_flags = [
-        "--cap-lints=allow",
-    ],
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-    version = "0.2.114",
-    visibility = ["//visibility:private"],
-    deps = [
-    ],
-)
+# Unsupported target "rdrand" with type "bench" omitted
+
+# Unsupported target "rdseed" with type "bench" omitted
+
+# Unsupported target "std" with type "bench" omitted
 
 rust_library(
-    name = "libc",
+    name = "rdrand",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
@@ -77,14 +52,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=libc",
+        "crate-name=rdrand",
         "manual",
     ],
-    version = "0.2.114",
+    version = "0.4.0",
     # buildifier: leave-alone
     deps = [
-        ":libc_build_script",
+        "@raze__rand_core__0_3_1//:rand_core",
     ],
 )
-
-# Unsupported target "const_fn" with type "test" omitted

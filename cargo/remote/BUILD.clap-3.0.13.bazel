@@ -152,7 +152,7 @@ rust_library(
         "crate-name=clap",
         "manual",
     ],
-    version = "3.0.12",
+    version = "3.0.13",
     # buildifier: leave-alone
     deps = [
         "@raze__atty__0_2_14//:atty",
