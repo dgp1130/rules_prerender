@@ -31,21 +31,14 @@ licenses([
 
 # Generated Targets
 
-# Unsupported target "bench" with type "bench" omitted
-
-# Unsupported target "generators" with type "bench" omitted
-
-# Unsupported target "misc" with type "bench" omitted
+# Unsupported target "values" with type "example" omitted
 
 rust_library(
-    name = "rand",
+    name = "num_cpus",
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
     crate_features = [
-        "default",
-        "libc",
-        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -55,14 +48,14 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=rand",
+        "crate-name=num_cpus",
         "manual",
     ],
-    version = "0.4.6",
+    version = "1.13.1",
     # buildifier: leave-alone
     deps = [
     ] + selects.with_or({
-        # cfg(unix)
+        # cfg(not(windows))
         (
             "@rules_rust//rust/platform:i686-apple-darwin",
             "@rules_rust//rust/platform:i686-unknown-linux-gnu",
@@ -77,20 +70,13 @@ rust_library(
             "@rules_rust//rust/platform:i686-unknown-freebsd",
             "@rules_rust//rust/platform:powerpc-unknown-linux-gnu",
             "@rules_rust//rust/platform:s390x-unknown-linux-gnu",
+            "@rules_rust//rust/platform:wasm32-unknown-unknown",
+            "@rules_rust//rust/platform:wasm32-wasi",
             "@rules_rust//rust/platform:x86_64-apple-ios",
             "@rules_rust//rust/platform:x86_64-linux-android",
             "@rules_rust//rust/platform:x86_64-unknown-freebsd",
         ): [
             "@raze__libc__0_2_115//:libc",
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(windows)
-        (
-            "@rules_rust//rust/platform:i686-pc-windows-msvc",
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__winapi__0_3_9//:winapi",
         ],
         "//conditions:default": [],
     }),

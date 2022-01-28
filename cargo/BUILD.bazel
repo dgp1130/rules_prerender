@@ -22,6 +22,15 @@ alias(
 )
 
 alias(
+    name = "futures",
+    actual = "@raze__futures__0_3_19//:futures",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "serde",
     actual = "@raze__serde__1_0_136//:serde",
     tags = [
@@ -42,6 +51,15 @@ alias(
 alias(
     name = "tempdir",
     actual = "@raze__tempdir__0_3_7//:tempdir",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "tokio",
+    actual = "@raze__tokio__1_16_0//:tokio",
     tags = [
         "cargo-raze",
         "manual",

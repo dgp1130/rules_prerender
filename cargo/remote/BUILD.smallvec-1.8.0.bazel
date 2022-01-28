@@ -31,11 +31,12 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "bench" with type "bench" omitted
+
 rust_library(
-    name = "hermit_abi",
+    name = "smallvec",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +46,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=smallvec",
         "manual",
     ],
-    version = "0.1.19",
+    version = "1.8.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
     ],
 )
+
+# Unsupported target "macro" with type "test" omitted

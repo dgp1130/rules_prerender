@@ -1,9 +1,13 @@
 extern crate clap;
+extern crate futures;
+extern crate tokio;
 
 use std::error::Error;
 use clap::{App, arg};
+use tokio::fs;
 
-fn main() -> Result<(), Box<dyn Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     let matches = App::new("resource_injector")
         .about("Injects web resources into a HTML files.")
         .arg(arg!(--"input-dir" <INPUT_DIR> "Directory containing input resources"))
@@ -12,12 +16,15 @@ fn main() -> Result<(), Box<dyn Error>> {
         .arg(arg!(--"output-dir" <OUTPUT_DIR> "Directory to output injected resources to"))
         .get_matches();
 
-    let input_dir = matches.value_of("input-dir").unwrap();
-    let config = matches.value_of("config").unwrap();
-    let bundle = matches.value_of("bundle");
-    let output_dir = matches.value_of("output-dir").unwrap();
+    let input_dir_path = matches.value_of("input-dir").unwrap();
+    let config_path = matches.value_of("config").unwrap();
+    let bundle_path = matches.value_of("bundle");
+    let output_dir_path = matches.value_of("output-dir").unwrap();
 
-    println!("Injecting from {} to {} with config {} and bundle {:?}.", &input_dir, &output_dir, &config, &bundle);
+    println!("Injecting from {} to {} with config {} and bundle {:?}.", &input_dir_path, &output_dir_path, &config_path, &bundle_path);
+
+    let config = fs::read(config_path).await?;
+    println!("Config: {}", String::from_utf8_lossy(&config));
 
     Ok(())
 }

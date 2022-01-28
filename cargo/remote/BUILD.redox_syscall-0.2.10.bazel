@@ -26,16 +26,24 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
+alias(
+    name = "redox_syscall",
+    actual = ":syscall",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
 rust_library(
-    name = "hermit_abi",
+    name = "syscall",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +53,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=syscall",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.2.10",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
+        "@raze__bitflags__1_3_2//:bitflags",
     ],
 )

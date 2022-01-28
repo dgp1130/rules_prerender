@@ -26,41 +26,45 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
-# Unsupported target "bench" with type "bench" omitted
+# Unsupported target "tcp_server" with type "example" omitted
 
-# Unsupported target "generators" with type "bench" omitted
-
-# Unsupported target "misc" with type "bench" omitted
+# Unsupported target "udp_server" with type "example" omitted
 
 rust_library(
-    name = "rand",
+    name = "mio",
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
     crate_features = [
         "default",
-        "libc",
-        "std",
+        "net",
+        "os-ext",
+        "os-poll",
+        "os-util",
+        "tcp",
+        "udp",
+        "uds",
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=rand",
+        "crate-name=mio",
         "manual",
     ],
-    version = "0.4.6",
+    version = "0.7.14",
     # buildifier: leave-alone
     deps = [
+        "@raze__log__0_4_14//:log",
     ] + selects.with_or({
         # cfg(unix)
         (
@@ -90,6 +94,8 @@ rust_library(
             "@rules_rust//rust/platform:i686-pc-windows-msvc",
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
         ): [
+            "@raze__miow__0_3_7//:miow",
+            "@raze__ntapi__0_3_6//:ntapi",
             "@raze__winapi__0_3_9//:winapi",
         ],
         "//conditions:default": [],

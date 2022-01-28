@@ -26,16 +26,17 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "slab",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +46,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=slab",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.4.5",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
     ],
 )
+
+# Unsupported target "serde" with type "test" omitted
+
+# Unsupported target "slab" with type "test" omitted

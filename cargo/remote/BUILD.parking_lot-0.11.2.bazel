@@ -26,13 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "parking_lot",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
@@ -45,12 +45,16 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=parking_lot",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.11.2",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
+        "@raze__instant__0_1_12//:instant",
+        "@raze__lock_api__0_4_5//:lock_api",
+        "@raze__parking_lot_core__0_8_5//:parking_lot_core",
     ],
 )
+
+# Unsupported target "issue_203" with type "test" omitted

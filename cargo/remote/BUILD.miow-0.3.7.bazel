@@ -32,10 +32,9 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "miow",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +44,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=miow",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.3.7",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
+        "@raze__winapi__0_3_9//:winapi",
     ],
 )

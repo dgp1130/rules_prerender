@@ -26,16 +26,15 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "pin_project_lite",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +44,23 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=pin-project-lite",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.2.8",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
     ],
 )
+
+# Unsupported target "compiletest" with type "test" omitted
+
+# Unsupported target "drop_order" with type "test" omitted
+
+# Unsupported target "expandtest" with type "test" omitted
+
+# Unsupported target "lint" with type "test" omitted
+
+# Unsupported target "proper_unpin" with type "test" omitted
+
+# Unsupported target "test" with type "test" omitted

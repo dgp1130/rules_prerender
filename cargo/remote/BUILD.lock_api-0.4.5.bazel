@@ -26,16 +26,15 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "lock_api",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +44,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=lock_api",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.4.5",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_115//:libc",
+        "@raze__scopeguard__1_1_0//:scopeguard",
     ],
 )
