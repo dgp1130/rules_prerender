@@ -14,14 +14,14 @@ def script_entry_point(name, metadata, output_entry_point, **kwargs):
         srcs = [metadata],
         outs = [output_entry_point],
         cmd = """
-            $(location //tools/internal:script_entry_generator) \\
+            $(location //packages/script_entry_generator_rs) \\
                 --metadata $(location {metadata}) \\
                 --output $(location {output})
         """.format(
             metadata = metadata,
             output = output_entry_point,
         ),
-        tools = ["//tools/internal:script_entry_generator"],
+        exec_tools = ["//packages/script_entry_generator_rs"],
         **kwargs
     )
 
