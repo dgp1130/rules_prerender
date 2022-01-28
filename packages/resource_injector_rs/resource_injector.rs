@@ -5,6 +5,8 @@ extern crate tokio;
 
 use std::error::Error;
 use std::path::{Path, PathBuf};
+use futures::FutureExt;
+use futures::future::try_join_all;
 use async_recursion::async_recursion;
 use clap::{App, arg};
 use tokio::fs;
@@ -24,29 +26,34 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let bundle_path = matches.value_of("bundle");
     let output_dir_path = matches.value_of("output-dir").unwrap();
 
-    println!("Injecting from {} to {} with config {} and bundle {:?}.", &input_dir_path, &output_dir_path, &config_path, &bundle_path);
+    eprintln!("Injecting from {} to {} with config {} and bundle {:?}.", &input_dir_path, &output_dir_path, &config_path, &bundle_path);
 
     let config = fs::read(config_path).await?;
-    println!("Config: {}", String::from_utf8_lossy(&config));
+    eprintln!("Config: {}", String::from_utf8_lossy(&config));
 
-    let files = list_recursive_files(&Path::new(input_dir_path)).await?;
-    println!("Input files:");
-    for file in files {
-        println!("{}", file.to_str().unwrap());
-    }
+    // Copy files from input directory to output directory.
+    let relative_paths = list_recursive_files(&Path::new(input_dir_path), Path::new("")).await?;
+    try_join_all(relative_paths.into_iter().map(move |rel_path| {
+        let input_file = Path::new(input_dir_path).join(&rel_path);
+        let output_file = Path::new(output_dir_path).join(&rel_path);
+        let output_dir = output_file.parent().unwrap().to_owned();
+
+        // Create parent directories if necessary and then copy the file.
+        fs::create_dir_all(output_dir).then(move |_| fs::copy(input_file, output_file))
+    })).await?;
 
     Ok(())
 }
 
 /** Returns a Vector of paths for all the files recursively under the given root path. */
 #[async_recursion]
-async fn list_recursive_files(root: &Path) -> Result<Vec<PathBuf>, Box<dyn Error>> {
+async fn list_recursive_files(root: &Path, parents: &Path) -> Result<Vec<PathBuf>, Box<dyn Error>> {
     let mut results = Vec::<PathBuf>::new();
-    let mut entries = fs::read_dir(root).await?;
+    let mut entries = fs::read_dir(root.join(parents)).await?;
     while let Some(entry) = entries.next_entry().await? {
-        let rel_path = Path::new(root).join(entry.file_name().into_string().unwrap());
+        let rel_path = Path::new(parents).join(entry.file_name().into_string().unwrap());
         if entry.file_type().await?.is_dir() {
-            results.append(&mut list_recursive_files(&rel_path).await?);
+            results.append(&mut list_recursive_files(&root, &rel_path).await?);
         } else {
             results.push(rel_path);
         }
