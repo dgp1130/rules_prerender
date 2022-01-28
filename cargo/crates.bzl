@@ -13,6 +13,16 @@ def raze_fetch_remote_crates():
     """This function defines a collection of repos and should be called in a WORKSPACE file"""
     maybe(
         http_archive,
+        name = "raze__async_recursion__1_0_0",
+        url = "https://crates.io/api/v1/crates/async-recursion/1.0.0/download",
+        type = "tar.gz",
+        sha256 = "2cda8f4bcc10624c4e85bc66b3f452cca98cfa5ca002dc83a16aad2367641bea",
+        strip_prefix = "async-recursion-1.0.0",
+        build_file = Label("//cargo/remote:BUILD.async-recursion-1.0.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__atty__0_2_14",
         url = "https://crates.io/api/v1/crates/atty/0.2.14/download",
         type = "tar.gz",

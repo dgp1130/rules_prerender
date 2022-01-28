@@ -1,8 +1,11 @@
+extern crate async_recursion;
 extern crate clap;
 extern crate futures;
 extern crate tokio;
 
 use std::error::Error;
+use std::path::{Path, PathBuf};
+use async_recursion::async_recursion;
 use clap::{App, arg};
 use tokio::fs;
 
@@ -26,5 +29,28 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let config = fs::read(config_path).await?;
     println!("Config: {}", String::from_utf8_lossy(&config));
 
+    let files = list_recursive_files(&Path::new(input_dir_path)).await?;
+    println!("Input files:");
+    for file in files {
+        println!("{}", file.to_str().unwrap());
+    }
+
     Ok(())
+}
+
+/** Returns a Vector of paths for all the files recursively under the given root path. */
+#[async_recursion]
+async fn list_recursive_files(root: &Path) -> Result<Vec<PathBuf>, Box<dyn Error>> {
+    let mut results = Vec::<PathBuf>::new();
+    let mut entries = fs::read_dir(root).await?;
+    while let Some(entry) = entries.next_entry().await? {
+        let rel_path = Path::new(root).join(entry.file_name().into_string().unwrap());
+        if entry.file_type().await?.is_dir() {
+            results.append(&mut list_recursive_files(&rel_path).await?);
+        } else {
+            results.push(rel_path);
+        }
+    }
+
+    Ok(results)
 }

@@ -13,6 +13,15 @@ licenses([
 
 # Aliased targets
 alias(
+    name = "async_recursion",
+    actual = "@raze__async_recursion__1_0_0//:async_recursion",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "clap",
     actual = "@raze__clap__3_0_13//:clap",
     tags = [
