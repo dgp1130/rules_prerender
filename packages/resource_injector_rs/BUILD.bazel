@@ -1,0 +1,12 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+alias(
+    name = "resource_injector_rs",
+    actual = ":resource_injector",
+    visibility = ["//:__subpackages__"],
+)
+
+rust_binary(
+    name = "resource_injector",
+    srcs = ["resource_injector.rs"],
+)
