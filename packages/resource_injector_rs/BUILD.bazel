@@ -9,4 +9,5 @@ alias(
 rust_binary(
     name = "resource_injector",
     srcs = ["resource_injector.rs"],
+    deps = ["//cargo:clap"],
 )
