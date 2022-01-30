@@ -5,8 +5,9 @@ extern crate tokio;
 
 use std::error::Error;
 use std::path::{Path, PathBuf};
-use futures::FutureExt;
-use futures::future::try_join_all;
+use std::pin::Pin;
+use futures::{FutureExt, future};
+use futures::future::{Future, try_join_all};
 use async_recursion::async_recursion;
 use clap::{App, arg};
 use tokio::fs;
@@ -33,13 +34,20 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     // Copy files from input directory to output directory.
     let relative_paths = list_recursive_files(&Path::new(input_dir_path), Path::new("")).await?;
-    try_join_all(relative_paths.into_iter().map(move |rel_path| {
+    try_join_all(relative_paths.into_iter().map(move |rel_path| -> Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>> {
         let input_file = Path::new(input_dir_path).join(&rel_path);
         let output_file = Path::new(output_dir_path).join(&rel_path);
         let output_dir = output_file.parent().unwrap().to_owned();
 
         // Create parent directories if necessary and then copy the file.
-        fs::create_dir_all(output_dir).then(move |_| fs::copy(input_file, output_file))
+        Box::pin(fs::create_dir_all(output_dir).then(move |_| -> Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>> {
+            let extension = &input_file.extension().and_then(|ext| ext.to_str());
+            if let Some("html") = extension {
+                Box::pin(future::ok(()))
+            } else {
+                Box::pin(fs::copy(input_file, output_file).map(|_| Ok(())))
+            }
+        }))
     })).await?;
 
     Ok(())
