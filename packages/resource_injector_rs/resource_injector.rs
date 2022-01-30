@@ -1,16 +1,20 @@
 extern crate async_recursion;
 extern crate clap;
 extern crate futures;
+extern crate serde_json;
 extern crate tokio;
 
 use std::error::Error;
+use std::fmt::{Display, Formatter};
+use std::iter;
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
-use futures::{FutureExt, future};
+use futures::FutureExt;
 use futures::future::{Future, try_join_all};
 use async_recursion::async_recursion;
 use clap::{App, arg};
 use tokio::fs;
+use config::{InjectorAction, InjectorConfig};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -29,9 +33,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     eprintln!("Injecting from {} to {} with config {} and bundle {:?}.", &input_dir_path, &output_dir_path, &config_path, &bundle_path);
 
-    let config = fs::read(config_path).await?;
-    eprintln!("Config: {}", String::from_utf8_lossy(&config));
-
     // Copy files from input directory to output directory.
     let relative_paths = list_recursive_files(&Path::new(input_dir_path), Path::new("")).await?;
     try_join_all(relative_paths.into_iter().map(move |rel_path| -> Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>> {
@@ -43,7 +44,27 @@ async fn main() -> Result<(), Box<dyn Error>> {
         Box::pin(fs::create_dir_all(output_dir).then(move |_| -> Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>> {
             let extension = &input_file.extension().and_then(|ext| ext.to_str());
             if let Some("html") = extension {
-                Box::pin(future::ok(()))
+                Box::pin(async move {
+                    // Get the config to inject the HTML with.
+                    // TODO: Only read config once. Read in parallel with HTML.
+                    let input_config = read_config(&config_path).await?;
+                    let config = if bundle_path.is_some() {
+                        let sibling_js = input_file.with_extension("js");
+                        input_config.into_iter()
+                            .chain(iter::once(InjectorAction::Style {
+                                path: sibling_js.into_os_string().into_string().unwrap(),
+                            }))
+                            .collect()
+                    } else {
+                        input_config
+                    };
+                    eprintln!("Config: {:?}", &config);
+
+                    // Read the HTML, inject it, and write the output.
+                    let html = fs::read_to_string(input_file).await?;
+                    fs::write(output_file, html).await?;
+                    Ok(())
+                })
             } else {
                 Box::pin(fs::copy(input_file, output_file).map(|_| Ok(())))
             }
@@ -51,6 +72,26 @@ async fn main() -> Result<(), Box<dyn Error>> {
     })).await?;
 
     Ok(())
+}
+
+/** Reads and parses the config file at the given path. */
+async fn read_config(config_path: &str) -> Result<InjectorConfig, Box<dyn Error>> {
+    let config_contents = fs::read_to_string(config_path).await?;
+    serde_json::from_str::<InjectorConfig>(&config_contents).or(Err(Box::new(JsonParseError {
+        raw: config_contents.clone(),
+    })))
+}
+
+/** Error representing a failed JSON parsing. */
+#[derive(Debug)]
+struct JsonParseError {
+    raw: String,
+}
+impl Error for JsonParseError {}
+impl Display for JsonParseError {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
+        write!(f, "Failed to parse JSON:\n{}", self.raw)
+    }
 }
 
 /** Returns a Vector of paths for all the files recursively under the given root path. */

@@ -1,4 +1,4 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
 
 alias(
     name = "resource_injector_rs",
@@ -11,8 +11,16 @@ rust_binary(
     srcs = ["resource_injector.rs"],
     proc_macro_deps = ["//cargo:async_recursion"],
     deps = [
+        ":config",
         "//cargo:clap",
         "//cargo:futures",
+        "//cargo:serde_json",
         "//cargo:tokio",
     ],
+)
+
+rust_library(
+    name = "config",
+    srcs = ["config.rs"],
+    deps = ["//cargo:serde"],
 )
