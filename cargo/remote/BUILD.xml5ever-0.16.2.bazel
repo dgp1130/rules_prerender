@@ -31,11 +31,16 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "xml5ever" with type "bench" omitted
+
+# Unsupported target "simple_xml_tokenizer" with type "example" omitted
+
+# Unsupported target "xml_tokenizer" with type "example" omitted
+
 rust_library(
-    name = "hermit_abi",
+    name = "xml5ever",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +50,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=xml5ever",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.16.2",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
+        "@raze__log__0_4_14//:log",
+        "@raze__mac__0_1_1//:mac",
+        "@raze__markup5ever__0_10_1//:markup5ever",
+        "@raze__time__0_1_44//:time",
     ],
 )

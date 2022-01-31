@@ -15,6 +15,7 @@ use async_recursion::async_recursion;
 use clap::{App, arg};
 use tokio::fs;
 use config::{InjectorAction, InjectorConfig};
+use injector::inject;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -49,20 +50,21 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     // TODO: Only read config once. Read in parallel with HTML.
                     let input_config = read_config(&config_path).await?;
                     let config = if bundle_path.is_some() {
-                        let sibling_js = input_file.with_extension("js");
+                        let sibling_js_path = &rel_path.with_extension("js");
+                        let sibling_js = sibling_js_path.to_owned().into_os_string().into_string().unwrap();
                         input_config.into_iter()
-                            .chain(iter::once(InjectorAction::Style {
-                                path: sibling_js.into_os_string().into_string().unwrap(),
+                            .chain(iter::once(InjectorAction::Script {
+                                path: format!("/{}", sibling_js),
                             }))
                             .collect()
                     } else {
                         input_config
                     };
-                    eprintln!("Config: {:?}", &config);
 
                     // Read the HTML, inject it, and write the output.
                     let html = fs::read_to_string(input_file).await?;
-                    fs::write(output_file, html).await?;
+                    let injected = inject(html, config).await?;
+                    fs::write(output_file, injected).await?;
                     Ok(())
                 })
             } else {

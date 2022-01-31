@@ -40,6 +40,24 @@ alias(
 )
 
 alias(
+    name = "html5ever",
+    actual = "@raze__html5ever__0_25_1//:html5ever",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "markup5ever_rcdom",
+    actual = "@raze__markup5ever_rcdom__0_1_0//:markup5ever_rcdom",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "serde",
     actual = "@raze__serde__1_0_136//:serde",
     tags = [
@@ -68,7 +86,7 @@ alias(
 
 alias(
     name = "tokio",
-    actual = "@raze__tokio__1_16_0//:tokio",
+    actual = "@raze__tokio__1_16_1//:tokio",
     tags = [
         "cargo-raze",
         "manual",

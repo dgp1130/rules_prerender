@@ -32,25 +32,27 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "lazy_static",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=lazy_static",
         "manual",
     ],
-    version = "0.1.19",
+    version = "1.4.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
     ],
 )
+
+# Unsupported target "no_std" with type "test" omitted
+
+# Unsupported target "test" with type "test" omitted

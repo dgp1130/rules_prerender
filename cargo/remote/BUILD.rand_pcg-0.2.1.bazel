@@ -32,10 +32,9 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "rand_pcg",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +44,18 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=rand_pcg",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.2.1",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
+        "@raze__rand_core__0_5_1//:rand_core",
     ],
 )
+
+# Unsupported target "lcg128xsl64" with type "test" omitted
+
+# Unsupported target "lcg64xsh32" with type "test" omitted
+
+# Unsupported target "mcg128xsl64" with type "test" omitted

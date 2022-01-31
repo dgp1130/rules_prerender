@@ -32,25 +32,25 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "futf",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=futf",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.1.4",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
+        "@raze__mac__0_1_1//:mac",
+        "@raze__new_debug_unreachable__1_0_4//:new_debug_unreachable",
     ],
 )

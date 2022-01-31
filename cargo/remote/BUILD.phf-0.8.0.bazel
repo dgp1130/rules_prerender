@@ -26,16 +26,17 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "phf",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +46,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=phf",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.8.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
+        "@raze__phf_shared__0_8_0//:phf_shared",
     ],
 )

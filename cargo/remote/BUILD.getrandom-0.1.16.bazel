@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
@@ -38,11 +38,12 @@ load(
 )
 
 cargo_build_script(
-    name = "parking_lot_core_build_script",
+    name = "getrandom_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
+        "std",
     ],
     crate_root = "build.rs",
     data = glob(["**"]),
@@ -54,10 +55,17 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.8.5",
+    version = "0.1.16",
     visibility = ["//visibility:private"],
     deps = [
     ] + selects.with_or({
+        # cfg(target_os = "wasi")
+        (
+            "@rules_rust//rust/platform:wasm32-wasi",
+        ): [
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
         # cfg(unix)
         (
             "@rules_rust//rust/platform:i686-apple-darwin",
@@ -79,23 +87,18 @@ cargo_build_script(
         ): [
         ],
         "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(windows)
-        (
-            "@rules_rust//rust/platform:i686-pc-windows-msvc",
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-        ],
-        "//conditions:default": [],
     }),
 )
 
+# Unsupported target "mod" with type "bench" omitted
+
 rust_library(
-    name = "parking_lot_core",
+    name = "getrandom",
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
     crate_features = [
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -105,17 +108,23 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=parking_lot_core",
+        "crate-name=getrandom",
         "manual",
     ],
-    version = "0.8.5",
+    version = "0.1.16",
     # buildifier: leave-alone
     deps = [
-        ":parking_lot_core_build_script",
+        ":getrandom_build_script",
         "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__instant__0_1_12//:instant",
-        "@raze__smallvec__1_8_0//:smallvec",
     ] + selects.with_or({
+        # cfg(target_os = "wasi")
+        (
+            "@rules_rust//rust/platform:wasm32-wasi",
+        ): [
+            "@raze__wasi__0_9_0_wasi_snapshot_preview1//:wasi",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
         # cfg(unix)
         (
             "@rules_rust//rust/platform:i686-apple-darwin",
@@ -138,14 +147,7 @@ rust_library(
             "@raze__libc__0_2_116//:libc",
         ],
         "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(windows)
-        (
-            "@rules_rust//rust/platform:i686-pc-windows-msvc",
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__winapi__0_3_9//:winapi",
-        ],
-        "//conditions:default": [],
     }),
 )
+
+# Unsupported target "common" with type "test" omitted

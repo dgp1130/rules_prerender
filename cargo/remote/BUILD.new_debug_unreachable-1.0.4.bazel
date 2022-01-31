@@ -26,16 +26,26 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
+# Unsupported target "simple" with type "example" omitted
+
+alias(
+    name = "new_debug_unreachable",
+    actual = ":debug_unreachable",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
 rust_library(
-    name = "hermit_abi",
+    name = "debug_unreachable",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +55,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=debug_unreachable",
         "manual",
     ],
-    version = "0.1.19",
+    version = "1.0.4",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
     ],
 )
+
+# Unsupported target "check" with type "test" omitted

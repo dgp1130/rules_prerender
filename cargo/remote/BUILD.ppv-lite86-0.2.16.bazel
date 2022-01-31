@@ -32,10 +32,11 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "hermit_abi",
+    name = "ppv_lite86",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
+        "simd",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +46,11 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=ppv-lite86",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.2.16",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_116//:libc",
     ],
 )

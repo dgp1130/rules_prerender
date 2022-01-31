@@ -12,6 +12,7 @@ rust_binary(
     proc_macro_deps = ["//cargo:async_recursion"],
     deps = [
         ":config",
+        ":injector",
         "//cargo:clap",
         "//cargo:futures",
         "//cargo:serde_json",
@@ -23,4 +24,15 @@ rust_library(
     name = "config",
     srcs = ["config.rs"],
     deps = ["//cargo:serde"],
+)
+
+rust_library(
+    name = "injector",
+    srcs = ["injector.rs"],
+    deps = [
+        ":config",
+        "//cargo:futures",
+        "//cargo:html5ever",
+        "//cargo:markup5ever_rcdom",
+    ],
 )
