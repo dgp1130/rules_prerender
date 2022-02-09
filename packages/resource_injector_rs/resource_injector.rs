@@ -49,14 +49,20 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     // Get the config to inject the HTML with.
                     // TODO: Only read config once. Read in parallel with HTML.
                     let input_config = read_config(&config_path).await?;
-                    let config = if bundle_path.is_some() {
+                    let config = if let Some(bundle) = bundle_path {
                         let sibling_js_path = &rel_path.with_extension("js");
                         let sibling_js = sibling_js_path.to_owned().into_os_string().into_string().unwrap();
-                        input_config.into_iter()
+                        let config = input_config.into_iter()
                             .chain(iter::once(InjectorAction::Script {
                                 path: format!("/{}", sibling_js),
                             }))
                             .collect()
+                        ;
+
+                        // Copy JavaScript bundle to output HTML location, but with a `.js` extension.
+                        fs::copy(&bundle, Path::new(&output_dir_path).join(&sibling_js)).await?;
+
+                        config
                     } else {
                         input_config
                     };
