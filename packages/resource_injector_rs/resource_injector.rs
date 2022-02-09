@@ -10,7 +10,8 @@ use std::iter;
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
 use futures::FutureExt;
-use futures::future::{self, Future, try_join_all};
+use futures::TryFutureExt;
+use futures::future::{self, Future, try_join, try_join_all};
 use async_recursion::async_recursion;
 use clap::{App, arg};
 use tokio::fs;
@@ -47,7 +48,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             if let Some("html") = extension {
                 Box::pin(async move {
                     // Get the config to inject the HTML with.
-                    // TODO: Only read config once. Read in parallel with HTML.
+                    // TODO: Only read config once.
                     let sibling_js_path = &rel_path.with_extension("js");
                     let sibling_js = sibling_js_path.to_owned().into_os_string().into_string().unwrap();
                     let futures: Vec<Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>> = vec![
@@ -58,7 +59,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
                         },
                         // Inject the HTML and write it to the output directory.
                         Box::pin(async move {
-                            let input_config = read_config(&config_path).await?;
+                            // Read configuration and input HTML in parallel.
+                            let (input_config, html) = try_join(
+                                read_config(&config_path),
+                                fs::read_to_string(input_file).map_err(|err| err.into()),
+                            ).await?;
+
                             let config = if bundle_path.is_some() {
                                 // Modify config to also inject the JS bundle into the HTML document.
                                 input_config.into_iter()
@@ -70,8 +76,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                                 input_config
                             };
         
-                            // Read the HTML, inject it, and write the output.
-                            let html = fs::read_to_string(input_file).await?;
+                            // Inject into the HTML and write it to the output.
                             let injected = inject(html, config).await?;
                             fs::write(output_file, injected).await?;
                             Ok(())
