@@ -34,5 +34,6 @@ rust_library(
         "//cargo:futures",
         "//cargo:html5ever",
         "//cargo:markup5ever_rcdom",
+        "//cargo:tokio",
     ],
 )
