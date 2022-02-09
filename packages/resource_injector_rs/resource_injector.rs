@@ -49,28 +49,27 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     // Get the config to inject the HTML with.
                     // TODO: Only read config once. Read in parallel with HTML.
                     let input_config = read_config(&config_path).await?;
-                    let config = if let Some(bundle) = bundle_path {
-                        let sibling_js_path = &rel_path.with_extension("js");
-                        let sibling_js = sibling_js_path.to_owned().into_os_string().into_string().unwrap();
-                        let config = input_config.into_iter()
+                    let sibling_js_path = &rel_path.with_extension("js");
+                    let sibling_js = sibling_js_path.to_owned().into_os_string().into_string().unwrap();
+                    let mut futures: Vec<Pin<Box<dyn Future<Output = Result<(), Box<dyn Error>>>>>> = vec![];
+                    let config = if let Some(bundle) = &bundle_path {
+                        // Copy JavaScript bundle to output HTML location, but with a `.js` extension.
+                        futures.push(Box::pin(fs::copy(bundle, Path::new(&output_dir_path).join(&sibling_js)).map(|_| Ok(()))));
+
+                        // Modify config to also inject the JS bundle into the HTML document.
+                        input_config.into_iter()
                             .chain(iter::once(InjectorAction::Script {
                                 path: format!("/{}", sibling_js),
                             }))
                             .collect()
-                        ;
-
-                        // Copy JavaScript bundle to output HTML location, but with a `.js` extension.
-                        fs::copy(&bundle, Path::new(&output_dir_path).join(&sibling_js)).await?;
-
-                        config
                     } else {
                         input_config
                     };
 
                     // Read the HTML, inject it, and write the output.
-                    let html = fs::read_to_string(input_file).await?;
-                    let injected = inject(html, config).await?;
-                    fs::write(output_file, injected).await?;
+                    futures.push(Box::pin(inject_html(&input_file, config, &output_file)));
+
+                    try_join_all(futures).await?;
                     Ok(())
                 })
             } else {
@@ -79,6 +78,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
         }))
     })).await?;
 
+    Ok(())
+}
+
+async fn inject_html(input_file: &Path, config: InjectorConfig, output_file: &Path) -> Result<(), Box<dyn Error>> {
+    let html = fs::read_to_string(input_file).await?;
+    let injected = inject(html, config).await?;
+    fs::write(output_file, injected).await?;
     Ok(())
 }
 
