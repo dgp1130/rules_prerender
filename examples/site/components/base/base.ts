@@ -10,10 +10,10 @@ import { renderFooter } from 'rules_prerender/examples/site/components/footer/fo
  *     document. Will be wrapped in a `<main />` tag, so need to add one in the
  *     callback.
  */
-export async function baseLayout(
+export function baseLayout(
     title: string,
-    main: () => string | Promise<string>,
-): Promise<string> {
+    main: () => string,
+): string {
     return `
 <!DOCTYPE html>
 <html comp-base>
@@ -24,7 +24,7 @@ export async function baseLayout(
     <body>
         ${renderHeader()}
         <div class="main-container">
-            <main>${await main()}</main>
+            <main>${main()}</main>
         </div>
         ${renderFooter()}
         ${includeStyle('rules_prerender/examples/site/components/base/base.css')}

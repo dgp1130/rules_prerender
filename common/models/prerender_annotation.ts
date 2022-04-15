@@ -57,6 +57,10 @@ export function annotationsEqual(
             const sec = second as StyleAnnotation;
             if (first.path !== sec.path) return false;
             return true;
+        } case 'inline-style': {
+            const sec = second as InlineStyleAnnotation;
+            if (first.path !== sec.path) return false;
+            return true;
         } default: {
             return assertNever(first);
         }
@@ -67,7 +71,7 @@ export function annotationsEqual(
  * An annotation to be used by the build process to include external resources
  * in the final generated HTML page.
  */
-export type PrerenderAnnotation = ScriptAnnotation | StyleAnnotation;
+export type PrerenderAnnotation = ScriptAnnotation | StyleAnnotation | InlineStyleAnnotation;
 
 /**
  * An annotation of a JavaScript resource to be included in the final generated
@@ -88,6 +92,17 @@ export interface StyleAnnotation {
     readonly type: 'style';
 
     /** A path to the CSS file to include. */
+    readonly path: string;
+}
+
+/**
+ * An annotation of a CSS resource to be inlined in the final generated HTML
+ * page.
+ */
+export interface InlineStyleAnnotation {
+    readonly type: 'inline-style';
+
+    /** A path to the CSS file to inline. */
     readonly path: string;
 }
 

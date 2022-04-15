@@ -19,6 +19,7 @@ ts_library(
         ":entry_point",
         "//common:binary",
         "//common:formatters",
+        "//packages/rules_prerender:inline_style_map",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],

@@ -1,7 +1,7 @@
 import { PrerenderResource } from 'rules_prerender';
 import { renderComponent } from 'rules_prerender/examples/declarative_shadow_dom/component';
 
-export default async function*(): AsyncGenerator<PrerenderResource, void, void> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `
         <!DOCTYPE html>
         <html>
@@ -9,7 +9,7 @@ export default async function*(): AsyncGenerator<PrerenderResource, void, void> 
                 <title>Declarative Shadow DOM</title>
             </head>
             <body>
-                ${await renderComponent(`
+                ${renderComponent(`
                     <div>Light content</div>
                 `)}
             </body>

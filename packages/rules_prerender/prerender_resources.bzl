@@ -4,11 +4,14 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":web_resources.bzl", "WebResourceInfo")
+load(":css_library.bzl", "CssImportMap")
+# TODO: `bzl_library()` deps.
 
 def prerender_resources(
     name,
     entry_point,
     data,
+    inline_styles = None,
     testonly = None,
     visibility = None,
 ):
@@ -57,6 +60,7 @@ def prerender_resources(
             that file into the current workspace and then use the copy as an
             entry point.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        inline_styles: TODO
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
@@ -81,25 +85,29 @@ def prerender_resources(
     _prerender_resources(
         name = name,
         entry_point = entry_point,
+        inline_styles = inline_styles,
         renderer = ":%s" % binary,
         testonly = testonly,
         visibility = visibility,
     )
 
 def _prerender_resources_impl(ctx):
-    # Invoke the renderer and output the content.
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
+
+    args = ctx.actions.args()
+    args.add("--entry-point", "%s/%s" % (ctx.workspace_name, ctx.attr.entry_point))
+    args.add("--output-dir", output_dir.path)
+
+    if ctx.attr.inline_styles:
+        for (import_path, file) in ctx.attr.inline_styles[CssImportMap].import_map.items():
+            args.add("--inline-style-import", import_path)
+            args.add("--inline-style-path", file.path)
+
     ctx.actions.run(
         mnemonic = "Prerender",
         progress_message = "Prerendering (%s)" % ctx.label,
         executable = ctx.executable.renderer,
-        arguments = [
-            "--entry-point", "%s/%s" % (
-                ctx.workspace_name,
-                ctx.attr.entry_point,
-            ),
-            "--output-dir", output_dir.path,
-        ],
+        arguments = [args],
         outputs = [output_dir],
     )
 
@@ -116,6 +124,7 @@ _prerender_resources = rule(
     implementation = _prerender_resources_impl,
     attrs = {
         "entry_point": attr.string(mandatory = True),
+        "inline_styles": attr.label(providers = [CssImportMap]),
         "renderer": attr.label(
             mandatory = True,
             executable = True,

@@ -172,6 +172,7 @@ ts_library(
     name = "styles",
     srcs = ["styles.ts"],
     deps = [
+        ":inline_style_map",
         "//common:fs",
         "//common/models:prerender_annotation",
         "@npm//@bazel/runfiles",
@@ -192,4 +193,10 @@ ts_library(
 jasmine_node_test(
     name = "styles_test",
     deps = [":styles_test_lib"],
+)
+
+ts_library(
+    name = "inline_style_map",
+    srcs = ["inline_style_map.ts"],
+    visibility = ["//packages/renderer:__pkg__"],
 )

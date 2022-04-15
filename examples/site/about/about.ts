@@ -4,11 +4,10 @@ import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { srcLink } from 'rules_prerender/examples/site/common/links';
 
 /** Renders the about page. */
-export default async function*():
-        AsyncGenerator<PrerenderResource, void, void> {
+export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of(
         '/about/index.html',
-        await baseLayout('About', async () => `
+        baseLayout('About', () => `
 <article>
     <template shadowroot="open">
         ${polyfillDeclarativeShadowDom()}
@@ -57,7 +56,7 @@ export default async function*():
         dignissim quis, venenatis non mi. Curabitur lacinia tincidunt vulputate.
         Proin non vehicula risus, id pharetra lorem.</p>
 
-        ${await inlineStyle('rules_prerender/examples/site/about/about.css')}
+        ${inlineStyle('rules_prerender/examples/site/about/about.css')}
     </template>
 </article>
         `),

@@ -1,3 +1,5 @@
-.page > .label {
-    color: red;
+@import url("rules_prerender/examples/styles/dep.css");
+
+.label {
+    color: var(--favorite-color);
 }

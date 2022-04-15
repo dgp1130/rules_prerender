@@ -1,6 +1,7 @@
 import * as fs from 'rules_prerender/common/fs';
-import { HTMLElement, parse } from 'node-html-parser';
+import { CommentNode, HTMLElement, Node, parse } from 'node-html-parser';
 import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packages/resource_injector/config';
+import { parseAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the
@@ -26,7 +27,7 @@ export async function inject(html: string, config: InjectorConfig):
         },
     });
 
-    // Inject all resources.
+    // Inject all static resources.
     for (const action of config) {
         switch (action.type) {
             case 'script': {
@@ -41,8 +42,60 @@ export async function inject(html: string, config: InjectorConfig):
         }
     }
 
+    // Find remaining annotations and inject their resources.
+    await replaceInlineStyleAnnotations(walkComments(walk(root)));
+
     // Return the new document.
     return root.toString();
+}
+
+// TODO: Share implementation with extractor?
+
+async function replaceInlineStyleAnnotations(
+    comments: Iterable<[ comment: CommentNode, parent: HTMLElement | undefined ]>,
+): Promise<void> {
+    for (const [ comment, parent ] of comments) { 
+        const annotation = parseAnnotation(comment.text);
+        if (!annotation) continue;
+        if (annotation.type !== 'inline-style') {
+            throw new Error(`Tried injecting an annotation which is not an inline style (actually ${
+                annotation.type}). This should have been handled earlier in the pipeline.\n${
+                JSON.stringify(annotation, null, 4)}`);
+        }
+        if (!parent) throw new Error('Found comment node with no parent.');
+
+        const inlineStyle = new HTMLElement('style', {});
+        inlineStyle.set_content(await fs.readFile(annotation.path, 'utf-8'));
+        parent.exchangeChild(comment, inlineStyle);
+    }
+}
+
+/**
+ * Filters the given {@link Iterable} of {@link Node} to limit to only comment
+ * nodes.
+ */
+function* walkComments(
+    nodes: Iterable<[ node: Node, parent: HTMLElement | undefined ]>,
+): Iterable<[ comment: CommentNode, parent: HTMLElement | undefined ]> {
+    for (const [ node, parent ] of nodes) {
+        if (node instanceof CommentNode) {
+            yield [ node, parent ];
+        }
+    }
+}
+
+/**
+ * Returns an {@link Iterable} of all the {@link Node} descendants of the given
+ * root and their parent.
+ */
+function* walk(root: Node, parent?: HTMLElement):
+        Iterable<[ node: Node, parent: HTMLElement | undefined ]> {
+    yield [ root, parent ];
+    if (root instanceof HTMLElement) {
+        for (const node of root.childNodes) {
+            yield* walk(node, root);
+        }
+    }
 }
 
 /**

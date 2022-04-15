@@ -1,6 +1,7 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load(
     "//:index.bzl",
+    "css_library",
     "prerender_component",
     "prerender_pages",
     "web_resources_devserver",
@@ -17,9 +18,14 @@ prerender_pages(
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
-    styles = ["component.css"],
+    inline_styles = [":styles"],
     lib_deps = ["//packages/rules_prerender"],
     deps = ["//:declarative_shadow_dom"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["component.css"],
 )
 
 web_resources_devserver(

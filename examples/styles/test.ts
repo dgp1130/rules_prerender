@@ -16,9 +16,9 @@ describe('styles', () => {
 
         expect(await browser.getTitle()).toBe('Styling');
 
-        expect(await browser.$('.page > .label').getText())
+        expect(await browser.$('.page').shadow$('.label').getText())
             .toBe(`I'm a page with some CSS!`);
-        expect(await getColor(browser, browser.$('.page > .label')))
+        expect(await getColor(browser, browser.$('.page').shadow$('.label')))
             .toBe('rgb(255, 0, 0)'); // Red.
 
         expect(await browser.$('.component > .label').getText())

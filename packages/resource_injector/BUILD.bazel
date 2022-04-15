@@ -57,6 +57,7 @@ ts_library(
     deps = [
         ":config",
         "//common:fs",
+        "//common/models:prerender_annotation",
         "@npm//node-html-parser",
     ],
 )

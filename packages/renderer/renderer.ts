@@ -4,12 +4,15 @@ import * as yargs from 'yargs';
 import { main } from 'rules_prerender/common/binary';
 import { mdSpacing } from 'rules_prerender/common/formatters';
 import { invoke } from 'rules_prerender/packages/renderer/entry_point';
+import { setMap as setInlineStyleMap } from 'rules_prerender/packages/rules_prerender/inline_style_map';
 
 main(async () => {
     // Parse binary options and arguments.
     const {
         'entry-point': entryPoint,
         'output-dir': outputDir,
+        'inline-style-import': inlineStyleImports = [],
+        'inline-style-path': inlineStylePaths = [],
     } = yargs
         .option('entry-point', {
             type: 'string',
@@ -31,7 +34,20 @@ main(async () => {
                 at their specified paths.
             `),
         })
+        .option('inline-style-import', {
+            type: 'string',
+            array: true,
+            description: mdSpacing(`TODO`),
+        })
+        .option('inline-style-path', {
+            type: 'string',
+            array: true,
+            description: mdSpacing(`TODO`),
+        })
         .argv;
+
+    // TODO: Explain.
+    setInlineStyleMap(new Map(zip(inlineStyleImports, inlineStylePaths)));
 
     // Invoke the provided entry point.
     let resources: Awaited<ReturnType<typeof invoke>>;
@@ -69,3 +85,20 @@ main(async () => {
 
     return 0;
 });
+
+/**
+ * Given two arrays, returns an {@link Iterable} of pairs of the same index.
+ * Assumes the two inputs have the same number of items.
+ */
+function* zip<First, Second>(firsts: First[], seconds: Second[]):
+        Iterable<[ First, Second ]> {
+    if (firsts.length !== seconds.length) {
+        throw new Error(`Zipped arrays must be the same length, got:\n${
+            firsts.join(', ')}\n\n${seconds.join(', ')}`);
+    }
+    for (const [ index, first ] of firsts.entries()) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const second = seconds[index]!;
+        yield [ first, second ];
+    }
+}

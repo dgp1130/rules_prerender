@@ -1,4 +1,4 @@
-import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { PrerenderMetadata, StyleScope } from 'rules_prerender/common/models/prerender_metadata';
 
 /**
  * Generates a CSS entry point which imports all the styles in the given
@@ -11,6 +11,7 @@ import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metad
  */
 export function generateEntryPoint(metadata: PrerenderMetadata): string {
     return metadata.styles
+        .filter((style) => style.scope === StyleScope.Global)
         .map((style) => `@import '${style.path}';`)
         .join('\n');
 }

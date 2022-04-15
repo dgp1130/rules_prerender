@@ -1,5 +1,5 @@
 import { PrerenderAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { PrerenderMetadata, ScriptMetadata, StyleMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { PrerenderMetadata, ScriptMetadata, StyleMetadata, StyleScope } from 'rules_prerender/common/models/prerender_metadata';
 
 /**
  * Converts the provided {@link Set} of {@link PrerenderAnnotation} into a
@@ -28,6 +28,13 @@ export function assembleMetadata(annotations: Set<PrerenderAnnotation>):
             } case 'style': {
                 metadata.styles.push({
                     path: annotation.path,
+                    scope: StyleScope.Global,
+                });
+                break;
+            } case 'inline-style': {
+                metadata.styles.push({
+                    path: annotation.path,
+                    scope: StyleScope.Local,
                 });
                 break;
             } default: {

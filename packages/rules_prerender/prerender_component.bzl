@@ -10,6 +10,7 @@ load(
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
 load("//common:paths.bzl", "is_js_file")
+load(":css_library.bzl", "css_group", "css_multi_binary")
 load(":web_resources.bzl", "web_resources")
 
 def prerender_component(
@@ -20,6 +21,7 @@ def prerender_component(
     lib_deps = [],
     scripts = [],
     styles = [],
+    inline_styles = [],
     resources = [],
     deps = [],
     testonly = None,
@@ -51,6 +53,7 @@ def prerender_component(
             in the prerendered HTML.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
             included in the prerendered HTML.
+        inline_styles: TODO
         resources: List of `web_resources()` required by this component at
             runtime.
         deps: `prerender_component()` dependencies for this component.
@@ -90,6 +93,7 @@ def prerender_component(
     elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
         js_library(
             name = prerender_lib,
+            # TODO: Remove styles once `inlineStyle()` is deleted.
             srcs = srcs + data + styles, # `data` is included in `srcs`.
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
@@ -122,6 +126,25 @@ which are always allowed).
         srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
+    )
+
+    # Useful error message for users who accidentally pass a source file directly.
+    for inline_style in inline_styles:
+        if inline_style.endswith(".css"):
+            fail("`inline_styles` must be `css_library()` targets, *not* `*.css` source files (%s)." % inline_style)
+
+    css_multi_binary(
+        name = "%s_inline_styles_bin" % name,
+        libs = inline_styles,
+        testonly = testonly,
+    )
+
+    css_group(
+        name = "%s_inline_styles" % name,
+        testonly = testonly,
+        visibility = visibility,
+        deps = ["%s_inline_styles_bin" % name] +
+               ["%s_inline_styles" % absolute(dep) for dep in deps],
     )
 
     web_resources(

@@ -43,7 +43,8 @@ function* stripAnnotations(
         const annotation = parseAnnotation(comment.text);
         if (!annotation) continue;
         if (!parent) throw new Error('Found comment node with no parent.');
-        parent.removeChild(comment);
+        // Keep inline style annotations.
+        if (annotation.type !== 'inline-style') parent.removeChild(comment);
         yield annotation;
     }
 }

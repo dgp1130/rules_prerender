@@ -16,6 +16,7 @@ def prerender_pages_unbundled(
     lib_deps = [],
     scripts = [],
     styles = [],
+    inline_styles = [],
     resources = [],
     deps = [],
     testonly = None,
@@ -82,6 +83,7 @@ def prerender_pages_unbundled(
             the generated pages.
         styles: List of CSS files or `filegroup()`s to included with the
             prerendered HTML files.
+        inline_styles: TODO
         resources: List of `web_resources()` rules required by the pages at
             runtime.
         deps: `prerender_component()` dependencies for the generated pages.
@@ -98,6 +100,7 @@ def prerender_pages_unbundled(
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,
+        inline_styles = inline_styles,
         resources = resources,
         deps = deps,
         testonly = testonly,
@@ -106,6 +109,7 @@ def prerender_pages_unbundled(
     component_prerender_for_test = "%s_prerender_for_test" % component
     component_scripts = "%s_scripts" % component
     component_styles = "%s_styles" % component
+    component_inline_styles = "%s_inline_styles" % component
     component_resources = "%s_resources" % component
 
     native.alias(
@@ -125,6 +129,7 @@ def prerender_pages_unbundled(
         name = annotated,
         entry_point = file_path_of(absolute(js_src)),
         data = [":%s" % component_prerender],
+        inline_styles = ":%s" % component_inline_styles,
         testonly = testonly,
     )
 
@@ -178,6 +183,14 @@ def prerender_pages_unbundled(
             style_entry,
             ":%s" % component_styles,
         ],
+        testonly = testonly,
+        visibility = visibility,
+    )
+
+    # Reexport all inline styles at `%{name}_inline_styles`.
+    native.alias(
+        name = "%s_inline_styles" % name,
+        actual = ":%s" % component_inline_styles,
         testonly = testonly,
         visibility = visibility,
     )

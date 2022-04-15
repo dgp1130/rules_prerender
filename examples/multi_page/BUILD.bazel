@@ -52,11 +52,3 @@ jasmine_web_test_suite(
     data = [":devserver"],
     deps = [":test_lib"],
 )
-
-build_test(
-    name = "build_test",
-    targets = [
-        ":pages_bundle",
-        ":pages_styles",
-    ],
-)

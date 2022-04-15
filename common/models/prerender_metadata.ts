@@ -17,4 +17,12 @@ export interface ScriptMetadata {
 export interface StyleMetadata {
     /** The path of the style to include. */
     readonly path: string;
+
+    readonly scope: StyleScope;
+}
+
+/** TODO */
+export enum StyleScope {
+    Global = 'global',
+    Local = 'local',
 }
