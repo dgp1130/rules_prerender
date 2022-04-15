@@ -15,21 +15,33 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "8a7c981217239085f78acc9898a1f7ba99af887c1996ceb3b4504655383a2c3c",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.0.0/rules_nodejs-4.0.0.tar.gz"],
+    sha256 = "2b2004784358655f334925e7eadc7ba80f701144363df949b3293e1ae7a2fb7b",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.4.0/rules_nodejs-5.4.0.tar.gz"],
+)
+
+# Load `rules_nodejs` dependencies.
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+build_bazel_rules_nodejs_dependencies()
+
+# Set the NodeJS version.
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+nodejs_register_toolchains(
+    name = "nodejs", # Default name used by most tools.
+    node_version = "12.22.5",
 )
 
 # The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
 # It also extracts any Bazel rules distributed in an npm package.
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
-node_repositories(node_version = "12.22.5")
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
 npm_install(
-    # Name this npm so that Bazel Label references look like @npm//package
+    # Name this npm so that Bazel label references look like `@npm//package`.
     name = "npm",
     package_json = "//:package.json",
     package_lock_json = "//:package-lock.json",
     # Needed for `rules_postcss` to be able to resolve its NPM dependencies.
     strict_visibility = False,
+    # Needed for `ts_library()`, should be able to drop after migrating to `ts_project()`.
+    exports_directories_only = False,
 )
 
 # Load bazel_skylib.

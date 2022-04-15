@@ -68,7 +68,7 @@ resources (images, fonts, JSON) required for to it to function.
 ```python
 # my_component/BUILD.bazel
 
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("@npm//rules_prerender:index.bzl", "prerender_component", "web_resources")
 
 # A "library" target encapsulating the entire component.

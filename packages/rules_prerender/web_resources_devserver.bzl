@@ -27,7 +27,11 @@ def web_resources_devserver(
     concatjs_devserver(
         name = name,
         static_files = [resources],
-        additional_root_paths = [file_path_of(absolute(resources))],
+        # Workspace name is required, but there is no way to look that up in Starlark macro.
+        # However, `__main__` seems to work as the default workspace name, even though this
+        # repository has a different workspace name.
+        # See: https://github.com/bazelbuild/bazel/issues/4092#issuecomment-869091443
+        additional_root_paths = ["__main__/%s" % file_path_of(absolute(resources))],
         testonly = testonly,
         visibility = visibility,
         tags = tags,

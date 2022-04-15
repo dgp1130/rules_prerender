@@ -7,7 +7,7 @@ load(
     "JSModuleInfo",
     "JSEcmaScriptModuleInfo",
 )
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
 load("//common:paths.bzl", "is_js_file")
 load(":web_resources.bzl", "web_resources")

@@ -1,4 +1,4 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//:index.bzl", "prerender_resources")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 

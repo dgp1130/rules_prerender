@@ -1,5 +1,5 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load(
     "//:index.bzl",
     "prerender_pages",

@@ -1,4 +1,4 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load(
     "//packages/rules_prerender:prerender_component.bzl",
     "prerender_component",
