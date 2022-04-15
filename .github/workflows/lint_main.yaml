@@ -17,11 +17,11 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install
-      run: bazel run @nodejs//:npm -- ci
+      run: bazel run @nodejs_host//:npm -- ci
 
     # Lint the entire repository. This does not take changes into account and
     # will show existing lint failures as well as new ones, but that's ok for a
     # codebase of this size as any such failures should be fixed and/or
     # explicitly ignored.
     - name: Lint
-      run: bazel run @nodejs//:npm -- run lint
+      run: bazel run @nodejs_host//:npm -- run lint

@@ -31,7 +31,7 @@ jobs:
 
     # Install the package, including Bazel.
     - name: Install
-      run: bazel run @nodejs//:npm -- ci
+      run: bazel run @nodejs_host//:npm -- ci
 
     # Build and test the entire repository.
     - name: Test

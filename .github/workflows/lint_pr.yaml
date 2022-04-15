@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install
-      run: bazel run @nodejs//:npm -- ci
+      run: bazel run @nodejs_host//:npm -- ci
 
     # Lint each commit in the given PR.
     - name: Lint PR
@@ -28,7 +28,7 @@ jobs:
         
         # Lint each commit.
         if ! echo -n "${PR_COMMITS}" |
-          xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" bazel run @nodejs//:npm -- run -s -- lint-commit"
+          xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" bazel run @nodejs_host//:npm -- run -s -- lint-commit"
         then
           # One commit failed to lint, fail the GitHub action.
           exit 1

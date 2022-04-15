@@ -372,12 +372,12 @@ resource with tools that expect a single file as input, rather than a directory.
 To get started, simply download / fork the repository and run:
 
 ```shell
-bazel run @nodejs//:npm -- ci
+bazel run @nodejs_host//:npm -- ci
 bazel test //...
 ```
 
-Prefer using `bazel run @nodejs//:npm -- ...` and
-`bazel run @nodejs//:node -- ...` over using `npm` and `node` directly so they
+Prefer using `bazel run @nodejs_host//:npm -- ...` and
+`bazel run @nodejs_host//:node -- ...` over using `npm` and `node` directly so they
 are strongly versioned with the repository. Alternatively, you can install
 [`nvm`](https://github.com/nvm-sh/nvm) and run `nvm use` to switch the `node`
 and `npm` commands to use the correct versions in this repository.
