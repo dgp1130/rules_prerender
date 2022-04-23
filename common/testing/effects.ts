@@ -131,7 +131,7 @@ export function useForAll<T extends Defined>(
 }
 
 type MaybePromise<T> = T | Promise<T>;
-type UseResult<T> = readonly [ T, (() => MaybePromise<void>) | undefined ];
+type UseResult<T> = readonly [ value: T, cleanup: (() => MaybePromise<void>) | undefined ];
 function useValue<T extends Defined>({ init, beforeFn, afterFn }: {
     init: () => MaybePromise<UseResult<T>>,
     beforeFn: (cb: () => MaybePromise<void>) => void,
