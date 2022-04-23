@@ -37,7 +37,7 @@ export function extract(html: string): [
  * comment is left alone and nothing is emitted.
  */
 function* stripAnnotations(
-    comments: Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]>,
+    comments: Iterable<[ comment: CommentNode, parent: HTMLElement | undefined ]>,
 ): Iterable<PrerenderAnnotation> {
     for (const [ comment, parent ] of comments) {
         const annotation = parseAnnotation(comment.text);
@@ -53,8 +53,8 @@ function* stripAnnotations(
  * nodes.
  */
 function* walkComments(
-    nodes: Iterable<[ Node, HTMLElement | undefined /* parent */ ]>,
-): Iterable<[ CommentNode, HTMLElement | undefined /* parent */ ]> {
+    nodes: Iterable<[ node: Node, parent: HTMLElement | undefined ]>,
+): Iterable<[ comment: CommentNode, parent: HTMLElement | undefined ]> {
     for (const [ node, parent ] of nodes) {
         if (node instanceof CommentNode) {
             yield [ node, parent ];
@@ -67,7 +67,7 @@ function* walkComments(
  * root and their parent.
  */
 function* walk(root: Node, parent?: HTMLElement):
-        Iterable<[ Node, HTMLElement | undefined /* parent */ ]> {
+        Iterable<[ node: Node, parent: HTMLElement | undefined ]> {
     yield [ root, parent ];
     if (root instanceof HTMLElement) {
         for (const node of root.childNodes) {
