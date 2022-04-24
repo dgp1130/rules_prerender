@@ -72,6 +72,6 @@
         "webdriverio": "^7.16.3"
     },
     "peerDependencies": {
-        "@bazel/typescript": "^4.0.0"
+        "@bazel/typescript": "^5.0.0"
     }
 }
