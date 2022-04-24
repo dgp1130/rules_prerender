@@ -1,0 +1,35 @@
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("//packages/rules_prerender/css:css_library.bzl", "css_library")
+load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
+
+package(default_testonly = True)
+
+diff_test(
+    name = "bin_test",
+    file1 = ":bin",
+    file2 = "expected.css",
+)
+
+css_binaries(
+    name = "bin",
+    # Disable sourcemaps to not confuse `diff_test()` with an extra file.
+    sourcemap = False,
+    deps = [":foo"],
+)
+
+css_library(
+    name = "foo",
+    srcs = ["foo.css"],
+    deps = [":bar"],
+)
+
+css_library(
+    name = "bar",
+    srcs = ["bar.css"],
+    deps = [":baz"],
+)
+
+css_library(
+    name = "baz",
+    srcs = ["baz.css"],
+)

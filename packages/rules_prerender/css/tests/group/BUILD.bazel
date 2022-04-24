@@ -1,0 +1,5 @@
+load(":group_test.bzl", "group_test_suite")
+
+package(default_testonly = True)
+
+group_test_suite(name = "tests")

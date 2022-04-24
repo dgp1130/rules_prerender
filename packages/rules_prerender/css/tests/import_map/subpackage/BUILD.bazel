@@ -1,0 +1,10 @@
+load("//packages/rules_prerender/css:css_library.bzl", "css_library")
+
+package(default_testonly = True)
+
+css_library(
+    name = "lib",
+    srcs = ["lib.css"],
+    tags = ["manual"],
+    visibility = ["//packages/rules_prerender/css/tests/import_map:__pkg__"],
+)

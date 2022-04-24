@@ -1,5 +1,5 @@
-load("//:index.bzl", "extract_single_resource", "prerender_pages_unbundled")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("//:index.bzl", "extract_single_resource", "prerender_pages_unbundled")
 
 prerender_pages_unbundled(
     name = "single_resource",

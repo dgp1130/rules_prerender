@@ -1,0 +1,13 @@
+load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
+load("//packages/rules_prerender/css:css_library.bzl", "css_library")
+
+package(default_testonly = True)
+
+# Generates an import map which points `conflicting_lib` sources to CSS files
+# generated in *this* package (`subpackage`).
+css_binaries(
+    name = "bin",
+    tags = ["manual"],
+    visibility = ["//packages/rules_prerender/css/tests/group:__pkg__"],
+    deps = ["//packages/rules_prerender/css/tests/group:conflicting_lib"],
+)

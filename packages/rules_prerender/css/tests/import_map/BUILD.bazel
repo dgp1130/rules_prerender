@@ -1,0 +1,5 @@
+load(":import_map_test.bzl", "import_map_test_suite")
+
+package(default_testonly = True)
+
+import_map_test_suite(name = "tests")
