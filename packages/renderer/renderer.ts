@@ -33,7 +33,7 @@ main(async () => {
         .argv;
 
     // Invoke the provided entry point.
-    let resources: PromiseValue<ReturnType<typeof invoke>>;
+    let resources: Awaited<ReturnType<typeof invoke>>;
     try {
         resources = await invoke(entryPoint);
     } catch (err) {
@@ -68,7 +68,3 @@ main(async () => {
 
     return 0;
 });
-
-// Extracts the generic value type from an input `Promise`.
-type PromiseValue<T extends Promise<unknown>> =
-    T extends Promise<infer V> ? V : never;
