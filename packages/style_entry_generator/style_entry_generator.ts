@@ -15,7 +15,7 @@ main(async () => {
         `))
         .option('metadata', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 A path to a file containing a \`PrerenderMetadata\` object in
                 JSON format. This metadata should contain a \`styles\` property
@@ -24,7 +24,7 @@ main(async () => {
         })
         .option('output', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 A path to a file which will be written to by this tool,
                 containing CSS source of the entry point generated.

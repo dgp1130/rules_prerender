@@ -25,7 +25,7 @@ main(async () => {
         `))
         .option('input-dir', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 Path to the input directory file containing HTML files to inject
                 resources into. May also contain non-HTML files which will be
@@ -34,7 +34,7 @@ main(async () => {
         })
         .option('config', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 Path to the configuration JSON file containing information about
                 the resources to inject. Must match the \`InjectorConfig\` type.
@@ -49,7 +49,7 @@ main(async () => {
         })
         .option('output-dir', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 Path to the output directory to write the output files to.
             `),

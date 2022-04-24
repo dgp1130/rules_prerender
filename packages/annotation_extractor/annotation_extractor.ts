@@ -25,7 +25,7 @@ main(async () => {
         `))
         .option('input-dir', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 The input directory of files to extract annotations from. Files
                 ending in \`.html\` have annotations extracted.
@@ -33,7 +33,7 @@ main(async () => {
         })
         .option('output-dir', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 The directory to write output files to. Will be identical to the
                 input directory, except that all HTML files will have
@@ -42,7 +42,7 @@ main(async () => {
         })
         .option('output-metadata', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 The output JSON file to write metadata to. Will contain all
                 extracted annotations in the \`PrerenderMetadata\` format.

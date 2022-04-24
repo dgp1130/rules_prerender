@@ -13,6 +13,7 @@ main(async () => {
     } = yargs
         .option('entry-point', {
             type: 'string',
+            demandOption: true,
             description: mdSpacing(`
                 The entry point to render the template. Should be a path to a
                 JavaScript file which has a CommonJS default export of a
@@ -24,12 +25,12 @@ main(async () => {
         })
         .option('output-dir', {
             type: 'string',
+            demandOption: true,
             description: mdSpacing(`
                 The path to the output directory to write the rendered files to
                 at their specified paths.
             `),
         })
-        .demand([ 'entry-point', 'output-dir' ])
         .argv;
 
     // Invoke the provided entry point.

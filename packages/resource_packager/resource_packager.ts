@@ -70,7 +70,7 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
         })
         .option('dest-dir', {
             type: 'string',
-            required: true,
+            demandOption: true,
             description: mdSpacing(`
                 Destination directory to write outputs to.
             `),
