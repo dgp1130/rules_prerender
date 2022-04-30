@@ -1,6 +1,7 @@
 import 'jasmine';
 
 import * as fs from 'rules_prerender/common/fs';
+import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
 import { InjectorConfig } from 'rules_prerender/packages/resource_injector/config';
 import { inject } from 'rules_prerender/packages/resource_injector/injector';
 
@@ -194,6 +195,90 @@ describe('injector', () => {
     </body>
 </html>
             `.trim());
+        });
+
+        it('inlines style annotations', async () => {
+            const annotation = createAnnotation({
+                type: 'style',
+                path: 'foo.css',
+                scope: StyleScope.Inline,
+            });
+
+            const input = `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+        <!-- ${annotation} -->
+    </body>
+</html>
+            `.trim();
+
+            spyOn(fs, 'readFile').and.resolveTo('.foo { color: red; }');
+
+            const injected = await inject(input, []);
+            expect(fs.readFile).toHaveBeenCalledWith('foo.css', 'utf-8');
+
+            expect(injected).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+        <style>.foo { color: red; }</style>
+    </body>
+</html>
+            `.trim());
+        });
+
+        it('throws on any annotations other than inline style annotations', async () => {
+            // Should fail when given a script annotation.
+            const scriptAnnotation = createAnnotation({
+                type: 'script',
+                path: 'foo.js',
+            });
+            const inputWithScriptAnnotation = `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+        <!-- ${scriptAnnotation} -->
+    </body>
+</html>
+            `.trim();
+            await expectAsync(inject(inputWithScriptAnnotation, []))
+                .toBeRejectedWithError(
+                    /Injector found an annotation which is not an inline style/);
+
+            // Should fail when given a global style annotation.
+            const globalStyleAnnotation = createAnnotation({
+                type: 'style',
+                path: 'foo.css',
+                scope: StyleScope.Global,
+            });
+            const inputWithGlobalStyleAnnotation = `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+        <!-- ${globalStyleAnnotation} -->
+    </body>
+</html>
+            `.trim();
+            await expectAsync(inject(inputWithGlobalStyleAnnotation, []))
+                .toBeRejectedWithError(
+                    /Injector found an annotation which is not an inline style/);
         });
     });
 });

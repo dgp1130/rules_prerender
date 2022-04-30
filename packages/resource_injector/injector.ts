@@ -1,6 +1,8 @@
 import * as fs from 'rules_prerender/common/fs';
 import { HTMLElement, parse } from 'node-html-parser';
 import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packages/resource_injector/config';
+import { isInlineStyle } from 'rules_prerender/common/models/prerender_annotation';
+import { AnnotationNode, walkAllAnnotations } from 'rules_prerender/common/prerender_annotation_walker';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the
@@ -26,7 +28,7 @@ export async function inject(html: string, config: InjectorConfig):
         },
     });
 
-    // Inject all resources.
+    // Inject all static resources.
     for (const action of config) {
         switch (action.type) {
             case 'script': {
@@ -40,6 +42,9 @@ export async function inject(html: string, config: InjectorConfig):
             }
         }
     }
+
+    // Inject `<style />` tags for each inline style annotation in the document.
+    await replaceInlineStyleAnnotations(walkAllAnnotations(root));
 
     // Return the new document.
     return root.toString();
@@ -113,6 +118,30 @@ async function injectStyle(root: HTMLElement, { path }: InjectStyle):
 
     // Insert a trailing newline so subsequent insertions look a little better.
     style.insertAdjacentHTML('afterend', '\n');
+}
+
+/**
+ * Replaces all inline style annotations with real `<style />` tags for the referenced
+ * file.
+ */
+async function replaceInlineStyleAnnotations(
+    nodes: Generator<AnnotationNode, void, void>,
+): Promise<void> {
+    for (const node of nodes) {
+        const { annotation } = node;
+
+        // Only inline styles should still be in the HTML, everything else should have
+        // been extracted already.
+        if (!isInlineStyle(annotation)){
+            throw new Error(`Injector found an annotation which is not an inline style (actually ${
+                annotation.type}). This should have been handled earlier in the pipeline.\n${
+                JSON.stringify(annotation, null, 4)}`);
+        }
+
+        const inlineStyle = new HTMLElement('style', {});
+        inlineStyle.set_content(await fs.readFile(annotation.path, 'utf-8'));
+        node.replace(inlineStyle);
+    }
 }
 
 function assertNever(value: never): never {

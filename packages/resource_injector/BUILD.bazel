@@ -57,6 +57,8 @@ ts_library(
     deps = [
         ":config",
         "//common:fs",
+        "//common:prerender_annotation_walker",
+        "//common/models:prerender_annotation",
         "@npm//node-html-parser",
     ],
 )
@@ -69,6 +71,7 @@ ts_library(
         ":config",
         ":injector",
         "//common:fs",
+        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )
