@@ -5,6 +5,7 @@
     "javascript.preferences.importModuleSpecifier": "non-relative",
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "cSpell.words": [
+        "bazel",
         "bazelrc",
         "Chainable",
         "concatjs",
@@ -21,6 +22,7 @@
         "promisified",
         "readonly",
         "runfile",
+        "runfiles",
         "semver",
         "shadowroot",
         "testonly",
