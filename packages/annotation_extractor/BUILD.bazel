@@ -54,6 +54,7 @@ ts_library(
     name = "extractor",
     srcs = ["extractor.ts"],
     deps = [
+        "//common:prerender_annotation_walker",
         "//common/models:prerender_annotation",
         "@npm//node-html-parser",
     ],
