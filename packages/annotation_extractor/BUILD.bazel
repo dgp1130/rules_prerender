@@ -64,6 +64,7 @@ ts_library(
     testonly = True,
     deps = [
         ":extractor",
+        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )

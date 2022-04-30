@@ -1,16 +1,18 @@
 import 'jasmine';
 
 import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('extractor', () => {
     describe('extract()', () => {
         it('extracts annotations from the given HTML contents', () => {
+            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
                 <!DOCTYPE html>
                 <html>
                     <head>
                         <title>Title</title>
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo/bar/baz.js"} -->
+                        <!-- ${annotation} -->
                     </head>
                     <body>
                         <h2>Hello, World!</h2>
@@ -33,13 +35,14 @@ describe('extractor', () => {
             expect(Array.from(annotations.values())).toEqual([
                 {
                     type: 'script',
-                    path: 'foo/bar/baz.js',
+                    path: 'wksp/foo.js',
                 },
             ]);
         });
 
         it('extracts a first node annotation', () => {
-            const [ extracted, annotations ] = extract(`<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo/bar/baz.js"} -->
+            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
+            const [ extracted, annotations ] = extract(`<!-- ${annotation} -->
                 <!DOCTYPE html>
                 <html>
                     <head>
@@ -61,12 +64,13 @@ describe('extractor', () => {
             expect(Array.from(annotations.values())).toEqual([
                 {
                     type: 'script',
-                    path: 'foo/bar/baz.js',
+                    path: 'wksp/foo.js',
                 },
             ]);
         });
 
         it('ignores unrelated comments', () => {
+            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
                 <!-- Some leading comment. -->
                 <!DOCTYPE html>
@@ -77,7 +81,7 @@ describe('extractor', () => {
                     </head>
                     <!-- One more comment. -->
                     <body>
-                        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo/bar/baz.js"} -->
+                        <!-- ${annotation} -->
                     </body>
                 </html>
             `);
@@ -99,7 +103,7 @@ describe('extractor', () => {
             expect(Array.from(annotations.values())).toEqual([
                 {
                     type: 'script',
-                    path: 'foo/bar/baz.js',
+                    path: 'wksp/foo.js',
                 },
             ]);
         });
