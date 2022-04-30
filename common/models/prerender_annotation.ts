@@ -56,6 +56,7 @@ export function annotationsEqual(
         } case 'style': {
             const sec = second as StyleAnnotation;
             if (first.path !== sec.path) return false;
+            if (first.scope !== sec.scope) return false;
             return true;
         } default: {
             return assertNever(first);
@@ -89,6 +90,21 @@ export interface StyleAnnotation {
 
     /** A path to the CSS file to include. */
     readonly path: string;
+
+    /** The scope in which the CSS file applies. */
+    readonly scope: StyleScope;
+}
+
+/** The scope which a given stylesheet applies. */
+export enum StyleScope {
+    /**
+     * Stylesheet is inlined at a particular location in the DOM, scoped to that shadow
+     * DOM if present.
+     */
+    Inline = 'inline',
+
+    /** Stylesheet applies globally to the entire page. */
+    Global = 'global',
 }
 
 function assertNever(value: never): never {

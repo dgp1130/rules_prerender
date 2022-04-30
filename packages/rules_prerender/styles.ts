@@ -1,6 +1,6 @@
 import { runfiles } from '@bazel/runfiles';
 import * as fs from 'rules_prerender/common/fs';
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
 
 /**
  * Returns a prerender annotation as a string to be included in prerendered
@@ -10,6 +10,7 @@ import { createAnnotation } from 'rules_prerender/common/models/prerender_annota
 export function includeStyle(path: string): string {
     const annotation = createAnnotation({
         type: 'style',
+        scope: StyleScope.Global,
         path,
     });
     return `<!-- ${annotation} -->`;

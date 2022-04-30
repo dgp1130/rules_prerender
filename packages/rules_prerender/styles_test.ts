@@ -8,7 +8,7 @@ describe('styles', () => {
             const annotation = includeStyle('foo/bar/baz.css');
 
             expect(annotation)
-                .toBe('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"style","path":"foo/bar/baz.css"} -->');
+                .toBe('<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"style","scope":"global","path":"foo/bar/baz.css"} -->');
         });
     });
 
