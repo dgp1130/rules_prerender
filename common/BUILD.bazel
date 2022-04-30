@@ -132,3 +132,30 @@ bzl_library(
 )
 
 paths_test_suite(name = "paths_test")
+
+ts_library(
+    name = "prerender_annotation_walker",
+    srcs = ["prerender_annotation_walker.ts"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//common/models:prerender_annotation",
+        "@npm//node-html-parser",
+    ],
+)
+
+ts_library(
+    name = "prerender_annotation_walker_test_lib",
+    srcs = ["prerender_annotation_walker_test.ts"],
+    testonly = True,
+    deps = [
+        ":prerender_annotation_walker",
+        "//common/models:prerender_annotation",
+        "@npm//@types/jasmine",
+        "@npm//node-html-parser",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_annotation_walker_test",
+    deps = [":prerender_annotation_walker_test_lib"],
+)

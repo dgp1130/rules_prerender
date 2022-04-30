@@ -30,7 +30,9 @@
         "tsjs",
         "unmocked",
         "unproxied",
-        "webdriverio"
+        "Updateable",
+        "webdriverio",
+        "wksp"
     ],
     "files.associations": {
         "BUILD.publish": "bazel"
