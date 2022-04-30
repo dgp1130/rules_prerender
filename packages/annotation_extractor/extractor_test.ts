@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('extractor', () => {
     describe('extract()', () => {
@@ -104,6 +104,52 @@ describe('extractor', () => {
                 {
                     type: 'script',
                     path: 'wksp/foo.js',
+                },
+            ]);
+        });
+
+        it('extracts style annotations while ignoring inline styles', () => {
+            const inlineAnnotation = createAnnotation({
+                type: 'style',
+                path: 'wksp/foo.css',
+                scope: StyleScope.Inline,
+            });
+            const globalAnnotation = createAnnotation({
+                type: 'style',
+                path: 'wksp/bar.css',
+                scope: StyleScope.Global,
+            });
+
+            const [ extracted, annotations ] = extract(`
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>Title</title>
+                    </head>
+                    <body>
+                        <!-- ${inlineAnnotation} -->
+                        <!-- ${globalAnnotation} -->
+                    </body>
+                </html>
+            `);
+
+            expect(extracted).toBe(`
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>Title</title>
+                    </head>
+                    <body>
+                        <!-- ${inlineAnnotation} -->
+                        
+                    </body>
+                </html>
+            `);
+            expect(Array.from(annotations.values())).toEqual([
+                {
+                    type: 'style',
+                    path: 'wksp/bar.css',
+                    scope: StyleScope.Global,
                 },
             ]);
         });

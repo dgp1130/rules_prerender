@@ -107,6 +107,13 @@ export enum StyleScope {
     Global = 'global',
 }
 
+type InlineStyleAnnotation = StyleAnnotation & { scope: StyleScope.Inline };
+
+/** Returns whether or not the given annotation is an inline style. */
+export function isInlineStyle(annotation: PrerenderAnnotation): annotation is InlineStyleAnnotation {
+    return annotation.type === 'style' && annotation.scope === StyleScope.Inline;
+}
+
 function assertNever(value: never): never {
     throw new Error(`Expected never type but got: ${value}`);
 }

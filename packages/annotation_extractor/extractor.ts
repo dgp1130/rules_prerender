@@ -1,5 +1,5 @@
 import { parse, HTMLElement } from 'node-html-parser';
-import { PrerenderAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, isInlineStyle } from 'rules_prerender/common/models/prerender_annotation';
 import { walkAllAnnotations } from 'rules_prerender/common/prerender_annotation_walker';
 
 /**
@@ -39,6 +39,11 @@ export function extract(html: string): [
 function* stripAnnotations(root: HTMLElement):
         Generator<PrerenderAnnotation, void, void> {
     for (const node of walkAllAnnotations(root)) {
+        // Ignore inline styles as they are handled in a later part of the BUILD
+        // pipeline. Extracting them here would lose the context of where each
+        // style is supposed to be inlined.
+        if (isInlineStyle(node.annotation)) continue;
+
         node.remove();
         yield node.annotation;
     }
