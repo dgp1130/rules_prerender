@@ -6,6 +6,7 @@ import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/commo
 import { PrerenderMetadata } from 'rules_prerender/common/models/prerender_metadata';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 const extractor = runfiles.resolvePackageRelative('annotation_extractor.sh');
 
@@ -25,6 +26,9 @@ describe('annotation_extractor', () => {
     const tmpDir = useTempDir();
 
     it('extracts annotations', async () => {
+        const annotation1 = createAnnotation({ type: 'script', path: 'foo.js' });
+        const annotation2 = createAnnotation({ type: 'script', path: 'bar.js' });
+
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
 
@@ -37,7 +41,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+        <!-- ${annotation1} -->
     </body>
 </html>
         `.trim());
@@ -50,7 +54,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"bar.js"} -->
+        <!-- ${annotation2} -->
     </body>
 </html>
         `.trim());
@@ -113,6 +117,8 @@ describe('annotation_extractor', () => {
     });
 
     it('deduplicates extracted annotations', async () => {
+        const annotation = createAnnotation({ type: 'script', path: 'foo.js' });
+
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
 
@@ -125,7 +131,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+        <!-- ${annotation} -->
     </body>
 </html>
         `.trim());
@@ -138,7 +144,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+        <!-- ${annotation} -->
     </body>
 </html>
         `.trim());
@@ -166,6 +172,8 @@ describe('annotation_extractor', () => {
     });
 
     it('extracts annotations from a file in a nested directory', async () => {
+        const annotation = createAnnotation({ type: 'script', path: 'foo.js' });
+
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
 
@@ -179,7 +187,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+        <!-- ${annotation} -->
     </body>
 </html>
         `.trim());
@@ -225,6 +233,8 @@ describe('annotation_extractor', () => {
     });
 
     it('passes through non-HTML files', async () => {
+        const annotation = createAnnotation({ type: 'script', path: 'foo.js' });
+
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
 
@@ -235,7 +245,7 @@ describe('annotation_extractor', () => {
 Hello, World!
 
 Annotation should **not** be processed.
-<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+<!-- ${annotation} -->
         `.trim());
 
         const { code, stdout, stderr } = await run({
@@ -256,7 +266,7 @@ Annotation should **not** be processed.
 Hello, World!
 
 Annotation should **not** be processed.
-<!-- bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE - {"type":"script","path":"foo.js"} -->
+<!-- ${annotation} -->
         `.trim());
 
         const metadata = JSON.parse(
