@@ -1,4 +1,4 @@
-import { inlineStyle } from 'rules_prerender';
+import { inlineStyleLegacy } from 'rules_prerender';
 import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
 
 /** Renders an example component using Declarative Shadow DOM. */
@@ -13,7 +13,7 @@ export async function renderComponent(lightDom: string): Promise<string> {
                 ${polyfillDeclarativeShadowDom()}
 
                 <!-- Inline styles to apply them within this shadow root. -->
-                ${await inlineStyle('rules_prerender/examples/declarative_shadow_dom/component.css')}
+                ${await inlineStyleLegacy('rules_prerender/examples/declarative_shadow_dom/component.css')}
 
                 <!-- Shadow DOM content, styled with the associated style
                 sheet. -->

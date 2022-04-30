@@ -19,7 +19,7 @@ export function includeStyle(path: string): string {
  * Reads the given CSS file at the provided runfiles path and returns it in a
  * `<style />` tag to be inlined in the document.
  */
-export async function inlineStyle(path: string): Promise<string> {
+export async function inlineStyleLegacy(path: string): Promise<string> {
     const styles = await fs.readFile(runfiles.resolve(path), 'utf-8');
     return `
 <style>
