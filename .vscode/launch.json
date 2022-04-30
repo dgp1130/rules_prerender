@@ -8,11 +8,12 @@
             // From: https://bazelbuild.github.io/rules_nodejs/debugging.html#debugging-with-vs-code
             "type": "node",
             "request": "attach",
-            "name": "Attach",
+            "name": "Attach Bazel Debugger",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "internalConsoleOptions": "neverOpen",
+            "resolveSourceMapLocations": null,
             "sourceMapPathOverrides": {
                 "../*": "${workspaceRoot}/*",
                 "../../*": "${workspaceRoot}/*",
