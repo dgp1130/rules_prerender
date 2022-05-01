@@ -171,7 +171,9 @@ jasmine_node_test(
 ts_library(
     name = "styles",
     srcs = ["styles.ts"],
+    visibility = ["//packages/renderer:__subpackages__"],
     deps = [
+        ":inline_style_map",
         "//common:fs",
         "//common/models:prerender_annotation",
         "@npm//@bazel/runfiles",
@@ -184,7 +186,9 @@ ts_library(
     testonly = True,
     data = ["//packages/rules_prerender/testdata:styles.css"],
     deps = [
+        ":inline_style_map",
         ":styles",
+        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )
@@ -192,4 +196,10 @@ ts_library(
 jasmine_node_test(
     name = "styles_test",
     deps = [":styles_test_lib"],
+)
+
+ts_library(
+    name = "inline_style_map",
+    srcs = ["inline_style_map.ts"],
+    visibility = ["//packages/renderer:__subpackages__"],
 )

@@ -17,6 +17,7 @@ ts_library(
     visibility = ["//tools/internal:__pkg__"],
     deps = [
         ":entry_point",
+        "//packages/rules_prerender:inline_style_map",
         "//common:binary",
         "//common:formatters",
         "@npm//@types/node",
@@ -46,9 +47,13 @@ ts_library(
     srcs = ["renderer_test.ts"],
     testonly = True,
     deps = [
+        "//common/models:prerender_annotation",
         "//common/models:prerender_resource",
         "//common/testing:binary",
         "//common/testing:temp_dir",
+        # Need a dependency on styles for entry points under test to import
+        # `includeStyle()`.
+        "//packages/rules_prerender:styles",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",

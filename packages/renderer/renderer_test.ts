@@ -4,17 +4,23 @@ import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
+import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
 
 const renderer = runfiles.resolvePackageRelative('renderer_test_binary.sh');
 
 /** Invokes the renderer binary. */
-async function run({ entryPoint, outputDir }: {
+async function run({ entryPoint, outputDir, inlineStyles = new Map() }: {
     entryPoint: string,
     outputDir: string,
+    inlineStyles?: ReadonlyMap<string, string>,
 }): Promise<ProcessResult> {
     return await execBinary(renderer, [
         '--entry-point', entryPoint,
         '--output-dir', outputDir,
+        ...Array.from(inlineStyles.entries()).flatMap(([ importPath, filePath ]) => [
+            '--inline-style-import', importPath,
+            '--inline-style-path', filePath,
+        ]),
     ]);
 }
 
@@ -135,6 +141,63 @@ module.exports = async function* () {
         const world = await fs.readFile(
             `${tmpDir.get()}/output/hello/world.html`, 'utf8');
         expect(world).toBe('Hello, World!');
+    });
+
+    it('renders mapped inline style paths', async () => {
+        await fs.mkdir(`${tmpDir.get()}/output`);
+        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
+// We can't rely on the linker to resolve imports for us. We also don't want to
+// rely on the legacy require() patch, so instead we need to manually load the
+// runfiles helper and require() the file through it.
+const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
+const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
+const { inlineStyle } = require(runfiles.resolveWorkspaceRelative('packages/rules_prerender/styles.js'));
+
+module.exports = async function* () {
+    yield PrerenderResource.of('/index.html', \`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Page</title>
+    </head>
+    <body>
+        \${inlineStyle('wksp/foo/bar/baz.css')}
+    </body>
+</html>
+    \`.trim());
+};
+        `.trim());
+
+        const { code, stdout, stderr } = await run({
+            entryPoint: `${tmpDir.get()}/foo.js`,
+            outputDir: `${tmpDir.get()}/output`,
+            inlineStyles: new Map(Object.entries({
+                'wksp/foo/bar/baz.css': 'wksp/hello/world.css',
+            })),
+        });
+
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(stdout).toBe('');
+        expect(stderr).toBe('');
+
+        const index = await fs.readFile(
+            `${tmpDir.get()}/output/index.html`, 'utf8');
+        const expectedAnnotation = createAnnotation({
+            type: 'style',
+            scope: StyleScope.Inline,
+            path: 'wksp/hello/world.css',
+        });
+        expect(index).toBe(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Page</title>
+    </head>
+    <body>
+        <!-- ${expectedAnnotation} -->
+    </body>
+</html>
+        `.trim());
     });
 
     it('fails from import errors from the entry point', async () => {
