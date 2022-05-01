@@ -45,6 +45,16 @@ wksp/foo/bar/baz.css
 wksp/hello/world.css
             `.trim());
         });
+
+        it('ignores the inline style map when not defined', () => {
+            spyOn(inlineStyleMap, 'getMap').and.returnValue(undefined);
+
+            expect(inlineStyle('wksp/foo/bar/baz.css')).toBe(`<!-- ${createAnnotation({
+                type: 'style',
+                scope: StyleScope.Inline,
+                path: 'wksp/foo/bar/baz.css',
+            })} -->`);
+        });
     });
 
     describe('inlineStyleLegacy()', () => {

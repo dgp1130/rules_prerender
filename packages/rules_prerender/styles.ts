@@ -24,13 +24,17 @@ export function includeStyle(path: string): string {
  */
 export function inlineStyle(importPath: string): string {
     // Look up the import path in the inline style map to get its actual file
-    // path on disk.
+    // path on disk. This will always exist when executed as part of the
+    // renderer, however tests which directly call components won't set the
+    // inline style map and it won't exist. In these cases, we just ignore it
+    // since such tests would not actually care.
     const inlineStyleMap = getInlineStyleMap();
-    const filePath = inlineStyleMap.get(importPath);
+    const filePath = inlineStyleMap ? inlineStyleMap.get(importPath) : importPath;
     if (!filePath) {
         throw new Error(`Could not find "${
             importPath}" in the inline style map. Available imports are:\n\n${
-            Array.from(inlineStyleMap.keys()).join('\n')}`);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            Array.from(inlineStyleMap!.keys()).join('\n')}`);
     }
 
     // Return an annotation with the real file path.

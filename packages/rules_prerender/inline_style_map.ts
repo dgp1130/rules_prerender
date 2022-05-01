@@ -8,8 +8,7 @@
 let map: ReadonlyMap<string, string> | undefined;
 
 /** Returns the inline style map. */
-export function getMap(): ReadonlyMap<string, string> {
-    if (!map) throw new Error('Inline style map not set.');
+export function getMap(): ReadonlyMap<string, string> | undefined {
     return map;
 }
 
