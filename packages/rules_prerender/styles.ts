@@ -30,12 +30,8 @@ export function inlineStyle(importPath: string): string {
     // since such tests would not actually care.
     const inlineStyleMap = getInlineStyleMap();
     const filePath = inlineStyleMap ? inlineStyleMap.get(importPath) : importPath;
-    if (!filePath) {
-        throw new Error(`Could not find "${
-            importPath}" in the inline style map. Available imports are:\n\n${
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            Array.from(inlineStyleMap!.keys()).join('\n')}`);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (!filePath) throw InlineStyleNotFoundError.from(importPath, inlineStyleMap!);
 
     // Return an annotation with the real file path.
     const annotation = createAnnotation({
@@ -44,6 +40,34 @@ export function inlineStyle(importPath: string): string {
         path: filePath,
     });
     return `<!-- ${annotation} -->`;
+}
+
+/** An error thrown when an inline style is not found in the inline style map. */
+export class InlineStyleNotFoundError extends Error {
+    public importPath: string;
+    public availableImportPaths: string[];
+
+    private constructor({ message, importPath, availableImportPaths }: {
+        message: string,
+        importPath: string,
+        availableImportPaths: string[],
+    }) {
+        super(message);
+        this.importPath = importPath;
+        this.availableImportPaths = availableImportPaths;
+    }
+
+    public static from(importPath: string, inlineStyleMap: ReadonlyMap<string, string>):
+            InlineStyleNotFoundError {
+        const message = `Could not find "${
+            importPath}" in the inline style map. Available imports are:\n\n${
+            Array.from(inlineStyleMap.keys()).join('\n')}`;
+        return new InlineStyleNotFoundError({
+            message,
+            importPath,
+            availableImportPaths: Array.from(inlineStyleMap.keys()),
+        });
+    }
 }
 
 /**

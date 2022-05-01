@@ -2,7 +2,7 @@ import 'jasmine';
 
 import * as inlineStyleMap from 'rules_prerender/packages/rules_prerender/inline_style_map';
 import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
-import { includeStyle, inlineStyle, inlineStyleLegacy } from 'rules_prerender/packages/rules_prerender/styles';
+import { includeStyle, inlineStyle, inlineStyleLegacy, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
 
 describe('styles', () => {
     describe('includeStyle()', () => {
@@ -38,12 +38,14 @@ describe('styles', () => {
                 'wksp/hello/world.css': 'wksp/goodbye/mars.css',
             })));
 
-            expect(() => inlineStyle('wksp/does/not/exist.css')).toThrowError(`
-Could not find "wksp/does/not/exist.css" in the inline style map. Available imports are:
-
-wksp/foo/bar/baz.css
-wksp/hello/world.css
-            `.trim());
+            expect(() => inlineStyle('wksp/does/not/exist.css'))
+                .toThrow(InlineStyleNotFoundError.from(
+                    'wksp/does/not/exist.css',
+                    new Map(Object.entries({
+                        'wksp/foo/bar/baz.css': 'wksp/some/dir/baz.css',
+                        'wksp/hello/world.css': 'wksp/goodbye/mars.css',
+                    })),
+                ));
         });
 
         it('ignores the inline style map when not defined', () => {

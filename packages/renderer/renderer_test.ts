@@ -253,4 +253,48 @@ module.exports = async function* () {
         expect(stdout).toBe('');
         expect(stderr).toContain('Generated path `/bar.html` twice.');
     });
+
+    it('fails when inlining a style not in the inline style map', async () => {
+        await fs.mkdir(`${tmpDir.get()}/output`);
+        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
+// We can't rely on the linker to resolve imports for us. We also don't want to
+// rely on the legacy require() patch, so instead we need to manually load the
+// runfiles helper and require() the file through it.
+const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
+const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
+const { inlineStyle } = require(runfiles.resolveWorkspaceRelative('packages/rules_prerender/styles.js'));
+
+module.exports = async function* () {
+    yield PrerenderResource.of('/index.html', \`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Page</title>
+    </head>
+    <body>
+        \${inlineStyle('wksp/does/not/exist.css')}
+    </body>
+</html>
+    \`.trim());
+};
+        `.trim());
+
+        const { code, stdout, stderr } = await run({
+            entryPoint: `${tmpDir.get()}/foo.js`,
+            outputDir: `${tmpDir.get()}/output`,
+            inlineStyles: new Map(Object.entries({
+                'wksp/foo/bar/baz.css': 'wksp/hello/world.css',
+                'wksp/some/other/file.css': 'wksp/place/with/file.css',
+            })),
+        });
+
+        expect(code).toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
+        expect(stdout).toBe('');
+        expect(stderr).toBe(`
+Inline style "wksp/does/not/exist.css" was not in the inline style map. Did you forget to depend on it in \`inline_styles\`? CSS files available to inline are:
+
+wksp/foo/bar/baz.css
+wksp/some/other/file.css
+        `.trim() + '\n');
+    });
 });
