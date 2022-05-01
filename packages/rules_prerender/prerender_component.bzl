@@ -10,6 +10,8 @@ load(
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute")
 load("//common:paths.bzl", "is_js_file")
+load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
+load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load(":web_resources.bzl", "web_resources")
 
 def prerender_component(
@@ -20,6 +22,7 @@ def prerender_component(
     lib_deps = [],
     scripts = [],
     styles = [],
+    inline_styles = [],
     resources = [],
     deps = [],
     testonly = None,
@@ -51,6 +54,8 @@ def prerender_component(
             in the prerendered HTML.
         styles: List of CSS files or `filegroup()`s of CSS files which can be
             included in the prerendered HTML.
+        inline_styles: List of `css_library()` targets which can be inlined in
+            prerendered HTML.
         resources: List of `web_resources()` required by this component at
             runtime.
         deps: `prerender_component()` dependencies for this component.
@@ -122,6 +127,14 @@ which are always allowed).
         srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
+    )
+
+    _inline_css_reexport(
+        name = "%s_inline_styles" % name,
+        inline_styles = inline_styles,
+        testonly = testonly,
+        visibility = visibility,
+        deps = ["%s_inline_styles" % absolute(dep) for dep in deps],
     )
 
     web_resources(
@@ -213,3 +226,23 @@ _js_reexport = rule(
             some of the given targets.
     """,
 )
+
+def _inline_css_reexport(name, inline_styles, deps, testonly = None, visibility = None):
+    for inline_style in inline_styles:
+        if inline_style.endswith(".css"):
+            fail(("`inline_styles` must be `css_library()` targets, *not* `*.css`"
+                + " source files (%s)") % inline_style)
+
+    binaries = "%s_bin" % name
+    css_binaries(
+        name = binaries,
+        testonly = testonly,
+        deps = inline_styles,
+    )
+
+    css_group(
+        name = name,
+        testonly = testonly,
+        visibility = visibility,
+        deps = [":%s" % binaries] + deps,
+    )

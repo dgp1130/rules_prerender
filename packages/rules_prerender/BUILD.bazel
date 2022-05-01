@@ -67,6 +67,8 @@ bzl_library(
         ":web_resources",
         "//common:label",
         "//common:paths",
+        "//packages/rules_prerender/css:css_binaries",
+        "//packages/rules_prerender/css:css_group",
     ],
 )
 
@@ -124,6 +126,7 @@ bzl_library(
         ":web_resources",
         "//common:paths",
         "//packages/renderer:build_vars",
+        "//packages/rules_prerender/css:css_providers",
     ],
 )
 

@@ -20,6 +20,7 @@ def prerender_pages(
     lib_deps = [],
     scripts = [],
     styles = [],
+    inline_styles = [],
     resources = [],
     deps = [],
     bundle_js = True,
@@ -95,6 +96,8 @@ def prerender_pages(
             generated pages.
         styles: List of CSS files or `filegroup()`s to inject into the
             prerendered HTML files.
+        inline_styles: List of `css_library()` targets which can be inlined in
+            prerendered HTML.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
         deps: `prerender_component()` dependencies for the generated pages.
@@ -115,6 +118,7 @@ def prerender_pages(
         lib_deps = lib_deps,
         scripts = scripts,
         styles = styles,
+        inline_styles = inline_styles,
         resources = resources,
         deps = deps,
         testonly = testonly,
@@ -165,6 +169,7 @@ def prerender_pages(
         input_dir = ":%s" % prerender_name,
         bundle = ":%s" % bundle if bundle_js else None,
         styles = [bundled_css] if bundle_css else [],
+        inline_styles = ":%s_inline_styles" % prerender_name,
         testonly = testonly,
     )
 
