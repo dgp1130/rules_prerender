@@ -24,6 +24,8 @@ bzl_library(
         "//packages/rules_prerender:prerender_resources",
         "//packages/rules_prerender:web_resources",
         "//packages/rules_prerender:web_resources_devserver",
+        "//packages/rules_prerender/css:css_group",
+        "//packages/rules_prerender/css:css_library",
     ],
 )
 

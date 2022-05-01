@@ -36,7 +36,17 @@ load(
     "//packages/rules_prerender:web_resources_devserver.bzl",
     _web_resources_devserver = "web_resources_devserver",
 )
+load(
+    "//packages/rules_prerender/css:css_group.bzl",
+    _css_group = "css_group",
+)
+load(
+    "//packages/rules_prerender/css:css_library.bzl",
+    _css_library = "css_library",
+)
 
+css_group = _css_group
+css_library = _css_library
 extract_single_resource = _extract_single_resource
 inject_resources = _inject_resources
 prerender_component = _prerender_component
