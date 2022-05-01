@@ -163,6 +163,7 @@ ts_library(
     testonly = True,
     deps = [
         ":scripts",
+        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )
