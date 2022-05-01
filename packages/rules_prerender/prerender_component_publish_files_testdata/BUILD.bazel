@@ -8,6 +8,7 @@ load(
     "prerender_component_publish_files",
 )
 load("//packages/rules_prerender:web_resources.bzl", "web_resources")
+load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
 prerender_component(
@@ -15,7 +16,7 @@ prerender_component(
     srcs = ["component.ts"],
     lib_deps = [":prerender_dep"],
     scripts = [":scripts"],
-    styles = ["style.css"],
+    inline_styles = [":styles"],
     resources = [":resources"],
 )
 
@@ -28,6 +29,11 @@ ts_library(
     name = "scripts",
     srcs = ["script.ts"],
     deps = [":script_dep"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["style.css"],
 )
 
 ts_library(

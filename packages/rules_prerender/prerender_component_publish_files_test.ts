@@ -21,6 +21,7 @@ describe('prerender_component_publish_files()', () => {
             'script_dep.d.ts',
             'script_dep.externs.js',
             'style.css',
+            'style.css.map',
             'component_resources', // from `resources` attribute.
         ];
 
