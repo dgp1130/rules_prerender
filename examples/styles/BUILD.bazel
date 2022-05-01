@@ -1,14 +1,19 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
-load("//:index.bzl", "prerender_pages", "web_resources_devserver")
+load("//:index.bzl", "css_library", "prerender_pages", "web_resources_devserver")
 load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
     name = "page",
     src = "page.ts",
-    styles = ["page.css"],
+    inline_styles = [":styles"],
     lib_deps = ["//packages/rules_prerender"],
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     deps = ["//examples/styles/component"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["page.css"],
 )
 
 web_resources_devserver(

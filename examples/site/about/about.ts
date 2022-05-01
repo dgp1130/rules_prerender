@@ -1,4 +1,4 @@
-import { PrerenderResource, inlineStyleLegacy } from 'rules_prerender';
+import { PrerenderResource, inlineStyle } from 'rules_prerender';
 import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
 import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
 import { srcLink } from 'rules_prerender/examples/site/common/links';
@@ -57,7 +57,7 @@ export default async function*():
         dignissim quis, venenatis non mi. Curabitur lacinia tincidunt vulputate.
         Proin non vehicula risus, id pharetra lorem.</p>
 
-        ${await inlineStyleLegacy('rules_prerender/examples/site/about/about.css')}
+        ${inlineStyle('rules_prerender/examples/site/about/about.css')}
     </template>
 </article>
         `),

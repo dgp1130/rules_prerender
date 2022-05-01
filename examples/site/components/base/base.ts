@@ -1,4 +1,4 @@
-import { includeStyle } from 'rules_prerender';
+import { inlineStyle } from 'rules_prerender';
 import { renderHeader } from 'rules_prerender/examples/site/components/header/header';
 import { renderFooter } from 'rules_prerender/examples/site/components/footer/footer';
 
@@ -20,6 +20,7 @@ export async function baseLayout(
     <head>
         <title>${title}</title>
         <meta charset="utf-8">
+        ${inlineStyle('rules_prerender/examples/site/components/base/base.css')}
     </head>
     <body>
         ${renderHeader()}
@@ -27,7 +28,6 @@ export async function baseLayout(
             <main>${await main()}</main>
         </div>
         ${renderFooter()}
-        ${includeStyle('rules_prerender/examples/site/components/base/base.css')}
     </body>
 </html>
     `;

@@ -21,14 +21,14 @@ describe('styles', () => {
         expect(await getColor(browser, browser.$('.page > .label')))
             .toBe('rgb(255, 0, 0)'); // Red.
 
-        expect(await browser.$('.component > .label').getText())
+        expect(await browser.$('.component').shadow$('div').getText())
             .toBe(`I'm a component with some CSS!`);
-        expect(await getColor(browser, browser.$('.component > .label')))
+        expect(await getColor(browser, browser.$('.component').shadow$('div')))
             .toBe('rgb(0, 128, 0)'); // Green.
 
-        expect(await browser.$('.transitive > .label').getText())
+        expect(await browser.$('.transitive').shadow$('div').getText())
             .toBe(`I'm a transitive component with some CSS!`);
-        expect(await getColor(browser, browser.$('.transitive > .label')))
+        expect(await getColor(browser, browser.$('.transitive').shadow$('div')))
             .toBe('rgb(0, 0, 255)'); // Blue.
 
         // Note: `getPageSource()` returns a stringified representation of the

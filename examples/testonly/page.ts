@@ -1,4 +1,4 @@
-import { PrerenderResource, includeStyle, includeScript } from 'rules_prerender';
+import { PrerenderResource, inlineStyle, includeScript } from 'rules_prerender';
 import { renderComponent } from 'rules_prerender/examples/testonly/component/component';
 
 export default function*(): Generator<PrerenderResource, void, void> {
@@ -7,6 +7,8 @@ export default function*(): Generator<PrerenderResource, void, void> {
         <html>
             <head>
                 <title>Testonly</title>
+
+                ${inlineStyle('rules_prerender/examples/testonly/page_styles.css')}
             </head>
             <body>
                 <h2>Testonly</h2>
@@ -16,7 +18,6 @@ export default function*(): Generator<PrerenderResource, void, void> {
                     <img src="/images/page.png" />
                     ${renderComponent()}
                     ${includeScript('rules_prerender/examples/testonly/page_script')}
-                    ${includeStyle('rules_prerender/examples/testonly/page_styles.css')}
                 </div>
             </body>
         </html>

@@ -1,4 +1,4 @@
-load("//:index.bzl", "prerender_pages", "web_resources")
+load("//:index.bzl", "css_library", "prerender_pages", "web_resources")
 
 prerender_pages(
     name = "about",
@@ -7,13 +7,18 @@ prerender_pages(
         "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
-    styles = ["about.css"],
+    inline_styles = [":styles"],
     resources = [":resources"],
     visibility = ["//examples/site:__pkg__"],
     deps = [
         "//:declarative_shadow_dom",
         "//examples/site/components/base",
     ],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["about.css"],
 )
 
 web_resources(

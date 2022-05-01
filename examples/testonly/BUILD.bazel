@@ -2,6 +2,7 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load(
     "//:index.bzl",
+    "css_library",
     "prerender_pages",
     "web_resources",
     "web_resources_devserver",
@@ -12,15 +13,22 @@ prerender_pages(
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],
-    styles = ["page_styles.css"],
+    inline_styles = [":styles"],
     resources = [":resources"],
     testonly = True,
     deps = ["//examples/testonly/component"],
 )
 
+css_library(
+    name = "styles",
+    srcs = ["page_styles.css"],
+    testonly = True,
+)
+
 ts_library(
     name = "scripts",
     srcs = ["page_script.ts"],
+    testonly = True,
 )
 
 web_resources(
@@ -28,6 +36,7 @@ web_resources(
     entries = {
         "/images/page.png": "image.png",
     },
+    testonly = True,
 )
 
 web_resources_devserver(

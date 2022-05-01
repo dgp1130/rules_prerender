@@ -1,10 +1,15 @@
-load("//:index.bzl", "prerender_component")
+load("//:index.bzl", "css_library", "prerender_component")
 
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
-    styles = ["component_styles.css"],
+    inline_styles = [":styles"],
     lib_deps = ["//packages/rules_prerender"],
     visibility = ["//examples/styles:__subpackages__"],
     deps = ["//examples/styles/transitive"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["component_styles.css"],
 )

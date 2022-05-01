@@ -1,4 +1,4 @@
-import { PrerenderResource, includeScript, includeStyle } from 'rules_prerender';
+import { PrerenderResource, includeScript, inlineStyle } from 'rules_prerender';
 
 export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', generate(`
@@ -29,7 +29,7 @@ function generate(content: string): string {
         <meta charset="utf-8">
 
         ${includeScript('rules_prerender/examples/multi_page/script')}
-        ${includeStyle('rules_prerender/examples/multi_page/styles.css')}
+        ${inlineStyle('rules_prerender/examples/multi_page/styles.css')}
     </head>
     <body>
         ${content}

@@ -1,12 +1,12 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
-load("//:index.bzl", "prerender_component", "web_resources")
+load("//:index.bzl", "css_library", "prerender_component", "web_resources")
 
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],
-    styles = ["component_styles.css"],
+    inline_styles = [":styles"],
     resources = [":resources"],
     testonly = True,
     visibility = ["//examples/testonly:__subpackages__"],
@@ -16,6 +16,12 @@ prerender_component(
 ts_library(
     name = "scripts",
     srcs = ["component_script.ts"],
+    testonly = True,
+)
+
+css_library(
+    name = "styles",
+    srcs = ["component_styles.css"],
     testonly = True,
 )
 
