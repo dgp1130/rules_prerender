@@ -83,7 +83,7 @@ prerender_component(
     # Client-side JavaScript to be executed in the browser.
     scripts = [":scripts"],
     # Styles for the component.
-    styles = ["my_component.css"],
+    inline_styles = [":styles"],
     # Other resources required by the component.
     resources = [":resources"],
 )
@@ -93,6 +93,12 @@ ts_library(
     name = "scripts",
     srcs = ["my_component.ts"],
     deps = ["//my_other_component:scripts"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["my_component.css"],
+    deps = ["//some_common_package:styles"],
 )
 
 # Other resources required for this component to function at the URL paths they
@@ -109,7 +115,7 @@ web_resources(
 ```typescript
 // my_component/my_component_prerender.ts
 
-import { includeScript, includeStyle } from 'rules_prerender';
+import { includeScript, inlineStyle } from 'rules_prerender';
 import { renderOtherComponent } from '__main__/my_other_component/my_other_component_prerender';
 
 /**
@@ -118,6 +124,12 @@ import { renderOtherComponent } from '__main__/my_other_component/my_other_compo
  */
 export function renderMyComponent(name: string): string {
     return `
+<div>
+    <!-- Use declarative shadow DOM to isolate styles. If you're not familiar with
+    declarative shadow DOM, you don't have to use it. But if you don't you'll need
+    to manually namespace your styles or else styles in different components could
+    conflict with each other! -->
+    <template shadowroot="open">
         <!-- Render some HTML. -->
         <h2 class="my-component-header">Hello, ${name}</h2>!
         <button id="show">Show</button>
@@ -125,17 +137,22 @@ export function renderMyComponent(name: string): string {
         <!-- Use related web resources. -->
         <img src="/images/foo.png" />
 
-        <!-- Compose other components. -->
-        ${renderOtherComponent({
-            id: 'other',
-            name: name.reverse(),
-        })}
+        <!-- Compose other components via light DOM. -->
+        <slot></slot>
 
         <!-- Inject the associated client-side JavaScript. -->
         ${includeScript('my_workspace/my_component/my_component')}
 
-        <!-- Inject the associated CSS styles. -->
-        ${includeStyle('my_workspace/my_component/my_component.css')}
+        <!-- Inline the associated CSS styles, scoped to this shadow root. -->
+        ${inlineStyle('my_workspace/my_component/my_component.css')}
+    </template>
+    
+    <!-- Other components are placed in light DOM and visible at the \`<slot />\`. -->
+    ${renderOtherComponent({
+        id: 'other',
+        name: name.reverse(),
+    })}
+</div>
     `;
 }
 ```
@@ -160,6 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ```css
 /* my_component/my_component.css */
+
+/* @import dependencies resolved and bundled at build time. */
+@import '__main__/some_common_package/styles.css';
 
 /* Styles for the component. */
 @font-face {
@@ -188,16 +208,16 @@ import { renderMyComponent } from '__main__/my_component/my_component_prerender'
 export default function* render(): Generator<PrerenderResource, void, void> {
     // Generate an HTML page at `/my_page/index.html` with this content:
     yield PrerenderResource.of('/my_page/index.html', `
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>My Page</title>
-            </head>
-            <body>
-                ${renderMyComponent('World')}
-            </body>
-        </html>
-    `);
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Page</title>
+    </head>
+    <body>
+        ${renderMyComponent('World')}
+    </body>
+</html>
+    `.trim());
 }
 ```
 
