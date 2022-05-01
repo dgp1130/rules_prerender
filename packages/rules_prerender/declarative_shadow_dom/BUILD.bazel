@@ -35,6 +35,7 @@ ts_library(
     testonly = True,
     deps = [
         ":declarative_shadow_dom_prerender_for_test",
+        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )
