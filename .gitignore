@@ -4,3 +4,6 @@ node_modules
 
 # Generated package from `bazel run //:pkg.pack`
 rules_prerender-*.tgz
+
+# Generated with `bazel build --config ci`.
+bazel.profile.gz
