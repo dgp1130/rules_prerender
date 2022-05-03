@@ -2,7 +2,7 @@ import 'jasmine';
 
 import * as inlineStyleMap from 'rules_prerender/packages/rules_prerender/inline_style_map';
 import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
-import { includeStyle, inlineStyle, inlineStyleLegacy, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
+import { includeStyle, inlineStyle, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
 
 describe('styles', () => {
     describe('includeStyle()', () => {
@@ -56,24 +56,6 @@ describe('styles', () => {
                 scope: StyleScope.Inline,
                 path: 'wksp/foo/bar/baz.css',
             })} -->`);
-        });
-    });
-
-    describe('inlineStyleLegacy()', () => {
-        it('resolves to a `<style />` element with the runfiles content of the given file path', async () => {
-            const styles = await inlineStyleLegacy(
-                'rules_prerender/packages/rules_prerender/testdata/styles.css');
-            expect(styles).toBe(`
-<style>
-.foo { color: red; }
-
-</style>
-            `.trim());
-        });
-
-        it('rejects when the given file path is not found in runfiles', async () => {
-            await expectAsync(inlineStyleLegacy('rules_prerender/does/not/exist.css'))
-                .toBeRejected();
         });
     });
 });

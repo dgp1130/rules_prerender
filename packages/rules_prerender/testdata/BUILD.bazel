@@ -1,3 +1,0 @@
-package(default_visibility = ["//packages/rules_prerender:__pkg__"])
-
-exports_files(["styles.css"])

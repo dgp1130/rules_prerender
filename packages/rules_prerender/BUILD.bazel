@@ -190,7 +190,6 @@ ts_library(
     name = "styles_test_lib",
     srcs = ["styles_test.ts"],
     testonly = True,
-    data = ["//packages/rules_prerender/testdata:styles.css"],
     deps = [
         ":inline_style_map",
         ":styles",
