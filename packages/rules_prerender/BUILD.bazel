@@ -180,9 +180,7 @@ ts_library(
     visibility = ["//packages/renderer:__subpackages__"],
     deps = [
         ":inline_style_map",
-        "//common:fs",
         "//common/models:prerender_annotation",
-        "@npm//@bazel/runfiles",
     ],
 )
 

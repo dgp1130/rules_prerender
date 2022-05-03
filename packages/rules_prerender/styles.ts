@@ -1,5 +1,3 @@
-import { runfiles } from '@bazel/runfiles';
-import * as fs from 'rules_prerender/common/fs';
 import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
 import { getMap as getInlineStyleMap } from 'rules_prerender/packages/rules_prerender/inline_style_map';
 
