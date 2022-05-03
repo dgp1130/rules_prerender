@@ -46,6 +46,7 @@ prerender_component_publish_files(
 publish_files(
     name = "publish_files",
     files = [
+        ".npmrc",
         "README.md",
         "index.bzl",
         "package.bzl",

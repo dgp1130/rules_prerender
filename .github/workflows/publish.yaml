@@ -40,10 +40,17 @@ jobs:
     # Publish the package. Use the CI configuration to reuse the existing cache
     # and have a more polished output.
     - name: Publish
-      run: bazel run //:pkg.publish --config ci --config release
+      run: |
+        # Append NPM token to `.npmrc` file.
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_ACCESS_TOKEN }}" >> .npmrc
+
+        # Publish the package.
+        bazel run //:pkg.publish --config ci --config release
+
+        # Remove the token from the `.npmrc` file, it should no longer be needed.
+        sed -i "/${{ secrets.NPM_ACCESS_TOKEN }}/d" .npmrc
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
     # Tag the commit and create a release on GitHub.
     - name: Tag and Create Draft Release
