@@ -22,7 +22,7 @@ def prerender_resources(
 
     The file listed in `entry` must be included in the `data` attribute as a
     CommonJS module with a default export of the type:
-    
+
     ```
     () => Iterable<PrerenderResource> | Promise<Iterable<PrerenderResource>>
         | AsyncIterable<PrerenderResource>
@@ -48,7 +48,7 @@ def prerender_resources(
     Outputs:
         %{name}: A `web_resources()`-compatible target containing all the files
             generated at their corresponding locations.
-    
+
     Args:
         name: The name of this rule.
         entry_point: The JavaScript entry point to use to execute the given
@@ -63,6 +63,27 @@ def prerender_resources(
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
+    prerender_resources_internal(
+        name = name,
+        entry_point = entry_point,
+        data = data,
+        testonly = testonly,
+        visibility = visibility,
+        # Not supported in public API because this would require exposing `css_group()` or
+        # `css_binaries()` and is only useful for prerendering HTML pages which should be
+        # done with `prerender_pages()`, not `prerender_resources()`.
+        inline_styles = None,
+    )
+
+def prerender_resources_internal(
+    name,
+    entry_point,
+    data,
+    inline_styles = None,
+    testonly = None,
+    visibility = None,
+):
+    """Internal version of `prerender_resources()` which allows `inline_styles` usage."""
     # Validate `entry_point`.
     if "/" not in entry_point or not is_js_file(entry_point):
         fail(("`entry_point` (%s) *must* be a workspace-relative path of the"

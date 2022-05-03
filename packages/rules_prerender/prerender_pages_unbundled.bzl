@@ -5,7 +5,7 @@ load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
 load(":entry_points.bzl", "script_entry_point", "style_entry_point")
 load(":prerender_component.bzl", "prerender_component")
-load(":prerender_resources.bzl", "prerender_resources")
+load(":prerender_resources.bzl", "prerender_resources_internal")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
 def prerender_pages_unbundled(
@@ -126,7 +126,7 @@ def prerender_pages_unbundled(
         if src.endswith(".ts")
         else src
     )
-    prerender_resources(
+    prerender_resources_internal(
         name = annotated,
         entry_point = file_path_of(absolute(js_src)),
         inline_styles = ":%s" % component_inline_styles,
