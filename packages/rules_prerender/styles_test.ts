@@ -2,21 +2,9 @@ import 'jasmine';
 
 import * as inlineStyleMap from 'rules_prerender/packages/rules_prerender/inline_style_map';
 import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
-import { includeStyle, inlineStyle, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
+import { inlineStyle, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
 
 describe('styles', () => {
-    describe('includeStyle()', () => {
-        it('returns a global style annotation in an HTML comment', () => {
-            const annotation = includeStyle('wksp/foo/bar/baz.css');
-
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'style',
-                scope: StyleScope.Global,
-                path: 'wksp/foo/bar/baz.css',
-            })} -->`);
-        });
-    });
-
     describe('inlineStyle()', () => {
         it('returns an inline style annotation in an HTML comment', () => {
             spyOn(inlineStyleMap, 'getMap').and.returnValue(new Map(Object.entries({

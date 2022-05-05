@@ -68,9 +68,8 @@ def prerender_pages(
     into a single JavaScript file and inserted into **all** the generated HTML
     documents as a `<script />` tag.
 
-    Any styles that are included with `includeStyle()` are bundled together into
-    a single CSS file and inserted into **all** the generated HTML documents as
-    an inline `<style />` tag.
+    Any styles that are included with `inlineStyle()` are inlined as a
+    `<style />` tag at the inserted location in the document.
     
     Outputs:
         %{name}: A `web_resources()`-compatible rule which includes all the

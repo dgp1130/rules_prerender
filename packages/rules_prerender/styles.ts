@@ -3,20 +3,6 @@ import { getMap as getInlineStyleMap } from 'rules_prerender/packages/rules_prer
 
 /**
  * Returns a prerender annotation as a string to be included in prerendered
- * HTML. This is used by the prerender build process to include the referenced
- * CSS file in the final bundle for the page.
- */
-export function includeStyle(path: string): string {
-    const annotation = createAnnotation({
-        type: 'style',
-        scope: StyleScope.Global,
-        path,
-    });
-    return `<!-- ${annotation} -->`;
-}
-
-/**
- * Returns a prerender annotation as a string to be included in prerendered
  * HTML. This is used by the prerender build process to inline the referenced
  * CSS file at the annotation's location in the page.
  */
