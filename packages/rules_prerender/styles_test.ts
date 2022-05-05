@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import * as inlineStyleMap from 'rules_prerender/packages/rules_prerender/inline_style_map';
-import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import { inlineStyle, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
 
 describe('styles', () => {
@@ -15,7 +15,6 @@ describe('styles', () => {
 
             expect(annotation).toBe(`<!-- ${createAnnotation({
                 type: 'style',
-                scope: StyleScope.Inline,
                 path: 'wksp/some/real/file.css',
             })} -->`);
         });
@@ -41,7 +40,6 @@ describe('styles', () => {
 
             expect(inlineStyle('wksp/foo/bar/baz.css')).toBe(`<!-- ${createAnnotation({
                 type: 'style',
-                scope: StyleScope.Inline,
                 path: 'wksp/foo/bar/baz.css',
             })} -->`);
         });

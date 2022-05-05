@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
-import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('extractor', () => {
     describe('extract()', () => {
@@ -109,11 +109,7 @@ describe('extractor', () => {
         });
 
         it('ignores styles', () => {
-            const annotation = createAnnotation({
-                type: 'style',
-                path: 'wksp/foo.css',
-                scope: StyleScope.Inline,
-            });
+            const annotation = createAnnotation({ type: 'style', path: 'wksp/foo.css' });
 
             const [ extracted, annotations ] = extract(`
                 <!DOCTYPE html>

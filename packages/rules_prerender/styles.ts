@@ -1,4 +1,4 @@
-import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 import { getMap as getInlineStyleMap } from 'rules_prerender/packages/rules_prerender/inline_style_map';
 
 /**
@@ -20,7 +20,6 @@ export function inlineStyle(importPath: string): string {
     // Return an annotation with the real file path.
     const annotation = createAnnotation({
         type: 'style',
-        scope: StyleScope.Inline,
         path: filePath,
     });
     return `<!-- ${annotation} -->`;

@@ -4,7 +4,7 @@ import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
 import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
 import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
-import { createAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
+import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 const renderer = runfiles.resolvePackageRelative('renderer_test_binary.sh');
 
@@ -184,7 +184,6 @@ module.exports = async function* () {
             `${tmpDir.get()}/output/index.html`, 'utf8');
         const expectedAnnotation = createAnnotation({
             type: 'style',
-            scope: StyleScope.Inline,
             path: 'wksp/hello/world.css',
         });
         expect(index).toBe(`

@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('prerender_annotation', () => {
     describe('PrerenderAnnotation', () => {
@@ -71,27 +71,15 @@ describe('prerender_annotation', () => {
         });
 
         it('returns `true` when given two equivalent `StyleAnnotations`', () => {
-            const first: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Inline,
-            };
-            const second: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Inline,
-            };
+            const first: StyleAnnotation = { type: 'style', path: 'foo.css' };
+            const second: StyleAnnotation = { type: 'style', path: 'foo.css' };
 
             expect(annotationsEqual(first, second)).toBeTrue();
         });
 
         it('returns `false` when given different subtypes of `PrerenderAnnotation`', () => {
             const first: ScriptAnnotation = { type: 'script', path: 'foo' };
-            const second: StyleAnnotation = {
-                type: 'style',
-                path: 'foo',
-                scope: StyleScope.Inline,
-            };
+            const second: StyleAnnotation = { type: 'style', path: 'foo' };
 
             expect(annotationsEqual(first, second)).toBeFalse();
         });
@@ -104,16 +92,8 @@ describe('prerender_annotation', () => {
         });
 
         it('returns `false` when given `StyleAnnotations` with different paths', () => {
-            const first: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Inline,
-            };
-            const second: StyleAnnotation = {
-                type: 'style',
-                path: 'bar.css',
-                scope: StyleScope.Inline,
-            };
+            const first: StyleAnnotation = { type: 'style', path: 'foo.css' };
+            const second: StyleAnnotation = { type: 'style', path: 'bar.css' };
 
             expect(annotationsEqual(first, second)).toBeFalse();
         });
