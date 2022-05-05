@@ -129,64 +129,6 @@ describe('injector', () => {
         `.trim());
     });
 
-    it('injects styles', async () => {
-        await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
-        await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });
-
-        await fs.writeFile(`${tmpDir.get()}/input_dir/page.html`, `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Some title</title>
-    </head>
-    <body>
-        <h2>Hello, World!</h2>
-    </body>
-</html>
-        `.trim());
-
-        await fs.writeFile(`${tmpDir.get()}/foo.css`, `.foo { color: red; }`);
-        await fs.writeFile(`${tmpDir.get()}/bar.css`, `.bar { color: green; }`);
-        await fs.writeFile(`${tmpDir.get()}/baz.css`, `.baz { color: blue; }`);
-
-        const config: InjectorConfig = [
-            { type: 'style', path: `${tmpDir.get()}/foo.css` },
-            { type: 'style', path: `${tmpDir.get()}/bar.css` },
-            { type: 'style', path: `${tmpDir.get()}/baz.css` },
-        ];
-        await fs.writeFile(`${tmpDir.get()}/config.json`,
-            JSON.stringify(config, null /* replacer */, 4 /* tabSize */));
-
-        const { code, stdout, stderr } = await run({
-            inputDir: `${tmpDir.get()}/input_dir`,
-            config: `${tmpDir.get()}/config.json`,
-            outputDir: `${tmpDir.get()}/output_dir`,
-        });
-
-        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
-        expect(stdout).toBe('');
-        expect(stderr).toBe('');
-
-        const output = await fs.readFile(
-            `${tmpDir.get()}/output_dir/page.html`,
-            { encoding: 'utf8' },
-        );
-        expect(output).toBe(`
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Some title</title>
-    <style>.foo { color: red; }</style>
-<style>.bar { color: green; }</style>
-<style>.baz { color: blue; }</style>
-</head>
-    <body>
-        <h2>Hello, World!</h2>
-    </body>
-</html>
-        `.trim());
-    });
-
     it('injects multiple files', async () => {
         await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });
