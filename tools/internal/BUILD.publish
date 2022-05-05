@@ -56,11 +56,6 @@ alias(
     actual = "@npm//rules_prerender/bin:script-entry-generator",
 )
 
-alias(
-    name = "style_entry_generator",
-    actual = "@npm//rules_prerender/bin:style-entry-generator",
-)
-
 postcss_plugin(
     name = "postcss_import_plugin",
     node_require = "postcss-import",

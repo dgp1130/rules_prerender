@@ -87,7 +87,6 @@ pkg_npm(
         "//tools/internal:resource_injector",
         "//tools/internal:resource_packager",
         "//tools/internal:script_entry_generator",
-        "//tools/internal:style_entry_generator",
         "//tools/internal:publish_files",
     ],
 )
