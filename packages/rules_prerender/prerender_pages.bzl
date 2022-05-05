@@ -5,10 +5,8 @@ load(
     "JSEcmaScriptModuleInfo",
     "JSModuleInfo",
 )
-load("@npm//@bazel/postcss:index.bzl", "postcss_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
-load(":postcss_import_plugin.bzl", IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG")
 load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
 load(":web_resources.bzl", "web_resources")
 
@@ -146,28 +144,12 @@ def prerender_pages(
             ],
         )
 
-    bundled_css = "%s_styles_bundled.css" % name
-    if bundle_css:
-        # Bundle all styles.
-        postcss_binary(
-            name = "%s_styles" % name,
-            src = ":%s_styles.css" % prerender_name,
-            sourcemap = True,
-            output_name = bundled_css,
-            plugins = {
-                "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
-            },
-            testonly = testonly,
-            deps = [":%s_styles" % prerender_name],
-        )
-
     # Inject bundled JS and CSS into the HTML.
     injected_dir = "%s_injected" % name
     multi_inject_resources(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
         bundle = ":%s" % bundle if bundle_js else None,
-        styles = [bundled_css] if bundle_css else [],
         inline_styles = ":%s_inline_styles" % prerender_name,
         testonly = testonly,
     )
