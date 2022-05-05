@@ -21,7 +21,6 @@ def prerender_component(
     data = [],
     lib_deps = [],
     scripts = [],
-    styles = [],
     inline_styles = [],
     resources = [],
     deps = [],
@@ -52,8 +51,6 @@ def prerender_component(
         lib_deps: Dependencies for the source files.
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
-        styles: List of CSS files or `filegroup()`s of CSS files which can be
-            included in the prerendered HTML.
         inline_styles: List of `css_library()` targets which can be inlined in
             prerendered HTML.
         resources: List of `web_resources()` required by this component at
@@ -87,7 +84,7 @@ def prerender_component(
             name = prerender_lib,
             srcs = srcs,
             tsconfig = tsconfig,
-            data = data + styles,
+            data = data,
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
             visibility = visibility,
@@ -95,7 +92,7 @@ def prerender_component(
     elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
         js_library(
             name = prerender_lib,
-            srcs = srcs + data + styles, # `data` is included in `srcs`.
+            srcs = srcs + data, # `data` is included in `srcs`.
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
             visibility = visibility,
@@ -118,13 +115,6 @@ which are always allowed).
         name = "%s_scripts" % name,
         srcs = scripts,
         deps = ["%s_scripts" % absolute(dep) for dep in deps],
-        testonly = testonly,
-        visibility = visibility,
-    )
-
-    native.filegroup(
-        name = "%s_styles" % name,
-        srcs = styles + ["%s_styles" % absolute(dep) for dep in deps],
         testonly = testonly,
         visibility = visibility,
     )

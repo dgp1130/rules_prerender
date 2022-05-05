@@ -15,7 +15,6 @@ def prerender_pages_unbundled(
     data = [],
     lib_deps = [],
     scripts = [],
-    styles = [],
     inline_styles = [],
     resources = [],
     deps = [],
@@ -63,8 +62,6 @@ def prerender_pages_unbundled(
             scripts used by the page. This includes a generated file
             `%{name}_scripts.js` which acts as an entry point, importing all
             scripts that were included in the page via `includeScript()`.
-        %{name}_styles: A `filegroup()` containing all the CSS styles used by
-            the page.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
         %{name}_prerender_for_test: An alias to the `ts_library()` target which
@@ -81,8 +78,6 @@ def prerender_pages_unbundled(
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be included with
             the generated pages.
-        styles: List of CSS files or `filegroup()`s to included with the
-            prerendered HTML files.
         inline_styles: List of `css_library()` targets which can be inlined in
             prerendered HTML.
         resources: List of `web_resources()` rules required by the pages at
@@ -100,7 +95,6 @@ def prerender_pages_unbundled(
         data = data,
         lib_deps = lib_deps,
         scripts = scripts,
-        styles = styles,
         inline_styles = inline_styles,
         resources = resources,
         deps = deps,
@@ -109,7 +103,6 @@ def prerender_pages_unbundled(
     component_prerender = "%s_prerender" % component
     component_prerender_for_test = "%s_prerender_for_test" % component
     component_scripts = "%s_scripts" % component
-    component_styles = "%s_styles" % component
     component_inline_styles = "%s_inline_styles" % component
     component_resources = "%s_resources" % component
 

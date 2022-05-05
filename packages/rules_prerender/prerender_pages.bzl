@@ -17,7 +17,6 @@ def prerender_pages(
     data = [],
     lib_deps = [],
     scripts = [],
-    styles = [],
     inline_styles = [],
     resources = [],
     deps = [],
@@ -91,8 +90,6 @@ def prerender_pages(
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled with the
             generated pages.
-        styles: List of CSS files or `filegroup()`s to inject into the
-            prerendered HTML files.
         inline_styles: List of `css_library()` targets which can be inlined in
             prerendered HTML.
         resources: List of `web_resources()` rules required by the pages at
@@ -114,7 +111,6 @@ def prerender_pages(
         data = data,
         lib_deps = lib_deps,
         scripts = scripts,
-        styles = styles,
         inline_styles = inline_styles,
         resources = resources,
         deps = deps,
