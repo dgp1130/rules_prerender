@@ -6,7 +6,7 @@ import { getColor, useWebDriver } from 'rules_prerender/common/testing/webdriver
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
-describe('inline_styles', () => {
+describe('styles', () => {
     const devserver = useDevserver(devserverBinary);
     const wd = useWebDriver(devserver);
 

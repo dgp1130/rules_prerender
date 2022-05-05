@@ -1,5 +1,0 @@
-@import url("rules_prerender/examples/inline_styles/dep.css");
-
-div {
-    color: var(--favorite-color);
-}
