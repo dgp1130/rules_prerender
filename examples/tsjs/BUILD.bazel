@@ -10,7 +10,6 @@ prerender_pages(
         ":ts_parent_script",
         ":js_parent_script",
     ],
-    bundle_css = False, # Optimization: No CSS styling on this page.
     lib_deps = ["//packages/rules_prerender"],
     deps = [
         "//examples/tsjs/js_parent",

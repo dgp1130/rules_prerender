@@ -11,7 +11,6 @@ prerender_pages(
     name = "page",
     src = "page.ts",
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
-    bundle_css = False, # Optimization: No CSS styling on this page.
     resources = [":resources"],
     lib_deps = ["//packages/rules_prerender"],
     deps = [

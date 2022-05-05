@@ -21,7 +21,6 @@ def prerender_pages(
     resources = [],
     deps = [],
     bundle_js = True,
-    bundle_css = True,
     testonly = None,
     visibility = None,
 ):
@@ -97,8 +96,6 @@ def prerender_pages(
         deps: `prerender_component()` dependencies for the generated pages.
         bundle_js: Whether or not to bundle and inject JavaScript files.
             Defaults to `True`.
-        bundle_css: Whether or not to bundle and inject CSS files. Defaults to
-            `True`.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """

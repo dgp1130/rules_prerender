@@ -7,7 +7,6 @@ prerender_pages(
     src = "page.ts",
     styles = [":styles"],
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
-    bundle_css = False, # Optimization: No global CSS styling on this page.
     lib_deps = ["//packages/rules_prerender"],
 )
 
