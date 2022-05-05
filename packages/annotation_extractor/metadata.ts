@@ -26,10 +26,12 @@ export function assembleMetadata(annotations: Set<PrerenderAnnotation>):
                 });
                 break;
             } case 'style': {
-                metadata.styles.push({
-                    path: annotation.path,
-                });
-                break;
+                // Annotation extractor should leave style annotations alone, they
+                // shouldn't be included in the metadata at all.
+                throw new Error(`
+Tried to add styles to \`PrerenderMetadata\`, but styles should be handled elsewhere in
+the build pipeline.
+                `.trim());
             } default: {
                 return assertNever(type);
             }

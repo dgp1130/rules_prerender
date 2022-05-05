@@ -23,21 +23,10 @@ describe('metadata', () => {
             }));
         });
 
-        it('includes style annotations into the result metadata object', () => {
-            const metadata = assembleMetadata(new Set([
-                mockStyleAnnotation({ path: 'foo.css' }),
-                mockStyleAnnotation({ path: 'bar.css' }),
-                mockStyleAnnotation({ path: 'baz.css' }),
-            ]));
-
-            expect(metadata).toEqual(mockPrerenderMetadata({
-                scripts: [],
-                styles: [
-                    mockStyleMetadata({ path: 'foo.css' }),
-                    mockStyleMetadata({ path: 'bar.css' }),
-                    mockStyleMetadata({ path: 'baz.css' }),
-                ],
-            }));
+        it('throws an error when given style annotations', () => {
+            const style = mockStyleAnnotation({ path: 'foo.css' });
+            expect(() => assembleMetadata(new Set([ style ])))
+                .toThrowError(/Tried to add styles/);
         });
     });
 });
