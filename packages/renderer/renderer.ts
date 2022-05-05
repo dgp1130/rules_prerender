@@ -106,7 +106,7 @@ main(async () => {
 
         // Give a nicer error message for `InlineStyleNotFoundErrors`.
         console.error(`
-Inline style "${err.importPath}" was not in the inline style map. Did you forget to depend on it in \`inline_styles\`? CSS files available to inline are:
+Inline style "${err.importPath}" was not in the inline style map. Did you forget to depend on it in \`styles\`? CSS files available to inline are:
 
 ${err.availableImportPaths.join('\n')}
         `.trim());

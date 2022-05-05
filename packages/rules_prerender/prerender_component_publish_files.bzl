@@ -74,7 +74,7 @@ def prerender_component_publish_files(
             ":%s" % prerender_js,
             ":%s" % scripts_dts,
             ":%s" % scripts_js,
-            "%s_inline_styles" % absolute_name, # inline style `*.css` files.
+            "%s_styles" % absolute_name, # inlined `*.css` files.
             "%s_resources" % absolute_name, # resource files.
         ],
         testonly = testonly,

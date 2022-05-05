@@ -21,7 +21,7 @@ def prerender_component(
     data = [],
     lib_deps = [],
     scripts = [],
-    inline_styles = [],
+    styles = [],
     resources = [],
     deps = [],
     testonly = None,
@@ -51,8 +51,8 @@ def prerender_component(
         lib_deps: Dependencies for the source files.
         scripts: List of client-side JavaScript libraries which can be included
             in the prerendered HTML.
-        inline_styles: List of `css_library()` targets which can be inlined in
-            prerendered HTML.
+        styles: List of `css_library()` targets which can be inlined in prerendered
+            HTML.
         resources: List of `web_resources()` required by this component at
             runtime.
         deps: `prerender_component()` dependencies for this component.
@@ -120,11 +120,11 @@ which are always allowed).
     )
 
     _inline_css_reexport(
-        name = "%s_inline_styles" % name,
-        inline_styles = inline_styles,
+        name = "%s_styles" % name,
+        styles = styles,
         testonly = testonly,
         visibility = visibility,
-        deps = ["%s_inline_styles" % absolute(dep) for dep in deps],
+        deps = ["%s_styles" % absolute(dep) for dep in deps],
     )
 
     web_resources(
@@ -217,17 +217,17 @@ _js_reexport = rule(
     """,
 )
 
-def _inline_css_reexport(name, inline_styles, deps, testonly = None, visibility = None):
-    for inline_style in inline_styles:
-        if inline_style.endswith(".css"):
-            fail(("`inline_styles` must be `css_library()` targets, *not* `*.css`"
-                + " source files (%s)") % inline_style)
+def _inline_css_reexport(name, styles, deps, testonly = None, visibility = None):
+    for style in styles:
+        if style.endswith(".css"):
+            fail(("`styles` must be `css_library()` targets, *not* `*.css`"
+                + " source files (%s)") % style)
 
     binaries = "%s_bin" % name
     css_binaries(
         name = binaries,
         testonly = testonly,
-        deps = inline_styles,
+        deps = styles,
     )
 
     css_group(

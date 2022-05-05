@@ -6,7 +6,7 @@ prerender_component(
     name = "base",
     srcs = ["base.ts"],
     lib_deps = ["//packages/rules_prerender"],
-    inline_styles = [":styles"],
+    styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
     deps = [
         "//examples/site/components/footer",

@@ -28,7 +28,7 @@ def _multi_inject_resources_impl(ctx):
         arguments = [args],
         inputs = [ctx.file.input_dir, config] +
                  ([ctx.file.bundle] if ctx.file.bundle else []) +
-                 ctx.files.inline_styles,
+                 ctx.files.styles,
         outputs = [output_dir],
     )
 
@@ -46,7 +46,7 @@ multi_inject_resources = rule(
         ),
         "bundle": attr.label(allow_single_file = True),
         "scripts": attr.string_list(),
-        "inline_styles": attr.label(),
+        "styles": attr.label(),
         "_injector": attr.label(
             default = "//tools/internal:resource_injector",
             executable = True,

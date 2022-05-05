@@ -10,7 +10,7 @@ def prerender_resources(
     name,
     entry_point,
     data,
-    inline_styles = None,
+    styles = None,
     testonly = None,
     visibility = None,
 ):
@@ -59,7 +59,7 @@ def prerender_resources(
             that file into the current workspace and then use the copy as an
             entry point.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-        inline_styles: A `css_group()` of inline styles used by the entry point program.
+        styles: A `css_group()` of inline styles used by the entry point program.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
@@ -72,18 +72,18 @@ def prerender_resources(
         # Not supported in public API because this would require exposing `css_group()` or
         # `css_binaries()` and is only useful for prerendering HTML pages which should be
         # done with `prerender_pages()`, not `prerender_resources()`.
-        inline_styles = None,
+        styles = None,
     )
 
 def prerender_resources_internal(
     name,
     entry_point,
     data,
-    inline_styles = None,
+    styles = None,
     testonly = None,
     visibility = None,
 ):
-    """Internal version of `prerender_resources()` which allows `inline_styles` usage."""
+    """Internal version of `prerender_resources()` which allows `styles` usage."""
     # Validate `entry_point`.
     if "/" not in entry_point or not is_js_file(entry_point):
         fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
@@ -105,7 +105,7 @@ def prerender_resources_internal(
     _prerender_resources(
         name = name,
         entry_point = entry_point,
-        inline_styles = inline_styles,
+        styles = styles,
         renderer = ":%s" % binary,
         testonly = testonly,
         visibility = visibility,
@@ -117,8 +117,8 @@ def _prerender_resources_impl(ctx):
     args = ctx.actions.args()
     args.add("--entry-point", "%s/%s" % (ctx.workspace_name, ctx.attr.entry_point))
     args.add("--output-dir", output_dir.path)
-    if ctx.attr.inline_styles:
-        import_map = ctx.attr.inline_styles[CssImportMapInfo].import_map
+    if ctx.attr.styles:
+        import_map = ctx.attr.styles[CssImportMapInfo].import_map
         for (import_path, file) in import_map.items():
             args.add("--inline-style-import", import_path)
             args.add("--inline-style-path", file.path)
@@ -144,7 +144,7 @@ _prerender_resources = rule(
     implementation = _prerender_resources_impl,
     attrs = {
         "entry_point": attr.string(mandatory = True),
-        "inline_styles": attr.label(providers = [CssImportMapInfo]),
+        "styles": attr.label(providers = [CssImportMapInfo]),
         "renderer": attr.label(
             mandatory = True,
             executable = True,

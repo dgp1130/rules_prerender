@@ -13,7 +13,7 @@ prerender_pages(
     src = "page.ts",
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],
-    inline_styles = [":styles"],
+    styles = [":styles"],
     resources = [":resources"],
     testonly = True,
     deps = ["//examples/testonly/component"],

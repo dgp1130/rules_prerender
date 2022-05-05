@@ -290,7 +290,7 @@ module.exports = async function* () {
         expect(code).toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
         expect(stderr).toBe(`
-Inline style "wksp/does/not/exist.css" was not in the inline style map. Did you forget to depend on it in \`inline_styles\`? CSS files available to inline are:
+Inline style "wksp/does/not/exist.css" was not in the inline style map. Did you forget to depend on it in \`styles\`? CSS files available to inline are:
 
 wksp/foo/bar/baz.css
 wksp/some/other/file.css

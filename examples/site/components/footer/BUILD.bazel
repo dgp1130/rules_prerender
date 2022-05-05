@@ -9,7 +9,7 @@ prerender_component(
         "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
-    inline_styles = [":styles"],
+    styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
 )
 

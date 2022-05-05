@@ -83,7 +83,7 @@ prerender_component(
     # Client-side JavaScript to be executed in the browser.
     scripts = [":scripts"],
     # Styles for the component.
-    inline_styles = [":styles"],
+    styles = [":styles"],
     # Other resources required by the component.
     resources = [":resources"],
 )

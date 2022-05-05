@@ -7,7 +7,7 @@ prerender_pages(
         "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
-    inline_styles = [":styles"],
+    styles = [":styles"],
     resources = [":resources"],
     visibility = ["//examples/site:__pkg__"],
     deps = [

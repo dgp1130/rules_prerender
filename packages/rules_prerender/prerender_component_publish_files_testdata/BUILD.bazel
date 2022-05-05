@@ -16,7 +16,7 @@ prerender_component(
     srcs = ["component.ts"],
     lib_deps = [":prerender_dep"],
     scripts = [":scripts"],
-    inline_styles = [":styles"],
+    styles = [":styles"],
     resources = [":resources"],
 )
 

@@ -15,7 +15,7 @@ def prerender_pages_unbundled(
     data = [],
     lib_deps = [],
     scripts = [],
-    inline_styles = [],
+    styles = [],
     resources = [],
     deps = [],
     testonly = None,
@@ -78,8 +78,8 @@ def prerender_pages_unbundled(
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be included with
             the generated pages.
-        inline_styles: List of `css_library()` targets which can be inlined in
-            prerendered HTML.
+        styles: List of `css_library()` targets which can be inlined in prerendered
+            HTML.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
         deps: `prerender_component()` dependencies for the generated pages.
@@ -95,7 +95,7 @@ def prerender_pages_unbundled(
         data = data,
         lib_deps = lib_deps,
         scripts = scripts,
-        inline_styles = inline_styles,
+        styles = styles,
         resources = resources,
         deps = deps,
         testonly = testonly,
@@ -103,7 +103,7 @@ def prerender_pages_unbundled(
     component_prerender = "%s_prerender" % component
     component_prerender_for_test = "%s_prerender_for_test" % component
     component_scripts = "%s_scripts" % component
-    component_inline_styles = "%s_inline_styles" % component
+    component_styles = "%s_styles" % component
     component_resources = "%s_resources" % component
 
     native.alias(
@@ -122,7 +122,7 @@ def prerender_pages_unbundled(
     prerender_resources_internal(
         name = annotated,
         entry_point = file_path_of(absolute(js_src)),
-        inline_styles = ":%s" % component_inline_styles,
+        styles = ":%s" % component_styles,
         data = [":%s" % component_prerender],
         testonly = testonly,
     )
@@ -160,11 +160,11 @@ def prerender_pages_unbundled(
         visibility = visibility,
     )
 
-    # Reexport all inlined styles at `%{name}_inline_styles`.
-    inline_styles = "%s_inline_styles" % name
+    # Reexport all inlined styles at `%{name}_styles`.
+    client_styles = "%s_styles" % name
     native.alias(
-        name = inline_styles,
-        actual = ":%s" % component_inline_styles,
+        name = client_styles,
+        actual = ":%s" % component_styles,
         testonly = testonly,
         visibility = visibility,
     )

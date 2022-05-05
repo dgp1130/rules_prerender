@@ -17,7 +17,7 @@ def prerender_pages(
     data = [],
     lib_deps = [],
     scripts = [],
-    inline_styles = [],
+    styles = [],
     resources = [],
     deps = [],
     bundle_js = True,
@@ -90,8 +90,8 @@ def prerender_pages(
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled with the
             generated pages.
-        inline_styles: List of `css_library()` targets which can be inlined in
-            prerendered HTML.
+        styles: List of `css_library()` targets which can be inlined in prerendered
+            HTML.
         resources: List of `web_resources()` rules required by the pages at
             runtime.
         deps: `prerender_component()` dependencies for the generated pages.
@@ -111,7 +111,7 @@ def prerender_pages(
         data = data,
         lib_deps = lib_deps,
         scripts = scripts,
-        inline_styles = inline_styles,
+        styles = styles,
         resources = resources,
         deps = deps,
         testonly = testonly,
@@ -146,7 +146,7 @@ def prerender_pages(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
         bundle = ":%s" % bundle if bundle_js else None,
-        inline_styles = ":%s_inline_styles" % prerender_name,
+        styles = ":%s_styles" % prerender_name,
         testonly = testonly,
     )
 
