@@ -1,5 +1,5 @@
 import { PrerenderAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { PrerenderMetadata, ScriptMetadata, StyleMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { PrerenderMetadata, ScriptMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 /**
  * Converts the provided {@link Set} of {@link PrerenderAnnotation} into a
@@ -13,7 +13,6 @@ export function assembleMetadata(annotations: Set<PrerenderAnnotation>):
     // Manually type metadata so it is mutable.
     const metadata = {
         scripts: [] as ScriptMetadata[],
-        styles: [] as StyleMetadata[],
     };
 
     // Add each annotation to its relevant place in the metadata object.

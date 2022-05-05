@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { mockScriptAnnotation, mockStyleAnnotation } from 'rules_prerender/common/models/prerender_annotation_mock';
-import { mockPrerenderMetadata, mockScriptMetadata, mockStyleMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
+import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
 import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
 
 describe('metadata', () => {
@@ -19,7 +19,6 @@ describe('metadata', () => {
                     mockScriptMetadata({ path: 'bar.js' }),
                     mockScriptMetadata({ path: 'baz.js' }),
                 ],
-                styles: [],
             }));
         });
 

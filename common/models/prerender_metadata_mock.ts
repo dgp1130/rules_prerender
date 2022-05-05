@@ -3,7 +3,7 @@
  * @see /README.md#Mocking
  */
 
-import { PrerenderMetadata, ScriptMetadata, StyleMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { PrerenderMetadata, ScriptMetadata } from 'rules_prerender/common/models/prerender_metadata';
 
 /** Mocks the {@link PrerenderMetadata} object with the given overrides. */
 export function mockPrerenderMetadata(
@@ -11,7 +11,6 @@ export function mockPrerenderMetadata(
 ): PrerenderMetadata {
     return {
         scripts: [],
-        styles: [],
         ...overrides,
     };
 }
@@ -21,15 +20,6 @@ export function mockScriptMetadata(overrides: Partial<ScriptMetadata> = {}):
         ScriptMetadata {
     return {
         path: 'path/to/mocked/script',
-        ...overrides,
-    };
-}
-
-/** Mocks the {@link StyleMetadata} object with the given overrides. */
-export function mockStyleMetadata(overrides: Partial<StyleMetadata> = {}):
-        StyleMetadata {
-    return {
-        path: 'path/to/mocked/style.css',
         ...overrides,
     };
 }
