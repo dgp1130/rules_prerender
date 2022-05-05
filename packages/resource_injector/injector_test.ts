@@ -236,7 +236,7 @@ describe('injector', () => {
             `.trim());
         });
 
-        it('throws on any annotations other than inline style annotations', async () => {
+        it('throws on any annotations other than style annotations', async () => {
             // Should fail when given a script annotation.
             const scriptAnnotation = createAnnotation({
                 type: 'script',
@@ -256,29 +256,7 @@ describe('injector', () => {
             `.trim();
             await expectAsync(inject(inputWithScriptAnnotation, []))
                 .toBeRejectedWithError(
-                    /Injector found an annotation which is not an inline style/);
-
-            // Should fail when given a global style annotation.
-            const globalStyleAnnotation = createAnnotation({
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Global,
-            });
-            const inputWithGlobalStyleAnnotation = `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Some title</title>
-    </head>
-    <body>
-        <h2>Hello, World!</h2>
-        <!-- ${globalStyleAnnotation} -->
-    </body>
-</html>
-            `.trim();
-            await expectAsync(inject(inputWithGlobalStyleAnnotation, []))
-                .toBeRejectedWithError(
-                    /Injector found an annotation which is not an inline style/);
+                    /Injector found an annotation which is not a style/);
         });
     });
 });

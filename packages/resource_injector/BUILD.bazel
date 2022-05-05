@@ -58,7 +58,6 @@ ts_library(
         ":config",
         "//common:fs",
         "//common:prerender_annotation_walker",
-        "//common/models:prerender_annotation",
         "@npm//node-html-parser",
     ],
 )

@@ -1,7 +1,6 @@
 import * as fs from 'rules_prerender/common/fs';
 import { HTMLElement, parse } from 'node-html-parser';
 import { InjectorConfig, InjectScript, InjectStyle } from 'rules_prerender/packages/resource_injector/config';
-import { isInlineStyle } from 'rules_prerender/common/models/prerender_annotation';
 import { AnnotationNode, walkAllAnnotations } from 'rules_prerender/common/prerender_annotation_walker';
 
 /**
@@ -132,8 +131,8 @@ async function replaceInlineStyleAnnotations(
 
         // Only inline styles should still be in the HTML, everything else should have
         // been extracted already.
-        if (!isInlineStyle(annotation)){
-            throw new Error(`Injector found an annotation which is not an inline style (actually ${
+        if (annotation.type !== 'style'){
+            throw new Error(`Injector found an annotation which is not a style (actually ${
                 annotation.type}). This should have been handled earlier in the pipeline.\n${
                 JSON.stringify(annotation, null, 4)}`);
         }
