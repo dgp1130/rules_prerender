@@ -8,7 +8,6 @@ def inject_resources(
     name,
     input,
     scripts = [],
-    styles = [],
     output = None,
     **kwargs
 ):
@@ -38,7 +37,6 @@ def inject_resources(
         name = injected,
         input_dir = ":%s" % input_dir,
         scripts = scripts,
-        styles = styles,
     )
 
     # Extract the one file back out into its own label.

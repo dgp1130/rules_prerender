@@ -6,9 +6,7 @@ def _multi_inject_resources_impl(ctx):
     # Generate configuration JSON from inputs.
     script_injections = [{"type": "script", "path": script}
                          for script in ctx.attr.scripts]
-    style_injections = [{"type": "style", "path": style.path}
-                         for style in ctx.files.styles]
-    injections = script_injections + style_injections
+    injections = script_injections
 
     # Write the configuration to a file.
     config = ctx.actions.declare_file("%s_config.json" % ctx.attr.name)
@@ -30,7 +28,6 @@ def _multi_inject_resources_impl(ctx):
         arguments = [args],
         inputs = [ctx.file.input_dir, config] +
                  ([ctx.file.bundle] if ctx.file.bundle else []) +
-                 ctx.files.styles +
                  ctx.files.inline_styles,
         outputs = [output_dir],
     )
@@ -49,7 +46,6 @@ multi_inject_resources = rule(
         ),
         "bundle": attr.label(allow_single_file = True),
         "scripts": attr.string_list(),
-        "styles": attr.label_list(allow_files = True),
         "inline_styles": attr.label(),
         "_injector": attr.label(
             default = "//tools/internal:resource_injector",
