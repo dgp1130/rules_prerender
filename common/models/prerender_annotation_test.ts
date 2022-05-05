@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation, StyleScope, isInlineStyle } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation, StyleScope } from 'rules_prerender/common/models/prerender_annotation';
 
 describe('prerender_annotation', () => {
     describe('PrerenderAnnotation', () => {
@@ -116,24 +116,6 @@ describe('prerender_annotation', () => {
             };
 
             expect(annotationsEqual(first, second)).toBeFalse();
-        });
-    });
-
-    describe('isInlineStyle()', () => {
-        it('returns `true` when given an inline style', () => {
-            const annotation: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Inline,
-            };
-
-            expect(isInlineStyle(annotation)).toBeTrue();
-        });
-
-        it('returns `false` when given a `ScriptAnnotation`', () => {
-            const annotation: ScriptAnnotation = { type: 'script', path: 'foo.js' };
-
-            expect(isInlineStyle(annotation)).toBeFalse();
         });
     });
 });
