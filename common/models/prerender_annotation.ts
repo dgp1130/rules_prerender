@@ -102,9 +102,6 @@ export enum StyleScope {
      * DOM if present.
      */
     Inline = 'inline',
-
-    /** Stylesheet applies globally to the entire page. */
-    Global = 'global',
 }
 
 type InlineStyleAnnotation = StyleAnnotation & { scope: StyleScope.Inline };

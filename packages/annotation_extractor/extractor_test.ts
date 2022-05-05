@@ -108,16 +108,11 @@ describe('extractor', () => {
             ]);
         });
 
-        it('extracts style annotations while ignoring inline styles', () => {
-            const inlineAnnotation = createAnnotation({
+        it('ignores styles', () => {
+            const annotation = createAnnotation({
                 type: 'style',
                 path: 'wksp/foo.css',
                 scope: StyleScope.Inline,
-            });
-            const globalAnnotation = createAnnotation({
-                type: 'style',
-                path: 'wksp/bar.css',
-                scope: StyleScope.Global,
             });
 
             const [ extracted, annotations ] = extract(`
@@ -127,8 +122,7 @@ describe('extractor', () => {
                         <title>Title</title>
                     </head>
                     <body>
-                        <!-- ${inlineAnnotation} -->
-                        <!-- ${globalAnnotation} -->
+                        <!-- ${annotation} -->
                     </body>
                 </html>
             `);
@@ -140,18 +134,11 @@ describe('extractor', () => {
                         <title>Title</title>
                     </head>
                     <body>
-                        <!-- ${inlineAnnotation} -->
-                        
+                        <!-- ${annotation} -->
                     </body>
                 </html>
             `);
-            expect(Array.from(annotations.values())).toEqual([
-                {
-                    type: 'style',
-                    path: 'wksp/bar.css',
-                    scope: StyleScope.Global,
-                },
-            ]);
+            expect(Array.from(annotations.values())).toEqual([]);
         });
     });
 });

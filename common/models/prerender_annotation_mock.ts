@@ -35,7 +35,7 @@ export function mockStyleAnnotation(overrides: Partial<StyleAnnotation> = {}):
     return {
         type: 'style',
         path: 'path/to/mocked/style.css',
-        scope: StyleScope.Global,
+        scope: StyleScope.Inline,
         ...overrides,
     };
 }

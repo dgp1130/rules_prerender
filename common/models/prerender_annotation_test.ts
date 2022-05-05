@@ -74,12 +74,12 @@ describe('prerender_annotation', () => {
             const first: StyleAnnotation = {
                 type: 'style',
                 path: 'foo.css',
-                scope: StyleScope.Global,
+                scope: StyleScope.Inline,
             };
             const second: StyleAnnotation = {
                 type: 'style',
                 path: 'foo.css',
-                scope: StyleScope.Global,
+                scope: StyleScope.Inline,
             };
 
             expect(annotationsEqual(first, second)).toBeTrue();
@@ -90,7 +90,7 @@ describe('prerender_annotation', () => {
             const second: StyleAnnotation = {
                 type: 'style',
                 path: 'foo',
-                scope: StyleScope.Global,
+                scope: StyleScope.Inline,
             };
 
             expect(annotationsEqual(first, second)).toBeFalse();
@@ -107,26 +107,11 @@ describe('prerender_annotation', () => {
             const first: StyleAnnotation = {
                 type: 'style',
                 path: 'foo.css',
-                scope: StyleScope.Global,
+                scope: StyleScope.Inline,
             };
             const second: StyleAnnotation = {
                 type: 'style',
                 path: 'bar.css',
-                scope: StyleScope.Global,
-            };
-
-            expect(annotationsEqual(first, second)).toBeFalse();
-        });
-
-        it('returns `false` when given `StyleAnnotations` with different scopes', () => {
-            const first: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Global,
-            };
-            const second: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
                 scope: StyleScope.Inline,
             };
 
@@ -147,16 +132,6 @@ describe('prerender_annotation', () => {
 
         it('returns `false` when given a `ScriptAnnotation`', () => {
             const annotation: ScriptAnnotation = { type: 'script', path: 'foo.js' };
-
-            expect(isInlineStyle(annotation)).toBeFalse();
-        });
-
-        it('returns `false` when given a globally scoped `StyleAnnotation`', () => {
-            const annotation: StyleAnnotation = {
-                type: 'style',
-                path: 'foo.css',
-                scope: StyleScope.Global,
-            };
 
             expect(isInlineStyle(annotation)).toBeFalse();
         });
