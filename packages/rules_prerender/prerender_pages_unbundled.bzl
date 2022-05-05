@@ -3,7 +3,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
-load(":entry_points.bzl", "script_entry_point", "style_entry_point")
+load(":entry_points.bzl", "script_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
@@ -163,27 +163,6 @@ def prerender_pages_unbundled(
         name = client_scripts,
         srcs = [script_entry],
         deps = [":%s" % component_scripts],
-        testonly = testonly,
-        visibility = visibility,
-    )
-
-    # Generate the entry point importing all included styles.
-    client_styles = "%s_styles" % name
-    style_entry = "%s.css" % client_styles
-    style_entry_point(
-        name = "%s_entry" % client_styles,
-        metadata = metadata,
-        output_entry_point = style_entry,
-        testonly = testonly,
-    )
-
-    # Reexport all included styles at `%{name}_styles`.
-    native.filegroup(
-        name = client_styles,
-        srcs = [
-            style_entry,
-            ":%s" % component_styles,
-        ],
         testonly = testonly,
         visibility = visibility,
     )
