@@ -32,8 +32,8 @@ publish_files(
 )
 
 bzl_library(
-    name = "entry_points",
-    srcs = ["entry_points.bzl"],
+    name = "script_entry_point",
+    srcs = ["script_entry_point.bzl"],
 )
 
 bzl_library(
@@ -101,7 +101,7 @@ bzl_library(
     srcs = ["prerender_pages_unbundled.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
-        ":entry_points",
+        ":script_entry_point",
         ":prerender_component",
         ":web_resources",
     ],

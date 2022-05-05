@@ -3,9 +3,9 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
-load(":entry_points.bzl", "script_entry_point")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
+load(":script_entry_point.bzl", "script_entry_point")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
 def prerender_pages_unbundled(
