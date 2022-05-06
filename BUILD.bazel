@@ -1,11 +1,18 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "pkg_npm")
 load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
+# exports_files([".parcelrc"], visibility = ["//packages/rules_prerender/css:__subpackages__"])
+
+copy_to_bin(
+    name = "parcelrc",
+    srcs = [".parcelrc"],
+    visibility = ["//packages/rules_prerender/css:__subpackages__"],
+)
 
 bzl_library(
     name = "rules_prerender",
