@@ -1,5 +1,6 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//:index.bzl", "css_library", "prerender_pages", "web_resources_devserver")
+load("//packages/rules_prerender/css:parcel.bzl", "parcel")
 load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
@@ -13,12 +14,27 @@ prerender_pages(
 css_library(
     name = "styles",
     srcs = ["styles.css"],
-    deps = [":dep"],
+    deps = [
+        ":dep",
+        ":generated",
+    ],
 )
 
 css_library(
     name = "dep",
     srcs = ["dep.css"],
+)
+
+css_library(
+    name = "generated",
+    srcs = ["generated.css"],
+)
+
+genrule(
+    name = "generated_genrule",
+    srcs = [],
+    outs = ["generated.css"],
+    cmd = "echo '.foo { color: blue; }' > $@",
 )
 
 web_resources_devserver(

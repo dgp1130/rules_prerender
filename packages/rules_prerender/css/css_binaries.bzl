@@ -8,6 +8,7 @@ load(
 load(":css_group.bzl", "css_group")
 load(":css_map.bzl", "css_map")
 load(":css_providers.bzl", "CssInfo")
+load(":parcel.bzl", "parcel")
 
 def css_binaries(
     name,
@@ -102,22 +103,13 @@ def _css_binary(
         tags = tags,
     )
 
-    # Compile the CSS. This only compiles one library, but that library may have many
-    # source files, each one should be compiled into its own output, which requires
-    # `postcss_multi_binary()` even though `postcss_binary()` sounds like it would be
-    # sufficient here.
-    binary = "%s_postcss" % name
-    postcss_multi_binary(
+    # Bundle the CSS binary.
+    binary = "%s_bundled" % name
+    parcel(
         name = binary,
-        srcs = [dep],
-        output_pattern = "{name}",
-        sourcemap = sourcemap,
-        plugins = {
-            "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
-        },
         testonly = testonly,
         tags = tags,
-        deps = [":%s" % css_transitive_deps],
+        dep = dep,
     )
 
     # Return the binary outputs with a map of import name -> file path.
