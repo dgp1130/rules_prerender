@@ -50,7 +50,7 @@ multi_inject_resources = rule(
         "_injector": attr.label(
             default = "//tools/internal:resource_injector",
             executable = True,
-            cfg = "exec",
+            cfg = "host", # TODO(#48): Use `exec`.
         ),
     },
 )

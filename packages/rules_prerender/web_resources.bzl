@@ -199,7 +199,7 @@ _web_resources_rule = rule(
         "_packager": attr.label(
             default = "//tools/internal:resource_packager",
             executable = True,
-            cfg = "exec",
+            cfg = "host", # TODO(#48): Use `exec`.
         ),
     },
 )
