@@ -1,6 +1,5 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:publish.bzl", "publish_files")
 
 publish_files(
@@ -48,29 +47,4 @@ bzl_library(
     name = "css_providers",
     srcs = ["css_providers.bzl"],
     visibility = ["//packages/rules_prerender:__pkg__"],
-)
-
-nodejs_binary(
-    name = "parcel",
-    entry_point = "parcel.ts",
-    link_workspace_root = True,
-    visibility = ["//visibility:public"],
-    data = [
-        ":parcel_lib",
-        "@npm//yargs",
-    ],
-)
-
-ts_library(
-    name = "parcel_lib",
-    srcs = ["parcel.ts"],
-    data = ["parcel_config.json5"],
-    deps = [
-        "//common:binary",
-        "@npm//@parcel/config-default",
-        "@npm//@parcel/core",
-        "@npm//@parcel/fs",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-    ],
 )

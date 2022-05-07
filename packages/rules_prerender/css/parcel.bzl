@@ -5,6 +5,9 @@ load(":css_providers.bzl", "CssInfo")
 def _parcel_impl(ctx):
     # Compile each direct source as an entry point with its own output.
     sources = [source for source in ctx.attr.dep[CssInfo].direct_sources]
+    if not sources:
+        fail("`parcel()` requires at least one source file, but got none at %s" % ctx.attr.dep.label)
+
     outputs = []
     for source in sources:
         outputs.append(ctx.actions.declare_file(source.basename))
@@ -12,16 +15,25 @@ def _parcel_impl(ctx):
     # Define arguments.
     args = ctx.actions.args()
     args.add("--bazel_patch_module_resolver")
-    for (source, output) in zip(sources, outputs):
-        args.add("--input", source)
-        args.add("--output", output)
+    args.add("build")
+    args.add_all(sources)
+
+    # All output and in the same directory with the same names as their inputs.
+    args.add("--dist-dir", outputs[0].dirname)
+
+    # TODO: Should print warnings?
+    # Only print errors so the bundle is silent when successful.
+    args.add("--log-level", "error")
+
+    # Disable Parcel cache because we can rely on Bazel caching.
+    args.add("--no-cache")
 
     # Bundle the CSS with Parcel.
     run_node(
         ctx,
-        mnemonic = "ParcelCss",
-        progress_message = "Bundling CSS with Parcel %s" % ctx.label,
-        executable = "_binary",
+        mnemonic = "BundleCss",
+        progress_message = "Bundling CSS %s" % ctx.label,
+        executable = "_parcel",
         arguments = [args],
         inputs = ctx.attr.dep[CssInfo].transitive_sources,
         outputs = outputs,
@@ -37,8 +49,8 @@ parcel = rule(
             providers = [CssInfo],
             doc = "The `css_library()` to bundle all direct sources of.",
         ),
-        "_binary": attr.label(
-            default = "//packages/rules_prerender/css:parcel",
+        "_parcel": attr.label(
+            default = "@npm//parcel/bin:parcel",
             executable = True,
             cfg = "exec",
         ),
