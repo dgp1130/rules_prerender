@@ -6,12 +6,11 @@ load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
-# exports_files([".parcelrc"], visibility = ["//packages/rules_prerender/css:__subpackages__"])
 
 copy_to_bin(
-    name = "parcelrc",
-    srcs = [".parcelrc"],
-    visibility = ["//packages/rules_prerender/css:__subpackages__"],
+    name = "parcel_package_json",
+    srcs = ["package.parcel.json"],
+    visibility = ["//visibility:public"],
 )
 
 bzl_library(

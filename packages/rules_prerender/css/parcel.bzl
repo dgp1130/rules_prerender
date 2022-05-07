@@ -21,6 +21,11 @@ def _parcel_impl(ctx):
     # All output and in the same directory with the same names as their inputs.
     args.add("--dist-dir", outputs[0].dirname)
 
+    # Use custom config file.
+    config = [file for file in ctx.files._config
+              if file.basename == "parcel_config.json5"][0]
+    args.add("--config", "./%s" % config.path)
+
     # TODO: Should print warnings?
     # Only print errors so the bundle is silent when successful.
     args.add("--log-level", "error")
@@ -35,7 +40,9 @@ def _parcel_impl(ctx):
         progress_message = "Bundling CSS %s" % ctx.label,
         executable = "_parcel",
         arguments = [args],
-        inputs = ctx.attr.dep[CssInfo].transitive_sources,
+        inputs = depset(ctx.files._config + ctx.files._package_json, transitive = [
+            ctx.attr.dep[CssInfo].transitive_sources,
+        ]),
         outputs = outputs,
     )
 
@@ -53,6 +60,15 @@ parcel = rule(
             default = "@npm//parcel/bin:parcel",
             executable = True,
             cfg = "exec",
+        ),
+        "_config": attr.label(
+            # TODO: Make this work with external use cases.
+            default = "//packages/rules_prerender/css:parcel_config",
+        ),
+        "_package_json": attr.label(
+            # TODO: Make this work with external use cases.
+            default = "//:parcel_package_json",
+            allow_single_file = True,
         ),
     },
 )

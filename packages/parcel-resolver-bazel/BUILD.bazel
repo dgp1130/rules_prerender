@@ -1,0 +1,14 @@
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+
+ts_library(
+    name = "parcel-resolver-bazel",
+    srcs = ["index.ts"],
+    data = ["package.json"],
+    # TODO: Necessary?
+    module_name = "parcel-resolver-bazel",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@npm//@parcel/plugin",
+        "@npm//@parcel/types",
+    ],
+)

@@ -1,0 +1,8 @@
+{
+    "name": "rules_prerender",
+    "version": "0.0.0",
+    "private": true,
+    "dependencies": {
+        "parcel-resolver-bazel": "file:packages/parcel-resolver-bazel"
+    }
+}
