@@ -1,7 +1,8 @@
-load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver", "ts_library")
+load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
 load("//tools:jasmine.bzl", "jasmine_node_test", "jasmine_web_test_suite")
+load("//tools:typescript.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "binary",
     srcs = ["binary.ts"],
     testonly = True,
@@ -9,7 +10,7 @@ ts_library(
     deps = ["@npm//@types/node"],
 )
 
-ts_library(
+ts_project(
     name = "binary_test_lib",
     srcs = ["binary_test.ts"],
     testonly = True,
@@ -26,7 +27,7 @@ jasmine_node_test(
     deps = [":binary_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "devserver",
     srcs = ["devserver.ts"],
     testonly = True,
@@ -42,7 +43,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "devserver_test_lib",
     srcs = ["devserver_test.ts"],
     testonly = True,
@@ -70,7 +71,7 @@ jasmine_node_test(
     deps = [":devserver_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "effects",
     srcs = ["effects.ts"],
     testonly = True,
@@ -79,7 +80,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "effects_test_lib",
     srcs = ["effects_test.ts"],
     testonly = True,
@@ -94,7 +95,7 @@ jasmine_node_test(
     deps = [":effects_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "effect_fake",
     srcs = ["effect_fake.ts"],
     testonly = True,
@@ -102,7 +103,7 @@ ts_library(
     deps = [":effects"],
 )
 
-ts_library(
+ts_project(
     name = "effect_fake_test_lib",
     srcs = ["effect_fake_test.ts"],
     testonly = True,
@@ -118,7 +119,7 @@ jasmine_node_test(
     deps = [":effect_fake_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "effect_tester",
     srcs = ["effect_tester.ts"],
     testonly = True,
@@ -129,7 +130,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "effect_tester_test_lib",
     srcs = ["effect_tester_test.ts"],
     testonly = True,
@@ -146,7 +147,7 @@ jasmine_node_test(
     deps = [":effect_tester_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "mocks",
     srcs = ["mocks.ts"],
     testonly = True,
@@ -154,7 +155,7 @@ ts_library(
     deps = ["@npm//@types/jasmine"],
 )
 
-ts_library(
+ts_project(
     name = "mocks_test_lib",
     srcs = ["mocks_test.ts"],
     testonly = True,
@@ -169,7 +170,7 @@ jasmine_node_test(
     deps = [":mocks_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "temp_dir",
     srcs = ["temp_dir.ts"],
     testonly = True,
@@ -180,7 +181,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "temp_dir_test_lib",
     srcs = ["temp_dir_test.ts"],
     testonly = True,
@@ -197,13 +198,13 @@ jasmine_node_test(
     deps = [":temp_dir_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "test_server",
     srcs = ["test_server.ts"],
     testonly = True,
 )
 
-ts_library(
+ts_project(
     name = "test_server_test_lib",
     srcs = ["test_server_test.ts"],
     testonly = True,
@@ -218,7 +219,7 @@ jasmine_node_test(
     deps = [":test_server_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "webdriver",
     srcs = ["webdriver.ts"],
     testonly = True,
@@ -231,7 +232,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "webdriver_test_lib",
     srcs = ["webdriver_test.ts"],
     testonly = True,

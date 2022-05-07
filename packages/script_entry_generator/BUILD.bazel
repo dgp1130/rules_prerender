@@ -1,6 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
 nodejs_binary(
     name = "script_entry_generator",
@@ -13,7 +13,7 @@ nodejs_binary(
     ],
 )
 
-ts_library(
+ts_project(
     name = "script_entry_generator_lib",
     srcs = ["script_entry_generator.ts"],
     deps = [
@@ -26,7 +26,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "script_entry_generator_test_lib",
     srcs = ["script_entry_generator_test.ts"],
     testonly = True,
@@ -46,13 +46,13 @@ jasmine_node_test(
     deps = [":script_entry_generator_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "generator",
     srcs = ["generator.ts"],
     deps = ["//common/models:prerender_metadata"],
 )
 
-ts_library(
+ts_project(
     name = "generator_test_lib",
     srcs = ["generator_test.ts"],
     testonly = True,

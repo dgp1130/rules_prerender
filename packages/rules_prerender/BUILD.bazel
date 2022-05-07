@@ -1,19 +1,26 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("//:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
+load("//tools:typescript.bzl", "ts_project")
 
 exports_files(
     ["rollup-default.config.js"],
     visibility = ["//visibility:public"],
 )
 
-ts_library(
+# Wrap `ts_project()` in a `js_library()` to give it a module name to be imported.
+js_library(
     name = "rules_prerender",
-    srcs = ["index.ts"],
-    module_name = "rules_prerender",
+    package_name = "rules_prerender",
     visibility = ["//visibility:public"],
+    deps = [":rules_prerender_lib"],
+)
+
+ts_project(
+    name = "rules_prerender_lib",
+    srcs = ["index.ts"],
     deps = [
         ":scripts",
         ":styles",
@@ -80,7 +87,7 @@ bzl_library(
     deps = ["//common:label"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_component_publish_files_test_lib",
     srcs = ["prerender_component_publish_files_test.ts"],
     data = ["//packages/rules_prerender/prerender_component_publish_files_testdata:component_publish_files"],
@@ -151,14 +158,14 @@ bzl_library(
     deps = ["//common:label"],
 )
 
-ts_library(
+ts_project(
     name = "scripts",
     srcs = ["scripts.ts"],
     visibility = ["//packages/rules_prerender/declarative_shadow_dom:__pkg__"],
     deps = ["//common/models:prerender_annotation"],
 )
 
-ts_library(
+ts_project(
     name = "scripts_test_lib",
     srcs = ["scripts_test.ts"],
     testonly = True,
@@ -174,7 +181,7 @@ jasmine_node_test(
     deps = [":scripts_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "styles",
     srcs = ["styles.ts"],
     visibility = ["//packages/renderer:__subpackages__"],
@@ -184,7 +191,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "styles_test_lib",
     srcs = ["styles_test.ts"],
     testonly = True,
@@ -201,7 +208,7 @@ jasmine_node_test(
     deps = [":styles_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "inline_style_map",
     srcs = ["inline_style_map.ts"],
     visibility = ["//packages/renderer:__subpackages__"],

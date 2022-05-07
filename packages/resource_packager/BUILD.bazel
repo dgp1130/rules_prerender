@@ -1,6 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
 nodejs_binary(
     name = "resource_packager",
@@ -13,7 +13,7 @@ nodejs_binary(
     ],
 )
 
-ts_library(
+ts_project(
     name = "resource_packager_lib",
     srcs = ["resource_packager.ts"],
     deps = [
@@ -26,7 +26,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "resource_packager_test_lib",
     srcs = ["resource_packager_test.ts"],
     testonly = True,
@@ -45,7 +45,7 @@ jasmine_node_test(
     deps = [":resource_packager_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "package_loader",
     srcs = ["package_loader.ts"],
     deps = [
@@ -54,7 +54,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "package_loader_test_lib",
     srcs = ["package_loader_test.ts"],
     testonly = True,
@@ -71,7 +71,7 @@ jasmine_node_test(
     deps = [":package_loader_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "packager",
     srcs = ["packager.ts"],
     deps = [
@@ -80,7 +80,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "packager_test_lib",
     srcs = ["packager_test.ts"],
     testonly = True,
@@ -98,12 +98,12 @@ jasmine_node_test(
     deps = [":packager_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "resource_map",
     srcs = ["resource_map.ts"],
 )
 
-ts_library(
+ts_project(
     name = "resource_map_test_lib",
     srcs = ["resource_map_test.ts"],
     testonly = True,
@@ -119,7 +119,7 @@ jasmine_node_test(
     deps = [":resource_map_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "resource_map_mock",
     srcs = ["resource_map_mock.ts"],
     testonly = True,

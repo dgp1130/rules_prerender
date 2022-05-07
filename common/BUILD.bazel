@@ -1,7 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
+load("//tools:typescript.bzl", "ts_project")
 load(":label_test.bzl", "label_test_suite")
 load(":paths_test.bzl", "paths_test_suite")
 
@@ -11,14 +11,14 @@ publish_files(
     visibility = ["//:__pkg__"],
 )
 
-ts_library(
+ts_project(
     name = "binary",
     srcs = ["binary.ts"],
     visibility = ["//visibility:public"],
     deps = ["@npm//@types/node"],
 )
 
-ts_library(
+ts_project(
     name = "binary_test_lib",
     srcs = ["binary_test.ts"],
     testonly = True,
@@ -33,13 +33,13 @@ jasmine_node_test(
     deps = [":binary_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "collections",
     srcs = ["collections.ts"],
     visibility = ["//visibility:public"],
 )
 
-ts_library(
+ts_project(
     name = "collections_test_lib",
     srcs = ["collections_test.ts"],
     testonly = True,
@@ -54,13 +54,13 @@ jasmine_node_test(
     deps = [":collections_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "formatters",
     srcs = ["formatters.ts"],
     visibility = ["//visibility:public"],
 )
 
-ts_library(
+ts_project(
     name = "formatters_test_lib",
     srcs = ["formatters_test.ts"],
     testonly = True,
@@ -75,21 +75,21 @@ jasmine_node_test(
     deps = [":formatters_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "fs",
     srcs = ["fs.ts"],
     visibility = ["//visibility:public"],
     deps = ["@npm//@types/node"],
 )
 
-ts_library(
+ts_project(
     name = "http",
     srcs = ["http.ts"],
     visibility = ["//visibility:public"],
     deps = ["@npm//@types/node"],
 )
 
-ts_library(
+ts_project(
     name = "http_test_lib",
     srcs = ["http_test.ts"],
     testonly = True,
@@ -133,7 +133,7 @@ bzl_library(
 
 paths_test_suite(name = "paths_test")
 
-ts_library(
+ts_project(
     name = "prerender_annotation_walker",
     srcs = ["prerender_annotation_walker.ts"],
     visibility = ["//visibility:public"],
@@ -143,7 +143,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "prerender_annotation_walker_test_lib",
     srcs = ["prerender_annotation_walker_test.ts"],
     testonly = True,

@@ -1,6 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
 nodejs_binary(
     name = "annotation_extractor",
@@ -13,7 +13,7 @@ nodejs_binary(
     ],
 )
 
-ts_library(
+ts_project(
     name = "annotation_extractor_lib",
     srcs = ["annotation_extractor.ts"],
     deps = [
@@ -28,7 +28,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "annotation_extractor_test_lib",
     srcs = ["annotation_extractor_test.ts"],
     testonly = True,
@@ -50,7 +50,7 @@ jasmine_node_test(
     deps = [":annotation_extractor_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "extractor",
     srcs = ["extractor.ts"],
     deps = [
@@ -60,7 +60,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "extractor_test_lib",
     srcs = ["extractor_test.ts"],
     testonly = True,
@@ -76,7 +76,7 @@ jasmine_node_test(
     deps = [":extractor_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "metadata",
     srcs = ["metadata.ts"],
     deps = [
@@ -85,7 +85,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "metadata_test_lib",
     srcs = ["metadata_test.ts"],
     testonly = True,

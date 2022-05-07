@@ -1,4 +1,3 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load(
     "//packages/rules_prerender:prerender_component.bzl",
     "prerender_component",
@@ -10,6 +9,7 @@ load(
 load("//packages/rules_prerender:web_resources.bzl", "web_resources")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
 prerender_component(
     name = "component",
@@ -20,12 +20,12 @@ prerender_component(
     resources = [":resources"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_dep",
     srcs = ["prerender_dep.ts"],
 )
 
-ts_library(
+ts_project(
     name = "scripts",
     srcs = ["script.ts"],
     deps = [":script_dep"],
@@ -36,7 +36,7 @@ css_library(
     srcs = ["style.css"],
 )
 
-ts_library(
+ts_project(
     name = "script_dep",
     srcs = ["script_dep.ts"],
 )

@@ -1,4 +1,6 @@
-import 'webdriverio'; // For global `WebdriverIO` namespace.
+// Can't import `webdriverio/async` because it isn't a module?
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../node_modules/webdriverio/async.d.ts" />
 
 import { remote, ChainablePromiseElement } from 'webdriverio';
 import { env } from 'process';

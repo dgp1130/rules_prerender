@@ -1,11 +1,6 @@
 """Defines `prerender_component_publish_files()`."""
 
-load(
-    "@build_bazel_rules_nodejs//:providers.bzl",
-    "DeclarationInfo",
-    "JSEcmaScriptModuleInfo",
-    "JSModuleInfo",
-)
+load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSModuleInfo")
 load("//common:label.bzl", "absolute")
 
 def prerender_component_publish_files(
@@ -42,9 +37,9 @@ def prerender_component_publish_files(
         testonly = testonly,
     )
 
-    # Collect ES5 JS for prerendering.
+    # Collect JS for prerendering.
     prerender_js = "%s_prerender_js" % name
-    _es5_transitive_sources(
+    _transitive_js_sources(
         name = prerender_js,
         target = "%s_prerender" % absolute_name,
         testonly = testonly,
@@ -58,9 +53,9 @@ def prerender_component_publish_files(
         testonly = testonly,
     )
 
-    # Collect ES6 JS for scripts.
+    # Collect JS for scripts.
     scripts_js = "%s_scripts_js" % name
-    _es6_transitive_sources(
+    _transitive_js_sources(
         name = scripts_js,
         target = "%s_scripts" % absolute_name,
         testonly = testonly,
@@ -101,38 +96,20 @@ _transitive_declarations = rule(
     """,
 )
 
-def _es5_transitive_sources_impl(ctx):
+def _transitive_js_sources_impl(ctx):
     return DefaultInfo(files = ctx.attr.target[JSModuleInfo].sources)
 
-_es5_transitive_sources = rule(
-    implementation = _es5_transitive_sources_impl,
+_transitive_js_sources = rule(
+    implementation = _transitive_js_sources_impl,
     attrs = {
         "target": attr.label(
             mandatory = True,
             providers = [JSModuleInfo],
-            doc = "Target to collect ES5 transitive sources of.",
+            doc = "Target to collect transitive JavaScript sources of.",
         ),
     },
     doc = """
-        Provides a `DefaultInfo` with all the transitive ES5 sources of the
-        given target.
-    """,
-)
-
-def _es6_transitive_sources_impl(ctx):
-    return DefaultInfo(files = ctx.attr.target[JSEcmaScriptModuleInfo].sources)
-
-_es6_transitive_sources = rule(
-    implementation = _es6_transitive_sources_impl,
-    attrs = {
-        "target": attr.label(
-            mandatory = True,
-            providers = [JSEcmaScriptModuleInfo],
-            doc = "Target to collect ES6 transitive sources of.",
-        ),
-    },
-    doc = """
-        Provides a `DefaultInfo` with all the transitive ES6 sources of the
+        Provides a `DefaultInfo` with all the transitive JavaScript sources of the
         given target.
     """,
 )

@@ -9,29 +9,30 @@ const root = runfiles.resolvePackageRelative(
 describe('prerender_component_publish_files()', () => {
     it('includes exactly the expected files', async () => {
         // Should include **exactly** these files and no more.
-        const expectedFiles = [
+        const expectedFiles = new Set([
             'component.js',
             'component.d.ts',
             'prerender_dep.js',
+            'prerender_dep.js.map',
             'prerender_dep.d.ts',
-            'script.mjs',
+            'script.js',
+            'script.js.map',
             'script.d.ts',
-            'scripts.externs.js',
-            'script_dep.mjs',
+            'script_dep.js',
+            'script_dep.js.map',
             'script_dep.d.ts',
-            'script_dep.externs.js',
             'style.css',
             'style.css.map',
             'component_resources', // from `resources` attribute.
-        ];
+        ]);
 
-        const actualFiles = await fs.readdir(root);
+        const actualFiles = new Set(await fs.readdir(root));
 
-        expect(actualFiles.sort()).toEqual(expectedFiles.sort());
+        expect(actualFiles).toEqual(expectedFiles);
 
         // Separately test for the resources directory.
-        const expectedResources = [ 'resource.txt' ];
-        const actualResources = await fs.readdir(`${root}/component_resources`);
-        expect(actualResources.sort()).toEqual(expectedResources.sort());
+        const expectedResources = new Set([ 'resource.txt' ]);
+        const actualResources = new Set(await fs.readdir(`${root}/component_resources`));
+        expect(actualResources).toEqual(expectedResources);
     });
 });

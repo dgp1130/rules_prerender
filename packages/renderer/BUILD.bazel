@@ -1,8 +1,8 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
+load("//tools:typescript.bzl", "ts_project")
 load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
 publish_files(
@@ -11,10 +11,11 @@ publish_files(
     visibility = ["//:__pkg__"],
 )
 
-ts_library(
+ts_project(
     name = "renderer",
     srcs = ["renderer.ts"],
-    visibility = ["//tools/internal:__pkg__"],
+    # For `prerender_pages()` generated `nodejs_binary()` to use `renderer.js` an entry point.
+    visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
         "//packages/rules_prerender:inline_style_map",
@@ -24,13 +25,6 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
-)
-
-filegroup(
-    name = "renderer_js",
-    srcs = [":renderer"],
-    visibility = ["//tools/internal:__pkg__"],
-    output_group = "es5_sources",
 )
 
 nodejs_binary(
@@ -43,7 +37,7 @@ nodejs_binary(
     ],
 )
 
-ts_library(
+ts_project(
     name = "renderer_test_lib",
     srcs = ["renderer_test.ts"],
     testonly = True,
@@ -67,12 +61,12 @@ jasmine_node_test(
     deps = [":renderer_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "dynamic_import",
     srcs = ["dynamic_import.ts"],
 )
 
-ts_library(
+ts_project(
     name = "entry_point",
     srcs = ["entry_point.ts"],
     deps = [
@@ -81,7 +75,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "entry_point_test_lib",
     srcs = ["entry_point_test.ts"],
     deps = [

@@ -1,4 +1,3 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load(
     "//packages/rules_prerender:prerender_component.bzl",
     "prerender_component",
@@ -9,6 +8,7 @@ load(
 )
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
+load("//tools:typescript.bzl", "ts_project")
 
 publish_files(
     name = "publish_files",
@@ -29,7 +29,7 @@ prerender_component(
     visibility = ["//:__pkg__"],
 )
 
-ts_library(
+ts_project(
     name = "declarative_shadow_dom_test_lib",
     srcs = ["declarative_shadow_dom_test.ts"],
     testonly = True,
@@ -45,7 +45,7 @@ jasmine_node_test(
     deps = [":declarative_shadow_dom_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "declarative_shadow_dom_polyfill",
     srcs = ["declarative_shadow_dom_polyfill.ts"],
 )

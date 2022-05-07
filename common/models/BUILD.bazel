@@ -1,13 +1,13 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "prerender_annotation",
     srcs = ["prerender_annotation.ts"],
     visibility = ["//visibility:public"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_annotation_test_lib",
     srcs = ["prerender_annotation_test.ts"],
     testonly = True,
@@ -22,7 +22,7 @@ jasmine_node_test(
     deps = [":prerender_annotation_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_annotation_mock",
     srcs = ["prerender_annotation_mock.ts"],
     testonly = True,
@@ -30,13 +30,13 @@ ts_library(
     deps = [":prerender_annotation"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_metadata",
     srcs = ["prerender_metadata.ts"],
     visibility = ["//visibility:public"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_metadata_test_lib",
     srcs = ["prerender_metadata_test.ts"],
     testonly = True,
@@ -51,7 +51,7 @@ jasmine_node_test(
     deps = [":prerender_metadata_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_metadata_mock",
     srcs = ["prerender_metadata_mock.ts"],
     testonly = True,
@@ -59,14 +59,14 @@ ts_library(
     deps = [":prerender_metadata"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_resource",
     srcs = ["prerender_resource.ts"],
     visibility = ["//visibility:public"],
     deps = [":url_path"],
 )
 
-ts_library(
+ts_project(
     name = "prerender_resource_test_lib",
     srcs = ["prerender_resource_test.ts"],
     testonly = True,
@@ -81,12 +81,12 @@ jasmine_node_test(
     deps = [":prerender_resource_test_lib"],
 )
 
-ts_library(
+ts_project(
     name = "url_path",
     srcs = ["url_path.ts"],
 )
 
-ts_library(
+ts_project(
     name = "url_path_test_lib",
     srcs = ["url_path_test.ts"],
     testonly = True,

@@ -93,7 +93,7 @@ def prerender_resources_internal(
     binary = "%s_binary" % name
     nodejs_binary(
         name = binary,
-        entry_point = "//tools/internal:renderer_js",
+        entry_point = "//packages/renderer:renderer.js",
         templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
