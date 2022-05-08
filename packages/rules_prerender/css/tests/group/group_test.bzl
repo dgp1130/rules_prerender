@@ -12,9 +12,7 @@ def _css_group_test_impl(ctx):
     default_info = analysistest.target_under_test(env)[DefaultInfo]
     expected_files = sets.make([
         "packages/rules_prerender/css/tests/group/lib1.css",
-        "packages/rules_prerender/css/tests/group/lib1.css.map",
         "packages/rules_prerender/css/tests/group/lib2.css",
-        "packages/rules_prerender/css/tests/group/lib2.css.map",
     ])
     actual_files = sets.make([file.short_path for file in default_info.files.to_list()])
     asserts.new_set_equals(env, expected_files, actual_files)

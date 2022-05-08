@@ -42,6 +42,12 @@ npm_install(
     strict_visibility = False,
     # Needed for `ts_library()`, should be able to drop after migrating to `ts_project()`.
     exports_directories_only = False,
+    # TODO: How to do this for external repositories?
+    # Maybe make a `@npm_rules_prerender_parcel_plugins//` external workspace with just
+    # the required package?
+    links = {
+        "parcel-resolver-bazel": "//packages/rules_prerender/css:parcel_config_deps",
+    },
 )
 
 # Load bazel_skylib.

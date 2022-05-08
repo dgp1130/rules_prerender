@@ -1,7 +1,7 @@
 @import './dep.css';
 
 /* TODO: Support importing files from different artifact root. */
-/* @import './generated.css'; */
+@import './generated.css';
 
 div {
     color: var(--favorite-color);

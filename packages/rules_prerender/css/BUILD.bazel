@@ -1,6 +1,16 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "pkg_npm", "nodejs_binary", "js_library")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//tools:publish.bzl", "publish_files")
+load(":transitive_js_sources.bzl", "transitive_js_sources")
+
+exports_files(["parcel_config.json5"], visibility = ["//visibility:public"])
+
+# Deps listed in the parcel config.
+_PARCEL_CONFIG_DEPS = [
+    "@npm//parcel-resolver-bazel",
+    "@npm//@parcel/config-default",
+]
 
 publish_files(
     name = "publish_files",
@@ -38,28 +48,71 @@ bzl_library(
 )
 
 bzl_library(
-    name = "css_map",
-    srcs = ["css_map.bzl"],
-    deps = [":css_providers"],
-)
-
-bzl_library(
     name = "css_providers",
     srcs = ["css_providers.bzl"],
     visibility = ["//packages/rules_prerender:__pkg__"],
 )
 
+bzl_library(
+    name = "parcel",
+    srcs = ["parcel.bzl"],
+    deps = [":css_providers"],
+)
+
+nodejs_binary(
+    name = "parcel_bin",
+    entry_point = "parcel.ts",
+    link_workspace_root = True,
+    visibility = ["//visibility:public"],
+    data = _PARCEL_CONFIG_DEPS + [
+        ":parcel_lib",
+        "@npm//yargs",
+    ],
+)
+
+pkg_npm(
+    name = "parcel_resolver_bazel",
+    deps = [":parcel-resolver-bazel"],
+)
+
+ts_library(
+    name = "parcel_lib",
+    srcs = ["parcel.ts"],
+    deps = [
+        "//common:binary",
+        "@npm//@parcel/core",
+        "@npm//@parcel/fs",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)
+
+# TODO: Move to `packages/parcel-resolver-bazel`.
+copy_to_bin(
+    name = "package_json",
+    srcs = ["package.json"],
+)
+
 filegroup(
-    name = "parcel_config",
-    srcs = [":parcel_config_src"],
-    data = [
-        "//packages/parcel-resolver-bazel",
-        "@npm//@parcel/config-default",
+    name = "parcel_config_deps",
+    srcs = [
+        ":package_json",
+        ":parcel_config_deps_js",
     ],
     visibility = ["//visibility:public"],
 )
 
-copy_to_bin(
-    name = "parcel_config_src",
-    srcs = ["parcel_config.json5"],
+transitive_js_sources(
+    name = "parcel_config_deps_js",
+    dep = ":parcel-resolver-bazel",
+)
+
+ts_library(
+    name = "parcel-resolver-bazel",
+    srcs = ["parcel-resolver-bazel.ts"],
+    module_name = "parcel-resolver-bazel",
+    deps = [
+        "@npm//@parcel/plugin",
+        "@npm//@types/node",
+    ],
 )

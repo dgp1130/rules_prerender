@@ -1,52 +1,58 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
 load("@build_bazel_rules_nodejs//:providers.bzl", "run_node")
-load(":css_providers.bzl", "CssInfo")
+load(":css_providers.bzl", "CssImportMapInfo", "CssInfo")
 
 def _parcel_impl(ctx):
     # Compile each direct source as an entry point with its own output.
     sources = [source for source in ctx.attr.dep[CssInfo].direct_sources]
-    if not sources:
-        fail("`parcel()` requires at least one source file, but got none at %s" % ctx.attr.dep.label)
-
     outputs = []
     for source in sources:
         outputs.append(ctx.actions.declare_file(source.basename))
 
-    # Define arguments.
+    wksp = ctx.attr.dep.label.workspace_name if ctx.attr.dep.label.workspace_name else ctx.workspace_name
+
+    import_map = {}
+    # TODO: Avoid `to_list()` with `args.add_all(map_each)`
+    # TODO: Support external CSS?
+    transitive_sources = [source for source in ctx.attr.dep[CssInfo].transitive_sources.to_list()]
+    for source in transitive_sources:
+        import_map["%s/%s" % (wksp, source.short_path)] = source.path
+    import_map_file = ctx.actions.declare_file("%s_import_map.json" % ctx.attr.name)
+    ctx.actions.write(import_map_file, json.encode_indent(import_map, indent = "    "))
+
     args = ctx.actions.args()
     args.add("--bazel_patch_module_resolver")
-    args.add("build")
-    args.add_all(sources)
 
-    # All output and in the same directory with the same names as their inputs.
-    args.add("--dist-dir", outputs[0].dirname)
+    # Define the config.
+    args.add("--config", "./%s" % ctx.file._config.path)
+    args.add("--import-map", import_map_file.path)
 
-    # Use custom config file.
-    config = [file for file in ctx.files._config
-              if file.basename == "parcel_config.json5"][0]
-    args.add("--config", "./%s" % config.path)
+    # When debugging, set Parcel to print verbose logs.
+    if ctx.var.get("VERBOSE_LOGS", False):
+        args.add("--log-level", "verbose")
 
-    # TODO: Should print warnings?
-    # Only print errors so the bundle is silent when successful.
-    args.add("--log-level", "error")
-
-    # Disable Parcel cache because we can rely on Bazel caching.
-    args.add("--no-cache")
+    # Define inputs and outputs.
+    for (source, output) in zip(sources, outputs):
+        args.add("--input", source)
+        args.add("--output", output)
 
     # Bundle the CSS with Parcel.
     run_node(
         ctx,
-        mnemonic = "BundleCss",
-        progress_message = "Bundling CSS %s" % ctx.label,
-        executable = "_parcel",
+        mnemonic = "ParcelCss",
+        progress_message = "Bundling CSS with Parcel %s" % ctx.label,
+        executable = "_binary",
         arguments = [args],
-        inputs = depset(ctx.files._config + ctx.files._package_json, transitive = [
+        inputs = depset([ctx.file._config, import_map_file], transitive = [
             ctx.attr.dep[CssInfo].transitive_sources,
         ]),
         outputs = outputs,
     )
 
-    return DefaultInfo(files = depset(outputs))
+    return [
+        DefaultInfo(files = depset(outputs)),
+        CssImportMapInfo(import_map = _make_import_map(zip(sources, outputs), wksp)),
+    ]
 
 parcel = rule(
     implementation = _parcel_impl,
@@ -56,19 +62,30 @@ parcel = rule(
             providers = [CssInfo],
             doc = "The `css_library()` to bundle all direct sources of.",
         ),
-        "_parcel": attr.label(
-            default = "@npm//parcel/bin:parcel",
+        "_config": attr.label(
+            default = "//packages/rules_prerender/css:parcel_config.json5",
+            allow_single_file = True,
+        ),
+        "_binary": attr.label(
+            default = "//packages/rules_prerender/css:parcel_bin",
             executable = True,
             cfg = "exec",
         ),
-        "_config": attr.label(
-            # TODO: Make this work with external use cases.
-            default = "//packages/rules_prerender/css:parcel_config",
-        ),
-        "_package_json": attr.label(
-            # TODO: Make this work with external use cases.
-            default = "//:parcel_package_json",
-            allow_single_file = True,
-        ),
     },
 )
+
+def _make_import_map(zipped_inputs_and_outputs, wksp):
+    import_map = dict()
+    for (input, output) in zipped_inputs_and_outputs:
+        # Verify that the importable path isn't already registered.
+        key = "%s/%s" % (wksp, input.short_path)
+        if key in import_map:
+            fail("CSS library file (%s) mapped twice, once to %s and a second time to %s." % (
+                key,
+                import_map[key].path,
+                output.path,
+            ))
+
+        import_map[key] = output
+
+    return import_map

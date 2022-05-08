@@ -6,7 +6,6 @@ load(
     IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG",
 )
 load(":css_group.bzl", "css_group")
-load(":css_map.bzl", "css_map")
 load(":css_providers.bzl", "CssInfo")
 load(":parcel.bzl", "parcel")
 
@@ -56,6 +55,7 @@ def css_binaries(
         tags = tags,
     )
 
+# TODO: Inline `_css_binary()` as `parcel()`?
 # It might look like this implementation should accept multiple `css_library()` targets,
 # but doing so would be a bad idea. This is because the library is separated into "direct
 # sources" and "transitive dependencies" which are fed into `postcss_multi_binary()`. If
@@ -94,46 +94,10 @@ def _css_binary(
         visibility: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
         tags: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
     """
-    # Collect all transitive CSS dependencies into a single `DefaultInfo` target.
-    css_transitive_deps = "%s_transitive_deps" % name
-    _css_deps(
-        name = css_transitive_deps,
-        dep = dep,
-        testonly = testonly,
-        tags = tags,
-    )
-
     # Bundle the CSS binary.
-    binary = "%s_bundled" % name
     parcel(
-        name = binary,
+        name = name,
         testonly = testonly,
         tags = tags,
         dep = dep,
     )
-
-    # Return the binary outputs with a map of import name -> file path.
-    css_map(
-        name = name,
-        bin = ":%s" % binary,
-        lib = dep,
-        testonly = testonly,
-        visibility = visibility,
-        tags = tags,
-    )
-
-def _css_deps_impl(ctx):
-    return DefaultInfo(
-        files = ctx.attr.dep[CssInfo].transitive_sources,
-    )
-
-_css_deps = rule(
-    implementation = _css_deps_impl,
-    attrs = {
-        "dep": attr.label(
-            mandatory = True,
-            providers = [CssInfo],
-        ),
-    },
-    doc = "Returns transitive CSS sources in `DefaultInfo`.",
-)
