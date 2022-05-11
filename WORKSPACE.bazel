@@ -10,9 +10,47 @@ workspace(
     managed_directories = {"@npm": ["node_modules"]},
 )
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Install the Rust ruleset.
+http_archive(
+    name = "rules_rust",
+    sha256 = "edb87c0d2ba70823fe3df7862676d695599314a4634b9758bd55f0e8f19c2751",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.4.0/rules_rust-v0.4.0.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/releases/download/0.4.0/rules_rust-v0.4.0.tar.gz",
+    ],
+)
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+rules_rust_dependencies()
+rust_register_toolchains()
+
+# Install crates.
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+crate_universe_dependencies()
+load("@rules_rust//crate_universe:crates_deps.bzl", "crate_repositories")
+crate_repositories()
+load("@rules_rust//crate_universe:defs.bzl", "crate", "crates_repository", "render_config")
+crates_repository(
+    name = "crates",
+    lockfile = "//:Cargo.Bazel.lock",
+    packages = {
+        "parcel_css": crate.spec(
+            version = "1.0.0-alpha.24", # TODO: This is actually supported?
+        ),
+    },
+    # Setting the default package name to `""` forces the use of the macros defined in this repository
+    # to always use the root package when looking for dependencies or aliases. This should be considered
+    # optional as the repository also exposes alises for easy access to all dependencies.
+    render_config = render_config(
+        default_package_name = "",
+    ),
+)
+load("@crates//:defs.bzl", "crate_repositories")
+crate_repositories()
+
 # Install the nodejs "bootstrap" package
 # This provides the basic tools for running and packaging nodejs programs in Bazel
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "build_bazel_rules_nodejs",
     sha256 = "2b2004784358655f334925e7eadc7ba80f701144363df949b3293e1ae7a2fb7b",
