@@ -1,4 +1,5 @@
-@import url("rules_prerender/examples/styles/dep.css");
+@import './dep.css';
+@import './generated.css';
 
 div {
     color: var(--favorite-color);

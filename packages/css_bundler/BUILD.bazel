@@ -5,5 +5,8 @@ rust_binary(
     srcs = ["css_bundler.rs"],
     edition = "2021",
     visibility = ["//visibility:public"],
-    deps = ["@crates//:parcel_css"],
+    deps = [
+        "@crates//:clap",
+        "@crates//:parcel_css",
+    ],
 )

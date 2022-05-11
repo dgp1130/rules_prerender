@@ -35,6 +35,10 @@ crates_repository(
     name = "crates",
     lockfile = "//:Cargo.Bazel.lock",
     packages = {
+        "clap": crate.spec(
+            version = "3.1.18",
+            features = ["derive"],
+        ),
         "parcel_css": crate.spec(
             version = "1.0.0-alpha.24", # TODO: This is actually supported?
         ),

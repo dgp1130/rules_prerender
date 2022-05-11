@@ -1,48 +1,68 @@
-use std::env;
+use std::collections::HashMap;
+use std::fs;
 use std::io;
+use std::iter::zip;
 use std::path::Path;
-use std::process;
 use parcel_css::bundler::{Bundler, FileProvider, SourceProvider};
 use parcel_css::printer::PrinterOptions;
 use parcel_css::stylesheet::ParserOptions;
+use clap::Parser;
+
+// TODO: Can `clap` support map arguments?
+#[derive(Debug, Parser)]
+struct Args {
+    #[clap(short, long)]
+    entry_point: Vec<String>,
+
+    #[clap(short, long)]
+    output: Vec<String>,
+
+    #[clap(short, long)]
+    import_path: Vec<String>,
+
+    #[clap(short, long)]
+    import_file: Vec<String>,
+
+    #[clap(short, long)]
+    workspace_name: String,
+}
 
 fn main() {
-    let args = parse_args(env::args().collect());
+    let args = Args::parse();
 
-    let fs = BazelFileProvider::new();
+    let import_map: HashMap<_, _> = zip(args.import_path, args.import_file).collect();
+    let fs = BazelFileProvider::new(import_map);
     let mut bundler = Bundler::new(&fs, None, ParserOptions::default());
-    let stylesheet = bundler.bundle(Path::new(&args.entry_point)).unwrap();
-    let css = stylesheet.to_css(PrinterOptions::default()).unwrap().code;
 
-    println!("{}", css);
+    for (entry_point, output) in zip(args.entry_point, args.output) {
+        let stylesheet = bundler.bundle(&Path::new(&args.workspace_name).join(&entry_point)).unwrap();
+        let css = stylesheet.to_css(PrinterOptions::default()).unwrap().code;
+        fs::write(Path::new(&output), css).unwrap();
+    }
 }
 
 struct BazelFileProvider {
     fs: FileProvider,
+    import_map: HashMap<String, String>,
 }
 
 impl BazelFileProvider {
-    pub fn new() -> BazelFileProvider {
-        BazelFileProvider { fs: FileProvider::new() }
+    pub fn new(import_map: HashMap<String, String>) -> BazelFileProvider {
+        BazelFileProvider { fs: FileProvider::new(), import_map }
     }
 }
 
 impl SourceProvider for BazelFileProvider {
-    fn read<'a>(&'a self, file: &Path) -> io::Result<&'a str> {
-        self.fs.read(&file.with_extension("css2"))
+    fn read<'a>(&'a self, import_path: &Path) -> io::Result<&'a str> {
+        let import_file = self.import_map.get(&normalize(import_path.to_str().unwrap()))
+            .unwrap_or_else(|| panic!("Did not find {} in the import map\n{:?}", import_path.to_str().unwrap(), self.import_map));
+
+        self.fs.read(&Path::new(import_file))
     }
 }
 
-fn parse_args(args: Vec<String>) -> Args {
-    if args.len() < 2 {
-        eprintln!("Missing entry point argument.");
-        process::exit(1);
-    }
-    let entry_point = &args[1];
-
-    Args { entry_point: entry_point.to_string() }
-}
-
-struct Args {
-    entry_point: String,
+// No equivalent of NodeJS' `path.normalize()` in Rust. Only `Path.canonicalize()`
+// which actually reads the file system to get an absolute path,
+fn normalize(path: &str) -> String {
+    path.replace("./", "")
 }
