@@ -20,10 +20,10 @@ export class Counter extends HTMLElement {
         this.value = initial ? parseInt(initial) : 0;
 
         // Find the increment and decrement buttons in the prerendered DOM.
-        const decrementBtn = this.shadowRoot.querySelector('button[decrement]');
-        if (!decrementBtn) throw new Error('No `button[decrement]` element!');
-        const incrementBtn = this.shadowRoot.querySelector('button[increment]');
-        if (!incrementBtn) throw new Error('No `button[increment]` element!');
+        const decrementBtn = this.shadowRoot.querySelector('#decrement');
+        if (!decrementBtn) throw new Error('No `#decrement` element!');
+        const incrementBtn = this.shadowRoot.querySelector('#increment');
+        if (!incrementBtn) throw new Error('No `#increment` element!');
 
         // Attach event listeners.
         const onDecrement = this.onDecrement.bind(this);
@@ -45,8 +45,8 @@ export class Counter extends HTMLElement {
     }
 
     private render(): void {
-        const text = this.shadowRoot.querySelector('[label]');
-        if (!text) throw new Error('No `[label]` element to render to!');
+        const text = this.shadowRoot.querySelector('#label');
+        if (!text) throw new Error('No `#label` element to render to!');
         text.textContent = `The current count is: ${this.value}.`;
     }
 

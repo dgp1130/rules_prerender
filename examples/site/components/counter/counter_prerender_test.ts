@@ -14,10 +14,10 @@ describe('counter', () => {
 
             // Custom element light DOM should be prerendered.
             expect(counter.getAttribute('initial')).toBe('5');
-            expect(counter.querySelector('[label]').text)
+            expect(counter.querySelector('#label').text)
                 .toBe('The current count is: 5.');
-            expect(counter.querySelector('button[decrement]')).toBeDefined();
-            expect(counter.querySelector('button[increment]')).toBeDefined();
+            expect(counter.querySelector('#decrement')).toBeDefined();
+            expect(counter.querySelector('#increment')).toBeDefined();
         });
     });
 });
