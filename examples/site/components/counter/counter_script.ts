@@ -1,9 +1,9 @@
 /**
  * Custom element for `<site-counter />`. Implements the functionality for a
  * prerendered counter. Must be rendered with three child elements:
- * 1. `[label]` - The current state of the counter is rendered here.
- * 2. `button[decrement]` - Decrements the counter when clicked.
- * 3. `button[increment]` - Increments the counter when clicked.
+ * 1. `#label` - The current state of the counter is rendered here.
+ * 2. `button#decrement` - Decrements the counter when clicked.
+ * 3. `button#increment` - Increments the counter when clicked.
  * 
  * Can provide an `initial` attribute with an integer which will act as the
  * initial value. Defaults to `0` if not given.
