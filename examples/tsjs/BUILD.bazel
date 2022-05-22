@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 
@@ -19,9 +19,10 @@ prerender_pages(
     ],
 )
 
-ts_library(
+ts_project(
     name = "ts_parent_script",
     srcs = ["ts_parent_script.ts"],
+    tsconfig = "//:tsconfig_client",
     deps = [":js_child_script"],
 )
 
@@ -39,9 +40,10 @@ js_library(
     deps = [":ts_child_script"],
 )
 
-ts_library(
+ts_project(
     name = "ts_child_script",
     srcs = ["ts_child_script.ts"],
+    tsconfig = "//:tsconfig_client",
 )
 
 web_resources_devserver(
@@ -49,7 +51,7 @@ web_resources_devserver(
     resources = ":page",
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     srcs = ["test.ts"],
     data = [":devserver"],

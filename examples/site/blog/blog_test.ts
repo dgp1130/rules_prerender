@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import parse from 'node-html-parser';
-import renderBlog from 'rules_prerender/examples/site/blog/blog';
+import renderBlog from './blog';
 
 describe('Blog', () => {
     it('generates a list of posts', async () => {

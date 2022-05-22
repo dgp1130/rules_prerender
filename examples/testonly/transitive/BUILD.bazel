@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "css_library", "prerender_component", "web_resources")
 
 prerender_component(
@@ -14,7 +14,7 @@ prerender_component(
     visibility = ["//examples/testonly:__subpackages__"],
 )
 
-ts_library(
+ts_project(
     name = "scripts",
     srcs = ["transitive_script.ts"],
     testonly = True,

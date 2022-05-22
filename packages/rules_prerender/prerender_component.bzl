@@ -74,7 +74,7 @@ def prerender_component(
             outputs of this macro directly, use another `prerender_*()`
             macro/rule to depend on and use this correctly.
         `%{name}_prerender_for_test`: There is one exception which can be
-            directly depended upon. This is an alias to the `ts_library()`
+            directly depended upon. This is an alias to the `ts_project()`
             target which compiles the `srcs` of this macro. It does **not**
             include client side scripts, CSS, or other resources used by the
             component. It is intended purely for testing purposes to assert that
@@ -230,16 +230,16 @@ _js_reexport = rule(
         ),
     },
     doc = """
-        Re-exports the given `ts_library()` and `js_library()` targets. Targets
+        Re-exports the given `ts_project()` and `js_library()` targets. Targets
         in `srcs` have their direct sources re-exported as the direct sources of
         this target, while targets in `deps` are only included as transitive
         sources.
 
         This rule serves two purposes:
-        1.  It re-exports **both** `ts_library()` and `js_library()`.
+        1.  It re-exports **both** `ts_project()` and `js_library()`.
         2.  It merges multiple targets together, depending on all of them but
             only re-exporting direct sources from the `srcs` attribute. Even
-            with `ts_library()` re-export it is not possible to re-export only
+            with `ts_project()` re-export it is not possible to re-export only
             some of the given targets.
     """,
 )

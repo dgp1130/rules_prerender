@@ -1,10 +1,11 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "prerender_resources")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
-ts_library(
+ts_project(
     name = "generator",
     srcs = ["generator.ts"],
+    link_workspace_root = False,
     deps = ["//packages/rules_prerender"],
 )
 
@@ -14,7 +15,7 @@ prerender_resources(
     data = [":generator"],
 )
 
-ts_library(
+ts_project(
     name = "generator_test",
     srcs = ["generator_test.ts"],
     testonly = True,

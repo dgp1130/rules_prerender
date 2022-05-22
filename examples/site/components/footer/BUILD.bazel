@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "css_library", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
@@ -21,9 +21,10 @@ css_library(
     deps = ["//examples/site/common:theme"],
 )
 
-ts_library(
+ts_project(
     name = "footer_test_lib",
     srcs = ["footer_test.ts"],
+    link_workspace_root = False,
     testonly = True,
     deps = [
         ":footer_prerender_for_test",

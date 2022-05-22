@@ -1,5 +1,5 @@
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load(
     "//:index.bzl",
     "extract_single_resource",
@@ -27,9 +27,10 @@ extract_single_resource(
     out = "page.html",
 )
 
-ts_library(
+ts_project(
     name = "script",
     srcs = ["script.ts"],
+    tsconfig = "//:tsconfig_client",
 )
 
 # Manually bundle all scripts.
@@ -69,7 +70,7 @@ web_resources_devserver(
     resources = ":site",
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     srcs = ["test.ts"],
     testonly = True,

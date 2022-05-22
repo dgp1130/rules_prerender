@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load(
     "//:index.bzl",
     "prerender_component",
@@ -26,7 +26,7 @@ prerender_component(
     deps = [":dep"],
 )
 
-ts_library(
+ts_project(
     name = "ts_dep",
     srcs = ["ts_dep.ts"],
 )
@@ -51,7 +51,7 @@ web_resources_devserver(
     resources = ":page",
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     srcs = ["test.ts"],
     testonly = True,

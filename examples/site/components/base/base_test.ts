@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { HTMLElement, parse, NodeType } from 'node-html-parser';
-import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
+import { baseLayout } from './base';
 
 describe('base', () => {
     describe('baseLayout()', () => {

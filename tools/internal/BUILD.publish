@@ -26,7 +26,7 @@ alias(
 )
 
 # Renderer is actually a library that gets built into a custom binary on every
-# invocation. This target simply represents the `ts_library()` of that package,
+# invocation. This target simply represents the `ts_project()` of that package,
 # used as a dep. We can just depend on the whole NPM package instead.
 alias(
     name = "renderer",

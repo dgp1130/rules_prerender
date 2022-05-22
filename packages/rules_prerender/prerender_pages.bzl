@@ -58,7 +58,7 @@ def prerender_pages(
     }
     ```
 
-    A `ts_library()` is used to compile the `src` file and `lib_deps` + `deps`
+    A `ts_project()` is used to compile the `src` file and `lib_deps` + `deps`
     is used as the `deps` parameter with the given `tsconfig`.
 
     Any scripts that are included with `includeScript()` are bundled together
@@ -76,7 +76,7 @@ def prerender_pages(
             included. CSS is inlined directly in the HTML documents in a
             `<style />` tag. Non-HTML files are included as well, but not
             modified.
-        %{name}_prerender_for_test: An alias to the `ts_library()` target which
+        %{name}_prerender_for_test: An alias to the `ts_project()` target which
             compiles the `src` of this macro marked as `testonly`. This provides
             a simple hook for unit testing prerender logic.
     

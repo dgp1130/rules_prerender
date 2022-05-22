@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 
@@ -21,7 +21,7 @@ web_resources_devserver(
     resources = ":pages",
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     srcs = ["test.ts"],
     testonly = True,

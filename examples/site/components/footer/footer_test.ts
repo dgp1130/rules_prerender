@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { parse } from 'node-html-parser';
-import { renderFooter } from 'rules_prerender/examples/site/components/footer/footer';
+import { renderFooter } from './footer';
 
 describe('footer', () => {
     describe('renderFooter()', () => {

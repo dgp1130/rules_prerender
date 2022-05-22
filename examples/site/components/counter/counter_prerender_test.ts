@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import { parse } from 'node-html-parser';
-import { renderCounter } from 'rules_prerender/examples/site/components/counter/counter_prerender';
+import { renderCounter } from './counter_prerender';
 
 describe('counter', () => {
     describe('renderCounter()', () => {

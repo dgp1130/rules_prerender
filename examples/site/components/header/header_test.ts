@@ -1,7 +1,7 @@
 import 'jasmine';
 
 import parse from 'node-html-parser';
-import { renderHeader } from 'rules_prerender/examples/site/components/header/header';
+import { renderHeader } from './header';
 
 describe('header', () => {
     describe('renderHeader()', () => {

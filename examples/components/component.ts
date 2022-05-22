@@ -7,7 +7,7 @@ export function render(): string {
         <div class="component">
             <span class="content">I'm a component!</span>
 
-            <!-- Can use basic \`ts_library()\` dependencies. -->
+            <!-- Can use basic \`ts_project()\` dependencies. -->
             <span class="ts-dep">${tsDep()}</span>
 
             <!-- Can compose other \`prerender_component()\` dependencies. -->

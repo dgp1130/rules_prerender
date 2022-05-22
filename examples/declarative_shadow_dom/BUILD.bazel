@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load(
     "//:index.bzl",
     "css_library",
@@ -37,7 +37,7 @@ web_resources_devserver(
     resources = ":site",
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     srcs = ["test.ts"],
     data = [":devserver"],

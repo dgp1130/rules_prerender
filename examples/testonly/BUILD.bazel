@@ -1,5 +1,5 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load(
     "//:index.bzl",
     "css_library",
@@ -27,7 +27,7 @@ css_library(
     testonly = True,
 )
 
-ts_library(
+ts_project(
     name = "scripts",
     srcs = ["page_script.ts"],
     testonly = True,

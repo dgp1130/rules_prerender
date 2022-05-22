@@ -1,7 +1,6 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("//common:label.bzl", "absolute", "file_path_of")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
@@ -53,7 +52,7 @@ def prerender_pages_unbundled(
     }
     ```
     
-    A `ts_library()` is used to compile the `src` file and `lib_deps` + `deps`
+    A `ts_project()` is used to compile the `src` file and `lib_deps` + `deps`
     is used as the `deps` parameter with the given `tsconfig`.
 
     Outputs:
@@ -65,7 +64,7 @@ def prerender_pages_unbundled(
             scripts that were included in the page via `includeScript()`.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
-        %{name}_prerender_for_test: An alias to the `ts_library()` target which
+        %{name}_prerender_for_test: An alias to the `ts_project()` target which
             compiles the `src` of this macro marked as `testonly`. This provides
             a simple hook for unit testing prerender logic.
     

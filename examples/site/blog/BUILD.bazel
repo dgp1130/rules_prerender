@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 
@@ -22,9 +22,10 @@ prerender_pages(
     ],
 )
 
-ts_library(
+ts_project(
     name = "blog_test_lib",
     srcs = ["blog_test.ts"],
+    link_workspace_root = False,
     testonly = True,
     deps = [
         ":blog_prerender_for_test",

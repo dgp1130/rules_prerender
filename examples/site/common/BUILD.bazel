@@ -1,7 +1,7 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "css_library")
 
-ts_library(
+ts_project(
     name = "links",
     srcs = ["links.ts"],
     visibility = ["//examples/site:__subpackages__"],
