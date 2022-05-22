@@ -3,8 +3,12 @@
 :host {
     background-color: var(--primary-color);
     color: var(--text-color);
-    max-width: var(--content-max-width);
     padding: 10px var(--page-padding-width);
+}
+
+div {
+    margin: 0 auto;
+    max-width: var(--content-max-width);
 }
 
 a {
