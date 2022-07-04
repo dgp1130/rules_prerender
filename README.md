@@ -68,7 +68,7 @@ resources (images, fonts, JSON) required for to it to function.
 ```python
 # my_component/BUILD.bazel
 
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
 load("@npm//rules_prerender:index.bzl", "prerender_component", "web_resources")
 
 # A "library" target encapsulating the entire component.
@@ -76,7 +76,7 @@ prerender_component(
     name = "my_component",
     # The library which will prerender the HTML at build time in a Node process.
     srcs = ["my_component_prerender.ts"],
-    # Other `ts_library()` rules used by `my_component_prerender.ts`.
+    # Other `ts_project()` targets used by `my_component_prerender.ts`.
     lib_deps = ["@npm//rules_prerender"],
     # Other `prerender_component()` rules used by `my_component_prerender.ts`.
     deps = ["//my_other_component"],
@@ -89,9 +89,10 @@ prerender_component(
 )
 
 # Client-side scripts to be executed in the browser.
-ts_library(
+ts_project(
     name = "scripts",
     srcs = ["my_component.ts"],
+    declaration = True,
     deps = ["//my_other_component:scripts"],
 )
 
@@ -116,7 +117,7 @@ web_resources(
 // my_component/my_component_prerender.ts
 
 import { includeScript, inlineStyle } from 'rules_prerender';
-import { renderOtherComponent } from '__main__/my_other_component/my_other_component_prerender';
+import { renderOtherComponent } from '../my_other_component/my_other_component_prerender';
 
 /**
  * Render partial HTML. In this case we're just using a string literal, but you
@@ -160,7 +161,7 @@ export function renderMyComponent(name: string): string {
 ```typescript
 // my_component/my_component.ts
 
-import { show } from '__main__/my_other_component/my_other_component';
+import { show } from '../my_other_component/my_other_component';
 
 // Register an event handler to show the other component. Could just as easily
 // use a framework like Angular, LitElement, React, or just define an
@@ -179,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* my_component/my_component.css */
 
 /* @import dependencies resolved and bundled at build time. */
-@import '__main__/some_common_package/styles.css';
+@import '../some_common_package/styles.css';
 
 /* Styles for the component. */
 @font-face {
@@ -200,7 +201,7 @@ web page.
 // my_page/my_page_prerender.ts
 
 import { PrerenderResource } from 'rules_prerender';
-import { renderMyComponent } from '__main__/my_component/my_component_prerender';
+import { renderMyComponent } from '../my_component/my_component_prerender';
 
 // Renders HTML pages for the site at build-time.
 // If you aren't familiar with generators and the `yield` looks scary, you could
@@ -312,16 +313,15 @@ posts in a blog.
 // my_blog/posts_prerender.ts
 
 import * as fs from 'fs';
+import { runfiles } from '@bazel/runfiles';
 import { PrerenderResource } from 'rules_prerender';
 import * as md from 'markdown-it';
 
 export default async function* render():
         AsyncGenerator<PrerenderResource, void, void> {
     // List all files in the `posts/` directory.
-    const posts = await fs.readdir(
-        `${process.env['RUNFILES']}/__main__/my_blog/posts/`,
-        { withFileTypes: true },
-    );
+    const postsDir = runfiles.resolvePackageRelative('posts');
+    const posts = await fs.readdir(postsDir, { withFileTypes: true });
 
     for (const post of posts) {
         // Read the post markdown, convert it to HTML, and then emit the file to
