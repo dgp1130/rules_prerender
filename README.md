@@ -559,8 +559,8 @@ desired value for various parameters using <kbd>Tab</kbd> and
 <kbd>Shift</kbd>+<kbd>Tab</kbd> to navigate between them. The snippet will take
 care of making sure certain values match as expected.
 
-*   Typing `ts_lib` in a `BUILD.bazel` file with a filename will generate a
-    `ts_library()` rule for that file, a rule for its test file, and a
+*   Typing `ts_proj` in a `BUILD.bazel` file with a filename will generate a
+    `ts_project()` rule for that file, a rule for its test file, and a
     `jasmine_node_test()` rule. Useful when creating a new file to auto-generate
     its default `BUILD` rules.
 *   Typing `jas` in a TypeScript file will generate a base Jasmine setup with

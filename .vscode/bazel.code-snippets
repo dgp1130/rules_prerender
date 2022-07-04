@@ -15,17 +15,17 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"ts_library() with tests": {
+	"ts_project() with tests": {
 		"scope": "starlark",
-		"prefix": "ts_lib",
+		"prefix": "ts_proj",
 		"description": "Build a new TypeScript file with Jasmine tests.",
 		"body": [
-			"ts_library(",
+			"ts_project(",
 			"    name = \"${1:library_name}\",",
 			"    srcs = [\"${1}.ts\"],",
 			")",
 			"",
-			"ts_library(",
+			"ts_project(",
 			"    name = \"${1}_test_lib\",",
 			"    srcs = [\"${1}_test.ts\"],",
 			"    testonly = True,",
