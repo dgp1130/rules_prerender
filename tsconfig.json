@@ -53,6 +53,9 @@
       "./bazel-out/darwin-dbg/bin",
       "./bazel-out/k8-dbg/bin",
       "./bazel-out/x64_windows-dbg/bin",
+      "./bazel-out/darwin-opt/bin",
+      "./bazel-out/k8-opt/bin",
+      "./bazel-out/x64_windows-opt/bin",
     ],
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     // "types": [],                           /* Automatically managed by `ts_project()`. */

@@ -29,6 +29,9 @@
       "../../bazel-out/darwin-dbg/bin",
       "../../bazel-out/k8-dbg/bin",
       "../../bazel-out/x64_windows-dbg/bin",
+      "../../bazel-out/darwin-opt/bin",
+      "../../bazel-out/k8-opt/bin",
+      "../../bazel-out/x64_windows-opt/bin",
     ],
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
 
