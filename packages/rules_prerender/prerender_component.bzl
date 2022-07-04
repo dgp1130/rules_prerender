@@ -90,6 +90,10 @@ def prerender_component(
             visibility = visibility,
         )
     elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
+        if tsconfig:
+            fail("Cannot set a `tsconfig.json` file for a JS-based" +
+                " `prerender_component()`, don't set the `tsconfig` attribute.")
+
         js_library(
             name = prerender_lib,
             srcs = srcs + data, # `data` is included in `srcs`.
