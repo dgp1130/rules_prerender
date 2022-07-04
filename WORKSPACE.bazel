@@ -40,7 +40,7 @@ npm_install(
     package_lock_json = "//:package-lock.json",
     # Needed for `rules_postcss` to be able to resolve its NPM dependencies.
     strict_visibility = False,
-    # Needed for `ts_library()`, should be able to drop after migrating to `ts_project()`.
+    # Needed for `rules_postcss`.
     exports_directories_only = False,
 )
 
