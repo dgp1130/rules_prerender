@@ -1,5 +1,5 @@
 const { includeScript } = require('rules_prerender');
-const { content } = require('rules_prerender/examples/javascript/component/prerender_lib');
+const { content } = require('./prerender_lib');
 
 /** Renders an example component with a script. */
 function renderComponent() {

@@ -4,6 +4,8 @@ load("//:index.bzl", "prerender_component")
 prerender_component(
     name = "transitive",
     srcs = ["transitive.ts"],
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":transitive_script"],
     visibility = ["//examples/scripts:__subpackages__"],

@@ -7,7 +7,7 @@ load(
     "JSModuleInfo",
     "JSEcmaScriptModuleInfo",
 )
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
 load("//common:label.bzl", "absolute")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
@@ -18,6 +18,8 @@ def prerender_component(
     name,
     srcs,
     tsconfig = None,
+    source_map = None,
+    package_name = None,
     data = [],
     lib_deps = [],
     scripts = [],
@@ -47,6 +49,8 @@ def prerender_component(
             allowed. `*.d.ts` files are also allowed in either case.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile `*.ts` files in `srcs`.
+        source_map: A boolean indicating whether or not to generate source maps for
+            prerendered TypeScript.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         lib_deps: Dependencies for the source files.
         scripts: List of client-side JavaScript libraries which can be included
@@ -80,23 +84,40 @@ def prerender_component(
 
     prerender_lib = "%s_prerender" % name
     if all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
-        ts_library(
-            name = prerender_lib,
+        prerender_ts = "%s_ts" % prerender_lib
+        ts_project(
+            name = prerender_ts,
             srcs = srcs,
             tsconfig = tsconfig,
+            source_map = source_map,
             data = data,
+            # A `prerender_component()` can't compose other `prerender_component()` targets
+            # unless `declaration = True`, so we always set it.
+            declaration = True,
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
+        )
+
+        # Re-export compiled TS as a `js_library()` so `package_name` can be declared.
+        js_library(
+            name = prerender_lib,
+            package_name = package_name,
+            testonly = testonly,
             visibility = visibility,
+            deps = [":%s" % prerender_ts],
         )
     elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
         if tsconfig:
             fail("Cannot set a `tsconfig.json` file for a JS-based" +
                 " `prerender_component()`, don't set the `tsconfig` attribute.")
+        if source_map:
+            fail("Cannot generate a source map for a JS-based `prerender_component()`," +
+                " don't set `source_map = True`.")
 
         js_library(
             name = prerender_lib,
             srcs = srcs + data, # `data` is included in `srcs`.
+            package_name = package_name,
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
             visibility = visibility,

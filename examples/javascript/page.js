@@ -1,5 +1,5 @@
 const { PrerenderResource } = require('rules_prerender');
-const { renderComponent } = require('rules_prerender/examples/javascript/component/component');
+const { renderComponent } = require('./component/component');
 
 /* Renders the page. */
 module.exports = function*() {

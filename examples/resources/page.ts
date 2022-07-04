@@ -1,6 +1,6 @@
 import { PrerenderResource } from 'rules_prerender';
-import { renderComponent } from 'rules_prerender/examples/resources/component/component';
-import { renderTransitive } from 'rules_prerender/examples/resources/transitive/transitive';
+import { renderComponent } from './component/component';
+import { renderTransitive } from './transitive/transitive';
 
 export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `

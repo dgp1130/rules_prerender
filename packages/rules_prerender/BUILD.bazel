@@ -28,6 +28,16 @@ ts_project(
     ],
 )
 
+prerender_component(
+    name = "declarative_shadow_dom",
+    srcs = ["declarative_shadow_dom.ts"],
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
+    package_name = "rules_prerender",
+    visibility = ["//visibility:public"],
+    deps = ["//packages/rules_prerender/declarative_shadow_dom"],
+)
+
 publish_files(
     name = "publish_files",
     files = glob(["**/*.bzl"]) + [

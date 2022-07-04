@@ -1,8 +1,8 @@
 import { PrerenderResource } from 'rules_prerender';
 import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
-import { srcLink } from 'rules_prerender/examples/site/common/links';
-import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
-import { renderCounter } from 'rules_prerender/examples/site/components/counter/counter_prerender';
+import { srcLink } from '../common/links';
+import { baseLayout } from '../components/base/base';
+import { renderCounter } from '../components/counter/counter_prerender';
 
 /** Renders the counter page. */
 export default async function*():

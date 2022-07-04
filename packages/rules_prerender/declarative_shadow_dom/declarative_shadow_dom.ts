@@ -1,4 +1,4 @@
-import { includeScript } from 'rules_prerender/packages/rules_prerender/scripts';
+import { includeScript } from '../scripts';
 
 /**
  * Returns a prerender annotation used by the bundler to inject the declarative

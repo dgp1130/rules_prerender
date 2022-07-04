@@ -1,5 +1,5 @@
 import { includeScript } from 'rules_prerender';
-import { renderTransitive } from 'rules_prerender/examples/custom_bundling/transitive/transitive';
+import { renderTransitive } from '../transitive/transitive';
 
 /** Renders HTML which expects a JavaScript library to be included. */
 export function renderComponent(): string {

@@ -1,6 +1,6 @@
 import { PrerenderResource, includeScript } from 'rules_prerender';
-import { renderJsParent } from 'rules_prerender/examples/tsjs/js_parent/js_parent';
-import { renderTsParent } from 'rules_prerender/examples/tsjs/ts_parent/ts_parent';
+import { renderJsParent } from './js_parent/js_parent';
+import { renderTsParent } from './ts_parent/ts_parent';
 
 export default function*(): Generator<PrerenderResource, void, void> {
     // Index page to list the various test cases.

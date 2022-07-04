@@ -5,14 +5,16 @@ load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 prerender_pages(
     name = "home",
     src = "home.ts",
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     lib_deps = [
         "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
     visibility = ["//examples/site:__pkg__"],
     deps = [
-        "//:declarative_shadow_dom",
         "//examples/site/components/base",
+        "//packages/rules_prerender:declarative_shadow_dom",
     ],
 )
 

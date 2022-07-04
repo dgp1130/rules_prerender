@@ -11,6 +11,7 @@ describe('prerender_component_publish_files()', () => {
         // Should include **exactly** these files and no more.
         const expectedFiles = new Set([
             'component.js',
+            'component.js.map',
             'component.d.ts',
             'prerender_dep.js',
             'prerender_dep.js.map',

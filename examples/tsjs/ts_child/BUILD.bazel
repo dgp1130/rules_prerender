@@ -3,5 +3,7 @@ load("//:index.bzl", "prerender_component")
 prerender_component(
     name = "ts_child",
     srcs = ["ts_child.ts"],
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     visibility = ["//examples/tsjs:__subpackages__"],
 )

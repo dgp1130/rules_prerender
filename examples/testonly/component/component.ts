@@ -1,5 +1,5 @@
 import { includeScript, inlineStyle } from 'rules_prerender';
-import { renderTransitive } from 'rules_prerender/examples/testonly/transitive/transitive';
+import { renderTransitive } from '../transitive/transitive';
 
 export function renderComponent(): string {
     return `

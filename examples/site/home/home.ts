@@ -1,7 +1,7 @@
 import { PrerenderResource } from 'rules_prerender';
 import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
-import { baseLayout } from 'rules_prerender/examples/site/components/base/base';
-import { repo, srcLink } from 'rules_prerender/examples/site/common/links';
+import { baseLayout } from '../components/base/base';
+import { repo, srcLink } from '../common/links';
 
 /** Renders the entire home page. */
 export default async function*():

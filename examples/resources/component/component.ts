@@ -1,4 +1,4 @@
-import { renderTransitive } from 'rules_prerender/examples/resources/transitive/transitive';
+import { renderTransitive } from '../transitive/transitive';
 
 export function renderComponent(): string {
     return `

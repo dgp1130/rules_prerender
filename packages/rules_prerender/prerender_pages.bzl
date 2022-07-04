@@ -14,6 +14,7 @@ def prerender_pages(
     name,
     src,
     tsconfig = None,
+    source_map = None,
     data = [],
     lib_deps = [],
     scripts = [],
@@ -85,6 +86,8 @@ def prerender_pages(
             string which contains the HTML document.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile the `src` file.
+        source_map: A boolean indicating whether or not to generate source maps for
+            prerendered TypeScript.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be bundled with the
@@ -105,6 +108,7 @@ def prerender_pages(
         name = prerender_name,
         src = src,
         tsconfig = tsconfig,
+        source_map = source_map,
         data = data,
         lib_deps = lib_deps,
         scripts = scripts,

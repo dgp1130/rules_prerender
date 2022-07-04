@@ -5,6 +5,8 @@ load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 prerender_pages(
     name = "page",
     src = "page.ts",
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     styles = [":styles"],
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     lib_deps = ["//packages/rules_prerender"],

@@ -13,6 +13,7 @@ def prerender_pages_unbundled(
     src,
     tsconfig = None,
     data = [],
+    source_map = None,
     lib_deps = [],
     scripts = [],
     styles = [],
@@ -74,6 +75,8 @@ def prerender_pages_unbundled(
             any number of resources.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile the `src` file.
+        source_map: A boolean indicating whether or not to generate source maps for
+            prerendered TypeScript.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         lib_deps: Dependencies for the TypeScript source file.
         scripts: List of client-side JavaScript libraries to be included with
@@ -92,6 +95,7 @@ def prerender_pages_unbundled(
         name = component,
         srcs = [src],
         tsconfig = tsconfig,
+        source_map = source_map,
         data = data,
         lib_deps = lib_deps,
         scripts = scripts,

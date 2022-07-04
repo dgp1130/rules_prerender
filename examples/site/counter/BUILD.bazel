@@ -3,14 +3,16 @@ load("//:index.bzl", "prerender_pages")
 prerender_pages(
     name = "counter",
     src = "counter.ts",
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     lib_deps = [
         "//examples/site/common:links",
         "//packages/rules_prerender",
     ],
     visibility = ["//examples/site:__pkg__"],
     deps = [
-        "//:declarative_shadow_dom",
         "//examples/site/components/base",
         "//examples/site/components/counter",
+        "//packages/rules_prerender:declarative_shadow_dom",
     ],
 )

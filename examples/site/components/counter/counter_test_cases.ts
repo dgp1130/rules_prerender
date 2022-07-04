@@ -1,5 +1,5 @@
 import { PrerenderResource } from 'rules_prerender';
-import { renderCounter } from 'rules_prerender/examples/site/components/counter/counter_prerender';
+import { renderCounter } from './counter_prerender';
 
 /** Generates prerendered test cases of the counter. */
 export default function* (): Generator<PrerenderResource, void, void> {

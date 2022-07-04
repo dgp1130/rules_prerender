@@ -5,6 +5,8 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 prerender_pages(
     name = "blog",
     src = "blog.ts",
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     data = glob(["posts/*.md"]),
     visibility = ["//examples/site:__pkg__"],
     lib_deps = [
@@ -15,8 +17,8 @@ prerender_pages(
         "@npm//@types/node",
     ],
     deps = [
-        "//:declarative_shadow_dom",
         "//examples/site/components/base",
+        "//packages/rules_prerender:declarative_shadow_dom",
     ],
 )
 

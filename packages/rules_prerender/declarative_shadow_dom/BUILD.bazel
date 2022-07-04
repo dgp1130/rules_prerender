@@ -24,9 +24,14 @@ prerender_component_publish_files(
 prerender_component(
     name = "declarative_shadow_dom",
     srcs = ["declarative_shadow_dom.ts"],
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     scripts = [":declarative_shadow_dom_polyfill"],
     lib_deps = ["//packages/rules_prerender:scripts"],
-    visibility = ["//:__pkg__"],
+    visibility = [
+        "//:__pkg__",
+        "//packages/rules_prerender:__pkg__",
+    ],
 )
 
 ts_project(
@@ -48,4 +53,5 @@ jasmine_node_test(
 ts_project(
     name = "declarative_shadow_dom_polyfill",
     srcs = ["declarative_shadow_dom_polyfill.ts"],
+    tsconfig = "//:tsconfig_client",
 )

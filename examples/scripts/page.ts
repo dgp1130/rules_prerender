@@ -1,5 +1,5 @@
 import { PrerenderResource, includeScript } from 'rules_prerender';
-import { renderComponent } from 'rules_prerender/examples/scripts/component/component';
+import { renderComponent } from './component/component';
 
 /** Render some HTML with a `<script />` tag. */
 export default function*(): Generator<PrerenderResource, void, void> {

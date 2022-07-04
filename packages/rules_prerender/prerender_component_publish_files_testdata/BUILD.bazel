@@ -14,6 +14,8 @@ load("//tools:typescript.bzl", "ts_project")
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     lib_deps = [":prerender_dep"],
     scripts = [":scripts"],
     styles = [":styles"],

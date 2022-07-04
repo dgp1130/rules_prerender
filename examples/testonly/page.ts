@@ -1,5 +1,5 @@
 import { PrerenderResource, inlineStyle, includeScript } from 'rules_prerender';
-import { renderComponent } from 'rules_prerender/examples/testonly/component/component';
+import { renderComponent } from './component/component';
 
 export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `

@@ -1,5 +1,5 @@
 import { inlineStyle } from 'rules_prerender';
-import { repo } from 'rules_prerender/examples/site/common/links';
+import { repo } from '../../common/links';
 
 /** Renders a footer component for the site. */
 export function renderFooter(): string {

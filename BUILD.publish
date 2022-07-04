@@ -19,7 +19,7 @@ prerender_component(
 js_library(
     name = "_declarative_shadow_dom_scripts_lib",
     srcs = [
-        "@npm//:node_modules/rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill.mjs",
+        "@npm//:node_modules/rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill.js",
         "@npm//:node_modules/rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill.d.ts",
     ],
     # Link under `external/npm/rules_prerender/...`.

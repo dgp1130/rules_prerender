@@ -11,6 +11,8 @@ load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 prerender_pages(
     name = "site",
     src = "site.ts",
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     lib_deps = ["//packages/rules_prerender"],
     deps = [":component"],
 )
@@ -18,9 +20,11 @@ prerender_pages(
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
+    tsconfig = "//:tsconfig.json",
+    source_map = True,
     styles = [":styles"],
     lib_deps = ["//packages/rules_prerender"],
-    deps = ["//:declarative_shadow_dom"],
+    deps = ["//packages/rules_prerender:declarative_shadow_dom"],
 )
 
 css_library(

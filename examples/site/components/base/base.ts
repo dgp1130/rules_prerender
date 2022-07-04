@@ -1,6 +1,6 @@
 import { inlineStyle } from 'rules_prerender';
-import { renderHeader } from 'rules_prerender/examples/site/components/header/header';
-import { renderFooter } from 'rules_prerender/examples/site/components/footer/footer';
+import { renderHeader } from '../header/header';
+import { renderFooter } from '../footer/footer';
 
 /**
  * Provides a basic structure for an HTML page.
