@@ -167,11 +167,13 @@ def _js_reexport_impl(ctx):
     merged_js_ecma_script_module_info = JSEcmaScriptModuleInfo(
         direct_sources = depset([],
             transitive = [src[JSEcmaScriptModuleInfo].direct_sources
-                          for src in ctx.attr.srcs],
+                          for src in ctx.attr.srcs
+                          if JSEcmaScriptModuleInfo in src],
         ),
         sources = depset([],
             transitive = [dep[JSEcmaScriptModuleInfo].sources
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JSEcmaScriptModuleInfo in dep],
         ),
     )
 
@@ -195,11 +197,11 @@ _js_reexport = rule(
     attrs = {
         "srcs": attr.label_list(
             default = [],
-            providers = [JSModuleInfo, JSEcmaScriptModuleInfo],
+            providers = [JSModuleInfo],
         ),
         "deps": attr.label_list(
             default = [],
-            providers = [JSModuleInfo, JSEcmaScriptModuleInfo],
+            providers = [JSModuleInfo],
         ),
     },
     doc = """
