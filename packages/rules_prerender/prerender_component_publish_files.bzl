@@ -39,7 +39,7 @@ def prerender_component_publish_files(
 
     # Collect JS for prerendering.
     prerender_js = "%s_prerender_js" % name
-    _transitive_js_sources(
+    transitive_js_sources(
         name = prerender_js,
         target = "%s_prerender" % absolute_name,
         testonly = testonly,
@@ -55,7 +55,7 @@ def prerender_component_publish_files(
 
     # Collect JS for scripts.
     scripts_js = "%s_scripts_js" % name
-    _transitive_js_sources(
+    transitive_js_sources(
         name = scripts_js,
         target = "%s_scripts" % absolute_name,
         testonly = testonly,
@@ -99,7 +99,7 @@ _transitive_declarations = rule(
 def _transitive_js_sources_impl(ctx):
     return DefaultInfo(files = ctx.attr.target[JSModuleInfo].sources)
 
-_transitive_js_sources = rule(
+transitive_js_sources = rule(
     implementation = _transitive_js_sources_impl,
     attrs = {
         "target": attr.label(
