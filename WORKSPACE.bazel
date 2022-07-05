@@ -18,10 +18,19 @@ http_archive(
     sha256 = "2b2004784358655f334925e7eadc7ba80f701144363df949b3293e1ae7a2fb7b",
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.4.0/rules_nodejs-5.4.0.tar.gz"],
 )
-
-# Load `rules_nodejs` dependencies.
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 build_bazel_rules_nodejs_dependencies()
+
+# Load `@aspect_rules_js`.
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "80e168f9cd62f3640de429b70b34ff817d0d94ada2abaf2cffeef46e35434e1d",
+    strip_prefix = "rules_js-1.0.0-rc.1",
+    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.0.0-rc.1.tar.gz",
+)
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+rules_js_dependencies()
 
 # Set the NodeJS version.
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
@@ -43,6 +52,19 @@ npm_install(
     # Needed for `rules_postcss`.
     exports_directories_only = False,
 )
+
+# Load the `@aspect_rules_js` version of the `@npm` workspace. Named `@npm_rules_js` to avoid
+# conflicting with the existing workspace from `@build_bazel_rules_nodejs`.
+# TODO(#48): Rename to `@npm` once migrated off `@build_bazel_rules_nodejs`.
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+npm_translate_lock(
+    name = "npm_rules_js",
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+
+load("@npm_rules_js//:repositories.bzl", "npm_repositories")
+npm_repositories()
 
 # Load bazel_skylib.
 http_archive(

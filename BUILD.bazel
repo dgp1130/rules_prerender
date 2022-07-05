@@ -3,6 +3,7 @@ load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
+load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
@@ -14,6 +15,8 @@ ts_config(
     visibility = ["//visibility:public"],
     deps = ["tsconfig.json"],
 )
+
+npm_link_all_packages(name = "node_modules")
 
 bzl_library(
     name = "rules_prerender",
