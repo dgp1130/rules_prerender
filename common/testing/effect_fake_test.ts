@@ -1,7 +1,7 @@
 import 'jasmine';
 
-import { Effect } from 'rules_prerender/common/testing/effects';
-import { effectFake } from 'rules_prerender/common/testing/effect_fake';
+import { Effect } from './effects';
+import { effectFake } from './effect_fake';
 
 describe('effect_fake', () => {
     describe('effectFake()', () => {

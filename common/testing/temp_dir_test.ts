@@ -1,8 +1,8 @@
 import 'jasmine';
 
 import { env } from 'process';
-import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
-import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
+import { useTempDir } from './temp_dir';
+import { EffectTester } from './effect_tester';
 
 const originalTempDir = env['TEST_TMPDIR'];
 describe('temp_dir', () => {

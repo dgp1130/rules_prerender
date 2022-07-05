@@ -2,8 +2,8 @@ import 'jasmine';
 
 import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
-import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
-import { ProcessResult, execBinary } from 'rules_prerender/common/testing/binary';
+import { useTempDir } from '../../common/testing/temp_dir';
+import { ProcessResult, execBinary } from '../../common/testing/binary';
 
 const binary = runfiles.resolvePackageRelative('resource_packager.sh');
 

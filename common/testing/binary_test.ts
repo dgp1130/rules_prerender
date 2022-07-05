@@ -1,8 +1,8 @@
 import 'jasmine';
 
 import { promises as fs } from 'fs';
-import { execBinary } from 'rules_prerender/common/testing/binary';
-import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
+import { execBinary } from './binary';
+import { useTempDir } from './temp_dir';
 
 describe('binary', () => {
     const tmpDir = useTempDir();

@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { TestServer } from 'rules_prerender/common/testing/test_server';
+import { TestServer } from './test_server';
 
 describe('test_server', () => {
     describe('TestServer', () => {

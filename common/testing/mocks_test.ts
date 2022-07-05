@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { unmockedFunc } from 'rules_prerender/common/testing/mocks';
+import { unmockedFunc } from './mocks';
 
 describe('mocks', () => {
     describe('unmockedFunc()', () => {

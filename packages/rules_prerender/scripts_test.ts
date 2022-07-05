@@ -1,7 +1,7 @@
 import 'jasmine';
 
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { includeScript } from 'rules_prerender/packages/rules_prerender/scripts';
+import { createAnnotation } from '../../common/models/prerender_annotation';
+import { includeScript } from './scripts';
 
 describe('scripts', () => {
     describe('includeScript()', () => {

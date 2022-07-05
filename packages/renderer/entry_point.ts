@@ -1,5 +1,5 @@
 import { dynamicImport } from './dynamic_import';
-import { PrerenderResource } from 'rules_prerender/common/models/prerender_resource';
+import { PrerenderResource } from '../../common/models/prerender_resource';
 
 /**
  * Dynamically imports the JavaScript CommonJS module at the given path, invokes

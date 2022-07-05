@@ -2,9 +2,9 @@ import 'jasmine';
 
 import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
-import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
-import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { execBinary, ProcessResult } from '../../common/testing/binary';
+import { useTempDir } from '../../common/testing/temp_dir';
+import { createAnnotation } from '../../common/models/prerender_annotation';
 
 const renderer = runfiles.resolvePackageRelative('renderer_test_binary.sh');
 

@@ -1,9 +1,9 @@
 import * as yargs from 'yargs';
-import { main } from 'rules_prerender/common/binary';
-import { mdSpacing } from 'rules_prerender/common/formatters';
-import { pack } from 'rules_prerender/packages/resource_packager/packager';
-import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
-import { loadPackage } from 'rules_prerender/packages/resource_packager/package_loader';
+import { main } from '../../common/binary';
+import { mdSpacing } from '../../common/formatters';
+import { pack } from './packager';
+import { ResourceMap } from './resource_map';
+import { loadPackage } from './package_loader';
 
 main(async (args) => {
     const {

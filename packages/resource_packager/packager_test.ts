@@ -1,9 +1,9 @@
 import 'jasmine';
 
-import * as fs from 'rules_prerender/common/fs';
-import { pack } from 'rules_prerender/packages/resource_packager/packager';
-import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
-import { mockFileRef } from 'rules_prerender/packages/resource_packager/resource_map_mock';
+import * as fs from '../../common/fs';
+import { pack } from './packager';
+import { ResourceMap } from './resource_map';
+import { mockFileRef } from './resource_map_mock';
 
 describe('packager', () => {
     describe('pack()', () => {

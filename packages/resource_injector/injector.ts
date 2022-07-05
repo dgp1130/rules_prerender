@@ -1,7 +1,7 @@
-import * as fs from 'rules_prerender/common/fs';
+import * as fs from '../../common/fs';
 import { HTMLElement, parse } from 'node-html-parser';
-import { InjectorConfig, InjectScript } from 'rules_prerender/packages/resource_injector/config';
-import { AnnotationNode, walkAllAnnotations } from 'rules_prerender/common/prerender_annotation_walker';
+import { InjectorConfig, InjectScript } from './config';
+import { AnnotationNode, walkAllAnnotations } from '../../common/prerender_annotation_walker';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the

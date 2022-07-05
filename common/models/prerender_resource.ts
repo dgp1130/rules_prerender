@@ -1,4 +1,4 @@
-import { UrlPath } from 'rules_prerender/common/models/url_path';
+import { UrlPath } from './url_path';
 
 /** Represents a resource to be rendered / generated at a particular path. */
 export class PrerenderResource {

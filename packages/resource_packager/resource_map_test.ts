@@ -1,7 +1,7 @@
 import 'jasmine';
 
-import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
-import { mockFileRef } from 'rules_prerender/packages/resource_packager/resource_map_mock';
+import { ResourceMap } from './resource_map';
+import { mockFileRef } from './resource_map_mock';
 
 describe('ResourceMap', () => {
     describe('urlPaths()', () => {

@@ -3,7 +3,7 @@
  * @see /README.md#Mocking
  */
 
-import { PrerenderMetadata, ScriptMetadata } from 'rules_prerender/common/models/prerender_metadata';
+import { PrerenderMetadata, ScriptMetadata } from './prerender_metadata';
 
 /** Mocks the {@link PrerenderMetadata} object with the given overrides. */
 export function mockPrerenderMetadata(

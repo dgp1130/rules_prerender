@@ -2,9 +2,9 @@ import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
 import * as webdriverio from 'webdriverio';
-import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
-import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
+import { useDevserver } from './devserver';
+import { EffectTester } from './effect_tester';
+import { useWebDriver, webDriverTestTimeout } from './webdriver';
 
 const devserverBinary =
     runfiles.resolvePackageRelative('webdriver_test_server');

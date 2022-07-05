@@ -6,9 +6,9 @@ import killTree from 'tree-kill';
 import net from 'net';
 import { URL } from 'url';
 import { promisify } from 'util';
-import * as http from 'rules_prerender/common/http';
-import { Effect, useForAll } from 'rules_prerender/common/testing/effects';
-import { TestServer } from 'rules_prerender/common/testing/test_server';
+import * as http from '../http';
+import { Effect, useForAll } from './effects';
+import { TestServer } from './test_server';
 
 type Signal = Parameters<ChildProcess['kill']>[0];
 const execFile = promisify(execFileCb);

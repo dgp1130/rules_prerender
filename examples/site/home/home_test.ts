@@ -1,8 +1,8 @@
 import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
-import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { useWebDriver, webDriverTestTimeout } from 'rules_prerender/common/testing/webdriver';
+import { useDevserver } from '../../../common/testing/devserver';
+import { useWebDriver, webDriverTestTimeout } from '../../../common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('home_devserver');
 

@@ -2,9 +2,9 @@ import 'jasmine';
 
 import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
-import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
-import { execBinary, ProcessResult } from 'rules_prerender/common/testing/binary';
-import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
+import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';
+import { execBinary, ProcessResult } from '../../common/testing/binary';
+import { useTempDir } from '../../common/testing/temp_dir';
 
 const entryGenerator =
     runfiles.resolvePackageRelative('script_entry_generator.sh');

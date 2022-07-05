@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { Effect } from 'rules_prerender/common/testing/effects';
+import { Effect } from './effects';
 
 /**
  * Utility class for testing effects.
@@ -14,7 +14,7 @@ import { Effect } from 'rules_prerender/common/testing/effects';
  * 
  * ```typescript
  * import 'jasmine';
- * import { Effect, useForEach } from 'rules_prerender/common/testing/effects';
+ * import { Effect, useForEach } from '.../effects';
  * import { Foo } from './foo';
  * 
  * // Given an example effect:

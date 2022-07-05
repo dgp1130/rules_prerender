@@ -1,12 +1,12 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 import * as path from 'path';
-import { main } from 'rules_prerender/common/binary';
-import { mdSpacing } from 'rules_prerender/common/formatters';
-import { extract } from 'rules_prerender/packages/annotation_extractor/extractor';
-import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
-import { PrerenderAnnotation, annotationsEqual } from 'rules_prerender/common/models/prerender_annotation';
-import { unique } from 'rules_prerender/common/collections';
+import { main } from '../../common/binary';
+import { mdSpacing } from '../../common/formatters';
+import { extract } from './extractor';
+import { assembleMetadata } from './metadata';
+import { PrerenderAnnotation, annotationsEqual } from '../../common/models/prerender_annotation';
+import { unique } from '../../common/collections';
 
 main(async () => {
     const {

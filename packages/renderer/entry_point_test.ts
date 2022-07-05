@@ -1,8 +1,8 @@
 import 'jasmine';
 
-import { PrerenderResource } from 'rules_prerender/common/models/prerender_resource';
-import { invoke } from 'rules_prerender/packages/renderer/entry_point';
-import * as importLib from 'rules_prerender/packages/renderer/dynamic_import';
+import { PrerenderResource } from '../../common/models/prerender_resource';
+import { invoke } from './entry_point';
+import * as importLib from './dynamic_import';
 
 describe('entry_point', () => {
     describe('invoke()', () => {

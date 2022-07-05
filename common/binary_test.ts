@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { main as mainReal } from 'rules_prerender/common/binary';
+import { main as mainReal } from './binary';
 
 // Wrap `main`'s type to return its `Promise` to easily `await` it.
 function main(...args: Parameters<typeof mainReal>): Promise<void> {

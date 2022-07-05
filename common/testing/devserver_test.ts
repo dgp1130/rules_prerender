@@ -3,9 +3,9 @@ import 'jasmine';
 import { URL } from 'url';
 import { StatusCodes } from 'http-status-codes';
 import { runfiles } from '@bazel/runfiles';
-import * as http from 'rules_prerender/common/http';
-import { Server, useDevserver } from 'rules_prerender/common/testing/devserver';
-import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
+import * as http from '../http';
+import { Server, useDevserver } from './devserver';
+import { EffectTester } from './effect_tester';
 
 const devserver = runfiles.resolvePackageRelative('devserver_test_server');
 

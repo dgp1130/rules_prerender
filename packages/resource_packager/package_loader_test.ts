@@ -1,7 +1,7 @@
 import 'jasmine';
 
-import { loadPackage } from 'rules_prerender/packages/resource_packager/package_loader';
-import { useTempDir } from 'rules_prerender/common/testing/temp_dir';
+import { loadPackage } from './package_loader';
+import { useTempDir } from '../../common/testing/temp_dir';
 import { promises as fs } from 'fs';
 
 describe('package_loader', () => {

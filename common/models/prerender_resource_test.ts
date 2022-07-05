@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { PrerenderResource } from 'rules_prerender/common/models/prerender_resource';
+import { PrerenderResource } from './prerender_resource';
 
 describe('PrerenderResource', () => {
     describe('of()', () => {

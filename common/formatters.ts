@@ -13,7 +13,7 @@
  * Example:
  * 
  * ```typescript
- * import { mdSpacing } from 'rules_prerender/common/formatters';
+ * import { mdSpacing } from '.../formatters';
  * 
  * function doSomething() {
  *     console.log(mdSpacing(`

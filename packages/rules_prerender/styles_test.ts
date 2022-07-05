@@ -1,8 +1,8 @@
 import 'jasmine';
 
-import * as inlineStyleMap from 'rules_prerender/packages/rules_prerender/inline_style_map';
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { inlineStyle, InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
+import * as inlineStyleMap from './inline_style_map';
+import { createAnnotation } from '../../common/models/prerender_annotation';
+import { inlineStyle, InlineStyleNotFoundError } from './styles';
 
 describe('styles', () => {
     describe('inlineStyle()', () => {

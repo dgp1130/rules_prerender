@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { unique } from 'rules_prerender/common/collections';
+import { unique } from './collections';
 
 describe('collections', () => {
     describe('unique()', () => {

@@ -1,5 +1,5 @@
 import { CommentNode, HTMLElement, Node } from 'node-html-parser';
-import { parseAnnotation, PrerenderAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { parseAnnotation, PrerenderAnnotation } from './models/prerender_annotation';
 
 /**
  * A reference to a `node-html-parser` `Node` which contains a

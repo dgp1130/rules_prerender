@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
+import { ResourceMap } from './resource_map';
 
 /**
  * Loads the given directory and returns a {@link ResourceMap} of all its

@@ -1,5 +1,5 @@
 /** @fileoverview Re-exports public symbols. */
 
-export { PrerenderResource } from 'rules_prerender/common/models/prerender_resource';
-export { includeScript } from 'rules_prerender/packages/rules_prerender/scripts';
-export { inlineStyle } from 'rules_prerender/packages/rules_prerender/styles';
+export { PrerenderResource } from '../../common/models/prerender_resource';
+export { includeScript } from './scripts';
+export { inlineStyle } from './styles';

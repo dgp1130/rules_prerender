@@ -1,11 +1,11 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as yargs from 'yargs';
-import { main } from 'rules_prerender/common/binary';
-import { mdSpacing } from 'rules_prerender/common/formatters';
-import { invoke } from 'rules_prerender/packages/renderer/entry_point';
-import { setMap as setInlineStyleMap } from 'rules_prerender/packages/rules_prerender/inline_style_map';
-import { InlineStyleNotFoundError } from 'rules_prerender/packages/rules_prerender/styles';
+import { main } from '../../common/binary';
+import { mdSpacing } from '../../common/formatters';
+import { invoke } from './entry_point';
+import { setMap as setInlineStyleMap } from '../../packages/rules_prerender/inline_style_map';
+import { InlineStyleNotFoundError } from '../../packages/rules_prerender/styles';
 
 main(async () => {
     // Parse binary options and arguments.

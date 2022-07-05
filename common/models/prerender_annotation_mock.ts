@@ -3,7 +3,7 @@
  * @see /README.md#Mocking
  */
 
-import { PrerenderAnnotation, ScriptAnnotation, StyleAnnotation } from 'rules_prerender/common/models/prerender_annotation';
+import { PrerenderAnnotation, ScriptAnnotation, StyleAnnotation } from './prerender_annotation';
 
 /**
  * Mocks a {@link PrerenderAnnotation} object. Since this type is a

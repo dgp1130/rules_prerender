@@ -1,10 +1,10 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as yargs from 'yargs';
-import { main } from 'rules_prerender/common/binary';
-import { mdSpacing } from 'rules_prerender/common/formatters';
-import { InjectorConfig } from 'rules_prerender/packages/resource_injector/config';
-import { inject } from 'rules_prerender/packages/resource_injector/injector';
+import { main } from '../../common/binary';
+import { mdSpacing } from '../../common/formatters';
+import { InjectorConfig } from './config';
+import { inject } from './injector';
 
 main(async () => {
     // Define command line flags.

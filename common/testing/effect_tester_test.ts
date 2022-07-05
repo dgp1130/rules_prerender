@@ -1,8 +1,8 @@
 import 'jasmine';
 
-import { useForEach } from 'rules_prerender/common/testing/effects';
-import { effectFake } from 'rules_prerender/common/testing/effect_fake';
-import { EffectTester } from 'rules_prerender/common/testing/effect_tester';
+import { useForEach } from './effects';
+import { effectFake } from './effect_fake';
+import { EffectTester } from './effect_tester';
 
 describe('EffectTester', () => {
     it('tests effects', async () => {

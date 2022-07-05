@@ -1,5 +1,5 @@
-import * as fs from 'rules_prerender/common/fs';
-import { ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
+import * as fs from '../../common/fs';
+import { ResourceMap } from './resource_map';
 
 /**
  * Copies all the provided resources to their specified URL path under the given

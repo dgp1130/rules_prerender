@@ -6,7 +6,7 @@
  * {@link beforeEach} and {@link afterEach}. Using them generally looks like so:
  * 
  * ```typescript
- * import { Effect } from 'rules_prerender/common/testing/effects';
+ * import { Effect } from '.../effects';
  * import { useSomeResource } from './testing/resource';
  * 
  * describe('test suite', () => {

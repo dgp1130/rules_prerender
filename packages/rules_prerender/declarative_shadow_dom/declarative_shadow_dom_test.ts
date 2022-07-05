@@ -1,7 +1,7 @@
 import 'jasmine';
 
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { polyfillDeclarativeShadowDom } from 'rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom';
+import { createAnnotation } from '../../../common/models/prerender_annotation';
+import { polyfillDeclarativeShadowDom } from './declarative_shadow_dom';
 
 describe('declarative_shadow_dom', () => {
     describe('polyfillDeclarativeShadowDom()', () => {

@@ -1,8 +1,8 @@
 import 'jasmine';
 
-import { mockScriptAnnotation, mockStyleAnnotation } from 'rules_prerender/common/models/prerender_annotation_mock';
-import { mockPrerenderMetadata, mockScriptMetadata } from 'rules_prerender/common/models/prerender_metadata_mock';
-import { assembleMetadata } from 'rules_prerender/packages/annotation_extractor/metadata';
+import { mockScriptAnnotation, mockStyleAnnotation } from '../../common/models/prerender_annotation_mock';
+import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';
+import { assembleMetadata } from './metadata';
 
 describe('metadata', () => {
     describe('assembleMetadata()', () => {

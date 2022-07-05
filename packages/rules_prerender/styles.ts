@@ -1,5 +1,5 @@
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { getMap as getInlineStyleMap } from 'rules_prerender/packages/rules_prerender/inline_style_map';
+import { createAnnotation } from '../../common/models/prerender_annotation';
+import { getMap as getInlineStyleMap } from './inline_style_map';
 
 /**
  * Returns a prerender annotation as a string to be included in prerendered

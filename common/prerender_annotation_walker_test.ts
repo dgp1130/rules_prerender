@@ -1,8 +1,8 @@
 import 'jasmine';
 
 import { HTMLElement, parse } from 'node-html-parser';
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { walkAllAnnotations } from 'rules_prerender/common/prerender_annotation_walker';
+import { createAnnotation } from './models/prerender_annotation';
+import { walkAllAnnotations } from './prerender_annotation_walker';
 
 describe('prerender_annotation_walker', () => {
     describe('walkAllAnnotations()', () => {

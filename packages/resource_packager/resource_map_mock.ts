@@ -3,8 +3,8 @@
  * @see /README.md#Mocking
  */
 
-import { UrlPath, FileRef, ResourceMap } from 'rules_prerender/packages/resource_packager/resource_map';
-import { Public, unmockedFunc } from 'rules_prerender/common/testing/mocks';
+import { UrlPath, FileRef, ResourceMap } from './resource_map';
+import { Public, unmockedFunc } from '../../common/testing/mocks';
 
 /** Mocks a {@link ResourceMap} object with the given property overrides. */
 export function mockResourceMap(overrides: Partial<ResourceMap> = {}):

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { env } from 'process';
-import { Effect, useForEach } from 'rules_prerender/common/testing/effects';
+import { Effect, useForEach } from './effects';
 
 /**
  * Creates an {@link Effect} of a temporary directory. The directory is deleted

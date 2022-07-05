@@ -1,9 +1,9 @@
 import 'jasmine';
 
-import * as fs from 'rules_prerender/common/fs';
-import { createAnnotation } from 'rules_prerender/common/models/prerender_annotation';
-import { InjectorConfig } from 'rules_prerender/packages/resource_injector/config';
-import { inject } from 'rules_prerender/packages/resource_injector/injector';
+import * as fs from '../../common/fs';
+import { createAnnotation } from '../../common/models/prerender_annotation';
+import { InjectorConfig } from './config';
+import { inject } from './injector';
 
 describe('injector', () => {
     describe('inject()', () => {

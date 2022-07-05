@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { mdSpacing } from 'rules_prerender/common/formatters';
+import { mdSpacing } from './formatters';
 
 describe('formatters', () => {
     describe('spaceMarkdown()', () => {

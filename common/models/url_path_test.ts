@@ -1,6 +1,6 @@
 import 'jasmine';
 
-import { UrlPath } from 'rules_prerender/common/models/url_path';
+import { UrlPath } from './url_path';
 
 describe('UrlPath', () => {
     describe('of()', () => {

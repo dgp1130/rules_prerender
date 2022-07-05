@@ -4,8 +4,8 @@
 
 import { remote, ChainablePromiseElement } from 'webdriverio';
 import { env } from 'process';
-import { Effect, useForAll } from 'rules_prerender/common/testing/effects';
-import { TestServer } from 'rules_prerender/common/testing/test_server';
+import { Effect, useForAll } from './effects';
+import { TestServer } from './test_server';
 
 /**
  * Default timeout value to use for WebDriver tests. They can be quite resource

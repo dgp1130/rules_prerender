@@ -1,4 +1,4 @@
-import { Effect } from 'rules_prerender/common/testing/effects';
+import { Effect } from './effects';
 
 /**
  * Creates a fake implementation of an {@link Effect} which holds the provided

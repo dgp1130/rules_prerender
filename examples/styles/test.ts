@@ -1,8 +1,8 @@
 import 'jasmine';
 
 import { runfiles } from '@bazel/runfiles';
-import { useDevserver } from 'rules_prerender/common/testing/devserver';
-import { getColor, useWebDriver } from 'rules_prerender/common/testing/webdriver';
+import { useDevserver } from '../../common/testing/devserver';
+import { getColor, useWebDriver } from '../../common/testing/webdriver';
 
 const devserverBinary = runfiles.resolvePackageRelative('devserver');
 
