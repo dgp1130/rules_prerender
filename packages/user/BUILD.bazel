@@ -1,0 +1,17 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("//tools:typescript.bzl", "ts_project")
+
+js_binary(
+    name = "user",
+    entry_point = "user.js",
+    data = [
+        ":lib",
+        "//:node_modules/test_pkg",
+    ],
+)
+
+ts_project(
+    name = "lib",
+    srcs = ["user.ts"],
+    deps = ["//packages/test_pkg:lib_js"],
+)
