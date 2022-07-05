@@ -1,4 +1,5 @@
-load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
+load("//packages/rules_prerender:prerender_component_publish_files.bzl", "transitive_js_sources")
+load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
@@ -22,6 +23,26 @@ npm_link_all_packages(name = "node_modules")
 npm_link_package(
     name = "node_modules/test_pkg",
     src = "//packages/test_pkg",
+    visibility = ["//visibility:public"],
+)
+
+transitive_js_sources(
+    name = "rules_prerender_sources",
+    target = "//packages/rules_prerender:rules_prerender_lib",
+)
+
+npm_package(
+    name = "rules_prerender_pkg",
+    srcs = [
+        ":rules_prerender_sources",
+        "package.json",
+    ],
+    package = "rules_prerender",
+)
+
+npm_link_package(
+    name = "node_modules/rules_prerender",
+    src = ":rules_prerender_pkg",
     visibility = ["//visibility:public"],
 )
 

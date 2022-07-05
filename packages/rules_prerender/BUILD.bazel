@@ -1,3 +1,4 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("//:index.bzl", "prerender_component")
@@ -8,6 +9,21 @@ load("//tools:typescript.bzl", "ts_project")
 exports_files(
     ["rollup-default.config.js"],
     visibility = ["//visibility:public"],
+)
+
+js_binary(
+    name = "test_bin",
+    entry_point = "test.js",
+    data = [
+        ":test_lib",
+        "//:node_modules/rules_prerender",
+    ],
+)
+
+ts_project(
+    name = "test_lib",
+    srcs = ["test.ts"],
+    deps = [":rules_prerender"],
 )
 
 # Wrap `ts_project()` in a `js_library()` to give it a module name to be imported.
@@ -26,6 +42,7 @@ ts_project(
         ":styles",
         "//common/models:prerender_resource",
     ],
+    visibility = ["//:__pkg__"],
 )
 
 prerender_component(
