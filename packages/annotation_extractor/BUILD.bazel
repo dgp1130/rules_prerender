@@ -1,15 +1,14 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:typescript.bzl", "ts_project")
 
-nodejs_binary(
+js_binary(
     name = "annotation_extractor",
-    entry_point = "annotation_extractor.ts",
+    entry_point = "annotation_extractor.js",
     visibility = ["//tools/internal:__pkg__"],
-    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":annotation_extractor_lib",
-        "@npm//yargs",
+        "//:node_modules/yargs",
     ],
 )
 
