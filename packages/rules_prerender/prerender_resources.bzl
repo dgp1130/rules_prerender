@@ -1,6 +1,6 @@
 """Defines `prerender_resources()` functionality."""
 
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo")
@@ -84,17 +84,16 @@ def prerender_resources_internal(
     visibility = None,
 ):
     """Internal version of `prerender_resources()` which allows `styles` usage."""
-    # Validate `entry_point`.
-    if "/" not in entry_point or not is_js_file(entry_point):
-        fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
-                + " format: \"path/to/pkg/file.js\"") % entry_point)
+    # Validate `entry_point`. DEBUG
+    # if "/" not in entry_point or not is_js_file(entry_point):
+    #     fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
+    #             + " format: \"path/to/pkg/file.js\"") % entry_point)
 
     # Create a binary to execute the runner script.
     binary = "%s_binary" % name
-    nodejs_binary(
+    js_binary(
         name = binary,
         entry_point = "//packages/renderer:renderer.js",
-        templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
             "//tools/internal:renderer",
@@ -115,12 +114,15 @@ def _prerender_resources_impl(ctx):
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
 
     args = ctx.actions.args()
-    args.add("--entry-point", "%s/%s" % (ctx.workspace_name, ctx.attr.entry_point))
-    args.add("--output-dir", output_dir.path)
+    # TODO: Up two levels because it comes from `//packages/renderer` which is two levels deep.
+    # Not sure how this will work for external use cases.
+    args.add("--entry-point", "../../%s" % ctx.attr.entry_point)
+    args.add("--output-dir", output_dir.short_path)
     if ctx.attr.styles:
         import_map = ctx.attr.styles[CssImportMapInfo].import_map
         for (import_path, file) in import_map.items():
             args.add("--inline-style-import", import_path)
+            # TODO: Don't use `short_path` until resource injector is migrated to `@aspect_rules_js`.
             args.add("--inline-style-path", file.path)
 
     ctx.actions.run(
@@ -129,6 +131,9 @@ def _prerender_resources_impl(ctx):
         executable = ctx.executable.renderer,
         arguments = [args],
         outputs = [output_dir],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     return [

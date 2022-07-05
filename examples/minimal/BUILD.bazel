@@ -11,6 +11,7 @@ prerender_pages(
     lib_deps = [
         ":dep",
         "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
     ],
 )
 

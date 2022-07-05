@@ -9,7 +9,10 @@ prerender_pages(
     source_map = True,
     styles = [":styles"],
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
+    ],
 )
 
 css_library(

@@ -16,7 +16,10 @@ prerender_pages_unbundled(
     src = "page.ts",
     tsconfig = "//:tsconfig.json",
     source_map = True,
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
+    ],
     scripts = [":script"],
     deps = ["//examples/custom_bundling/component"],
 )
