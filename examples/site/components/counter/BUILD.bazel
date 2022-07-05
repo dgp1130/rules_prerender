@@ -27,7 +27,6 @@ ts_project(
     name = "counter_prerender_test_lib",
     srcs = ["counter_prerender_test.ts"],
     testonly = True,
-    link_workspace_root = False,
     deps = [
         ":counter_prerender_for_test",
         "@npm//@types/jasmine",

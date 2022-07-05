@@ -21,7 +21,6 @@ css_library(
 ts_project(
     name = "header_test_lib",
     srcs = ["header_test.ts"],
-    link_workspace_root = False,
     testonly = True,
     deps = [
         ":header_prerender_for_test",

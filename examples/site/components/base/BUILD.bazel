@@ -25,7 +25,6 @@ css_library(
 ts_project(
     name = "base_test_lib",
     srcs = ["base_test.ts"],
-    link_workspace_root = False,
     testonly = True,
     deps = [
         ":base_prerender_for_test",

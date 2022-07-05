@@ -25,7 +25,6 @@ prerender_pages(
 ts_project(
     name = "blog_test_lib",
     srcs = ["blog_test.ts"],
-    link_workspace_root = False,
     testonly = True,
     deps = [
         ":blog_prerender_for_test",

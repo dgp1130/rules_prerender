@@ -24,7 +24,6 @@ css_library(
 ts_project(
     name = "footer_test_lib",
     srcs = ["footer_test.ts"],
-    link_workspace_root = False,
     testonly = True,
     deps = [
         ":footer_prerender_for_test",

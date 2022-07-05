@@ -5,7 +5,6 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 ts_project(
     name = "generator",
     srcs = ["generator.ts"],
-    link_workspace_root = False,
     deps = ["//packages/rules_prerender"],
 )
 
