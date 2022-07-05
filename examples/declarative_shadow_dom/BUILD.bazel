@@ -13,7 +13,10 @@ prerender_pages(
     src = "site.ts",
     tsconfig = "//:tsconfig.json",
     source_map = True,
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
+    ],
     deps = [":component"],
 )
 
@@ -23,7 +26,10 @@ prerender_component(
     tsconfig = "//:tsconfig.json",
     source_map = True,
     styles = [":styles"],
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = [
+        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
+    ],
     deps = ["//packages/rules_prerender:declarative_shadow_dom"],
 )
 

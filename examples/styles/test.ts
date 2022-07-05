@@ -14,6 +14,7 @@ describe('styles', () => {
         const browser = wd.get();
         await browser.url('/');
 
+        // FIXME: Intellisense error?
         expect(await browser.getTitle()).toBe('Inline Styles');
 
         // Shadow DOM should be styled.

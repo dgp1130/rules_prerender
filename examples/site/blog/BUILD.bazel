@@ -10,9 +10,10 @@ prerender_pages(
     data = glob(["posts/*.md"]),
     visibility = ["//examples/site:__pkg__"],
     lib_deps = [
-        "//packages/rules_prerender",
         "//examples/site/common:links",
-        "@npm//markdown-it",
+        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
+        "//:node_modules/markdown-it",
         "@npm//@types/markdown-it",
         "@npm//@types/node",
     ],
@@ -29,7 +30,7 @@ ts_project(
     deps = [
         ":blog_prerender_for_test",
         "@npm//@types/jasmine",
-        "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 

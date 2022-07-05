@@ -4,8 +4,7 @@ import * as yargs from 'yargs';
 import { main } from '../../common/binary';
 import { mdSpacing } from '../../common/formatters';
 import { invoke } from './entry_point';
-import { setMap as setInlineStyleMap } from '../../packages/rules_prerender/inline_style_map';
-import { InlineStyleNotFoundError } from '../../packages/rules_prerender/styles';
+import { privateSetInlineStyleMap as setInlineStyleMap, PrivateInlineStyleNotFoundError as InlineStyleNotFoundError } from 'rules_prerender';
 
 main(async () => {
     // Parse binary options and arguments.

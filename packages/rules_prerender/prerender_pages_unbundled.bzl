@@ -124,7 +124,7 @@ def prerender_pages_unbundled(
     )
     prerender_resources_internal(
         name = annotated,
-        entry_point = file_path_of(absolute(js_src)),
+        entry_point = "%s/%s" % (native.package_name(), js_src),
         styles = ":%s" % component_styles,
         data = [":%s" % component_prerender],
         testonly = testonly,
