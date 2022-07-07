@@ -76,11 +76,13 @@ SUBSTITUTIONS = {
     "//packages/renderer": "@npm//rules_prerender/packages/renderer",
     "//packages/rules_prerender": "@npm//rules_prerender/packages/rules_prerender",
     "//tools/internal": "@npm//rules_prerender/tools/internal",
+    "@rules_prerender/annotations": "rules_prerender/packages/annotations"
 }
 
 pkg_npm(
     name = "pkg",
     package_name = "rules_prerender",
+    nested_packages = ["//packages/annotations:pkg"],
     substitutions = select({
         ":stamp": dicts.add(SUBSTITUTIONS, {
             "0.0.0-PLACEHOLDER": "{STABLE_RULES_PRERENDER_VERSION}",

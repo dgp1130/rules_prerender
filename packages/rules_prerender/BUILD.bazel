@@ -172,7 +172,7 @@ ts_project(
     name = "scripts",
     srcs = ["scripts.ts"],
     visibility = ["//packages/rules_prerender/declarative_shadow_dom:__pkg__"],
-    deps = ["//common/models:prerender_annotation"],
+    deps = ["//packages/annotations"],
 )
 
 ts_project(
@@ -181,7 +181,7 @@ ts_project(
     testonly = True,
     deps = [
         ":scripts",
-        "//common/models:prerender_annotation",
+        "//packages/annotations",
         "@npm//@types/jasmine",
     ],
 )

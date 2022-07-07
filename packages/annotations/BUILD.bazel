@@ -1,0 +1,123 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_npm")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:typescript.bzl", "ts_project")
+
+pkg_npm(
+    name = "pkg",
+    package_name = "@rules_prerender/annotations",
+    visibility = ["//visibility:public"],
+    deps = [":annotations"],
+)
+
+js_library(
+    name = "annotations",
+    package_name = "@rules_prerender/annotations",
+    visibility = ["//visibility:public"],
+    deps = [":annotations_lib"],
+)
+
+ts_project(
+    name = "annotations_lib",
+    srcs = ["index.ts"],
+    deps = [
+        ":prerender_annotation",
+        ":prerender_metadata",
+        ":prerender_resource",
+    ],
+)
+
+ts_project(
+    name = "prerender_annotation",
+    srcs = ["prerender_annotation.ts"],
+)
+
+ts_project(
+    name = "prerender_annotation_test_lib",
+    srcs = ["prerender_annotation_test.ts"],
+    testonly = True,
+    deps = [
+        ":prerender_annotation",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_annotation_test",
+    deps = [":prerender_annotation_test_lib"],
+)
+
+ts_project(
+    name = "prerender_annotation_mock",
+    srcs = ["prerender_annotation_mock.ts"],
+    testonly = True,
+    deps = [":prerender_annotation"],
+)
+
+ts_project(
+    name = "prerender_metadata",
+    srcs = ["prerender_metadata.ts"],
+)
+
+ts_project(
+    name = "prerender_metadata_test_lib",
+    srcs = ["prerender_metadata_test.ts"],
+    testonly = True,
+    deps = [
+        ":prerender_metadata",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_metadata_test",
+    deps = [":prerender_metadata_test_lib"],
+)
+
+ts_project(
+    name = "prerender_metadata_mock",
+    srcs = ["prerender_metadata_mock.ts"],
+    testonly = True,
+    deps = [":prerender_metadata"],
+)
+
+ts_project(
+    name = "prerender_resource",
+    srcs = ["prerender_resource.ts"],
+    visibility = ["//visibility:public"],
+    deps = [":url_path"],
+)
+
+ts_project(
+    name = "prerender_resource_test_lib",
+    srcs = ["prerender_resource_test.ts"],
+    testonly = True,
+    deps = [
+        ":prerender_resource",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_resource_test",
+    deps = [":prerender_resource_test_lib"],
+)
+
+ts_project(
+    name = "url_path",
+    srcs = ["url_path.ts"],
+)
+
+ts_project(
+    name = "url_path_test_lib",
+    srcs = ["url_path_test.ts"],
+    testonly = True,
+    deps = [
+        ":url_path",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "url_path_test",
+    deps = [":url_path_test_lib"],
+)
