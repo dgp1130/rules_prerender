@@ -85,6 +85,22 @@ http_archive(
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
 aspect_bazel_lib_dependencies()
 
+# Install `@rules_rollup`.
+http_archive(
+    name = "aspect_rules_rollup",
+    sha256 = "4f581917b91893e01037daebd8d060744c149601153be356bf7b38e5b8c2b79c",
+    strip_prefix = "rules_rollup-0.8.0",
+    url = "https://github.com/aspect-build/rules_rollup/archive/refs/tags/v0.8.0.tar.gz",
+)
+
+load("@aspect_rules_rollup//rollup:dependencies.bzl", "rules_rollup_dependencies")
+rules_rollup_dependencies()
+load("@aspect_rules_rollup//rollup:repositories.bzl", LATEST_ROLLUP_VERSION = "LATEST_VERSION", "rollup_register_toolchains")
+rollup_register_toolchains(
+    name = "rollup",
+    rollup_version = LATEST_ROLLUP_VERSION,
+)
+
 # Load web testing rules.
 http_archive(
     name = "io_bazel_rules_webtesting",

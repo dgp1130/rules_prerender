@@ -7,7 +7,7 @@ import { generateEntryPoint } from './generator';
 
 main(async () => {
     // Parse options and flags.
-    const { metadata: metadataFile, output } = yargs
+    const { metadata: metadataFile, 'import-depth': importDepth, output } = yargs
         .usage(mdSpacing(`
             Generates an entry point for all the scripts in the given metadata
             file. The entry point is a TypeScript source file which
@@ -24,6 +24,11 @@ main(async () => {
                 which contains all the scripts to reference in the output file.
             `),
         })
+        .option('import-depth', {
+            type: 'number',
+            demandOption: true,
+            description: mdSpacing(`TODO`),
+        })
         .option('output', {
             type: 'string',
             demandOption: true,
@@ -39,7 +44,7 @@ main(async () => {
     const metadata = JSON.parse(metadataText) as PrerenderMetadata;
 
     // Generate an entry point from metadata.
-    const entryPoint = generateEntryPoint(metadata);
+    const entryPoint = generateEntryPoint(metadata, importDepth);
 
     // Write the entry point to the output file.
     await fs.writeFile(output, entryPoint);
