@@ -1,11 +1,12 @@
 """Defines `prerender_pages()` functionality."""
 
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
 load(
     "@build_bazel_rules_nodejs//:providers.bzl",
     "JSEcmaScriptModuleInfo",
     "JSModuleInfo",
 )
-load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
 load(":web_resources.bzl", "web_resources")
@@ -127,17 +128,25 @@ def prerender_pages(
 
     bundle = "%s_bundle" % name
     if bundle_js:
+        bundle_config = "%s_bundle_config.js" % name
+        copy_file(
+            name = "%s_bundle_config" % name,
+            src = "//packages/rules_prerender:rollup-default.config.js",
+            out = bundle_config,
+        )
+
         # Bundle all client-side scripts at `%{name}_bundle.js`.
         rollup_bundle(
             name = bundle,
             entry_point = ":%s_scripts.js" % prerender_name,
-            config_file = "//packages/rules_prerender:rollup-default.config.js",
-            link_workspace_root = True,
+            config_file = ":%s" % bundle_config,
             silent = True,
             testonly = testonly,
             deps = [
                 ":%s_scripts" % prerender_name,
-                "@npm//@rollup/plugin-node-resolve",
+                # "@npm//@rollup/plugin-node-resolve",
+                # TODO: How to depend on this in a user workspace?
+                "//:node_modules/@rollup/plugin-node-resolve",
             ],
         )
 

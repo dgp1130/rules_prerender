@@ -9,6 +9,7 @@ def script_entry_point(name, metadata, output_entry_point, **kwargs):
         output_entry_point: The file to write the entry point contents to.
         **kwargs: Remaining arguments to pass through to the underlying rule.
     """
+    package_depth = len(native.package_name().split("/")) if native.package_name() != "" else 0
     native.genrule(
         name = name,
         srcs = [metadata],
@@ -16,9 +17,11 @@ def script_entry_point(name, metadata, output_entry_point, **kwargs):
         cmd = """
             $(location //tools/internal:script_entry_generator) \\
                 --metadata $(location {metadata}) \\
+                --import-depth {import_depth} \\
                 --output $(location {output})
         """.format(
             metadata = metadata,
+            import_depth = package_depth,
             output = output_entry_point,
         ),
         tools = ["//tools/internal:script_entry_generator"],

@@ -14,7 +14,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
                 <div id="replace">
                     This text to be overwritten by client-side JavaScript.
                 </div>
-                ${includeScript('rules_prerender/examples/scripts/script')}
+                ${includeScript('./examples/scripts/script')}
                 ${renderComponent()}
             </body>
         </html>
