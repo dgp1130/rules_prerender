@@ -23,7 +23,6 @@ describe('prerender_component_publish_files()', () => {
             'script_dep.js.map',
             'script_dep.d.ts',
             'style.css',
-            'style.css.map',
             'component_resources', // from `resources` attribute.
         ]);
 

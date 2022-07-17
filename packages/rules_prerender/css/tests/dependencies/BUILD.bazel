@@ -12,8 +12,6 @@ diff_test(
 
 css_binaries(
     name = "bin",
-    # Disable sourcemaps to not confuse `diff_test()` with an extra file.
-    sourcemap = False,
     deps = [":foo"],
 )
 
