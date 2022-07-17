@@ -11,10 +11,20 @@ import { PrerenderMetadata } from '../../common/models/prerender_metadata';
  */
 export function generateEntryPoint(metadata: PrerenderMetadata, importDepth: number):
         string {
-    const prefix = importDepth !== 0 ? range(importDepth).map(() => '..').join('/') + '/' : '';
     return metadata.scripts
-        .map((script) => `import '${prefix}${script.path}';`)
+        .map((script) => `import '${makeWorkspaceRelative(script.path, importDepth)}';`)
         .join('\n');
+}
+
+function makeWorkspaceRelative(path: string, importDepth: number): string {
+    // Bare import specifiers are left alone (likely NPM packages).
+    if (!path.startsWith('./')) return path;
+
+    // If imported from the workspace root, nothing to change.
+    if (importDepth === 0) return path;
+
+    const prefix = range(importDepth).map(() => '..').join('/');
+    return `${prefix}/${path}`;
 }
 
 // Like the Python `range()` function.

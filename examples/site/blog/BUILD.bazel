@@ -20,6 +20,7 @@ prerender_pages(
     deps = [
         "//examples/site/components/base",
         "//packages/rules_prerender:declarative_shadow_dom",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
     ],
 )
 
@@ -29,11 +30,13 @@ ts_project(
     testonly = True,
     deps = [
         ":blog_prerender_for_test",
-        "@npm//@types/jasmine",
         "//:node_modules/node-html-parser",
+        "@npm//@types/jasmine",
+        "@npm//node-html-parser",
     ],
 )
 
+# TODO: Need to migrate to `@aspect_rules_jasmine`?
 jasmine_node_test(
     name = "blog_test",
     deps = [":blog_test_lib"],

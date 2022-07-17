@@ -1,5 +1,6 @@
 import { PrerenderResource } from 'rules_prerender';
-import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
+// @ts-ignore
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
 import { srcLink } from '../common/links';
 import { baseLayout } from '../components/base/base';
 import { renderCounter } from '../components/counter/counter_prerender';
