@@ -1,7 +1,17 @@
 /** @fileoverview Re-exports public symbols. */
 
-export { PrerenderResource } from '../../common/models/prerender_resource';
-export { includeScript } from './scripts';
-export { inlineStyle, InlineStyleNotFoundError as PrivateInlineStyleNotFoundError } from './styles';
+import { getMap as getInlineStyleMap, setMap as setInlineStyleMap } from './inline_style_map';
+import { inlineStyle, InlineStyleNotFoundError } from './styles';
 
-export { getMap as privateGetInlineStyleMap, setMap as privateSetInlineStyleMap } from './inline_style_map';
+export { PrerenderResource } from './prerender_resource';
+export { includeScript } from './scripts';
+export { inlineStyle };
+
+/** TODO */
+export const context = {
+    inlineStyle,
+    getInlineStyleMap,
+    setInlineStyleMap,
+    InlineStyleNotFoundError,
+};
+export type Context = typeof context;

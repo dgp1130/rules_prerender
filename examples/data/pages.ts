@@ -1,9 +1,13 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { runfiles } from '@bazel/runfiles';
+// import { runfiles } from '@bazel/runfiles';
 import { PrerenderResource } from 'rules_prerender';
 
-const content = runfiles.resolvePackageRelative('content/');
+// DEBUG
+const RUNFILES = process.env['RUNFILES'];
+if (!RUNFILES) throw new Error(`RUNFILES not set!`);
+// const content = runfiles.resolvePackageRelative('content/');
+const content = path.join(RUNFILES, 'rules_prerender/examples/data/content');
 
 export default async function*():
         AsyncGenerator<PrerenderResource, void, void> {

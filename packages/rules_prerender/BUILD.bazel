@@ -5,6 +5,7 @@ load("//:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
+load(":type_library.bzl", "type_library") # TODO: bzl_library()
 
 exports_files(
     ["rollup-default.config.js"],
@@ -26,6 +27,12 @@ ts_project(
     deps = [":rules_prerender"],
 )
 
+type_library(
+    name = "rules_prerender_types",
+    dep = ":rules_prerender",
+    visibility = ["//visibility:public"],
+)
+
 # Wrap `ts_project()` in a `js_library()` to give it a module name to be imported.
 js_library(
     name = "rules_prerender",
@@ -38,9 +45,9 @@ ts_project(
     name = "rules_prerender_lib",
     srcs = ["index.ts"],
     deps = [
+        ":prerender_resource",
         ":scripts",
         ":styles",
-        "//common/models:prerender_resource",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -92,6 +99,11 @@ bzl_library(
     srcs = ["multi_inject_resources.bzl"],
     visibility = ["//:__pkg__"],
     deps = [":web_resources"],
+)
+
+ts_project(
+    name = "prerender_annotation",
+    srcs = ["prerender_annotation.ts"],
 )
 
 bzl_library(
@@ -153,6 +165,12 @@ bzl_library(
     ],
 )
 
+ts_project(
+    name = "prerender_resource",
+    srcs = ["prerender_resource.ts"],
+    deps = [":url_path"],
+)
+
 bzl_library(
     name = "prerender_resources",
     srcs = ["prerender_resources.bzl"],
@@ -189,7 +207,7 @@ ts_project(
     name = "scripts",
     srcs = ["scripts.ts"],
     visibility = ["//packages/rules_prerender/declarative_shadow_dom:__pkg__"],
-    deps = ["//common/models:prerender_annotation"],
+    deps = [":prerender_annotation"],
 )
 
 ts_project(
@@ -197,8 +215,8 @@ ts_project(
     srcs = ["scripts_test.ts"],
     testonly = True,
     deps = [
+        ":prerender_annotation",
         ":scripts",
-        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )
@@ -214,7 +232,7 @@ ts_project(
     visibility = ["//packages/renderer:__subpackages__"],
     deps = [
         ":inline_style_map",
-        "//common/models:prerender_annotation",
+        ":prerender_annotation",
     ],
 )
 
@@ -224,8 +242,8 @@ ts_project(
     testonly = True,
     deps = [
         ":inline_style_map",
+        ":prerender_annotation",
         ":styles",
-        "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
     ],
 )
@@ -239,4 +257,10 @@ ts_project(
     name = "inline_style_map",
     srcs = ["inline_style_map.ts"],
     visibility = ["//packages/renderer:__subpackages__"],
+)
+
+# TODO: Figure out where these files should live.
+ts_project(
+    name = "url_path",
+    srcs = ["url_path.ts"],
 )
