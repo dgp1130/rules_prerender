@@ -1,0 +1,6 @@
+{
+    "name": "@rules_prerender/declarative_shadow_dom",
+    "version": "0.0.0-PLACEHOLDER",
+    "private": true,
+    "main": "./declarative_shadow_dom"
+}
