@@ -1,3 +1,4 @@
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load(
     "//packages/rules_prerender:prerender_component.bzl",
     "prerender_component",
@@ -9,6 +10,15 @@ load(
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
+load("//packages/rules_prerender:prerender_package.bzl", "prerender_package")
+
+prerender_package(
+    name = "pkg",
+    srcs = ["package.json"],
+    components = [":declarative_shadow_dom"],
+    package_name = "@rules_prerender/declarative_shadow_dom",
+    visibility = ["//:__pkg__"],
+)
 
 publish_files(
     name = "publish_files",
