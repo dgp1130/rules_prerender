@@ -89,11 +89,24 @@ def prerender_resources_internal(
     #     fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
     #             + " format: \"path/to/pkg/file.js\"") % entry_point)
 
+    bin_entry_point = "%s_entry.js" % name
+    # TODO: How does this work when renderer is external?
+    renderer_import = _rel_path(
+        "%s/%s" % (native.package_name(), bin_entry_point),
+        "packages/renderer/renderer.js",
+    )
+    native.genrule(
+        name = "%s_entry" % name,
+        srcs = ["//packages/renderer:entry_point.tmpl.js"],
+        outs = [bin_entry_point],
+        cmd = "cat $< | sed 's,__RENDERER_REL_PATH__,%s,g' > $@" % renderer_import,
+    )
+
     # Create a binary to execute the runner script.
     binary = "%s_binary" % name
     js_binary(
         name = binary,
-        entry_point = "//packages/renderer:renderer.js",
+        entry_point = ":%s" % bin_entry_point,
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
             "//tools/internal:renderer",
@@ -109,6 +122,15 @@ def prerender_resources_internal(
         testonly = testonly,
         visibility = visibility,
     )
+
+def _rel_path(from_file, to_file):
+    # For each directory we are importing from, add a `../`.
+    directories_to_escape = len(from_file.split("/")) - 1
+    escape = "/".join([".." for _ in range(directories_to_escape)])
+
+    # `escape` should now go up X levels to the workspace root, meaning we can use
+    # `to_file` as is.
+    return "%s/%s" % (escape, to_file)
 
 def _prerender_resources_impl(ctx):
     output_dir = ctx.actions.declare_directory(ctx.attr.name)

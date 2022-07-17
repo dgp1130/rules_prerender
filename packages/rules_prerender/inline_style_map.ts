@@ -7,6 +7,12 @@
 
 let map: ReadonlyMap<string, string> | undefined;
 
+// DEBUG
+if ((globalThis as any).rulesPrerenderInlineStyleMapInitialized) {
+    throw new Error(`inline_style_map initialized twice!`);
+}
+(globalThis as any).rulesPrerenderInlineStyleMapInitialized = true;
+
 /** Returns the inline style map. */
 export function getMap(): ReadonlyMap<string, string> | undefined {
     return map;

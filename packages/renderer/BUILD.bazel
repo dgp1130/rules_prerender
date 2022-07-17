@@ -5,6 +5,8 @@ load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
 load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
+exports_files(["entry_point.tmpl.js"], visibility = ["//visibility:public"])
+
 publish_files(
     name = "publish_files",
     files = glob(["**/*.bzl"]),
@@ -18,7 +20,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
-        "//packages/rules_prerender",
+        "//packages/rules_prerender:rules_prerender_types",
         "//common:binary",
         "//common:formatters",
         "@npm//@types/node",
@@ -28,7 +30,7 @@ ts_project(
 
 js_binary(
     name = "renderer_test_binary",
-    entry_point = "renderer.js",
+    entry_point = "entry_point.tmpl.js",
     testonly = True,
     data = RENDERER_RUNTIME_DEPS + [
         ":renderer",
@@ -38,21 +40,21 @@ js_binary(
 ts_project(
     name = "renderer_test_lib",
     srcs = ["renderer_test.ts"],
+    # Needed by user code-under-test.
+    data = ["//:node_modules/rules_prerender"],
     testonly = True,
     deps = [
         "//common/models:prerender_annotation",
         "//common/models:prerender_resource",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        # Need a dependency on styles for entry points under test to import
-        # `inlineStyle()`.
-        "//packages/rules_prerender:styles",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
 )
 
+# TODO: Migrate to `@rules_js` so the `rules_prerender` dependency works.
 jasmine_node_test(
     name = "renderer_test",
     data = [":renderer_test_binary"],

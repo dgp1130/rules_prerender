@@ -12,6 +12,7 @@ prerender_pages(
     lib_deps = [
         "//packages/rules_prerender",
         "//:node_modules/rules_prerender",
+        "//:node_modules/@bazel/runfiles",
         "@npm//@bazel/runfiles",
         "@npm//@types/node",
     ],

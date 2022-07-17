@@ -1,4 +1,4 @@
-import { createAnnotation } from '../../common/models/prerender_annotation';
+import { createAnnotation } from './prerender_annotation';
 import { getMap as getInlineStyleMap } from './inline_style_map';
 
 /**
