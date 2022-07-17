@@ -27,7 +27,7 @@ build_bazel_rules_nodejs_dependencies()
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 nodejs_register_toolchains(
     name = "nodejs", # Default name used by most tools.
-    node_version = "12.22.5",
+    node_version = "16.10.0",
 )
 
 # The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
