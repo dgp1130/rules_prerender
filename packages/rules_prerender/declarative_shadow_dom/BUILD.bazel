@@ -31,6 +31,7 @@ prerender_component_publish_files(
     dep = ":declarative_shadow_dom",
 )
 
+# How to propagate NPM deps?
 prerender_component(
     name = "declarative_shadow_dom",
     srcs = ["declarative_shadow_dom.ts"],

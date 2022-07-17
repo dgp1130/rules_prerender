@@ -16,7 +16,8 @@ load(":web_resources.bzl", "web_resources")
 
 def prerender_component(
     name,
-    srcs,
+    srcs = None,
+    package = None,
     tsconfig = None,
     source_map = None,
     package_name = None,
@@ -81,9 +82,14 @@ def prerender_component(
             prerender logic works as intended and is marked `testonly`
             accordingly.
     """
+    # TODO
+    if srcs and package:
+        fail("srcs and package both set.")
+    if not srcs and not package:
+        fail("Neither srcs nor package are set.")
 
     prerender_lib = "%s_prerender" % name
-    if all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
+    if srcs and all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
         prerender_ts = "%s_ts" % prerender_lib
         ts_project(
             name = prerender_ts,
@@ -106,7 +112,7 @@ def prerender_component(
             visibility = visibility,
             deps = [":%s" % prerender_ts],
         )
-    elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
+    elif srcs and all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
         if tsconfig:
             fail("Cannot set a `tsconfig.json` file for a JS-based" +
                 " `prerender_component()`, don't set the `tsconfig` attribute.")
@@ -119,6 +125,13 @@ def prerender_component(
             srcs = srcs + data, # `data` is included in `srcs`.
             package_name = package_name,
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
+            testonly = testonly,
+            visibility = visibility,
+        )
+    elif package:
+        native.alias(
+            name = prerender_lib,
+            actual = package,
             testonly = testonly,
             visibility = visibility,
         )
@@ -136,13 +149,21 @@ which are always allowed).
         testonly = True,
     )
 
-    _js_reexport(
-        name = "%s_scripts" % name,
-        srcs = scripts,
-        deps = ["%s_scripts" % absolute(dep) for dep in deps],
-        testonly = testonly,
-        visibility = visibility,
-    )
+    if not package:
+        _js_reexport(
+            name = "%s_scripts" % name,
+            srcs = scripts,
+            deps = ["%s_scripts" % absolute(dep) for dep in deps],
+            testonly = testonly,
+            visibility = visibility,
+        )
+    else:
+        native.alias(
+            name = "%s_scripts" % name,
+            actual = package,
+            testonly = testonly,
+            visibility = visibility,
+        )
 
     _inline_css_reexport(
         name = "%s_styles" % name,
@@ -159,7 +180,43 @@ which are always allowed).
         deps = resources + ["%s_resources" % absolute(dep) for dep in deps],
     )
 
+def _merge_js_module_infos(srcs, deps):
+    if all([JSModuleInfo not in dep for dep in srcs + deps]):
+        return None
+
+    return JSModuleInfo(
+        direct_sources = depset([],
+            transitive = [src[JSModuleInfo].direct_sources
+                          for src in srcs
+                          if JSModuleInfo in src],
+        ),
+        sources = depset([],
+            transitive = [dep[JSModuleInfo].sources
+                          for dep in srcs + deps
+                          if JSModuleInfo in dep],
+        ),
+    )
+
+def _merge_js_ecma_script_module_infos(srcs, deps):
+    if all([JSEcmaScriptModuleInfo not in dep for dep in srcs + deps]):
+        return None
+
+    return JSEcmaScriptModuleInfo(
+        direct_sources = depset([],
+            transitive = [src[JSEcmaScriptModuleInfo].direct_sources
+                          for src in srcs
+                          if JSEcmaScriptModuleInfo in src],
+        ),
+        sources = depset([],
+            transitive = [dep[JSEcmaScriptModuleInfo].sources
+                          for dep in srcs + deps
+                          if JSEcmaScriptModuleInfo in dep],
+        ),
+    )
+
 def _js_reexport_impl(ctx):
+    providers = []
+
     merged_declaration_info = DeclarationInfo(
         declarations = depset([],
             transitive = [src[DeclarationInfo].declarations
@@ -178,56 +235,28 @@ def _js_reexport_impl(ctx):
         ),
     )
 
-    merged_js_module_info = JSModuleInfo(
-        direct_sources = depset([],
-            transitive = [src[JSModuleInfo].direct_sources
-                          for src in ctx.attr.srcs],
-        ),
-        sources = depset([],
-            transitive = [dep[JSModuleInfo].sources
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
-        ),
-    )
+    merged_js_module_info = _merge_js_module_infos(ctx.attr.srcs, ctx.attr.deps)
+    if merged_js_module_info:
+        providers.append(merged_js_module_info)
 
-    merged_js_ecma_script_module_info = JSEcmaScriptModuleInfo(
-        direct_sources = depset([],
-            transitive = [src[JSEcmaScriptModuleInfo].direct_sources
-                          for src in ctx.attr.srcs
-                          if JSEcmaScriptModuleInfo in src],
-        ),
-        sources = depset([],
-            transitive = [dep[JSEcmaScriptModuleInfo].sources
-                          for dep in ctx.attr.srcs + ctx.attr.deps
-                          if JSEcmaScriptModuleInfo in dep],
-        ),
-    )
+    merged_js_ecma_script_module_info = _merge_js_ecma_script_module_infos(
+        ctx.attr.srcs, ctx.attr.deps)
+    if merged_js_ecma_script_module_info:
+        providers.append(merged_js_ecma_script_module_info)
 
-    # Replicates output groups for TS/JS rules. Mostly for debugging purposes.
-    # https://bazelbuild.github.io/rules_nodejs/TypeScript.html#accessing-javascript-outputs
-    output_group_info = OutputGroupInfo(
-        es5_sources = merged_js_module_info.direct_sources,
-        es6_sources = merged_js_ecma_script_module_info.direct_sources,
-    )
-
-    return [
-        DefaultInfo(files = merged_declaration_info.declarations),
+    return providers + [
+        DefaultInfo(files = depset([],
+            transitive = [src[DefaultInfo].files for src in ctx.attr.srcs if DefaultInfo in src] +
+                         [dep[DefaultInfo].files for dep in ctx.attr.deps if DefaultInfo in dep],
+        )),
         merged_declaration_info,
-        merged_js_module_info,
-        merged_js_ecma_script_module_info,
-        output_group_info,
     ]
 
 _js_reexport = rule(
     implementation = _js_reexport_impl,
     attrs = {
-        "srcs": attr.label_list(
-            default = [],
-            providers = [JSModuleInfo],
-        ),
-        "deps": attr.label_list(
-            default = [],
-            providers = [JSModuleInfo],
-        ),
+        "srcs": attr.label_list(default = []),
+        "deps": attr.label_list(default = []),
     },
     doc = """
         Re-exports the given `ts_project()` and `js_library()` targets. Targets
