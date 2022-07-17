@@ -8,6 +8,7 @@ load("@npm//@bazel/typescript:index.bzl", "ts_config")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
+load("//packages/rules_prerender:prerender_link_component.bzl", "prerender_link_component")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
 
@@ -43,6 +44,19 @@ npm_package(
 npm_link_package(
     name = "node_modules/rules_prerender",
     src = ":rules_prerender_pkg",
+    visibility = ["//visibility:public"],
+)
+
+npm_link_package(
+    name = "node_modules/@rules_prerender/declarative_shadow_dom",
+    src = "//packages/rules_prerender/declarative_shadow_dom:pkg",
+    package = "@rules_prerender/declarative_shadow_dom",
+)
+
+prerender_link_component(
+    name = "prerender_components/@rules_prerender/declarative_shadow_dom",
+    package = ":node_modules/@rules_prerender/declarative_shadow_dom",
+    component_name = "declarative_shadow_dom",
     visibility = ["//visibility:public"],
 )
 
