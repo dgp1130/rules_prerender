@@ -1,4 +1,4 @@
-load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
+load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
 load("//tools:typescript.bzl", "ts_project")
 load(
     "//:index.bzl",
@@ -38,7 +38,6 @@ rollup_bundle(
     name = "bundle",
     entry_point = ":page_scripts.js",
     config_file = "rollup.config.js",
-    link_workspace_root = True,
     silent = True,
     deps = [
         ":page_scripts",

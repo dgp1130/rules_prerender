@@ -1,13 +1,14 @@
 """Defines functionality to generate entry points for JS and CSS."""
 
 def _script_entry_point_impl(ctx):
+    package_depth = len(ctx.label.package.split("/")) if ctx.label.package != "" else 0
     ctx.actions.run(
         mnemonic = "GenerateScriptEntryPoint",
         progress_message = "Generating script entry point %{label}",
         executable = ctx.executable._generator,
         arguments = [
             "--metadata", ctx.file.metadata.short_path,
-            "--import-depth", "0", # TODO(#48): Enable `--import-depth` when needed.
+            "--import-depth", str(package_depth),
             "--output", ctx.outputs.output_entry_point.short_path,
         ],
         inputs = [ctx.file.metadata],
