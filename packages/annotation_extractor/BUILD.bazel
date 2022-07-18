@@ -1,5 +1,6 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools:jest.bzl", "jest_test")
 load("//tools:typescript.bzl", "ts_project")
 
 js_binary(
@@ -27,6 +28,7 @@ ts_project(
     ],
 )
 
+# TODO: Why do these type check correctly against Jest?
 ts_project(
     name = "annotation_extractor_test_lib",
     srcs = ["annotation_extractor_test.ts"],
@@ -37,16 +39,17 @@ ts_project(
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@bazel/runfiles",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jest",
+        "//:node_modules/@types/node",
     ],
 )
 
-jasmine_node_test(
+jest_test(
     name = "annotation_extractor_test",
-    data = [":annotation_extractor"],
-    deps = [":annotation_extractor_test_lib"],
+    data = [
+        ":annotation_extractor",
+        ":annotation_extractor_test_lib",
+    ],
 )
 
 ts_project(
@@ -66,13 +69,13 @@ ts_project(
     deps = [
         ":extractor",
         "//common/models:prerender_annotation",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jest",
     ],
 )
 
-jasmine_node_test(
+jest_test(
     name = "extractor_test",
-    deps = [":extractor_test_lib"],
+    data = [":extractor_test_lib"],
 )
 
 ts_project(
@@ -92,11 +95,11 @@ ts_project(
         ":metadata",
         "//common/models:prerender_annotation_mock",
         "//common/models:prerender_metadata_mock",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jest",
     ],
 )
 
-jasmine_node_test(
+jest_test(
     name = "metadata_test",
-    deps = [":metadata_test_lib"],
+    data = [":metadata_test_lib"],
 )

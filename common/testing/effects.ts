@@ -1,5 +1,5 @@
 /**
- * @fileoverview Provides helper utilities for constructing Jasmine effects.
+ * @fileoverview Provides helper utilities for constructing Jest effects.
  * 
  * An "effect", for lack of a better term, is a resource with self-contained
  * initialization and cleanup functionality, typically implemented via
@@ -26,14 +26,13 @@
  * some initialization code with an {@link afterEach} (or {@link afterAll}) that
  * runs some cleanup code.
  * 
+ * TODO: Not a proxy anymore.
  * The magic trick which makes this work is that the returned value is a
- * {@link Proxy} which can exist during test setup, before Jasmine has actually
+ * {@link Proxy} which can exist during test setup, before Jest has actually
  * run the {@link beforeEach} callbacks. It proxies to the real value after
  * initialization, allowing tests to only worry about using the resource, not
  * creating it or cleaning it up.
  */
-
-import 'jasmine';
 
 // Not `undefined` or `null`.
 // eslint-disable-next-line @typescript-eslint/ban-types

@@ -1,14 +1,12 @@
-import 'jasmine';
-
 import { promises as fs } from 'fs';
-import { runfiles } from '@bazel/runfiles';
 import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';
 import { PrerenderMetadata } from '../../common/models/prerender_metadata';
 import { execBinary, ProcessResult } from '../../common/testing/binary';
 import { useTempDir } from '../../common/testing/temp_dir';
 import { createAnnotation } from '../../common/models/prerender_annotation';
 
-const extractor = runfiles.resolvePackageRelative('annotation_extractor.sh');
+// const extractor = runfiles.resolvePackageRelative('annotation_extractor.sh');
+const extractor = `${process.env['RUNFILES']}/rules_prerender/packages/annotation_extractor/annotation_extractor.sh`;
 
 async function run({ inputDir, outputHtmlDir, outputMetadata }: {
     inputDir: string,
@@ -65,7 +63,7 @@ describe('annotation_extractor', () => {
             outputMetadata: `${tmpDir.get()}/metadata.json`,
         });
 
-        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(code).toBe(0);
         expect(stdout.trim()).toBe('');
         expect(stderr.trim()).toBe('');
 
@@ -108,12 +106,12 @@ describe('annotation_extractor', () => {
                 { encoding: 'utf8' },
             ),
         ) as PrerenderMetadata;
-        expect(metadata).toEqual(mockPrerenderMetadata({
-            scripts: jasmine.arrayWithExactContents([
-                mockScriptMetadata({ path: 'foo.js' }),
-                mockScriptMetadata({ path: 'bar.js' }),
-            ]) as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-        }));
+
+        // Order-independent comparison.
+        expect(new Set(metadata.scripts)).toEqual(new Set([
+            mockScriptMetadata({ path: 'bar.js' }),
+            mockScriptMetadata({ path: 'foo.js' }),
+        ]));
     });
 
     it('deduplicates extracted annotations', async () => {
@@ -155,7 +153,7 @@ describe('annotation_extractor', () => {
             outputMetadata: `${tmpDir.get()}/metadata.json`,
         });
 
-        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(code).toBe(0);
         expect(stdout.trim()).toBe('');
         expect(stderr.trim()).toBe('');
 
@@ -198,7 +196,7 @@ describe('annotation_extractor', () => {
             outputMetadata: `${tmpDir.get()}/metadata.json`,
         });
 
-        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(code).toBe(0);
         expect(stdout.trim()).toBe('');
         expect(stderr.trim()).toBe('');
 
@@ -254,7 +252,7 @@ Annotation should **not** be processed.
             outputMetadata: `${tmpDir.get()}/metadata.json`,
         });
 
-        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(code).toBe(0);
         expect(stdout.trim()).toBe('');
         expect(stderr.trim()).toBe('');
 

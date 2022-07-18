@@ -7,7 +7,7 @@ ts_project(
     srcs = ["binary.ts"],
     testonly = True,
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/node"],
+    deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
@@ -75,9 +75,7 @@ ts_project(
     name = "effects",
     srcs = ["effects.ts"],
     testonly = True,
-    deps = [
-        "@npm//@types/jasmine",
-    ],
+    deps = ["//:node_modules/@types/jest"],
 )
 
 ts_project(
@@ -177,7 +175,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         ":effects",
-        "@npm//@types/node",
+        "//:node_modules/@types/jest",
     ],
 )
 

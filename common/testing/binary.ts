@@ -43,6 +43,7 @@ export async function execBinary(binary: string, args?: string[]):
         return { code: 0, stdout, stderr };
     } catch (err) {
         // The error object thrown has the relevant data on it.
+        // TODO: Code is actually a string in this case?
         const { code, stdout, stderr } = err as ChildProcessError;
         return { code, stdout, stderr };
     }
