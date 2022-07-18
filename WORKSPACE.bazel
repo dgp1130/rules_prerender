@@ -88,6 +88,16 @@ http_archive(
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
 aspect_bazel_lib_dependencies()
 
+# Install `@aspect_rules_ts`.
+http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "57aa473c5b4d300adea8eda9c8306519344c4acfcc86a42530cdf23e35cb63d7",
+    strip_prefix = "rules_ts-0.10.0",
+    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v0.10.0.tar.gz",
+)
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+rules_ts_dependencies(ts_version = "4.6.3")
+
 # Install `@rules_rollup`.
 http_archive(
     name = "aspect_rules_rollup",

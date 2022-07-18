@@ -23,8 +23,8 @@ ts_project(
         "//common:formatters",
         "//common:collections",
         "//common/models:prerender_annotation",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
     ],
 )
 

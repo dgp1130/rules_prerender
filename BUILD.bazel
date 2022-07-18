@@ -9,8 +9,15 @@ load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 load("//packages/rules_prerender:prerender_link_component.bzl", "prerender_link_component")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 
 exports_files(["tsconfig.json", "jest.config.js"], visibility = ["//visibility:public"])
+
+ts_config(
+    name = "tsconfig_rules_ts",
+    src = "tsconfig.json",
+    visibility = ["//visibility:public"],
+)
 
 ts_config(
     name = "tsconfig_client",

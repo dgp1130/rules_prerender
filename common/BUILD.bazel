@@ -15,7 +15,7 @@ ts_project(
     name = "binary",
     srcs = ["binary.ts"],
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/node"],
+    deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
@@ -139,7 +139,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//common/models:prerender_annotation",
-        "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 
