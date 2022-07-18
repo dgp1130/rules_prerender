@@ -104,6 +104,21 @@ rollup_register_toolchains(
     rollup_version = LATEST_ROLLUP_VERSION,
 )
 
+# Install `@aspect_rules_jest`.
+http_archive(
+    name = "aspect_rules_jest",
+    sha256 = "ed2d57f76127d47c3831f4ff6afd790aab149a2d542e978b41e0f6d277457407",
+    strip_prefix = "rules_jest-0.7.0",
+    url = "https://github.com/aspect-build/rules_jest/archive/refs/tags/v0.7.0.tar.gz",
+)
+load("@aspect_rules_jest//jest:dependencies.bzl", "rules_jest_dependencies")
+rules_jest_dependencies()
+load("@aspect_rules_jest//jest:repositories.bzl", "LATEST_VERSION", "jest_repositories")
+jest_repositories(
+    name = "jest",
+    jest_version = LATEST_VERSION,
+)
+
 # Load web testing rules.
 http_archive(
     name = "io_bazel_rules_webtesting",

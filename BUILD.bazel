@@ -10,7 +10,7 @@ load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 load("//packages/rules_prerender:prerender_link_component.bzl", "prerender_link_component")
 
-exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
+exports_files(["tsconfig.json", "jest.config.js"], visibility = ["//visibility:public"])
 
 ts_config(
     name = "tsconfig_client",
