@@ -61,6 +61,12 @@ npm_translate_lock(
     name = "npm_rules_js",
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
+    public_hoist_packages = {
+        # Hoist `debug` to the "" (root) Bazel package so it can be imported by `devtools`.
+        # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1189804133.
+        # TODO(#48): Remove after WebDriver supports pnpm.
+        "debug@4.3.1": [""],
+    },
 )
 
 load("@npm_rules_js//:repositories.bzl", "npm_repositories")
