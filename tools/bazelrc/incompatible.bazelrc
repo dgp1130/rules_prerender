@@ -10,7 +10,11 @@
 
 build:incompatible --incompatible_always_check_depset_elements
 build:incompatible --incompatible_avoid_conflict_dlls
-build:incompatible --incompatible_config_setting_private_default_visibility
+
+# TODO: Re-enable when fixed in `@aspect_rules_js`.
+# https://github.com/aspect-build/rules_js/pull/301
+# build:incompatible --incompatible_config_setting_private_default_visibility
+
 build:incompatible --incompatible_default_to_explicit_init_py
 build:incompatible --incompatible_depset_for_libraries_to_link_getter
 build:incompatible --incompatible_disable_expand_if_all_available_in_flag_set
