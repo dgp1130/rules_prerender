@@ -1,11 +1,8 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
-const devserverBinary = runfiles.resolvePackageRelative('devserver');
-
 describe('multi_page', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver('examples/multi_page/devserver');
     const wd = useWebDriver(devserver);
 
     describe('index page', () => {

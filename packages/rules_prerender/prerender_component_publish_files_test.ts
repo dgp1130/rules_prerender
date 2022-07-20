@@ -1,8 +1,6 @@
-import { runfiles } from '@bazel/runfiles';
 import { promises as fs } from 'fs';
 
-const root = runfiles.resolvePackageRelative(
-    'prerender_component_publish_files_testdata');
+const root = 'packages/rules_prerender/prerender_component_publish_files_testdata';
 
 describe('prerender_component_publish_files()', () => {
     it('includes exactly the expected files', async () => {

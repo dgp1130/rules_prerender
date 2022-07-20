@@ -49,7 +49,6 @@ ts_project(
         # Need a dependency on styles for entry points under test to import
         # `inlineStyle()`.
         "//packages/rules_prerender:styles",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

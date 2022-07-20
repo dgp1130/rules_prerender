@@ -1,11 +1,8 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../../common/testing/devserver';
 import { useWebDriver, webDriverTestTimeout } from '../../../common/testing/webdriver';
 
-const devserverBinary = runfiles.resolvePackageRelative('home_devserver');
-
 describe('home', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver('examples/site/home/home_devserver');
     const wd = useWebDriver(devserver);
 
     it('renders the home page', async () => {

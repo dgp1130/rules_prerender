@@ -152,6 +152,7 @@ ts_project(
         "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 

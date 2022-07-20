@@ -12,6 +12,7 @@ prerender_pages(
     lib_deps = [
         "//packages/rules_prerender",
         "//examples/site/common:links",
+        "//:node_modules/markdown-it",
         "@npm//markdown-it",
         "@npm//@types/markdown-it",
         "@npm//@types/node",
@@ -30,10 +31,13 @@ ts_project(
         ":blog_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 
 jasmine_node_test(
     name = "blog_test",
+    # TODO(#48): Turn on after declarative shadow DOM can be used in `@aspect_rules_js`.
+    tags = ["manual"],
     deps = [":blog_test_lib"],
 )

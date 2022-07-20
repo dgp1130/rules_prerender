@@ -33,7 +33,6 @@ ts_project(
     deps = [
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

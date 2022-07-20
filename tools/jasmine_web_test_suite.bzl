@@ -97,6 +97,7 @@ def jasmine_web_test_suite(
         **kwargs: Arguments for the `jasmine_node_test()` target.
     """
     wrapped_test_name = "%s_wrapped_test" % name
+    wrapped_test_config = "%s_config.json" % wrapped_test_name
 
     # The wrapped `jasmine_node_test()` being executed.
     jasmine_node_test(
@@ -118,6 +119,10 @@ def jasmine_web_test_suite(
         browsers = browsers,
         browser_overrides = browser_overrides,
         config = config,
+        # `web_test_suite()` uses a different action from the wrapped test, so args
+        # get dropped and need to be specified here.
+        args = ["--config=$(rootpath :%s)" % wrapped_test_config],
+        data = [":%s" % wrapped_test_config],
         flaky = flaky,
         local = local,
         shard_count = shard_count,

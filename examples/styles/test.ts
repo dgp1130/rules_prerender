@@ -1,11 +1,8 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver } from '../../common/testing/webdriver';
 
-const devserverBinary = runfiles.resolvePackageRelative('devserver');
-
 describe('styles', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver('examples/styles/devserver');
     const wd = useWebDriver(devserver);
 
     it('renders inline styles', async () => {

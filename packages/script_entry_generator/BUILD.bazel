@@ -34,7 +34,6 @@ ts_project(
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

@@ -1,10 +1,9 @@
 import { promises as fs } from 'fs';
-import { runfiles } from '@bazel/runfiles';
 import { InjectorConfig } from './config';
 import { execBinary, ProcessResult } from '../../common/testing/binary';
 import { useTempDir } from '../../common/testing/temp_dir';
 
-const injector = runfiles.resolvePackageRelative('resource_injector.sh');
+const injector = 'packages/resource_injector/resource_injector.sh';
 
 /** Invokes the resource injector binary. */
 async function run({ inputDir, config, bundle, outputDir }: {

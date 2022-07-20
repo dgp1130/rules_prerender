@@ -34,7 +34,6 @@ ts_project(
         ":config",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
@@ -58,7 +57,7 @@ ts_project(
         ":config",
         "//common:fs",
         "//common:prerender_annotation_walker",
-        "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 

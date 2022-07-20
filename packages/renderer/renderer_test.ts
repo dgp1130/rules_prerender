@@ -1,10 +1,9 @@
 import { promises as fs } from 'fs';
-import { runfiles } from '@bazel/runfiles';
 import { execBinary, ProcessResult } from '../../common/testing/binary';
 import { useTempDir } from '../../common/testing/temp_dir';
 import { createAnnotation } from '../../common/models/prerender_annotation';
 
-const renderer = runfiles.resolvePackageRelative('renderer_test_binary.sh');
+const renderer = 'packages/renderer/renderer_test_binary.sh';
 
 /** Invokes the renderer binary. */
 async function run({ entryPoint, outputDir, inlineStyles = new Map() }: {

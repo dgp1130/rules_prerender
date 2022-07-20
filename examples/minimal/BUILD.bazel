@@ -38,7 +38,6 @@ ts_project(
         "//common/testing:devserver",
         "//common/testing:webdriver",
         "@npm//@types/jasmine",
-        "@npm//@bazel/runfiles",
     ],
 )
 

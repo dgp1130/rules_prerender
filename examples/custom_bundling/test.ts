@@ -1,11 +1,8 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../common/testing/devserver';
 import { useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
-const devserverBinary = runfiles.resolvePackageRelative('devserver');
-
 describe('custom bundling', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver('examples/custom_bundling/devserver');
     const wd = useWebDriver(devserver);
 
     it('renders a custom bundled page', async () => {

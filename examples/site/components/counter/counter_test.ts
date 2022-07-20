@@ -1,12 +1,9 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../../../common/testing/devserver';
 import { useWebDriver, webDriverTestTimeout } from '../../../../common/testing/webdriver';
 
-const devserverBinary =
-    runfiles.resolvePackageRelative('counter_test_cases_devserver');
-
 describe('Counter', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver(
+        'examples/site/components/counter/counter_test_cases_devserver');
     const wd = useWebDriver(devserver);
 
     it('increments when the increment button is clicked', async () => {

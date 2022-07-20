@@ -1,11 +1,9 @@
 import { promises as fs } from 'fs';
-import { runfiles } from '@bazel/runfiles';
 import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';
 import { execBinary, ProcessResult } from '../../common/testing/binary';
 import { useTempDir } from '../../common/testing/temp_dir';
 
-const entryGenerator =
-    runfiles.resolvePackageRelative('script_entry_generator.sh');
+const entryGenerator = 'packages/script_entry_generator/script_entry_generator.sh';
 
 /** Invokes the entry generator binary. */
 async function run({ metadata, output }: { metadata: string, output: string }):

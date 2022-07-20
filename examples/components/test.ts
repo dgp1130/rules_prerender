@@ -1,11 +1,8 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../common/testing/devserver';
 import { useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
-const devserverBinary = runfiles.resolvePackageRelative('devserver');
-
 describe('components', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver('examples/components/devserver');
     const wd = useWebDriver(devserver);
 
     it('renders', async () => {

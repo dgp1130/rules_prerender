@@ -1,11 +1,8 @@
-import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
-const devserverBinary = runfiles.resolvePackageRelative('devserver');
-
 describe('Declarative Shadow DOM', () => {
-    const devserver = useDevserver(devserverBinary);
+    const devserver = useDevserver('examples/declarative_shadow_dom/devserver');
     const wd = useWebDriver(devserver);
 
     it('attaches the declarative shadow root to its host', async () => {

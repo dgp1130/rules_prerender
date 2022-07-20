@@ -20,7 +20,6 @@ ts_project(
     testonly = True,
     data = [":prerender"],
     deps = [
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

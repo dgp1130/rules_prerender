@@ -1,9 +1,8 @@
 import { promises as fs } from 'fs';
-import { runfiles } from '@bazel/runfiles';
 import { useTempDir } from '../../common/testing/temp_dir';
 import { ProcessResult, execBinary } from '../../common/testing/binary';
 
-const binary = runfiles.resolvePackageRelative('resource_packager.sh');
+const binary = 'packages/resource_packager/resource_packager.sh';
 
 async function run({ urlPaths, fileRefs, mergeDirs, destDir }: {
     urlPaths: string[],

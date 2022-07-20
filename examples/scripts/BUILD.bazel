@@ -30,7 +30,6 @@ ts_project(
     deps = [
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
     ],
 )

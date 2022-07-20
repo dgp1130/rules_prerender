@@ -102,7 +102,6 @@ ts_project(
     srcs = ["prerender_component_publish_files_test.ts"],
     data = ["//packages/rules_prerender/prerender_component_publish_files_testdata:component_publish_files"],
     deps = [
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],

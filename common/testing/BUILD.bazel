@@ -36,6 +36,8 @@ ts_project(
         ":effects",
         ":test_server",
         "//common:http",
+        "//:node_modules/http-status-codes",
+        "//:node_modules/tree-kill",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//http-status-codes",
@@ -51,10 +53,10 @@ ts_project(
         ":devserver",
         ":effect_tester",
         "//common:http",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//http-status-codes",
+        "//:node_modules/http-status-codes",
     ],
 )
 
@@ -229,6 +231,8 @@ ts_project(
         ":test_server",
         "@npm//@types/node",
         "@npm//webdriverio",
+        "//:node_modules/debug", # TODO(#48): Remove after WebDriver supports pnpm.
+        "//:node_modules/webdriverio",
     ],
 )
 
@@ -240,7 +244,6 @@ ts_project(
         ":devserver",
         ":webdriver",
         "effect_tester",
-        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//webdriverio",
     ],

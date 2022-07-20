@@ -1,15 +1,11 @@
-import { runfiles } from '@bazel/runfiles';
 import * as webdriverio from 'webdriverio';
 import { useDevserver } from './devserver';
 import { EffectTester } from './effect_tester';
 import { useWebDriver, webDriverTestTimeout } from './webdriver';
 
-const devserverBinary =
-    runfiles.resolvePackageRelative('webdriver_test_server');
-
 describe('webdriver', () => {
     describe('useWebDriver()', () => {
-        const devserver = useDevserver(devserverBinary);
+        const devserver = useDevserver('common/testing/webdriver_test_server');
 
         it('manages a WebDriver session without a server under test', async () => {
             const remoteSpy = spyOn(webdriverio, 'remote').and.callThrough();

@@ -10,6 +10,7 @@ prerender_component(
     lib_deps = [
         "//examples/site/common:links",
         "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
     ],
     styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
@@ -29,6 +30,7 @@ ts_project(
         ":footer_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 

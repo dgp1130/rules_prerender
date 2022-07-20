@@ -1,11 +1,10 @@
 import { URL } from 'url';
 import { StatusCodes } from 'http-status-codes';
-import { runfiles } from '@bazel/runfiles';
 import * as http from '../http';
 import { Server, useDevserver } from './devserver';
 import { EffectTester } from './effect_tester';
 
-const devserver = runfiles.resolvePackageRelative('devserver_test_server');
+const devserver = 'common/testing/devserver_test_server';
 
 describe('devserver', () => {
     describe('Server', () => {

@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs';
-import { runfiles } from '@bazel/runfiles';
 
-const prerenderedDir = runfiles.resolvePackageRelative('prerender');
+const prerenderedDir = 'examples/prerender_resources/prerender';
 
 describe('Prerender Resources', () => {
     it('prerenders `hello.txt`', async () => {
