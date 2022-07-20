@@ -1,3 +1,4 @@
+load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
@@ -5,6 +6,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
+load("//tools:transitive_sources.bzl", "transitive_sources")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
@@ -17,6 +19,27 @@ ts_config(
 )
 
 npm_link_all_packages(name = "node_modules")
+
+# Makes an internal NPM package for `rules_prerender` and links it.
+# TODO(#48): Move to `//packages/rules_prerender` once dependencies outside
+# that package are addressed.
+npm_package(
+    name = "rules_prerender_pkg",
+    srcs = [
+        ":rules_prerender_sources",
+        ":package.json",
+    ],
+    package = "rules_prerender",
+)
+transitive_sources(
+    name = "rules_prerender_sources",
+    dep = "//packages/rules_prerender",
+)
+npm_link_package(
+    name = "node_modules/rules_prerender",
+    src = ":rules_prerender_pkg",
+    visibility = ["//visibility:public"],
+)
 
 bzl_library(
     name = "rules_prerender",
