@@ -1,4 +1,3 @@
-import 'jasmine';
 import { useForAll, useForEach } from './effects';
 
 describe('effects', () => {

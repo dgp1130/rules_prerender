@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { runfiles } from '@bazel/runfiles';
 import * as webdriverio from 'webdriverio';
 import { useDevserver } from './devserver';

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { ResourceMap } from './resource_map';
 import { mockFileRef } from './resource_map_mock';
 

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { env } from 'process';
 import { useTempDir } from './temp_dir';
 import { EffectTester } from './effect_tester';

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { UrlPath } from './url_path';
 
 describe('UrlPath', () => {

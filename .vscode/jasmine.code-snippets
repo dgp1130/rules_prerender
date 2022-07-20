@@ -19,8 +19,6 @@
 		"scope": "javascript,typescript",
 		"prefix": "jas",
 		"body": [
-			"import 'jasmine';",
-			"",
 			"describe('${1:file_under_test}', () => {",
 			"    describe('${2:functionUnderTest}()', () => {",
 			"        it('${3:does a thing}', ${4:async }() => {",

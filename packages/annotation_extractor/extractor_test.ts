@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { extract } from './extractor';
 import { createAnnotation } from '../../common/models/prerender_annotation';
 

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { URL } from 'url';
 import { StatusCodes } from 'http-status-codes';
 import { runfiles } from '@bazel/runfiles';

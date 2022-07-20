@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { loadPackage } from './package_loader';
 import { useTempDir } from '../../common/testing/temp_dir';
 import { promises as fs } from 'fs';

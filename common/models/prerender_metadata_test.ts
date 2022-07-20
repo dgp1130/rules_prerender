@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { PrerenderMetadata, ScriptMetadata } from './prerender_metadata';
 
 describe('prerender_metadata', () => {

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import * as inlineStyleMap from './inline_style_map';
 import { createAnnotation } from '../../common/models/prerender_annotation';
 import { inlineStyle, InlineStyleNotFoundError } from './styles';

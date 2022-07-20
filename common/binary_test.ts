@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { main as mainReal } from './binary';
 
 // Wrap `main`'s type to return its `Promise` to easily `await` it.

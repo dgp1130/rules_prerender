@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import parse from 'node-html-parser';
 import renderBlog from './blog';
 

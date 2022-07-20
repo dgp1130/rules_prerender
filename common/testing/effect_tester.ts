@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { Effect } from './effects';
 
 /**
@@ -13,7 +11,6 @@ import { Effect } from './effects';
  * Example usage:
  * 
  * ```typescript
- * import 'jasmine';
  * import { Effect, useForEach } from '.../effects';
  * import { Foo } from './foo';
  * 

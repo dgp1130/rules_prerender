@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { Effect } from './effects';
 import { effectFake } from './effect_fake';
 

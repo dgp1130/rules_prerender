@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import * as fs from '../../common/fs';
 import { pack } from './packager';
 import { ResourceMap } from './resource_map';

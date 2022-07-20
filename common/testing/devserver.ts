@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { execFile as execFileCb, ChildProcess, ExecException } from 'child_process';
 import { StatusCodes } from 'http-status-codes';
 import killTree from 'tree-kill';

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { unmockedFunc } from './mocks';
 
 describe('mocks', () => {

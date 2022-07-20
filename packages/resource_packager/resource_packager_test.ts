@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
 import { useTempDir } from '../../common/testing/temp_dir';

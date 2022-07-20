@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { mdSpacing } from './formatters';
 
 describe('formatters', () => {

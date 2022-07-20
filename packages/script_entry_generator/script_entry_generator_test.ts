@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { promises as fs } from 'fs';
 import { runfiles } from '@bazel/runfiles';
 import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';

@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { createAnnotation } from '../../common/models/prerender_annotation';
 import { includeScript } from './scripts';
 

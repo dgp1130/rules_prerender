@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { PrerenderAnnotation, createAnnotation, parseAnnotation, ScriptAnnotation, annotationsEqual, StyleAnnotation } from './prerender_annotation';
 
 describe('prerender_annotation', () => {

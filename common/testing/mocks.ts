@@ -1,7 +1,5 @@
 /** @fileoverview Utilities around mocking objects. */
 
-import 'jasmine';
-
 /**
  * Returns an object type containing only the publicly available properties of
  * the input. This is useful because TypeScript interfaces include private

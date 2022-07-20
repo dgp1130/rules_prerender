@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { runfiles } from '@bazel/runfiles';
 import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver } from '../../common/testing/webdriver';

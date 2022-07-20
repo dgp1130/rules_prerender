@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { promises as fs } from 'fs';
 import { execBinary } from './binary';
 import { useTempDir } from './temp_dir';

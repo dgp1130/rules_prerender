@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { TestServer } from './test_server';
 
 describe('test_server', () => {

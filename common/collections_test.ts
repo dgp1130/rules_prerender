@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { unique } from './collections';
 
 describe('collections', () => {

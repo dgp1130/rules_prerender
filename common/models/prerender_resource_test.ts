@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { PrerenderResource } from './prerender_resource';
 
 describe('PrerenderResource', () => {

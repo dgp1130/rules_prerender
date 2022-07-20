@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { useForEach } from './effects';
 import { effectFake } from './effect_fake';
 import { EffectTester } from './effect_tester';

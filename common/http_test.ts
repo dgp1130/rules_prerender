@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import nodeHttp from 'http';
 import { URL } from 'url';
 import * as http from './http';

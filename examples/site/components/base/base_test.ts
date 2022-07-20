@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { HTMLElement, parse, NodeType } from 'node-html-parser';
 import { baseLayout } from './base';
 

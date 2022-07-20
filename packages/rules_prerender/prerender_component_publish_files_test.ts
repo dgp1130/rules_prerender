@@ -1,5 +1,3 @@
-import 'jasmine';
-
 import { runfiles } from '@bazel/runfiles';
 import { promises as fs } from 'fs';
 
