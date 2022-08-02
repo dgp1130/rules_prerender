@@ -231,7 +231,6 @@ ts_project(
         ":test_server",
         "@npm//@types/node",
         "@npm//webdriverio",
-        "//:node_modules/debug", # TODO(#48): Remove after WebDriver supports pnpm.
         "//:node_modules/webdriverio",
     ],
 )
