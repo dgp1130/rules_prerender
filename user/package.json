@@ -13,7 +13,8 @@
         "@bazel/rollup": "^5.0.0",
         "@bazel/typescript": "^5.0.0",
         "rollup": "^2.39.0",
-        "rules_prerender": "file:../rules_prerender-0.0.0-unstamped.tgz",
-        "typescript": "^3.9.7"
+        "rules_prerender": "file:rules_prerender-0.0.0-unstamped.tgz",
+        "typescript": "^3.9.7",
+        "yargs": "^16.2.0"
     }
 }

@@ -9,8 +9,12 @@ This serves as a test case of run time execution via the `pkg_npm()` rule at
 From the root directory of `rules_prerender`:
 
 ```shell
-bazel run //:pkg.pack && (cd user/ && npm install ../rules_prerender-*.tgz --save-dev && npm install && bazel run //app:devserver)
+bazel run //:pkg.pack -- --pack-destination user/ && (cd user/ && npm install ./rules_prerender-0.0.0-unstamped.tgz --save-dev && pnpm install ./rules_prerender-0.0.0-unstamped.tgz --save-dev && pnpm install && bazel run //app:devserver)
 ```
+
+We need to install via both `npm` and `pnpm` because the former is used by
+`@build_bazel_rules_nodejs` in the `@npm//...` workspace while the latter is used by
+`@aspect_rules_js` in the `@npm_rules_js//...` workspace.
 
 Of course, you can edit the user repository and run whatever Bazel command you
 want at the end to verify that things are working as expected.

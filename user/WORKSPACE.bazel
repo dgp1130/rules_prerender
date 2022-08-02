@@ -23,11 +23,21 @@ http_archive(
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 build_bazel_rules_nodejs_dependencies()
 
+# Install `aspect_rules_js`.
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "b82da82edf64ba7e07e568193d645fc09b0a4ec92e0d82bd4e53d1a0e28ff681",
+    strip_prefix = "rules_js-1.0.0-rc.3",
+    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.0.0-rc.3.tar.gz",
+)
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+rules_js_dependencies()
+
 # Set the NodeJS version.
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 nodejs_register_toolchains(
     name = "nodejs", # Default name used by most tools.
-    node_version = "12.22.5",
+    node_version = "16.10.0",
 )
 
 # The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
@@ -35,15 +45,34 @@ nodejs_register_toolchains(
 load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
 npm_install(
     # Name this npm so that Bazel label references look like `@npm//package`.
-    name = "npm",
+    name = "npm_user",
     package_json = "//:package.json",
     package_lock_json = "//:package-lock.json",
-    # Needed for `rules_postcss` to be able to resolve its NPM dependencies.
-    strict_visibility = False,
-    # Needed for `rules_postcss`.
+    # Needed for declarative shadow DOM component.
     exports_directories_only = False,
 )
 
-# Set up `rules_prerender`.
-load("@npm//rules_prerender:package.bzl", "rules_prerender_dependencies")
+# Load `@aspect_rules_js` version of `@npm`.
+# TODO(#48): Rename to `@npm` once migrated off `@build_bazel_rules_nodejs`.
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+npm_translate_lock(
+    name = "npm_rules_js_user",
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+load("@npm_rules_js_user//:repositories.bzl", "npm_repositories")
+npm_repositories()
+
+# Set up `@rules_prerender`.
+local_repository(
+    name = "rules_prerender",
+    path = "../",
+)
+load("@rules_prerender//:package.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()
+load("@npm_rules_js//:repositories.bzl", "npm_repositories")
+npm_repositories()
+
+# Set up `@npm_user//rules_prerender`.
+load("@npm_user//rules_prerender:package_nodejs.bzl", "rules_prerender_nodejs_dependencies")
+rules_prerender_nodejs_dependencies()

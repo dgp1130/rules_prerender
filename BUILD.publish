@@ -19,8 +19,10 @@ prerender_component(
 js_library(
     name = "_declarative_shadow_dom_scripts_lib",
     srcs = [
+        # `package.json` is necessary for Rollup to identify this as an NPM package.
+        "@npm//:node_modules/rules_prerender/package.json",
         "@npm//:node_modules/rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill.js",
-        "@npm//:node_modules/rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill.d.ts",
+        "@npm//:node_modules/rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill.d.ts",\
     ],
     # Link under `external/npm/rules_prerender/...`.
     package_name = "rules_prerender",

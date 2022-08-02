@@ -5,5 +5,5 @@
 # tool. As a result, any runtime dependencies needed for the renderer (such as
 # NPM packages), **must** be added here where the generated tool will load from.
 RENDERER_RUNTIME_DEPS = [
-    "@npm//yargs",
+    "@npm//yargs", # Publish: replace
 ]

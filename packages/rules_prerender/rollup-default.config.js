@@ -3,7 +3,11 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 export default {
     plugins: [
         // Needed to support absolute imports.
-        nodeResolve({ browser: true }),
+        nodeResolve({
+            browser: true,
+            // Check in `@npm_user//...` as well.
+            moduleDirectories: ['node_modules', 'external/npm_user/node_modules']
+        }),
     ],
 
     // Fail the build on any warning.

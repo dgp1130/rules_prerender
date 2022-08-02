@@ -90,6 +90,7 @@ publish_files(
         "README.md",
         "index.bzl",
         "package.bzl",
+        "package_nodejs.bzl",
         "package.json",
         ":declarative_shadow_dom_publish_files",
     ],
@@ -98,10 +99,14 @@ publish_files(
 SUBSTITUTIONS = {
     # Remap packages with a `BUILD.publish` file to use
     # `@npm//rules_prerender/...` so they can be resolved at runtime.
-    "//common": "@npm//rules_prerender/common",
-    "//packages/renderer": "@npm//rules_prerender/packages/renderer",
-    "//packages/rules_prerender": "@npm//rules_prerender/packages/rules_prerender",
-    "//tools/internal": "@npm//rules_prerender/tools/internal",
+    "@npm//rules_prerender": "@npm_user//rules_prerender",
+    "@npm//:node_modules/rules_prerender": "@npm_user//:node_modules/rules_prerender",
+    "@npm//typescript/bin:tsc": "@npm_user//typescript/bin:tsc",
+    "\"@npm//yargs\", # Publish: replace": "\"@npm_user//yargs\",",
+    "//common": "@npm_user//rules_prerender/common",
+    "//packages/renderer": "@npm_user//rules_prerender/packages/renderer",
+    "//packages/rules_prerender": "@npm_user//rules_prerender/packages/rules_prerender",
+    "//tools/internal": "@npm_user//rules_prerender/tools/internal",
 }
 
 pkg_npm(
@@ -122,7 +127,6 @@ pkg_npm(
         "//packages/renderer:publish_files",
         "//packages/rules_prerender",
         "//packages/rules_prerender:publish_files",
-        "//tools/internal:annotation_extractor",
         "//tools/internal:renderer",
         "//tools/internal:resource_injector",
         "//tools/internal:resource_packager",

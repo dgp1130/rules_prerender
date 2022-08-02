@@ -236,7 +236,7 @@ _multi_extract_annotations = rule(
             """,
         ),
         "_extractor": attr.label(
-            default = "//tools/internal:annotation_extractor",
+            default = "@rules_prerender//packages/annotation_extractor",
             executable = True,
             cfg = "host", # TODO(#48): Use `exec`.
         ),

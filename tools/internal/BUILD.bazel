@@ -27,11 +27,6 @@ publish_files(
 )
 
 alias(
-    name = "annotation_extractor",
-    actual = "//packages/annotation_extractor",
-)
-
-alias(
     name = "renderer",
     actual = "//packages/renderer",
 )

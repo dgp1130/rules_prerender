@@ -5,7 +5,7 @@ load("//tools:typescript.bzl", "ts_project")
 js_binary(
     name = "annotation_extractor",
     entry_point = "annotation_extractor.js",
-    visibility = ["//tools/internal:__pkg__"],
+    visibility = ["//visibility:public"],
     data = [
         ":annotation_extractor_lib",
         "//:node_modules/yargs",

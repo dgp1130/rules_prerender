@@ -89,6 +89,7 @@ def prerender_component(
             name = prerender_ts,
             srcs = srcs,
             tsconfig = tsconfig,
+            tsc = "@npm//typescript/bin:tsc",
             source_map = source_map,
             data = data,
             # A `prerender_component()` can't compose other `prerender_component()` targets

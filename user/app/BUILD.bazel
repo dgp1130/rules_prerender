@@ -1,6 +1,6 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@npm_user//@bazel/typescript:index.bzl", "ts_project")
 load(
-    "@npm//rules_prerender:index.bzl",
+    "@npm_user//rules_prerender:index.bzl",
     "css_library",
     "prerender_pages",
     "web_resources",
@@ -10,7 +10,7 @@ load(
 prerender_pages(
     name = "page",
     src = "page.ts",
-    lib_deps = ["@npm//rules_prerender"],
+    lib_deps = ["@npm_user//rules_prerender"],
     source_map = True,
     tsconfig = "//:tsconfig.json",
     scripts = [":scripts"],
