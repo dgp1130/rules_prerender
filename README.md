@@ -431,7 +431,9 @@ You can also use `npm run build` and `npm test` to build and test everything.
 ## Testing
 
 Most tests are run in [Jasmine](https://jasmine.github.io/) using
-[`jasmine_node_test()`](https://www.npmjs.com/package/@bazel/jasmine#jasmine_node_test).
+`jasmine_node_test()`, a [custom `@aspect_rules_js` implementation](/tools/jasmine.bzl)
+which mirrors the
+[`@build_bazel_rules_nodejs` version](https://www.npmjs.com/package/@bazel/jasmine#jasmine_node_test).
 These tests run in a Node Jasmine environment with no available browser (unless
 they depend on WebDriverIO). The test can be executed with a simple
 `bazel test //path/to/pkg:target`.

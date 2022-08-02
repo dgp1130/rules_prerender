@@ -1,7 +1,6 @@
 """Defines `jasmine_node_test()`."""
 
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
-load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm_rules_js//:jasmine/package_json.bzl", jasmine_bin = "bin")
 
 def jasmine_node_test(name, deps, data = [], **kwargs):
