@@ -192,9 +192,9 @@ def _multi_extract_annotations_impl(ctx):
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
 
     args = ctx.actions.args()
-    args.add("--input-dir", ctx.file.annotated_dir.path)
-    args.add("--output-dir", output_dir.path)
-    args.add("--output-metadata", ctx.outputs.output_metadata.path)
+    args.add("--input-dir", ctx.file.annotated_dir.short_path)
+    args.add("--output-dir", output_dir.short_path)
+    args.add("--output-metadata", ctx.outputs.output_metadata.short_path)
 
     ctx.actions.run(
         mnemonic = "MultiAnnotationExtractor",
@@ -206,6 +206,9 @@ def _multi_extract_annotations_impl(ctx):
             output_dir,
             ctx.outputs.output_metadata,
         ],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     return [
