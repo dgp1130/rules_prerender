@@ -52,10 +52,10 @@ jasmine_node_test(
 ts_project(
     name = "extractor",
     srcs = ["extractor.ts"],
+    data = ["//:node_modules/node-html-parser"],
     deps = [
         "//common:prerender_annotation_walker",
         "//common/models:prerender_annotation",
-        "//:node_modules/node-html-parser",
     ],
 )
 

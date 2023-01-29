@@ -7,12 +7,13 @@ prerender_pages(
     src = "blog.ts",
     tsconfig = "//:tsconfig.json",
     source_map = True,
-    data = glob(["posts/*.md"]),
+    data = glob(["posts/*.md"]) + [
+        "//:node_modules/markdown-it",
+    ],
     visibility = ["//examples/site:__pkg__"],
     lib_deps = [
         "//packages/rules_prerender",
         "//examples/site/common:links",
-        "//:node_modules/markdown-it",
         "@npm//markdown-it",
         "@npm//@types/markdown-it",
         "@npm//@types/node",
@@ -27,11 +28,11 @@ ts_project(
     name = "blog_test_lib",
     srcs = ["blog_test.ts"],
     testonly = True,
+    data = ["//:node_modules/node-html-parser"],
     deps = [
         ":blog_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
-        "//:node_modules/node-html-parser",
     ],
 )
 

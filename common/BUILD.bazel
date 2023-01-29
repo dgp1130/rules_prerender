@@ -147,12 +147,12 @@ ts_project(
     name = "prerender_annotation_walker_test_lib",
     srcs = ["prerender_annotation_walker_test.ts"],
     testonly = True,
+    data = ["//:node_modules/node-html-parser"],
     deps = [
         ":prerender_annotation_walker",
         "//common/models:prerender_annotation",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
-        "//:node_modules/node-html-parser",
     ],
 )
 

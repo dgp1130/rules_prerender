@@ -7,10 +7,10 @@ prerender_component(
     srcs = ["footer.ts"],
     tsconfig = "//:tsconfig.json",
     source_map = True,
+    data = ["//:node_modules/rules_prerender"],
     lib_deps = [
         "//examples/site/common:links",
         "//packages/rules_prerender",
-        "//:node_modules/rules_prerender",
     ],
     styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
@@ -26,11 +26,11 @@ ts_project(
     name = "footer_test_lib",
     srcs = ["footer_test.ts"],
     testonly = True,
+    data = ["//:node_modules/node-html-parser"],
     deps = [
         ":footer_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
-        "//:node_modules/node-html-parser",
     ],
 )
 

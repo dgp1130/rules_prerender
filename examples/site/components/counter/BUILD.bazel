@@ -12,10 +12,8 @@ prerender_component(
     srcs = ["counter_prerender.ts"],
     tsconfig = "//:tsconfig.json",
     source_map = True,
-    lib_deps = [
-        "//packages/rules_prerender",
-        "//:node_modules/rules_prerender",
-    ],
+    data = ["//:node_modules/rules_prerender"],
+    lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],
     visibility = ["//examples/site:__subpackages__"],
 )
@@ -30,11 +28,11 @@ ts_project(
     name = "counter_prerender_test_lib",
     srcs = ["counter_prerender_test.ts"],
     testonly = True,
+    data = ["//:node_modules/node-html-parser"],
     deps = [
         ":counter_prerender_for_test",
         "@npm//@types/jasmine",
         "@npm//node-html-parser",
-        "//:node_modules/node-html-parser",
     ],
 )
 
