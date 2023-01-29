@@ -8,7 +8,7 @@ load(
     "JSModuleInfo",
     "JSEcmaScriptModuleInfo",
 )
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("//common:label.bzl", "absolute")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
