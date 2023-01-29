@@ -1,7 +1,7 @@
 """Defines `jasmine_node_test()`."""
 
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
-load("@npm_rules_js//:jasmine/package_json.bzl", jasmine_bin = "bin")
+load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 
 def jasmine_node_test(name, deps, data = [], **kwargs):
     """Wrapper for the `jasmine_node_test()` rule.
@@ -10,7 +10,7 @@ def jasmine_node_test(name, deps, data = [], **kwargs):
         name: Name of this target.
         data: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
         deps: Targets whose `DefaultInfo` files are executed as Jasmine tests.
-        **kwargs: Arguments to pass through to the real `jasmine_node_test()`.
+        **kwargs: Arguments to pass through to the real `jasmine_test()`.
     """
     # Generate a config file for the test.
     config_file = "%s_config.json" % name
@@ -20,13 +20,9 @@ def jasmine_node_test(name, deps, data = [], **kwargs):
         deps = deps,
     )
 
-    # Generate the actual test from the `@aspect_rules_js` generated binary for the `jasmine`
-    # NPM package.
-    jasmine_bin.jasmine_test(
+    jasmine_test(
         name = name,
-        # Note: These args are not applied to `jasmine_web_test_suite()`.
-        # Any changes need to be manually applied to that macro.
-        args = ["--config=$(rootpath :%s)" % config_file],
+        config = config_file,
         data = data + deps + [
             ":%s" % config_file,
         ],

@@ -77,6 +77,22 @@ npm_translate_lock(
 load("@npm_rules_js//:repositories.bzl", "npm_repositories")
 npm_repositories()
 
+http_archive(
+    name = "aspect_rules_jasmine",
+    sha256 = "11797ef81f62121ef367b0d50eba1ce4f8fcb51a0fa2e99e18651b8cbc788c91",
+    strip_prefix = "rules_jasmine-0.2.5",
+    url = "https://github.com/aspect-build/rules_jasmine/archive/refs/tags/v0.2.5.tar.gz",
+)
+
+load("@aspect_rules_jasmine//jasmine:dependencies.bzl", "rules_jasmine_dependencies")
+rules_jasmine_dependencies()
+
+load("@aspect_rules_jasmine//jasmine:repositories.bzl", "jasmine_repositories")
+jasmine_repositories(name = "jasmine")
+
+load("@jasmine//:npm_repositories.bzl", jasmine_npm_repositories = "npm_repositories")
+jasmine_npm_repositories()
+
 # Load bazel_skylib.
 http_archive(
     name = "bazel_skylib",
