@@ -330,6 +330,6 @@ describe('injector', () => {
             `Binary unexpectedly succeeded. STDERR:\n${stderr}`,
         );
         expect(stdout).toBe('');
-        expect(stderr).toContain('packages/resource_injector/injector.ts');
+        expect(stderr).toContain('packages/resource_injector/injector.js');
     });
 });

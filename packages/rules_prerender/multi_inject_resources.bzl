@@ -16,11 +16,11 @@ def _multi_inject_resources_impl(ctx):
 
     # Run the resource injector.
     args = ctx.actions.args()
-    args.add("--input-dir", ctx.file.input_dir.path)
-    args.add("--config", config.path)
+    args.add("--input-dir", ctx.file.input_dir.short_path)
+    args.add("--config", config.short_path)
     if ctx.attr.bundle:
-        args.add("--bundle", ctx.file.bundle.path)
-    args.add("--output-dir", output_dir.path)
+        args.add("--bundle", ctx.file.bundle.short_path)
+    args.add("--output-dir", output_dir.short_path)
     ctx.actions.run(
         mnemonic = "MultiInjectResources",
         progress_message = "Injecting resources into multiple pages",
@@ -30,6 +30,9 @@ def _multi_inject_resources_impl(ctx):
                  ([ctx.file.bundle] if ctx.file.bundle else []) +
                  ctx.files.styles,
         outputs = [output_dir],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     return [

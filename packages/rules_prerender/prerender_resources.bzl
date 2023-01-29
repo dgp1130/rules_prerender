@@ -121,7 +121,7 @@ def _prerender_resources_impl(ctx):
         import_map = ctx.attr.styles[CssImportMapInfo].import_map
         for (import_path, file) in import_map.items():
             args.add("--inline-style-import", import_path)
-            args.add("--inline-style-path", file.path)
+            args.add("--inline-style-path", file.short_path)
 
     ctx.actions.run(
         mnemonic = "Prerender",
