@@ -1,21 +1,18 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:typescript.bzl", "ts_project")
 
-nodejs_binary(
+js_binary(
     name = "script_entry_generator",
-    entry_point = ":script_entry_generator.ts",
+    entry_point = ":script_entry_generator.js",
     visibility = ["//tools/internal:__pkg__"],
-    templated_args = ["--bazel_patch_module_resolver"],
-    data = [
-        ":script_entry_generator_lib",
-        "@npm//yargs",
-    ],
+    data = [":script_entry_generator_lib"],
 )
 
 ts_project(
     name = "script_entry_generator_lib",
     srcs = ["script_entry_generator.ts"],
+    data = ["//:node_modules/yargs"],
     deps = [
         ":generator",
         "//common:binary",
