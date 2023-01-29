@@ -1,21 +1,18 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:typescript.bzl", "ts_project")
 
-nodejs_binary(
+js_binary(
     name = "resource_packager",
-    entry_point = ":resource_packager.ts",
+    entry_point = ":resource_packager.js",
     visibility = ["//tools/internal:__pkg__"],
-    templated_args = ["--bazel_patch_module_resolver"],
-    data = [
-        ":resource_packager_lib",
-        "@npm//yargs",
-    ],
+    data = [":resource_packager_lib"],
 )
 
 ts_project(
     name = "resource_packager_lib",
     srcs = ["resource_packager.ts"],
+    data = ["//:node_modules/yargs"],
     deps = [
         ":package_loader",
         ":packager",

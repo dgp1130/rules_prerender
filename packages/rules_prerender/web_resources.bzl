@@ -1,5 +1,6 @@
 """Defines `web_resources()` functionality."""
 
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_files_to_bin_actions")
 load("@bazel_skylib//lib:collections.bzl", "collections")
 load("//common:label.bzl", "absolute")
 
@@ -94,18 +95,28 @@ def _web_resources_impl(ctx):
         ref = files[0]
 
         entries_args.add("--url-path", url_path)
-        entries_args.add("--file-ref", ref)
+        entries_args.add("--file-ref", ref.short_path)
+
+    # We need to copy resource files to `bazel-bin/` so they can be resolved by the packager
+    # `js_binary()` target.
+    copied_files = copy_files_to_bin_actions(
+        ctx = ctx,
+        files = ctx.files.file_lbls,
+    )
 
     # Package all `entries` resources into a new directory.
     res_dir = ctx.actions.declare_directory("%s_entries" % ctx.attr.name)
-    entries_args.add("--dest-dir", res_dir.path)
+    entries_args.add("--dest-dir", res_dir.short_path)
     ctx.actions.run(
         mnemonic = "ResourcePackager",
         progress_message = "Packing entries (%s)" % ctx.label,
         executable = ctx.executable._packager,
         arguments = [entries_args],
-        inputs = ctx.files.file_lbls,
+        inputs = copied_files,
         outputs = [res_dir],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     dest_dir = ctx.actions.declare_directory(ctx.attr.name)
@@ -120,12 +131,12 @@ def _web_resources_impl(ctx):
     )
 
     # Merge all trasitive dependencies `entries` directory.
-    merge_args.add("--merge-dir", res_dir.path)
+    merge_args.add("--merge-dir", res_dir.short_path)
     merge_args.add_all(
-        [dep.path for dep in transitive_entries_dirs],
+        [dep.short_path for dep in transitive_entries_dirs],
         before_each = "--merge-dir",
     )
-    merge_args.add("--dest-dir", dest_dir.path)
+    merge_args.add("--dest-dir", dest_dir.short_path)
 
     # Merge the `entries` directories of all transitive dependencies into a
     # single directory.
@@ -136,6 +147,9 @@ def _web_resources_impl(ctx):
         arguments = [merge_args],
         inputs = [res_dir] + transitive_entries_dirs,
         outputs = [dest_dir],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     merged_resources = depset([dest_dir])
