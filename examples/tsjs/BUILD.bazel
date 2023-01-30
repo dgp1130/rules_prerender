@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("//tools:typescript.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools:jasmine.bzl", "jasmine_web_test_suite")

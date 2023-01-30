@@ -1,6 +1,6 @@
 """Defines `prerender_component()` functionality."""
 
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load(
     "@build_bazel_rules_nodejs//:providers.bzl",
@@ -20,7 +20,6 @@ def prerender_component(
     srcs,
     tsconfig = None,
     source_map = None,
-    package_name = None,
     data = [],
     lib_deps = [],
     scripts = [],
@@ -85,9 +84,8 @@ def prerender_component(
 
     prerender_lib = "%s_prerender" % name
     if all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
-        prerender_ts = "%s_ts" % prerender_lib
         ts_project(
-            name = prerender_ts,
+            name = prerender_lib,
             srcs = srcs,
             tsconfig = tsconfig,
             source_map = source_map,
@@ -97,15 +95,7 @@ def prerender_component(
             declaration = True,
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
-        )
-
-        # Re-export compiled TS as a `js_library()` so `package_name` can be declared.
-        js_library(
-            name = prerender_lib,
-            package_name = package_name,
-            testonly = testonly,
             visibility = visibility,
-            deps = [":%s" % prerender_ts],
         )
     elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
         if tsconfig:
@@ -118,7 +108,6 @@ def prerender_component(
         js_library(
             name = prerender_lib,
             srcs = srcs + data, # `data` is included in `srcs`.
-            package_name = package_name,
             deps = lib_deps + ["%s_prerender" % absolute(dep) for dep in deps],
             testonly = testonly,
             visibility = visibility,

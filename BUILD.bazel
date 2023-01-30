@@ -68,7 +68,6 @@ prerender_component(
     srcs = ["declarative_shadow_dom.ts"],
     tsconfig = "//:tsconfig.json",
     source_map = True,
-    package_name = "rules_prerender",
     visibility = ["//visibility:public"],
     deps = ["//packages/rules_prerender/declarative_shadow_dom"],
 )

@@ -1,6 +1,6 @@
 """Defines `prerender_resources()` functionality."""
 
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
@@ -113,10 +113,9 @@ def prerender_resources_internal(
 
     # Create a binary to execute the runner script.
     binary = "%s_binary" % name
-    nodejs_binary(
+    js_binary(
         name = binary,
         entry_point = ":%s" % binary_entry,
-        templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
             "//common:binary",
@@ -137,7 +136,7 @@ def _prerender_resources_impl(ctx):
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
 
     args = ctx.actions.args()
-    args.add("--output-dir", output_dir.path)
+    args.add("--output-dir", output_dir.short_path)
     if ctx.attr.styles:
         import_map = ctx.attr.styles[CssImportMapInfo].import_map
         for (import_path, file) in import_map.items():
@@ -150,6 +149,9 @@ def _prerender_resources_impl(ctx):
         executable = ctx.executable.renderer,
         arguments = [args],
         outputs = [output_dir],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     return [

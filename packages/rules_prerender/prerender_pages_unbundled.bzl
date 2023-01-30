@@ -1,6 +1,6 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
