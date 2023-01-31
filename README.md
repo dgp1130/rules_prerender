@@ -313,14 +313,13 @@ posts in a blog.
 // my_blog/posts_prerender.ts
 
 import * as fs from 'fs';
-import { runfiles } from '@bazel/runfiles';
 import { PrerenderResource } from 'rules_prerender';
 import * as md from 'markdown-it';
 
 export default async function* render():
         AsyncGenerator<PrerenderResource, void, void> {
     // List all files in the `posts/` directory.
-    const postsDir = runfiles.resolvePackageRelative('posts');
+    const postsDir = `${process.env['RUNFILES']}/wksp/my_blog/posts`;
     const posts = await fs.readdir(postsDir, { withFileTypes: true });
 
     for (const post of posts) {

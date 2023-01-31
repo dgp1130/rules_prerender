@@ -7,7 +7,6 @@ specifiers:
   '@bazel/ibazel': latest
   '@bazel/postcss': ^0.5.0
   '@bazel/rollup': ^5.0.0
-  '@bazel/runfiles': ^5.0.0
   '@bazel/typescript': ^5.0.0
   '@rollup/plugin-node-resolve': ^11.0.1
   '@types/jasmine': ^3.6.2
@@ -32,9 +31,8 @@ specifiers:
 
 dependencies:
   '@bazel/concatjs': 5.4.0_typescript@4.6.3
-  '@bazel/postcss': 0.5.0
+  '@bazel/postcss': 0.5.0_postcss@7.0.36
   '@bazel/rollup': 5.4.0_rollup@2.35.1
-  '@bazel/runfiles': 5.4.0
   '@rollup/plugin-node-resolve': 11.0.1_rollup@2.35.1
   '@types/markdown-it': 12.0.1
   markdown-it: 12.0.4
@@ -45,8 +43,8 @@ dependencies:
   yargs: 16.2.0
 
 devDependencies:
-  '@bazel/bazelisk': 1.12.0
-  '@bazel/buildifier': 5.1.0
+  '@bazel/bazelisk': 0.0.0-PLACEHOLDER
+  '@bazel/buildifier': 6.0.0
   '@bazel/ibazel': 0.16.2
   '@bazel/typescript': 5.4.0_typescript@4.6.3
   '@types/jasmine': 3.6.2
@@ -84,13 +82,13 @@ packages:
       js-tokens: 4.0.0
     dev: true
 
-  /@bazel/bazelisk/1.12.0:
-    resolution: {integrity: sha512-7oQusq1e4AIyFgotxVV7Pc40Et0QyvoVjujL+7/qV5Vrbfh0Nj3CfqSgl63weEyI4r0+K6RlGVsjfRuBi05p5w==}
+  /@bazel/bazelisk/0.0.0-PLACEHOLDER:
+    resolution: {integrity: sha512-wzbgwPh2+wb8f07TqZs5E/QsRUxVZ51KWP+4dAJ67l7TSv2w9UJ4mZ3Hh+f62eDx3hB8WI3xEEm+NrmjQCujmg==}
     hasBin: true
     dev: true
 
-  /@bazel/buildifier/5.1.0:
-    resolution: {integrity: sha512-gO0+//hkH+iE3AQ02mYttJAcWiE+rapP8IxmstDhwSqs+CmZJJI8Q1vAaIvMyJUT3NIf7lGljRNpzclkCPk89w==}
+  /@bazel/buildifier/6.0.0:
+    resolution: {integrity: sha512-QIhSDSscSfQB3ZJ0DFqWZ1R99TwgYO44NcCBL7PsfFtwRobsQ7YMka4p9mkbZi4HPin0/ImIt3yUOir8H64mIQ==}
     hasBin: true
     dev: true
 
@@ -119,8 +117,10 @@ packages:
     hasBin: true
     dev: true
 
-  /@bazel/postcss/0.5.0:
+  /@bazel/postcss/0.5.0_postcss@7.0.36:
     resolution: {integrity: sha512-zKlXs6TnkiRrCPIVSdM3EVbONcRQuMdrhVMirRBVOToX6Q3Z1abL/9gIe1wXwQanGlncDs9NU5Te2DoHu4T2Cw==}
+    peerDependencies:
+      postcss: ^7.0.7
     dependencies:
       '@types/node': 12.19.12
       autoprefixer: 9.4.3
@@ -139,10 +139,6 @@ packages:
     dependencies:
       '@bazel/worker': 5.4.0
       rollup: 2.35.1
-    dev: false
-
-  /@bazel/runfiles/5.4.0:
-    resolution: {integrity: sha512-Kj461fH+fFhyp0iN/7yKS8hMOx27o4DdAK5a/PaFLG9IYdPxICIWBMhS8ccdr21R2LZKxHrjWdh9vRnuuKZtKw==}
     dev: false
 
   /@bazel/typescript/5.4.0_typescript@4.6.3:
