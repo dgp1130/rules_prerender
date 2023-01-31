@@ -18,8 +18,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
-        "//packages/rules_prerender:inline_style_map",
-        "//packages/rules_prerender:styles",
+        "//packages/rules_prerender",
         "//common:binary",
         "//common:formatters",
         "@npm//@types/node",

@@ -1,11 +1,10 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import { InternalInlineStyleNotFoundError, internalSetInlineStyleMap } from 'rules_prerender';
 import * as yargs from 'yargs';
 import { main } from '../../common/binary';
 import { mdSpacing } from '../../common/formatters';
 import { invoke } from './entry_point';
-import { setMap as setInlineStyleMap } from '../../packages/rules_prerender/inline_style_map';
-import { InlineStyleNotFoundError } from '../../packages/rules_prerender/styles';
 
 main(async () => {
     // Parse binary options and arguments.
@@ -67,7 +66,7 @@ main(async () => {
 
     // Pass through `--inline-style-import` and `--inline-style-path` flags as the
     // inline style map to be looked up by `inlineStyle()` calls.
-    setInlineStyleMap(new Map(zip(inlineStyleImports, inlineStylePaths)));
+    internalSetInlineStyleMap(new Map(zip(inlineStyleImports, inlineStylePaths)));
 
     // Invoke the provided entry point.
     let resources: Awaited<ReturnType<typeof invoke>>;
@@ -102,7 +101,7 @@ main(async () => {
             })());
         }
     } catch (err) {
-        if (!(err instanceof InlineStyleNotFoundError)) throw err;
+        if (!(err instanceof InternalInlineStyleNotFoundError)) throw err;
 
         // Give a nicer error message for `InlineStyleNotFoundErrors`.
         console.error(`
