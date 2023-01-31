@@ -1,7 +1,7 @@
 """Tests for `label.bzl`."""
 
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
-load(":label.bzl", "absolute", "file_path_of")
+load(":label.bzl", "absolute", "file_path_of", "rel_path")
 
 def _mock_self_repository_name():
     return "@"
@@ -131,6 +131,16 @@ def _file_path_of_given_external_root_package_target_impl(ctx):
 _file_path_of_given_external_root_package_target_test = unittest.make(
     _file_path_of_given_external_root_package_target_impl)
 
+def _rel_path_of_absolute_path_impl(ctx):
+    env = unittest.begin(ctx)
+
+    rel = rel_path("foo/bar/baz.txt", package_name = _mock_package_name)
+    asserts.equals(env, "../../../../foo/bar/baz.txt", rel)
+
+    return unittest.end(env)
+
+_rel_path_of_absolute_path_test = unittest.make(_rel_path_of_absolute_path_impl)
+
 def label_test_suite(name):
     unittest.suite(
         name,
@@ -143,4 +153,5 @@ def label_test_suite(name):
         _file_path_of_given_external_target_test,
         _file_path_of_given_root_package_target_test,
         _file_path_of_given_external_root_package_target_test,
+        _rel_path_of_absolute_path_test,
     )

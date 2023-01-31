@@ -63,3 +63,16 @@ def file_path_of(lbl):
         return path_to_target
 
     return "%s/%s" % (wksp.replace("@", ""), path_to_target)
+
+def rel_path(file_path, package_name = native.package_name):
+    """Converts a workspace-relative absolute path to a relative path.
+    
+    Args:
+        file_path: Absolute file path from workspace root.
+        package_name: Function which returns the package name. Used for tests
+            only, should not be set in production code.
+
+    Returns: A relative path to the given file from the current package.
+    """
+    back_out = "/".join([".." for _ in package_name().split("/")])
+    return "%s/%s" % (back_out, file_path)
