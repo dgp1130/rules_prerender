@@ -1,47 +1,59 @@
 import { promises as fs } from 'fs';
-import { execBinary, ProcessResult } from '../../common/testing/binary';
+import { PrerenderResource, internalResetInlineStyleMapForTesting, inlineStyle } from 'rules_prerender';
+import { ProcessResult } from '../../common/testing/binary';
 import { useTempDir } from '../../common/testing/temp_dir';
 import { createAnnotation } from '../../common/models/prerender_annotation';
+import { createRenderer } from './renderer';
 
-const renderer = 'packages/renderer/renderer_test_binary.sh';
-
-/** Invokes the renderer binary. */
-async function run({ entryPoint, outputDir, inlineStyles = new Map() }: {
+/**
+ * Invokes the renderer binary. We invoke this in-process instead of spinning up a
+ * subprocess because it actually can't run standalone. It needs a generated entry point
+ * which links it with user-authored code (`entryModule`). So instead we provide that
+ * directly and invoke it in-process.
+ */
+async function run({ entryModule, entryPoint, outputDir, inlineStyles = new Map() }: {
+    entryModule: unknown,
     entryPoint: string,
     outputDir: string,
     inlineStyles?: ReadonlyMap<string, string>,
 }): Promise<ProcessResult> {
-    return await execBinary(renderer, [
-        '--entry-point', entryPoint,
+    let stdout = '';
+    spyOn(console, 'log').and.callFake((message) => { stdout += `${message}\n`; });
+
+    let stderr = '';
+    spyOn(console, 'error').and.callFake((message) => { stderr += `${message}\n`; });
+
+    const render = createRenderer(entryModule, entryPoint);
+    const code = await render([
         '--output-dir', outputDir,
         ...Array.from(inlineStyles.entries()).flatMap(([ importPath, filePath ]) => [
             '--inline-style-import', importPath,
             '--inline-style-path', filePath,
         ]),
     ]);
+
+    return {
+        code,
+        stdout,
+        stderr,
+    };
 }
 
 describe('renderer', () => {
     const tmpDir = useTempDir();
 
+    beforeEach(() => {
+        internalResetInlineStyleMapForTesting();
+    });
+
     it('renders `Iterable<PrerenderResource>`', async () => {
-        await fs.mkdir(`${tmpDir.get()}/rendered`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// We can't rely on the linker to resolve imports for us. We also don't want to
-// rely on the legacy require() patch, so instead we need to manually load the
-// runfiles helper and require() the file through it.
-const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
-const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
-
-module.exports = function* () {
-    yield PrerenderResource.of('/foo.html', 'foo');
-    yield PrerenderResource.of('/bar.html', 'bar');
-    yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
-};
-        `.trim());
-
         const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+            entryModule: function* () {
+                yield PrerenderResource.of('/foo.html', 'foo');
+                yield PrerenderResource.of('/bar.html', 'bar');
+                yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
+            },
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
         });
 
@@ -63,25 +75,15 @@ module.exports = function* () {
     });
 
     it('renders `Promise<Iterable<PrerenderResource>>`', async () => {
-        await fs.mkdir(`${tmpDir.get()}/rendered`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// We can't rely on the linker to resolve imports for us. We also don't want to
-// rely on the legacy require() patch, so instead we need to manually load the
-// runfiles helper and require() the file through it.
-const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
-const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
-
-module.exports = () => {
-    return function* () {
-        yield PrerenderResource.of('/foo.html', 'foo');
-        yield PrerenderResource.of('/bar.html', 'bar');
-        yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
-    }();
-};
-        `.trim());
-
         const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+            entryModule: () => {
+                return Promise.resolve(function* () {
+                    yield PrerenderResource.of('/foo.html', 'foo');
+                    yield PrerenderResource.of('/bar.html', 'bar');
+                    yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
+                }());
+            },
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
         });
 
@@ -103,23 +105,13 @@ module.exports = () => {
     });
 
     it('renders `AsyncIterable<PrerenderResource>`', async () => {
-        await fs.mkdir(`${tmpDir.get()}/output`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// We can't rely on the linker to resolve imports for us. We also don't want to
-// rely on the legacy require() patch, so instead we need to manually load the
-// runfiles helper and require() the file through it.
-const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
-const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
-
-module.exports = async function* () {
-    yield PrerenderResource.of('/foo.html', 'foo');
-    yield PrerenderResource.of('/bar.html', 'bar');
-    yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
-};
-        `.trim());
-
         const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+            entryModule: async function* () {
+                yield PrerenderResource.of('/foo.html', 'foo');
+                yield PrerenderResource.of('/bar.html', 'bar');
+                yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
+            },
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
         });
 
@@ -141,32 +133,21 @@ module.exports = async function* () {
     });
 
     it('renders mapped inline style paths', async () => {
-        await fs.mkdir(`${tmpDir.get()}/output`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// We can't rely on the linker to resolve imports for us. We also don't want to
-// rely on the legacy require() patch, so instead we need to manually load the
-// runfiles helper and require() the file through it.
-const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
-const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
-const { inlineStyle } = require(runfiles.resolveWorkspaceRelative('packages/rules_prerender/styles.js'));
-
-module.exports = async function* () {
-    yield PrerenderResource.of('/index.html', \`
+        const { code, stdout, stderr } = await run({
+            entryModule: async function* () {
+                yield PrerenderResource.of('/index.html', `
 <!DOCTYPE html>
 <html>
     <head>
         <title>Test Page</title>
     </head>
     <body>
-        \${inlineStyle('wksp/foo/bar/baz.css')}
+        ${inlineStyle('wksp/foo/bar/baz.css')}
     </body>
 </html>
-    \`.trim());
-};
-        `.trim());
-
-        const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+                `.trim());
+            },
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
             inlineStyles: new Map(Object.entries({
                 'wksp/foo/bar/baz.css': 'wksp/hello/world.css',
@@ -197,50 +178,31 @@ module.exports = async function* () {
     });
 
     it('fails from import errors from the entry point', async () => {
-        await fs.mkdir(`${tmpDir.get()}/output`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-module.exports = 'Hello, World!'; // Not a function...
-        `.trim());
-
         const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+            entryModule: 'Hello, World!', // Not a function...
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
         });
 
-        expect(code)
-            .toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
+        expect(code).toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
-        expect(stderr).toContain(`${tmpDir.get()}/foo.js`);
-        expect(stderr).toContain(
-            'provided a default export that was not a function');
+        expect(stderr).toContain(`./foo.js`);
+        expect(stderr).toContain('did not export a CommonJS module');
         
-        // No output files should be written.
-        const outputFiles = await fs.readdir(`${tmpDir.get()}/output`, {
-            withFileTypes: true,
-        });
-        expect(outputFiles).toEqual([]);
+        // No output directory should be created.
+        await expectAsync(fs.access(`${tmpDir.get()}/output`)).toBeRejected();
     });
 
     it('fails when the same path is generated multiple times', async () => {
-        await fs.mkdir(`${tmpDir.get()}/output`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// We can't rely on the linker to resolve imports for us. We also don't want to
-// rely on the legacy require() patch, so instead we need to manually load the
-// runfiles helper and require() the file through it.
-const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
-const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
-
-module.exports = async function* () {
-    yield PrerenderResource.of('/foo.html', 'foo');
-
-    // Error: Generating /bar.html twice.
-    yield PrerenderResource.of('/bar.html', 'bar');
-    yield PrerenderResource.of('/bar.html', 'baz');
-};
-        `.trim());
-
         const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+            entryModule: async function* () {
+                yield PrerenderResource.of('/foo.html', 'foo');
+            
+                // Error: Generating /bar.html twice.
+                yield PrerenderResource.of('/bar.html', 'bar');
+                yield PrerenderResource.of('/bar.html', 'baz');
+            },
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
         });
 
@@ -251,32 +213,21 @@ module.exports = async function* () {
     });
 
     it('fails when inlining a style not in the inline style map', async () => {
-        await fs.mkdir(`${tmpDir.get()}/output`);
-        await fs.writeFile(`${tmpDir.get()}/foo.js`, `
-// We can't rely on the linker to resolve imports for us. We also don't want to
-// rely on the legacy require() patch, so instead we need to manually load the
-// runfiles helper and require() the file through it.
-const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']);
-const { PrerenderResource } = require(runfiles.resolveWorkspaceRelative('common/models/prerender_resource.js'));
-const { inlineStyle } = require(runfiles.resolveWorkspaceRelative('packages/rules_prerender/styles.js'));
-
-module.exports = async function* () {
-    yield PrerenderResource.of('/index.html', \`
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Test Page</title>
-    </head>
-    <body>
-        \${inlineStyle('wksp/does/not/exist.css')}
-    </body>
-</html>
-    \`.trim());
-};
-        `.trim());
-
         const { code, stdout, stderr } = await run({
-            entryPoint: `${tmpDir.get()}/foo.js`,
+            entryModule: async function* () {
+                yield PrerenderResource.of('/index.html', `
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Test Page</title>
+                </head>
+                <body>
+                    ${inlineStyle('wksp/does/not/exist.css')}
+                </body>
+            </html>
+                `.trim());
+            },
+            entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
             inlineStyles: new Map(Object.entries({
                 'wksp/foo/bar/baz.css': 'wksp/hello/world.css',

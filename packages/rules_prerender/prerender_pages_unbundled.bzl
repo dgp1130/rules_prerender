@@ -1,7 +1,7 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "nodejs_binary")
-load("//common:label.bzl", "absolute", "file_path_of")
+load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
 load(":script_entry_point.bzl", "script_entry_point")
@@ -124,7 +124,7 @@ def prerender_pages_unbundled(
     )
     prerender_resources_internal(
         name = annotated,
-        entry_point = file_path_of(absolute(js_src)),
+        entry_point = rel_path(file_path_of(absolute(js_src))),
         styles = ":%s" % component_styles,
         data = [":%s" % component_prerender],
         testonly = testonly,

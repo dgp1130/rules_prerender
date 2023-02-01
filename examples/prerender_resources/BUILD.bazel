@@ -10,7 +10,7 @@ ts_project(
 
 prerender_resources(
     name = "prerender",
-    entry_point = "examples/prerender_resources/generator.js",
+    entry_point = "./generator.js",
     data = [":generator"],
 )
 

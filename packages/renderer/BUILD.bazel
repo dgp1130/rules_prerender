@@ -1,5 +1,4 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
@@ -14,8 +13,7 @@ publish_files(
 ts_project(
     name = "renderer",
     srcs = ["renderer.ts"],
-    # For `prerender_pages()` generated `nodejs_binary()` to use `renderer.js` an entry point.
-    visibility = ["//visibility:public"],
+    visibility = ["//tools/internal:__pkg__"],
     deps = [
         ":entry_point",
         "//packages/rules_prerender",
@@ -26,28 +24,16 @@ ts_project(
     ],
 )
 
-nodejs_binary(
-    name = "renderer_test_binary",
-    entry_point = "renderer.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
-    testonly = True,
-    data = RENDERER_RUNTIME_DEPS + [
-        ":renderer",
-    ],
-)
-
 ts_project(
     name = "renderer_test_lib",
     srcs = ["renderer_test.ts"],
     testonly = True,
     deps = [
+        ":renderer",
         "//common/models:prerender_annotation",
-        "//common/models:prerender_resource",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        # Need a dependency on styles for entry points under test to import
-        # `inlineStyle()`.
-        "//packages/rules_prerender:styles",
+        "//packages/rules_prerender",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
@@ -55,20 +41,14 @@ ts_project(
 
 jasmine_node_test(
     name = "renderer_test",
-    data = [":renderer_test_binary"],
+    tags = ["manual"], # TODO(#48): Re-enable on `@aspect_rules_js`.
     deps = [":renderer_test_lib"],
-)
-
-ts_project(
-    name = "dynamic_import",
-    srcs = ["dynamic_import.ts"],
 )
 
 ts_project(
     name = "entry_point",
     srcs = ["entry_point.ts"],
     deps = [
-        ":dynamic_import",
         "//common/models:prerender_resource",
     ],
 )
@@ -77,7 +57,6 @@ ts_project(
     name = "entry_point_test_lib",
     srcs = ["entry_point_test.ts"],
     deps = [
-        ":dynamic_import",
         ":entry_point",
         "//common/models:prerender_resource",
         "@npm//@types/jasmine",

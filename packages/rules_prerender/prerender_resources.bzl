@@ -1,6 +1,7 @@
 """Defines `prerender_resources()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo")
@@ -89,14 +90,36 @@ def prerender_resources_internal(
         fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
                 + " format: \"path/to/pkg/file.js\"") % entry_point)
 
+    # Generate binary entry point.
+    binary_entry = "%s_binary_entry.js" % name
+    native.genrule(
+        name = "%s_binary_entry" % name,
+        srcs = [],
+        outs = [binary_entry],
+        testonly = testonly,
+        cmd = """
+            echo "const {{ main }} = require('{binary_helper}');" >> $@
+            echo "const {{ createRenderer }} = require('{renderer}');" >> $@
+            echo "const mod = require('{entry_point}');" >> $@
+            echo "" >> $@
+            echo "const render = createRenderer(mod, '{entry_point}');" >> $@
+            echo "main(render);" >> $@
+        """.format(
+            binary_helper = rel_path(file_path_of("//common:binary")),
+            renderer = rel_path(file_path_of(absolute("//packages/renderer"))),
+            entry_point = entry_point,
+        ),
+    )
+
     # Create a binary to execute the runner script.
     binary = "%s_binary" % name
     nodejs_binary(
         name = binary,
-        entry_point = "//packages/renderer:renderer.js",
+        entry_point = ":%s" % binary_entry,
         templated_args = ["--bazel_patch_module_resolver"],
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
+            "//common:binary",
             "//tools/internal:renderer",
         ],
     )
@@ -104,7 +127,6 @@ def prerender_resources_internal(
     # Execute the renderer and place the generated files into a directory.
     _prerender_resources(
         name = name,
-        entry_point = entry_point,
         styles = styles,
         renderer = ":%s" % binary,
         testonly = testonly,
@@ -115,7 +137,6 @@ def _prerender_resources_impl(ctx):
     output_dir = ctx.actions.declare_directory(ctx.attr.name)
 
     args = ctx.actions.args()
-    args.add("--entry-point", "%s/%s" % (ctx.workspace_name, ctx.attr.entry_point))
     args.add("--output-dir", output_dir.path)
     if ctx.attr.styles:
         import_map = ctx.attr.styles[CssImportMapInfo].import_map
@@ -143,7 +164,6 @@ def _prerender_resources_impl(ctx):
 _prerender_resources = rule(
     implementation = _prerender_resources_impl,
     attrs = {
-        "entry_point": attr.string(mandatory = True),
         "styles": attr.label(providers = [CssImportMapInfo]),
         "renderer": attr.label(
             mandatory = True,

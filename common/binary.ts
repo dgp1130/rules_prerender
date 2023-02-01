@@ -1,5 +1,8 @@
 /** @fileoverview Utilities for building Node binaries. */
 
+/** The "main" function implementation. */
+export type MainFn = (args: string[]) => Promise<number>;
+
 /**
  * Executes an asynchronous "main" function. This serves as an entry point for a
  * NodeJS binary which executes asynchronous operations. Top-level await is not
@@ -11,7 +14,7 @@
  *     of the program. If this rejects, the error is printed to stderr and the
  *     program exits with code 1.
  */
-export function main(impl: (args: string[]) => Promise<number>): void {
+export function main(impl: MainFn): void {
     const result = impl(process.argv.slice(2)).catch((err) => {
         const message = err.stack ?? err.message ?? err;
         console.error(message);
