@@ -13,7 +13,7 @@ prerender_component(
     tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     scripts = [":scripts"],
     visibility = ["//examples/site:__subpackages__"],
 )
@@ -47,7 +47,7 @@ prerender_pages(
     tsconfig = "//:tsconfig",
     source_map = True,
     testonly = True,
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     deps = [":counter"],
 )
 

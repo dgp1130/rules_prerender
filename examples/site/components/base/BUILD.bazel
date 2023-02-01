@@ -8,7 +8,7 @@ prerender_component(
     tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
     deps = [

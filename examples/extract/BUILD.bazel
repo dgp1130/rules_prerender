@@ -6,7 +6,7 @@ prerender_pages_unbundled(
     src = "single_resource.ts",
     tsconfig = "//:tsconfig",
     source_map = True,
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
 )
 
 extract_single_resource(
@@ -25,7 +25,7 @@ prerender_pages_unbundled(
     src = "nested_resource.ts",
     tsconfig = "//:tsconfig",
     source_map = True,
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
 )
 
 extract_single_resource(

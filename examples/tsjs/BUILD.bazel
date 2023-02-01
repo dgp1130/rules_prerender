@@ -12,7 +12,7 @@ prerender_pages(
         ":ts_parent_script",
         ":js_parent_script",
     ],
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     deps = [
         "//examples/tsjs/js_parent",
         "//examples/tsjs/ts_parent",

@@ -13,7 +13,7 @@ prerender_pages(
     tsconfig = "//:tsconfig",
     source_map = True,
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     deps = [":component"],
 )
 

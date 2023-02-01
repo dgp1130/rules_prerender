@@ -7,7 +7,7 @@ prerender_pages(
     source_map = True,
     lib_deps = [
         "//examples/site/common:links",
-        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
     ],
     visibility = ["//examples/site:__pkg__"],
     deps = [

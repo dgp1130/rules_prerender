@@ -10,7 +10,7 @@ prerender_pages(
     data = glob(["content/*.txt"]),
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     lib_deps = [
-        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
         "//:node_modules/@types/node",
     ],
 )

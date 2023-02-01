@@ -16,11 +16,11 @@ ts_project(
     visibility = ["//tools/internal:__pkg__"],
     deps = [
         ":entry_point",
-        "//packages/rules_prerender",
         "//common:binary",
         "//common:formatters",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
+        "//:node_modules/rules_prerender",
     ],
 )
 

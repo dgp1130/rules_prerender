@@ -13,7 +13,7 @@ prerender_pages(
     src = "page.ts",
     tsconfig = "//:tsconfig",
     source_map = True,
-    lib_deps = ["//packages/rules_prerender"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     scripts = [":scripts"],
     styles = [":styles"],
     resources = [":resources"],

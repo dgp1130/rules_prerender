@@ -12,7 +12,7 @@ prerender_pages(
     ],
     visibility = ["//examples/site:__pkg__"],
     lib_deps = [
-        "//packages/rules_prerender",
+        "//:node_modules/rules_prerender",
         "//examples/site/common:links",
         "//:node_modules/markdown-it",
         "//:node_modules/@types/markdown-it",
