@@ -24,7 +24,7 @@ prerender_component(
     source_map = True,
     styles = [":styles"],
     lib_deps = ["//:node_modules/rules_prerender"],
-    deps = ["//packages/rules_prerender:declarative_shadow_dom"],
+    deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
 )
 
 css_library(

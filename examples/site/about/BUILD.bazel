@@ -14,7 +14,7 @@ prerender_pages(
     visibility = ["//examples/site:__pkg__"],
     deps = [
         "//examples/site/components/base",
-        "//packages/rules_prerender:declarative_shadow_dom",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
     ],
 )
 

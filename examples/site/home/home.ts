@@ -1,5 +1,5 @@
 import { PrerenderResource } from 'rules_prerender';
-import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
 import { baseLayout } from '../components/base/base';
 import { repo, srcLink } from '../common/links';
 

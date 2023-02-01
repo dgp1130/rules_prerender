@@ -1,5 +1,5 @@
 import { inlineStyle } from 'rules_prerender';
-import { polyfillDeclarativeShadowDom } from 'rules_prerender/declarative_shadow_dom';
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
 
 /** Renders an example component using Declarative Shadow DOM. */
 export async function renderComponent(lightDom: string): Promise<string> {

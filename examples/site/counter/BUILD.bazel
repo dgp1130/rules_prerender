@@ -13,6 +13,6 @@ prerender_pages(
     deps = [
         "//examples/site/components/base",
         "//examples/site/components/counter",
-        "//packages/rules_prerender:declarative_shadow_dom",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
     ],
 )
