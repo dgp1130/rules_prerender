@@ -6,7 +6,6 @@ load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
-load("//tools:transitive_sources.bzl", "transitive_sources")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
 exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
@@ -26,14 +25,10 @@ npm_link_all_packages(name = "node_modules")
 npm_package(
     name = "rules_prerender_pkg",
     srcs = [
-        ":rules_prerender_sources",
         ":package.json",
+        "//packages/rules_prerender:rules_prerender_lib",
     ],
     package = "rules_prerender",
-)
-transitive_sources(
-    name = "rules_prerender_sources",
-    dep = "//packages/rules_prerender",
 )
 npm_link_package(
     name = "node_modules/rules_prerender",

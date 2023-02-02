@@ -21,6 +21,7 @@ js_library(
 ts_project(
     name = "rules_prerender_lib",
     srcs = ["index.ts"],
+    visibility = ["//:__pkg__"],
     deps = [
         ":scripts",
         ":styles",
