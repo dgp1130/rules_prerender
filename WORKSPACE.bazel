@@ -78,6 +78,19 @@ load("@npm_rules_js//:repositories.bzl", "npm_repositories")
 npm_repositories()
 
 http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "acb20a4e41295d07441fa940c8da9fd02f8637391fd74a14300586a3ee244d59",
+    strip_prefix = "rules_ts-1.2.0",
+    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.2.0.tar.gz",
+)
+
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+rules_ts_dependencies(
+    # This keeps the TypeScript version in-sync with the editor, which is typically best.
+    ts_version_from = "//:package.json",
+)
+
+http_archive(
     name = "aspect_rules_jasmine",
     sha256 = "11797ef81f62121ef367b0d50eba1ce4f8fcb51a0fa2e99e18651b8cbc788c91",
     strip_prefix = "rules_jasmine-0.2.5",
