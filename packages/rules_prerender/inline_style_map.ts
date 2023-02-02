@@ -17,3 +17,11 @@ export function setMap(newMap: ReadonlyMap<string, string>): void {
     if (map) throw new Error('Inline style map already set, cannot set it again.');
     map = newMap;
 }
+
+/**
+ * Resets the inline style map for testing purposes.
+ * @testonly
+ */
+export function resetMapForTesting(): void {
+    map = undefined;
+}
