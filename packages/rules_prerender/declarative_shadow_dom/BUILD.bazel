@@ -24,7 +24,7 @@ prerender_component_publish_files(
 prerender_component(
     name = "declarative_shadow_dom",
     srcs = ["declarative_shadow_dom.ts"],
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     scripts = [":declarative_shadow_dom_polyfill"],
     lib_deps = ["//packages/rules_prerender:scripts"],

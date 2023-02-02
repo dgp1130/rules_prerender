@@ -5,7 +5,7 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 prerender_component(
     name = "footer",
     srcs = ["footer.ts"],
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
     lib_deps = [

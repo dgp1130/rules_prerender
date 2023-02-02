@@ -5,7 +5,7 @@ load("//tools:jasmine.bzl", "jasmine_node_test")
 prerender_pages(
     name = "blog",
     src = "blog.ts",
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     data = glob(["posts/*.md"]) + [
         "//:node_modules/markdown-it",

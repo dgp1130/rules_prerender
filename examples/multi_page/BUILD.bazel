@@ -11,7 +11,7 @@ load("//tools:jasmine.bzl", "jasmine_web_test_suite")
 prerender_pages(
     name = "pages",
     src = "pages.ts",
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":script"],

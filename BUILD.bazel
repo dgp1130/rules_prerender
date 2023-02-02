@@ -1,20 +1,24 @@
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
 load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
 
-exports_files(["tsconfig.json"], visibility = ["//visibility:public"])
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//visibility:public"],
+)
 
 ts_config(
     name = "tsconfig_client",
     src = "tsconfig.client.json",
     visibility = ["//visibility:public"],
-    deps = ["tsconfig.json"],
+    deps = [":tsconfig"],
 )
 
 npm_link_all_packages(name = "node_modules")
@@ -66,7 +70,7 @@ bzl_library(
 prerender_component(
     name = "declarative_shadow_dom",
     srcs = ["declarative_shadow_dom.ts"],
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     visibility = ["//visibility:public"],
     deps = ["//packages/rules_prerender/declarative_shadow_dom"],

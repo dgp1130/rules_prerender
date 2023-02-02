@@ -10,7 +10,7 @@ load("//tools:jasmine.bzl", "jasmine_node_test", "jasmine_web_test_suite")
 prerender_component(
     name = "counter",
     srcs = ["counter_prerender.ts"],
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
     lib_deps = ["//packages/rules_prerender"],
@@ -44,7 +44,7 @@ jasmine_node_test(
 prerender_pages(
     name = "counter_test_cases",
     src = "counter_test_cases.ts",
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     testonly = True,
     lib_deps = ["//packages/rules_prerender"],

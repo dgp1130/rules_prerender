@@ -3,7 +3,7 @@ load("//:index.bzl", "css_library", "prerender_pages", "web_resources")
 prerender_pages(
     name = "about",
     src = "about.ts",
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = [
         "//examples/site/common:links",

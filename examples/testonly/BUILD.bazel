@@ -11,7 +11,7 @@ load(
 prerender_pages(
     name = "page",
     src = "page.ts",
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":scripts"],

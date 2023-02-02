@@ -4,7 +4,7 @@ load("//:index.bzl", "prerender_component")
 prerender_component(
     name = "component",
     srcs = ["component.ts"],
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//packages/rules_prerender"],
     scripts = [":component_script"],
