@@ -1,0 +1,8 @@
+{
+    "name": "@rules_prerender/declarative_shadow_dom",
+    "version": "0.0.0-PLACEHOLDER",
+    "main": "./declarative_shadow_dom",
+    "peerDependencies": {
+        "rules_prerender": "^0.0.0-PLACEHOLDER"
+    }
+}

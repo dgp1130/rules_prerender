@@ -6,7 +6,7 @@ describe('declarative_shadow_dom', () => {
         it('returns an annotation to include the declarative shadow DOM polyfill', () => {
             expect(polyfillDeclarativeShadowDom()).toBe(`<!-- ${createAnnotation({
                 type: 'script',
-                path: 'rules_prerender/packages/rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill',
+                path: 'node_modules/@rules_prerender/declarative_shadow_dom/declarative_shadow_dom_polyfill',
             })} -->`);
         });
     });

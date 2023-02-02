@@ -6,7 +6,7 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
-load("//:index.bzl", "prerender_component", "prerender_component_publish_files")
+load("//:index.bzl", "link_prerender_component", "prerender_component", "prerender_component_publish_files")
 
 ts_config(
     name = "tsconfig",
@@ -24,6 +24,7 @@ ts_config(
 npm_link_all_packages(name = "node_modules")
 
 # Makes an internal NPM package for `rules_prerender` and links it.
+# TODO(#48): Stamp versions.
 # TODO(#48): Move to `//packages/rules_prerender` once dependencies outside
 # that package are addressed.
 npm_package(
@@ -37,6 +38,17 @@ npm_package(
 npm_link_package(
     name = "node_modules/rules_prerender",
     src = ":rules_prerender_pkg",
+    visibility = ["//visibility:public"],
+)
+
+npm_link_package(
+    name = "node_modules/@rules_prerender/declarative_shadow_dom",
+    src = "//packages/rules_prerender/declarative_shadow_dom:pkg",
+    visibility = ["//visibility:public"],
+)
+link_prerender_component(
+    name = "prerender_components/@rules_prerender/declarative_shadow_dom",
+    package = ":node_modules/@rules_prerender/declarative_shadow_dom",
     visibility = ["//visibility:public"],
 )
 

@@ -1,3 +1,4 @@
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load(
     "//packages/rules_prerender:prerender_component.bzl",
     "prerender_component",
@@ -21,13 +22,23 @@ prerender_component_publish_files(
     dep = ":declarative_shadow_dom",
 )
 
+npm_package(
+    name = "pkg",
+    srcs = [
+        ":declarative_shadow_dom_publish_files",
+        "package.json",
+    ],
+    package = "@rules_prerender/declarative_shadow_dom",
+    visibility = ["//:__pkg__"],
+)
+
 prerender_component(
     name = "declarative_shadow_dom",
     srcs = ["declarative_shadow_dom.ts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     scripts = [":declarative_shadow_dom_polyfill"],
-    lib_deps = ["//packages/rules_prerender:scripts"],
+    lib_deps = ["//:node_modules/rules_prerender"],
     visibility = [
         "//:__pkg__",
         "//packages/rules_prerender:__pkg__",
