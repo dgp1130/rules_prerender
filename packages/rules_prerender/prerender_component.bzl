@@ -214,7 +214,7 @@ def _js_reexport_impl(ctx):
                           if JsInfo in src],
         ),
         transitive_declarations = depset([],
-            transitive = [dep[JsInfo].declarations
+            transitive = [dep[JsInfo].transitive_declarations
                           for dep in ctx.attr.srcs + ctx.attr.deps
                           if JsInfo in dep],
         ),
