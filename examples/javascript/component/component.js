@@ -8,7 +8,7 @@ function renderComponent() {
 <div id="component-replace">
     This text to be overwritten by client-side JavaScript.
 </div>
-${includeScript('rules_prerender/examples/javascript/component/component_script')}
+${includeScript('examples/javascript/component/component_script')}
     `.trim();
 }
 
@@ -19,7 +19,7 @@ ${includeScript('rules_prerender/examples/javascript/component/component_script'
 function renderUnused() {
     return `
 <div>ERROR: Should never be rendered.</div>
-${includeScript('rules_prerender/examples/javascript/component/component_script_unused')}
+${includeScript('examples/javascript/component/component_script_unused')}
     `.trim();
 }
 

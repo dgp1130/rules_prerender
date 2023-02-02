@@ -142,7 +142,7 @@ export function renderMyComponent(name: string): string {
         <slot></slot>
 
         <!-- Inject the associated client-side JavaScript. -->
-        ${includeScript('my_workspace/my_component/my_component')}
+        ${includeScript('my_component/my_component')}
 
         <!-- Inline the associated CSS styles, scoped to this shadow root. -->
         ${inlineStyle('my_workspace/my_component/my_component.css')}

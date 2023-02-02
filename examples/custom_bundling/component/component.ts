@@ -8,7 +8,7 @@ export function renderComponent(): string {
         <div id="component-replace">
             This text to be overwritten by client-side JavaScript.
         </div>
-        ${includeScript('rules_prerender/examples/custom_bundling/component/component_script')}
+        ${includeScript('examples/custom_bundling/component/component_script')}
         ${renderTransitive()}
     `;
 }

@@ -7,6 +7,6 @@ export function renderTransitive(): string {
         <div id="transitive-replace">
             This text to be overwritten by client-side JavaScript.
         </div>
-        ${includeScript('rules_prerender/examples/scripts/transitive/transitive_script')}
+        ${includeScript('examples/scripts/transitive/transitive_script')}
     `;
 }

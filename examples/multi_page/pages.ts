@@ -28,7 +28,7 @@ function generate(content: string): string {
         <title>Multi-Page</title>
         <meta charset="utf-8">
 
-        ${includeScript('rules_prerender/examples/multi_page/script')}
+        ${includeScript('examples/multi_page/script')}
         ${inlineStyle('rules_prerender/examples/multi_page/styles.css')}
     </head>
     <body>
