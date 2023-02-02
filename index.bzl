@@ -9,6 +9,10 @@ load(
     _inject_resources = "inject_resources",
 )
 load(
+    "//packages/rules_prerender:link_prerender_component.bzl",
+    _link_prerender_component = "link_prerender_component",
+)
+load(
     "//packages/rules_prerender:prerender_component.bzl",
     _prerender_component = "prerender_component",
 )
@@ -44,6 +48,7 @@ load(
 css_library = _css_library
 extract_single_resource = _extract_single_resource
 inject_resources = _inject_resources
+link_prerender_component = _link_prerender_component
 prerender_component = _prerender_component
 prerender_component_publish_files = _prerender_component_publish_files
 prerender_pages_unbundled = _prerender_pages_unbundled
