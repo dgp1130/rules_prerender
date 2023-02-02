@@ -25,7 +25,7 @@ specifiers:
   postcss-import: ^12.0.1
   rollup: ^2.35.1
   tree-kill: ^1.2.2
-  typescript: ^4.6.3
+  typescript: 4.6.3
   webdriverio: ^7.20.9
   yargs: ^16.2.0
 
