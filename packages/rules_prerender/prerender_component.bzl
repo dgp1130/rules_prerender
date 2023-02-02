@@ -1,6 +1,7 @@
 """Defines `prerender_component()` functionality."""
 
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load(
     "@build_bazel_rules_nodejs//:providers.bzl",
     "DeclarationInfo",
@@ -160,6 +161,14 @@ which are always allowed).
     )
 
 def _js_reexport_impl(ctx):
+    for target in ctx.attr.srcs + ctx.attr.deps:
+        if DeclarationInfo in target: continue
+        if JsInfo in target: continue
+        if JSModuleInfo in target: continue
+        if JSEcmaScriptModuleInfo in target: continue
+
+        fail("Dependency (%s) does not include any of the required providers." % target.label)
+
     merged_declaration_info = DeclarationInfo(
         declarations = depset([],
             transitive = [src[DeclarationInfo].declarations
@@ -178,14 +187,64 @@ def _js_reexport_impl(ctx):
         ),
     )
 
+    merged_js_info = js_info(
+        declarations = depset([],
+            transitive = [src[JsInfo].declarations
+                          for src in ctx.attr.srcs
+                          if JsInfo in src],
+        ),
+        npm_linked_package_files = depset([],
+            transitive = [src[JsInfo].npm_linked_package_files
+                          for src in ctx.attr.srcs
+                          if JsInfo in src],
+        ),
+        npm_linked_packages = depset([],
+            transitive = [src[JsInfo].npm_linked_packages
+                          for src in ctx.attr.srcs
+                          if JsInfo in src],
+        ),
+        npm_package_store_deps = depset([],
+            transitive = [src[JsInfo].npm_package_store_deps
+                          for src in ctx.attr.srcs
+                          if JsInfo in src],
+        ),
+        sources = depset([],
+            transitive = [src[JsInfo].sources
+                          for src in ctx.attr.srcs
+                          if JsInfo in src],
+        ),
+        transitive_declarations = depset([],
+            transitive = [dep[JsInfo].declarations
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JsInfo in dep],
+        ),
+        transitive_npm_linked_package_files = depset([],
+            transitive = [dep[JsInfo].transitive_npm_linked_package_files
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JsInfo in dep],
+        ),
+        transitive_npm_linked_packages = depset([],
+            transitive = [dep[JsInfo].transitive_npm_linked_packages
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JsInfo in dep],
+        ),
+        transitive_sources = depset([],
+            transitive = [dep[JsInfo].transitive_sources
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JsInfo in dep],
+        ),
+    )
+
     merged_js_module_info = JSModuleInfo(
         direct_sources = depset([],
             transitive = [src[JSModuleInfo].direct_sources
-                          for src in ctx.attr.srcs],
+                          for src in ctx.attr.srcs
+                          if JSModuleInfo in src],
         ),
         sources = depset([],
             transitive = [dep[JSModuleInfo].sources
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
+                          for dep in ctx.attr.srcs + ctx.attr.deps
+                          if JSModuleInfo in dep],
         ),
     )
 
@@ -212,6 +271,7 @@ def _js_reexport_impl(ctx):
     return [
         DefaultInfo(files = merged_declaration_info.declarations),
         merged_declaration_info,
+        merged_js_info,
         merged_js_module_info,
         merged_js_ecma_script_module_info,
         output_group_info,
@@ -220,14 +280,8 @@ def _js_reexport_impl(ctx):
 _js_reexport = rule(
     implementation = _js_reexport_impl,
     attrs = {
-        "srcs": attr.label_list(
-            default = [],
-            providers = [JSModuleInfo],
-        ),
-        "deps": attr.label_list(
-            default = [],
-            providers = [JSModuleInfo],
-        ),
+        "srcs": attr.label_list(default = []),
+        "deps": attr.label_list(default = []),
     },
     doc = """
         Re-exports the given `ts_project()` and `js_library()` targets. Targets
