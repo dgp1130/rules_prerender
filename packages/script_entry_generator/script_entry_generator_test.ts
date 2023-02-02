@@ -6,10 +6,14 @@ import { useTempDir } from '../../common/testing/temp_dir';
 const entryGenerator = 'packages/script_entry_generator/script_entry_generator.sh';
 
 /** Invokes the entry generator binary. */
-async function run({ metadata, output }: { metadata: string, output: string }):
-        Promise<ProcessResult> {
+async function run({ metadata, importDepth, output }: {
+    metadata: string,
+    importDepth: number,
+    output: string,
+}): Promise<ProcessResult> {
     return await execBinary(entryGenerator, [
         '--metadata', metadata,
+        '--import-depth', importDepth.toString(),
         '--output', output,
     ]);
 }
@@ -20,8 +24,8 @@ describe('script_entry_generator', () => {
     it('generates an entry point', async () => {
         const metadata = mockPrerenderMetadata({
             scripts: [
-                mockScriptMetadata({ path: 'wksp/foo/bar/baz' }),
-                mockScriptMetadata({ path: 'wksp/hello/world' }),
+                mockScriptMetadata({ path: 'foo/bar/baz' }),
+                mockScriptMetadata({ path: 'hello/world' }),
             ],
         });
         await fs.writeFile(`${tmpDir.get()}/metadata.json`,
@@ -29,6 +33,7 @@ describe('script_entry_generator', () => {
         
         const { code, stdout, stderr } = await run({
             metadata: `${tmpDir.get()}/metadata.json`,
+            importDepth: 2,
             output: `${tmpDir.get()}/entryPoint.ts`,
         });
 
@@ -41,8 +46,8 @@ describe('script_entry_generator', () => {
         });
 
         expect(entryPoint).toBe(`
-import 'wksp/foo/bar/baz';
-import 'wksp/hello/world';
+import '../../foo/bar/baz';
+import '../../hello/world';
         `.trim());
     });
 
@@ -51,6 +56,7 @@ import 'wksp/hello/world';
 
         const { code, stdout, stderr } = await run({
             metadata: `${tmpDir.get()}/metadata.json`,
+            importDepth: 2,
             output: `${tmpDir.get()}/entryPoint.ts`,
         });
 

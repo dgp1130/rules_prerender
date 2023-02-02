@@ -6,21 +6,21 @@ describe('generator', () => {
         it('generates an entry point', () => {
             const entryPoint = generateEntryPoint(mockPrerenderMetadata({
                 scripts: [
-                    { path: 'wksp/foo/bar/baz' },
-                    { path: 'wksp/hello/world' },
+                    { path: 'foo/bar/baz' },
+                    { path: 'hello/world' },
                 ],
-            }));
+            }), 2 /* importDepth */);
     
             expect(entryPoint).toBe(`
-import 'wksp/foo/bar/baz';
-import 'wksp/hello/world';
+import '../../foo/bar/baz';
+import '../../hello/world';
             `.trim());
         });
 
         it('generates an empty entry point when given no scripts', () => {
             const entryPoint = generateEntryPoint(mockPrerenderMetadata({
                 scripts: [ /* no scripts */ ],
-            }));
+            }), 2 /* importDepth */);
 
             expect(entryPoint).toBe('');
         });

@@ -7,6 +7,7 @@ def _script_entry_point_impl(ctx):
         executable = ctx.executable._generator,
         arguments = [
             "--metadata", ctx.file.metadata.short_path,
+            "--import-depth", "0", # TODO(#48): Enable `--import-depth` when needed.
             "--output", ctx.outputs.output_entry_point.short_path,
         ],
         inputs = [ctx.file.metadata],
