@@ -41,7 +41,6 @@ ts_project(
 
 jasmine_node_test(
     name = "renderer_test",
-    tags = ["manual"], # TODO(#48): Re-enable on `@aspect_rules_js`.
     deps = [":renderer_test_lib"],
 )
 
