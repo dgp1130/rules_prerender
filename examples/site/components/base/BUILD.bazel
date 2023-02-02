@@ -30,8 +30,8 @@ ts_project(
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":base_prerender_for_test",
-        "@npm//@types/jasmine",
-        "@npm//node-html-parser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/node-html-parser",
     ],
 )
 

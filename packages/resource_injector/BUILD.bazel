@@ -18,8 +18,8 @@ ts_project(
         ":injector",
         "//common:binary",
         "//common:formatters",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
     ],
 )
 
@@ -31,8 +31,8 @@ ts_project(
         ":config",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -67,7 +67,7 @@ ts_project(
         ":injector",
         "//common:fs",
         "//common/models:prerender_annotation",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

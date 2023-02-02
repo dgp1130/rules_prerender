@@ -7,7 +7,7 @@ ts_project(
     srcs = ["binary.ts"],
     testonly = True,
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/node"],
+    deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
@@ -17,8 +17,8 @@ ts_project(
     deps = [
         ":binary",
         ":temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -40,10 +40,10 @@ ts_project(
         ":effects",
         ":test_server",
         "//common:http",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//http-status-codes",
-        "@npm//tree-kill",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/http-status-codes",
+        "//:node_modules/tree-kill",
     ],
 )
 
@@ -56,9 +56,9 @@ ts_project(
         ":devserver",
         ":effect_tester",
         "//common:http",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//http-status-codes",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/http-status-codes",
     ],
 )
 
@@ -80,7 +80,7 @@ ts_project(
     srcs = ["effects.ts"],
     testonly = True,
     deps = [
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -90,7 +90,7 @@ ts_project(
     testonly = True,
     deps = [
         ":effects",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -114,7 +114,7 @@ ts_project(
     deps = [
         ":effects",
         ":effect_fake",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -130,7 +130,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         ":effects",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -142,7 +142,7 @@ ts_project(
         ":effects",
         ":effect_fake",
         ":effect_tester",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -156,7 +156,7 @@ ts_project(
     srcs = ["mocks.ts"],
     testonly = True,
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/jasmine"],
+    deps = ["//:node_modules/@types/jasmine"],
 )
 
 ts_project(
@@ -165,7 +165,7 @@ ts_project(
     testonly = True,
     deps = [
         ":mocks",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -181,7 +181,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         ":effects",
-        "@npm//@types/node",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -192,8 +192,8 @@ ts_project(
     deps = [
         ":temp_dir",
         ":effect_tester",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -214,7 +214,7 @@ ts_project(
     testonly = True,
     deps = [
         ":test_server",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -232,8 +232,8 @@ ts_project(
     deps = [
         ":effects",
         ":test_server",
-        "@npm//@types/node",
-        "@npm//webdriverio",
+        "//:node_modules/@types/node",
+        "//:node_modules/webdriverio",
     ],
 )
 
@@ -245,8 +245,8 @@ ts_project(
         ":devserver",
         ":webdriver",
         "effect_tester",
-        "@npm//@types/jasmine",
-        "@npm//webdriverio",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/webdriverio",
     ],
 )
 

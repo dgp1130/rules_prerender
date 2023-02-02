@@ -42,7 +42,7 @@ rollup_bundle(
     silent = True,
     deps = [
         ":page_scripts",
-        "@npm//@rollup/plugin-node-resolve",
+        "//:node_modules/@rollup/plugin-node-resolve",
     ],
 )
 
@@ -77,7 +77,7 @@ ts_project(
     deps = [
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

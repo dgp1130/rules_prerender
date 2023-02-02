@@ -35,7 +35,7 @@ ts_project(
     deps = [
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

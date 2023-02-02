@@ -14,9 +14,9 @@ prerender_pages(
     lib_deps = [
         "//packages/rules_prerender",
         "//examples/site/common:links",
-        "@npm//markdown-it",
-        "@npm//@types/markdown-it",
-        "@npm//@types/node",
+        "//:node_modules/markdown-it",
+        "//:node_modules/@types/markdown-it",
+        "//:node_modules/@types/node",
     ],
     deps = [
         "//examples/site/components/base",
@@ -31,8 +31,8 @@ ts_project(
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":blog_prerender_for_test",
-        "@npm//@types/jasmine",
-        "@npm//node-html-parser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/node-html-parser",
     ],
 )
 

@@ -11,7 +11,7 @@ prerender_pages(
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
     lib_deps = [
         "//packages/rules_prerender",
-        "@npm//@types/node",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -27,7 +27,7 @@ ts_project(
     deps = [
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

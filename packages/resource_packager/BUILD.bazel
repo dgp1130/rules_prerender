@@ -19,7 +19,7 @@ ts_project(
         ":resource_map",
         "//common:binary",
         "//common:formatters",
-        "@npm//@types/yargs",
+        "//:node_modules/@types/yargs",
     ],
 )
 
@@ -30,8 +30,8 @@ ts_project(
     deps = [
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -46,7 +46,7 @@ ts_project(
     srcs = ["package_loader.ts"],
     deps = [
         ":resource_map",
-        "@npm//@types/node",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -57,8 +57,8 @@ ts_project(
     deps = [
         ":package_loader",
         "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -85,7 +85,7 @@ ts_project(
         ":resource_map",
         ":resource_map_mock",
         "//common:fs",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -106,7 +106,7 @@ ts_project(
     deps = [
         ":resource_map",
         ":resource_map_mock",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

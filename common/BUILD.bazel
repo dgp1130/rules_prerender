@@ -15,7 +15,7 @@ ts_project(
     name = "binary",
     srcs = ["binary.ts"],
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/node"],
+    deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
@@ -24,7 +24,7 @@ ts_project(
     testonly = True,
     deps = [
         ":binary",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -45,7 +45,7 @@ ts_project(
     testonly = True,
     deps = [
         ":collections",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -66,7 +66,7 @@ ts_project(
     testonly = True,
     deps = [
         ":formatters",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -79,14 +79,14 @@ ts_project(
     name = "fs",
     srcs = ["fs.ts"],
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/node"],
+    deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
     name = "http",
     srcs = ["http.ts"],
     visibility = ["//visibility:public"],
-    deps = ["@npm//@types/node"],
+    deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
@@ -95,8 +95,8 @@ ts_project(
     testonly = True,
     deps = [
         ":http",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -139,7 +139,7 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         "//common/models:prerender_annotation",
-        "@npm//node-html-parser",
+        "//:node_modules/node-html-parser",
     ],
 )
 
@@ -151,8 +151,8 @@ ts_project(
     deps = [
         ":prerender_annotation_walker",
         "//common/models:prerender_annotation",
-        "@npm//@types/jasmine",
-        "@npm//node-html-parser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/node-html-parser",
     ],
 )
 

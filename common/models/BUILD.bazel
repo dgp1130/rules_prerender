@@ -13,7 +13,7 @@ ts_project(
     testonly = True,
     deps = [
         ":prerender_annotation",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -42,7 +42,7 @@ ts_project(
     testonly = True,
     deps = [
         ":prerender_metadata",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -72,7 +72,7 @@ ts_project(
     testonly = True,
     deps = [
         ":prerender_resource",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -92,7 +92,7 @@ ts_project(
     testonly = True,
     deps = [
         ":url_path",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

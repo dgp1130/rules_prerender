@@ -31,8 +31,8 @@ ts_project(
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":counter_prerender_for_test",
-        "@npm//@types/jasmine",
-        "@npm//node-html-parser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/node-html-parser",
     ],
 )
 
@@ -64,7 +64,7 @@ ts_project(
     deps = [
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

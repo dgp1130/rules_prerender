@@ -20,8 +20,8 @@ ts_project(
     testonly = True,
     data = [":prerender"],
     deps = [
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 

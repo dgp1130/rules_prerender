@@ -102,8 +102,8 @@ ts_project(
     srcs = ["prerender_component_publish_files_test.ts"],
     data = ["//packages/rules_prerender/prerender_component_publish_files_testdata:component_publish_files"],
     deps = [
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -181,7 +181,7 @@ ts_project(
     deps = [
         ":scripts",
         "//common/models:prerender_annotation",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -208,7 +208,7 @@ ts_project(
         ":inline_style_map",
         ":styles",
         "//common/models:prerender_annotation",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

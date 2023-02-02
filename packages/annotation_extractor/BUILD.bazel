@@ -20,8 +20,8 @@ ts_project(
         "//common:formatters",
         "//common:collections",
         "//common/models:prerender_annotation",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
     ],
 )
 
@@ -35,8 +35,8 @@ ts_project(
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -63,7 +63,7 @@ ts_project(
     deps = [
         ":extractor",
         "//common/models:prerender_annotation",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -89,7 +89,7 @@ ts_project(
         ":metadata",
         "//common/models:prerender_annotation_mock",
         "//common/models:prerender_metadata_mock",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

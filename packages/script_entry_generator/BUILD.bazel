@@ -18,8 +18,8 @@ ts_project(
         "//common:binary",
         "//common:formatters",
         "//common/models:prerender_metadata",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
     ],
 )
 
@@ -31,8 +31,8 @@ ts_project(
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 
@@ -55,7 +55,7 @@ ts_project(
     deps = [
         ":generator",
         "//common/models:prerender_metadata_mock",
-        "@npm//@types/jasmine",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

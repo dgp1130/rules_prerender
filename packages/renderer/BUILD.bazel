@@ -19,8 +19,8 @@ ts_project(
         "//packages/rules_prerender",
         "//common:binary",
         "//common:formatters",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
     ],
 )
 
@@ -33,9 +33,9 @@ ts_project(
         "//common/models:prerender_annotation",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "//packages/rules_prerender",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/rules_prerender",
     ],
 )
 
@@ -59,8 +59,8 @@ ts_project(
     deps = [
         ":entry_point",
         "//common/models:prerender_resource",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
     ],
 )
 

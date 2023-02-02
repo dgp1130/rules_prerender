@@ -31,7 +31,7 @@
 			"    testonly = True,",
 			"    deps = [",
 			"        \":${1}\",",
-			"        \"@npm//@types/jasmine\",",
+			"        \"//:node_modules/@types/jasmine\",",
 			"    ],",
 			")",
 			"",
