@@ -1,6 +1,6 @@
 """Defines `prerender_component_publish_files()`."""
 
-load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSModuleInfo")
+load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("//common:label.bzl", "absolute")
 
 def prerender_component_publish_files(
@@ -77,16 +77,14 @@ def prerender_component_publish_files(
     )
 
 def _transitive_declarations_impl(ctx):
-    return DefaultInfo(
-        files = ctx.attr.target[DeclarationInfo].transitive_declarations,
-    )
+    return DefaultInfo(files = ctx.attr.target[JsInfo].transitive_declarations)
 
 _transitive_declarations = rule(
     implementation = _transitive_declarations_impl,
     attrs = {
         "target": attr.label(
             mandatory = True,
-            providers = [DeclarationInfo],
+            providers = [JsInfo],
             doc = "Target to collect transitive declarations of.",
         ),
     },
@@ -97,14 +95,14 @@ _transitive_declarations = rule(
 )
 
 def _transitive_js_sources_impl(ctx):
-    return DefaultInfo(files = ctx.attr.target[JSModuleInfo].sources)
+    return DefaultInfo(files = ctx.attr.target[JsInfo].transitive_sources)
 
 _transitive_js_sources = rule(
     implementation = _transitive_js_sources_impl,
     attrs = {
         "target": attr.label(
             mandatory = True,
-            providers = [JSModuleInfo],
+            providers = [JsInfo],
             doc = "Target to collect transitive JavaScript sources of.",
         ),
     },
