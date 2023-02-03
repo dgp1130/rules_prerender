@@ -3,7 +3,7 @@ import { useWebDriver, webDriverTestTimeout } from '../../../../common/testing/w
 
 describe('Counter', () => {
     const devserver = useDevserver(
-        'examples/site/components/counter/counter_test_cases_devserver');
+        'examples/site/components/counter/counter_test_cases_devserver.sh');
     const wd = useWebDriver(devserver);
 
     it('increments when the increment button is clicked', async () => {

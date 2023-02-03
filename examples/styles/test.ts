@@ -2,7 +2,7 @@ import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver } from '../../common/testing/webdriver';
 
 describe('styles', () => {
-    const devserver = useDevserver('examples/styles/devserver');
+    const devserver = useDevserver('examples/styles/devserver.sh');
     const wd = useWebDriver(devserver);
 
     it('renders inline styles', async () => {

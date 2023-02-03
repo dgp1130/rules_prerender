@@ -66,7 +66,7 @@ export class Server implements DevServer {
 
     /**
      * Constructs a new DevServer representing an already running
-     * `concatjs_devserver()` child process.
+     * `web_resources_devserver()` child process.
      * 
      * @param host The host the devserver is running on (typically 'localhost').
      * @param port The port the devserver is running on.
@@ -90,17 +90,17 @@ export class Server implements DevServer {
     /**
      * Spawns a new instance of a Server with the given binary path.
      * 
-     * @param binary Path to a `ts_binary()` executable to invoke which will
+     * @param binary Path to a `js_binary()` executable to invoke which will
      *     start the server. This is usually done via a `data` dependency on a
-     *     `concatjs_devserver()`. The path to a `concatjs_devserver()` target
-     *     can be retrieved by resolving a runfile at
-     *     `${workspaceName}/${pathToDevserverPkg}/${devserverName}` (see
-     *     [runfiles.ts](../runfiles.ts)). For example, a
-     *     `concatjs_devserver(name = "my_server")` target in
+     *     `web_resources_devserver()`. The path to a
+     *     `web_resources_devserver()` target can be retrieved by resolving a
+     *     runfile at
+     *     `${workspaceName}/${pathToDevserverPkg}/${devserverName}.sh`. For
+     *     example, a `web_resources_devserver(name = "my_server")` target in
      *     `path/to/pkg/BUILD` with a `workspace(name = "wksp")` in the root
      *     `WORKSPACE` file would have its binary at
-     *     `resolveRunfile('wksp/path/to/pkg/my_server')` (don't forget the
-     *     `data` dependency on `//path/to/pkg:my_server`!).
+     *     `process.env.RUNFILES + '/wksp/path/to/pkg/my_server'` (don't forget
+     *     the `data` dependency on `//path/to/pkg:my_server`!).
      * @param stdout A function to call when receiving data from stdout of the
      *     server.
      * @param stderr A function to call when receiving data from stderr of the

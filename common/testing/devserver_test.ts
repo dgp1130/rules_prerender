@@ -4,7 +4,7 @@ import * as http from '../http';
 import { Server, useDevserver } from './devserver';
 import { EffectTester } from './effect_tester';
 
-const devserver = 'common/testing/devserver_test_server';
+const devserver = 'common/testing/devserver_test_server.sh';
 
 describe('devserver', () => {
     describe('Server', () => {

@@ -2,7 +2,7 @@ import { useDevserver } from '../../common/testing/devserver';
 import { useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
 describe('TS/JS', () => {
-    const devserver = useDevserver('examples/tsjs/devserver');
+    const devserver = useDevserver('examples/tsjs/devserver.sh');
     const wd = useWebDriver(devserver);
 
     it('renders TypeScript depending on JavaScript', async () => {

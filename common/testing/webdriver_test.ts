@@ -5,7 +5,7 @@ import { useWebDriver, webDriverTestTimeout } from './webdriver';
 
 describe('webdriver', () => {
     describe('useWebDriver()', () => {
-        const devserver = useDevserver('common/testing/webdriver_test_server');
+        const devserver = useDevserver('common/testing/webdriver_test_server.sh');
 
         it('manages a WebDriver session without a server under test', async () => {
             const remoteSpy = spyOn(webdriverio, 'remote').and.callThrough();

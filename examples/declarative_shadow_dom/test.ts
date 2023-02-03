@@ -2,7 +2,7 @@ import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
 describe('Declarative Shadow DOM', () => {
-    const devserver = useDevserver('examples/declarative_shadow_dom/devserver');
+    const devserver = useDevserver('examples/declarative_shadow_dom/devserver.sh');
     const wd = useWebDriver(devserver);
 
     it('attaches the declarative shadow root to its host', async () => {

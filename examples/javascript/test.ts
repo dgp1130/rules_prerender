@@ -2,7 +2,7 @@ import { useDevserver } from '../../common/testing/devserver';
 import { useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
 describe('JavaScript', () => {
-    const devserver = useDevserver('examples/javascript/devserver');
+    const devserver = useDevserver('examples/javascript/devserver.sh');
     const wd = useWebDriver(devserver);
 
     it('renders component', async () => {

@@ -29,7 +29,7 @@ export const webDriverTestTimeout = 60_000; // 60 seconds.
  * ```typescript
  * describe('test suite', () => {
  *     // Handles initialization and cleanup automatically.
- *     const server = useDevserver('path/to/devserver/binary');
+ *     const server = useDevserver('path/to/devserver/binary.sh');
  *     const wd = useWebDriver(server);
  *
  *     it('is alive', async () => {

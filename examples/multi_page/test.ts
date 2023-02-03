@@ -2,7 +2,7 @@ import { useDevserver } from '../../common/testing/devserver';
 import { getColor, useWebDriver, webDriverTestTimeout } from '../../common/testing/webdriver';
 
 describe('multi_page', () => {
-    const devserver = useDevserver('examples/multi_page/devserver');
+    const devserver = useDevserver('examples/multi_page/devserver.sh');
     const wd = useWebDriver(devserver);
 
     describe('index page', () => {
