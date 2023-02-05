@@ -1,6 +1,7 @@
 """Defines `prerender_resources()` functionality."""
 
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
@@ -92,23 +93,22 @@ def prerender_resources_internal(
 
     # Generate binary entry point.
     binary_entry = "%s_binary_entry.js" % name
-    native.genrule(
+    write_file(
         name = "%s_binary_entry" % name,
-        srcs = [],
-        outs = [binary_entry],
-        testonly = testonly,
-        cmd = """
-            echo "const {{ main }} = require('{binary_helper}');" >> $@
-            echo "const {{ createRenderer }} = require('{renderer}');" >> $@
-            echo "const mod = require('{entry_point}');" >> $@
-            echo "" >> $@
-            echo "const render = createRenderer(mod, '{entry_point}');" >> $@
-            echo "main(render);" >> $@
+        out = binary_entry,
+        content = ["""
+const {{ main }} = require('{binary_helper}');
+const {{ createRenderer }} = require('{renderer}');
+const mod = require('{entry_point}');
+
+const render = createRenderer(mod, '{entry_point}');
+main(render);
         """.format(
             binary_helper = rel_path(file_path_of("//common:binary")),
             renderer = rel_path(file_path_of(absolute("//packages/renderer"))),
             entry_point = entry_point,
-        ),
+        ).strip()],
+        testonly = testonly,
     )
 
     # Create a binary to execute the runner script.
