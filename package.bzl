@@ -5,8 +5,6 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def rules_prerender_dependencies():
     """Installs Bazel dependencies for `rules_prerender`."""
-    # Add `rules_webtesting` because it is necessary for `@bazel/concatjs` which
-    # is required for `web_resources_devserver()`.
     _maybe(
         http_archive,
         name = "io_bazel_rules_webtesting",
