@@ -5,5 +5,5 @@
 # dependencies needed for the renderer (such as NPM packages), **must** be added here where
 # the generated tool will load from.
 RENDERER_RUNTIME_DEPS = [
-    "//:node_modules/yargs",
+    "@rules_prerender//:node_modules/yargs",
 ]

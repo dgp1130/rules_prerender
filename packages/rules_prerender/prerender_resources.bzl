@@ -118,8 +118,8 @@ main(render);
         entry_point = ":%s" % binary_entry,
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
-            "//common:binary",
-            "//tools/internal:renderer",
+            "@rules_prerender//common:binary",
+            "@rules_prerender//tools/internal:renderer",
         ],
     )
 
