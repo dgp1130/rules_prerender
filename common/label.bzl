@@ -74,5 +74,6 @@ def rel_path(file_path, package_name = native.package_name):
 
     Returns: A relative path to the given file from the current package.
     """
-    back_out = "/".join([".." for _ in package_name().split("/")])
+    package = package_name()
+    back_out = "/".join([".." for _ in package.split("/")]) if package != "" else "."
     return "%s/%s" % (back_out, file_path)

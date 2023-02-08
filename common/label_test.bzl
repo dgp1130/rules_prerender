@@ -12,6 +12,9 @@ def _mock_external_repository_name():
 def _mock_package_name():
     return "path/to/some/pkg"
 
+def _mock_root_package_name():
+    return ""
+
 def _absolute_given_relative_target_impl(ctx):
     env = unittest.begin(ctx)
     
@@ -141,6 +144,16 @@ def _rel_path_of_absolute_path_impl(ctx):
 
 _rel_path_of_absolute_path_test = unittest.make(_rel_path_of_absolute_path_impl)
 
+def _rel_path_of_root_package_impl(ctx):
+    env = unittest.begin(ctx)
+
+    rel = rel_path("foo/bar/baz.txt", package_name = _mock_root_package_name)
+    asserts.equals(env, "./foo/bar/baz.txt", rel)
+
+    return unittest.end(env)
+
+_rel_path_of_root_package_test = unittest.make(_rel_path_of_root_package_impl)
+
 def label_test_suite(name):
     unittest.suite(
         name,
@@ -154,4 +167,5 @@ def label_test_suite(name):
         _file_path_of_given_root_package_target_test,
         _file_path_of_given_external_root_package_target_test,
         _rel_path_of_absolute_path_test,
+        _rel_path_of_root_package_test,
     )
