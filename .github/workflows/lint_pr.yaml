@@ -14,6 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gh-actions-cache/bazel/
+          node_modules/
+        key: bazel
+
     - name: Install
       run: bazel run @nodejs_host//:npm -- ci
 
