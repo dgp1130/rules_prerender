@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { PrerenderResource, internalResetInlineStyleMapForTesting, inlineStyle } from 'rules_prerender';
+import * as rulesPrerender from 'rules_prerender';
 import { ProcessResult } from '../../common/testing/binary';
 import { useTempDir } from '../../common/testing/temp_dir';
 import { createAnnotation } from '../../common/models/prerender_annotation';
@@ -23,7 +23,10 @@ async function run({ entryModule, entryPoint, outputDir, inlineStyles = new Map(
     let stderr = '';
     spyOn(console, 'error').and.callFake((message) => { stderr += `${message}\n`; });
 
-    const render = createRenderer(entryModule, entryPoint);
+    // Constructor types of the real and copied `rulesPrerender` types don't
+    // exactly match, easier to just cast to `any` than copy them too.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const render = createRenderer(rulesPrerender as any, entryModule, entryPoint);
     const code = await render([
         '--output-dir', outputDir,
         ...Array.from(inlineStyles.entries()).flatMap(([ importPath, filePath ]) => [
@@ -38,6 +41,12 @@ async function run({ entryModule, entryPoint, outputDir, inlineStyles = new Map(
         stderr,
     };
 }
+
+const {
+    PrerenderResource,
+    internalResetInlineStyleMapForTesting,
+    inlineStyle,
+} = rulesPrerender;
 
 describe('renderer', () => {
     const tmpDir = useTempDir();

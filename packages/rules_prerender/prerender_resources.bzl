@@ -97,15 +97,16 @@ def prerender_resources_internal(
         name = "%s_binary_entry" % name,
         out = binary_entry,
         content = ["""
+const rulesPrerender = require('rules_prerender');
 const {{ main }} = require('{binary_helper}');
 const {{ createRenderer }} = require('{renderer}');
 const mod = require('{entry_point}');
 
-const render = createRenderer(mod, '{entry_point}');
+const render = createRenderer(rulesPrerender, mod, '{entry_point}');
 main(render);
         """.format(
-            binary_helper = rel_path(file_path_of("//common:binary")),
-            renderer = rel_path(file_path_of(absolute("//packages/renderer"))),
+            binary_helper = rel_path(file_path_of(Label("//common:binary"))),
+            renderer = rel_path(file_path_of(Label("//packages/renderer"))),
             entry_point = entry_point,
         ).strip()],
         testonly = testonly,
@@ -118,6 +119,8 @@ main(render);
         entry_point = ":%s" % binary_entry,
         testonly = testonly,
         data = RENDERER_RUNTIME_DEPS + data + [
+            # Use the `rules_prerender` dependency from user-space.
+            "//:node_modules/rules_prerender",
             Label("//common:binary"),
             Label("//tools/internal:renderer"),
         ],

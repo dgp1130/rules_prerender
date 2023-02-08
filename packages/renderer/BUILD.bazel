@@ -20,7 +20,6 @@ ts_project(
         "//common:formatters",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
-        "//:node_modules/rules_prerender",
     ],
 )
 
