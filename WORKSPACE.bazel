@@ -82,6 +82,9 @@ http_archive(
     sha256 = "acb20a4e41295d07441fa940c8da9fd02f8637391fd74a14300586a3ee244d59",
     strip_prefix = "rules_ts-1.2.0",
     url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.2.0.tar.gz",
+    # TODO(#48): Remove when fix is released by `@aspect_rules_ts`.
+    # See: https://github.com/aspect-build/rules_ts/pull/310
+    patches = ["//:aspect_rules_ts_issue_284.patch"],
 )
 
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
@@ -151,6 +154,5 @@ load(
 )
 browser_repositories(chromium = True)
 
-# Install transitive Bazel dependencies.
-load("//:package.bzl", "rules_prerender_dependencies")
-rules_prerender_dependencies()
+load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
+rules_postcss_dependencies()

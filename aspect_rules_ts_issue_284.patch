@@ -1,0 +1,55 @@
+diff --git ts/private/ts_project.bzl ts/private/ts_project.bzl
+index 0c7f6fc..c38e1e3 100644
+--- ts/private/ts_project.bzl
++++ ts/private/ts_project.bzl
+@@ -86,11 +86,13 @@ See https://github.com/aspect-build/rules_ts/issues/228 for more details.
+     arguments.add_all(ctx.attr.args)
+ 
+     outdir = _lib.join(ctx.label.package, ctx.attr.out_dir) if ctx.attr.out_dir else ctx.label.package
++    if ctx.label.workspace_root:
++        outdir = _lib.join(ctx.label.workspace_root, outdir)
+     if outdir == "":
+         outdir = "."
+     arguments.add_all([
+         "--project",
+-        ctx.file.tsconfig.short_path,
++        ctx.file.tsconfig.path.removeprefix("%s/" % ctx.var["BINDIR"]),
+         "--outDir",
+         outdir,
+         "--rootDir",
+@@ -98,6 +100,8 @@ See https://github.com/aspect-build/rules_ts/issues/228 for more details.
+     ])
+     if len(typings_outs) > 0:
+         declaration_dir = _lib.join(ctx.label.package, typings_out_dir)
++        if ctx.label.workspace_root:
++            declaration_dir = _lib.join(ctx.label.workspace_root, declaration_dir)
+         if declaration_dir == "":
+             declaration_dir = "."
+         arguments.add_all([
+@@ -230,7 +234,7 @@ This is an error because Bazel does not run actions unless their outputs are nee
+             execution_requirements = execution_requirements,
+             progress_message = "Compiling TypeScript project %s [tsc -p %s]" % (
+                 ctx.label,
+-                ctx.file.tsconfig.short_path,
++                ctx.file.tsconfig.path.removeprefix("%s/" % ctx.var["BINDIR"]),
+             ),
+             env = {
+                 "BAZEL_BINDIR": ctx.bin_dir.path,
+diff --git ts/private/ts_validate_options.bzl ts/private/ts_validate_options.bzl
+index d3f7745..6ebe105 100644
+--- ts/private/ts_validate_options.bzl
++++ ts/private/ts_validate_options.bzl
+@@ -51,7 +51,12 @@ To disable this check, set the validate attribute to False:
+         incremental = ctx.attr.incremental,
+         ts_build_info_file = ctx.attr.ts_build_info_file,
+     )
+-    arguments.add_all([ctx.file.tsconfig.short_path, marker.short_path, ctx.attr.target, json.encode(config)])
++    arguments.add_all([
++        ctx.file.tsconfig.path.removeprefix("%s/" % ctx.var["BINDIR"]),
++        marker.path.removeprefix("%s/" % ctx.var["BINDIR"]),
++        ctx.attr.target,
++        json.encode(config),
++    ])
+ 
+     inputs = _tsconfig_inputs(ctx)
+ 

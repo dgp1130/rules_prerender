@@ -55,8 +55,10 @@ link_prerender_component(
 bzl_library(
     name = "rules_prerender",
     srcs = [
+        "dependencies.bzl",
         "index.bzl",
-        "package.bzl",
+        "npm_repositories.bzl",
+        "repositories.bzl",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -99,7 +101,6 @@ publish_files(
         ".npmrc",
         "README.md",
         "index.bzl",
-        "package.bzl",
         "package.json",
         ":declarative_shadow_dom_publish_files",
     ],
