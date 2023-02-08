@@ -160,3 +160,24 @@ jasmine_node_test(
     name = "prerender_annotation_walker_test",
     deps = [":prerender_annotation_walker_test_lib"],
 )
+
+ts_project(
+    name = "probably",
+    srcs = ["probably.ts"],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "probably_test_lib",
+    srcs = ["probably_test.ts"],
+    testonly = True,
+    deps = [
+        ":probably",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "probably_test",
+    deps = [":probably_test_lib"],
+)

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { InternalInlineStyleNotFoundError, internalSetInlineStyleMap } from 'rules_prerender';
+import { InternalInlineStyleNotFoundError, internalSetInlineStyleMap, PrerenderResource } from 'rules_prerender';
 import * as yargs from 'yargs';
 import type { MainFn } from '../../common/binary';
 import { mdSpacing } from '../../common/formatters';
@@ -72,6 +72,11 @@ export function createRenderer(entryModule: unknown, entryPoint: string):
         const writes = [] as Promise<void>[];
         try {
             for await (const resource of resources) {
+                // Assert the user yielded a `PrerenderResource`.
+                if (!(resource instanceof PrerenderResource)) {
+                    throw new Error(`Expected default export to yield \`PrerenderResource\` objects, but instead got a \`${resource.constructor.name}\`.`);
+                }
+
                 // Make sure the given path has not been previously generated.
                 if (generatedUrlPaths.has(resource.path)) {
                     console.error(`Generated path \`${resource.path}\` twice.`);

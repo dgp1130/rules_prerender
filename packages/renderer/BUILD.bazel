@@ -48,6 +48,7 @@ ts_project(
     name = "entry_point",
     srcs = ["entry_point.ts"],
     deps = [
+        "//common:probably",
         "//common/models:prerender_resource",
     ],
 )
@@ -57,6 +58,7 @@ ts_project(
     srcs = ["entry_point_test.ts"],
     deps = [
         ":entry_point",
+        "//common:probably",
         "//common/models:prerender_resource",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",

@@ -1,4 +1,5 @@
 import { PrerenderResource } from '../../common/models/prerender_resource';
+import { Probably } from '../../common/probably';
 
 /**
  * Invokes the default function export of the given CommonJS module, and validates the
@@ -23,8 +24,8 @@ import { PrerenderResource } from '../../common/models/prerender_resource';
  * @returns The returned value of the invoked entry point.
  */
 export async function invoke(module: unknown, entryPoint: string): Promise<
-    | Iterable<PrerenderResource>
-    | AsyncIterable<PrerenderResource>
+    | Iterable<Probably<PrerenderResource>>
+    | AsyncIterable<Probably<PrerenderResource>>
 > {
     // Get the default export of the given module. In a CommonJS-authored module,
     // it will be a function directly. In certain TypeScript compile modes, it
@@ -38,10 +39,10 @@ export async function invoke(module: unknown, entryPoint: string): Promise<
     // Invoke the default export and assert the result.
     const rendered = await defaultExport() as unknown;
     if (isIterable(rendered)) {
-        return rendered as Iterable<PrerenderResource>;
+        return rendered as Iterable<Probably<PrerenderResource>>;
     }
     if (isAsyncIterable(rendered)) {
-        return rendered as AsyncIterable<PrerenderResource>;
+        return rendered as AsyncIterable<Probably<PrerenderResource>>;
     }
 
     throw new Error(`Entry point (${entryPoint}) provided a default export`

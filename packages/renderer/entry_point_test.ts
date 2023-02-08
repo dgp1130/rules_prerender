@@ -1,14 +1,19 @@
 import { PrerenderResource } from '../../common/models/prerender_resource';
+import { Probably } from '../../common/probably';
 import { invoke } from './entry_point';
+
+function definitelyIterable<T>(probably: Iterable<Probably<T>> | AsyncIterable<Probably<T>>): Iterable<T> | AsyncIterable<T> {
+    return probably as unknown as Iterable<T> | AsyncIterable<T>;
+}
 
 describe('entry_point', () => {
     describe('invoke()', () => {
         it('invokes the given entry point and returns its `Iterable<PrerenderResource>` value', async () => {
-            const rendered = await invoke(() => [
+            const rendered = definitelyIterable(await invoke(() => [
                 PrerenderResource.of('/foo.html', 'Hello, foo!'),
                 PrerenderResource.of('/bar.html', 'Hello, bar!'),
                 PrerenderResource.of('/baz.html', 'Hello, baz!'),
-            ], './foo.js');
+            ], './foo.js'));
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
@@ -20,11 +25,11 @@ describe('entry_point', () => {
         });
 
         it('invokes the given entry point and awaits its `Promise<Iterable<PrerenderResource>>` value', async () => {
-            const rendered = await invoke(() => [
+            const rendered = definitelyIterable(await invoke(() => [
                 PrerenderResource.of('/foo.html', 'Hello, foo!'),
                 PrerenderResource.of('/bar.html', 'Hello, bar!'),
                 PrerenderResource.of('/baz.html', 'Hello, baz!'),
-            ], './foo.js');
+            ], './foo.js'));
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
@@ -36,11 +41,11 @@ describe('entry_point', () => {
         });
 
         it('invokes the given entry point and returns its `AsyncIterable<PrerenderResource>` value', async () => {
-            const rendered = await invoke(async function*() {
+            const rendered = definitelyIterable(await invoke(async function*() {
                 yield PrerenderResource.of('/foo.html', 'Hello, foo!');
                 yield PrerenderResource.of('/bar.html', 'Hello, bar!');
                 yield PrerenderResource.of('/baz.html', 'Hello, baz!');
-            }, './foo.js');
+            }, './foo.js'));
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.asyncIterator]).toBeDefined();
@@ -54,11 +59,11 @@ describe('entry_point', () => {
         });
 
         it('invokes the given entry point when it is an object with a `default` property', async () => {
-            const rendered = await invoke({
+            const rendered = definitelyIterable(await invoke({
                 default: () => [
                     PrerenderResource.of('/foo.html', 'Hello, foo!'),
                 ],
-            }, './foo.js');
+            }, './foo.js'));
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
