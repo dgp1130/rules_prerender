@@ -58,7 +58,6 @@ describe('probably', () => {
             expect(user).toBe(prob as unknown as User);
 
             // @ts-expect-error Property `name` is missing from type `User`.
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             user = {};
         });
     });
