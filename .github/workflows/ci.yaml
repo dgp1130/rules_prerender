@@ -44,7 +44,11 @@ jobs:
     # Build and test the entire repository. Include all supported
     # `--incompatible_*` flags to avoid regressions.
     - name: Test
-      run: bazel test //... --config incompatible --config ci
+      run: |
+        # Run `bazel test //...` over all workspaces in the repository.
+        find . -name WORKSPACE.bazel -printf "%h\n" |
+        sort |
+        xargs -I {} bash -c "(cd {} && bazel test //... --config incompatible --config ci)"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
