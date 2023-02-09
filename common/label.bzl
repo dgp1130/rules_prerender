@@ -49,20 +49,27 @@ def file_path_of(lbl):
         lbl: An absolute target (as a string) to generate the file path of.
 
     Returns:
-        The runtime path to the provided target. Generally of the form
-        `workspace_name/path/to/pkg/target`. Workspace name is dropped if in the
-        primary workspace. Package path is dropped if in the root level package.
+        The runtime path to the provided target relative to the main workspace
+        directory inside the execroot.
+
+    Example:
+        `//path/to/internal/pkg:target` => `./path/to/internal/pkg/target`
+        `@wksp//path/to/external/pkg:target` => `../wksp/path/to/external/pkg/target`
+    
+    Note the leading `../` for external packages, meaning they will resolve
+    correctly from the `execroot/__main__/` directory most actions use as the
+    current working directory by default.
     """
     # Isolate the workspace name, package, and target strings.
-    [wksp, absolute_path] = lbl.split("//")
+    [wksp, absolute_path] = str(lbl).split("//")
     [pkg, target] = absolute_path.split(":")
 
     # Build a file path to the given target.
     path_to_target = "%s/%s" % (pkg, target) if pkg else target
     if not wksp:
-        return path_to_target
+        return "./%s" % path_to_target
 
-    return "%s/%s" % (wksp.replace("@", ""), path_to_target)
+    return "../%s/%s" % (wksp.replace("@", ""), path_to_target)
 
 def rel_path(file_path, package_name = native.package_name):
     """Converts a workspace-relative absolute path to a relative path.

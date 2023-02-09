@@ -94,7 +94,7 @@ def _file_path_of_given_absolute_target_impl(ctx):
     env = unittest.begin(ctx)
     
     path = file_path_of("//path/to/some/other/pkg:foo")
-    asserts.equals(env, "path/to/some/other/pkg/foo", str(path))
+    asserts.equals(env, "./path/to/some/other/pkg/foo", str(path))
     
     return unittest.end(env)
 
@@ -105,7 +105,7 @@ def _file_path_of_given_external_target_impl(ctx):
     env = unittest.begin(ctx)
     
     path = file_path_of("@wksp//path/to/some/other/pkg:foo")
-    asserts.equals(env, "wksp/path/to/some/other/pkg/foo", str(path))
+    asserts.equals(env, "../wksp/path/to/some/other/pkg/foo", str(path))
     
     return unittest.end(env)
 
@@ -116,7 +116,7 @@ def _file_path_of_given_root_package_target_impl(ctx):
     env = unittest.begin(ctx)
     
     path = file_path_of("//:foo")
-    asserts.equals(env, "foo", str(path))
+    asserts.equals(env, "./foo", str(path))
     
     return unittest.end(env)
 
@@ -127,7 +127,7 @@ def _file_path_of_given_external_root_package_target_impl(ctx):
     env = unittest.begin(ctx)
     
     path = file_path_of("@wksp//:foo")
-    asserts.equals(env, "wksp/foo", str(path))
+    asserts.equals(env, "../wksp/foo", str(path))
     
     return unittest.end(env)
 
