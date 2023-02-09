@@ -132,7 +132,7 @@ def prerender_pages(
         bundle_config = "%s_bundle_config.js" % name
         copy_file(
             name = "%s_bundle_config" % name,
-            src = "@rules_prerender//packages/rules_prerender:rollup-default.config.js",
+            src = Label("//packages/rules_prerender:rollup-default.config.js"),
             out = bundle_config,
         )
 
@@ -145,7 +145,7 @@ def prerender_pages(
             testonly = testonly,
             deps = [
                 ":%s_scripts" % prerender_name,
-                "@rules_prerender//:node_modules/@rollup/plugin-node-resolve",
+                Label("//:node_modules/@rollup/plugin-node-resolve"),
             ],
         )
 
