@@ -10,6 +10,8 @@ export default function*(): Generator<PrerenderResource, void, void> {
     </head>
     <body>
         <h2>Hello, World!</h2>
+        <img src="/logo">
+
         ${includeScript('script.js')}
         ${inlineStyle('external/style.css')}
     </body>

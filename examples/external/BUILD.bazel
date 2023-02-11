@@ -3,7 +3,13 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm_user//:defs.bzl", "npm_link_all_packages")
-load("@rules_prerender//:index.bzl", "css_library", "prerender_pages", "web_resources_devserver")
+load(
+    "@rules_prerender//:index.bzl",
+    "css_library",
+    "prerender_pages",
+    "web_resources",
+    "web_resources_devserver",
+)
 
 npm_link_all_packages(name = "node_modules")
 
@@ -18,6 +24,7 @@ prerender_pages(
     src = "site.ts",
     scripts = [":script"],
     styles = [":styles"],
+    resources = [":resources"],
     source_map = True, # TODO(#48): This doesn't seem to work?
     tsconfig = "//:tsconfig.json",
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -33,6 +40,13 @@ ts_project(
 css_library(
     name = "styles",
     srcs = ["style.css"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/logo": "logo.png",
+    },
 )
 
 web_resources_devserver(
