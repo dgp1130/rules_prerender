@@ -24,5 +24,19 @@ import '../../hello/world';
 
             expect(entryPoint).toBe('');
         });
+
+        it('generates a relative empty entry point with depth 0', () => {
+            const entryPoint = generateEntryPoint(mockPrerenderMetadata({
+                scripts: [
+                    { path: 'foo/bar/baz' },
+                    { path: 'hello/world' },
+                ],
+            }), 0 /* importDepth */);
+
+            expect(entryPoint).toBe(`
+import './foo/bar/baz';
+import './hello/world';
+            `.trim());
+        });
     });
 });

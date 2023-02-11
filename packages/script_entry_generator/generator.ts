@@ -12,7 +12,7 @@ import { PrerenderMetadata } from '../../common/models/prerender_metadata';
  */
 export function generateEntryPoint(metadata: PrerenderMetadata, importDepth: number):
         string {
-    const prefix = importDepth !== 0 ? range(importDepth).map(() => '..').join('/') + '/' : '';
+    const prefix = importDepth !== 0 ? range(importDepth).map(() => '..').join('/') + '/' : './';
     return metadata.scripts
         .map((script) => `import '${prefix}${script.path}';`)
         .join('\n');
