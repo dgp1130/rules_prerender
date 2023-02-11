@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@bazel/postcss": "^0.5.0"
+    "@bazel/postcss": "^0.5.0",
+    "@rollup/plugin-node-resolve": "^11.2.1"
   }
 }

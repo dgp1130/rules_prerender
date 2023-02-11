@@ -145,7 +145,8 @@ def prerender_pages(
             testonly = testonly,
             deps = [
                 ":%s_scripts" % prerender_name,
-                Label("//:node_modules/@rollup/plugin-node-resolve"),
+                # TODO(#48): Don't require this dependency in the user's workspace.
+                "//:node_modules/@rollup/plugin-node-resolve",
             ],
         )
 
