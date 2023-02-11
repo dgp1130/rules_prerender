@@ -110,7 +110,7 @@ def _css_binary(
         # https://github.com/bazelbuild/rules_postcss/issues/73/
         sourcemap = False,
         plugins = {
-            "//tools/internal:postcss_import_plugin": IMPORT_PLUGIN_CONFIG,
+            Label("//tools/internal:postcss_import_plugin"): IMPORT_PLUGIN_CONFIG,
         },
         testonly = testonly,
         tags = tags,
