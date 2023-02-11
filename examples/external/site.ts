@@ -1,4 +1,4 @@
-import { PrerenderResource } from 'rules_prerender';
+import { includeScript, PrerenderResource } from 'rules_prerender';
 
 export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `
@@ -10,6 +10,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     </head>
     <body>
         <h2>Hello, World!</h2>
+        ${includeScript('script.js')}
     </body>
 </html>
     `.trim());
