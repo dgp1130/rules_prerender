@@ -1,0 +1,49 @@
+load("@aspect_bazel_lib//lib:diff_test.bzl", "diff_test")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load(":stamp_package.bzl", "stamp_package")
+
+exports_files(["stamp.jq"], visibility = ["//visibility:public"])
+
+bzl_library(
+    name = "stamp_package",
+    srcs = ["stamp_package.bzl"],
+)
+
+stamp_package(
+    name = "stamp_package_version",
+    package = "package_version.json",
+    default_version = "1.2.3",
+    testonly = True,
+)
+
+diff_test(
+    name = "stamp_package_version_test",
+    file1 = ":stamp_package_version",
+    file2 = "package_version_expected.json",
+)
+
+stamp_package(
+    name = "stamp_package_dependencies",
+    package = "package_dependencies.json",
+    default_version = "1.2.3",
+    testonly = True,
+)
+
+diff_test(
+    name = "stamp_package_dependencies_test",
+    file1 = ":stamp_package_dependencies",
+    file2 = "package_dependencies_expected.json",
+)
+
+stamp_package(
+    name = "stamp_package_ignored_dependencies",
+    package = "package_ignored_dependencies.json",
+    default_version = "1.2.3",
+    testonly = True,
+)
+
+diff_test(
+    name = "stamp_package_ignored_dependencies_test",
+    file1 = ":stamp_package_ignored_dependencies",
+    file2 = "package_ignored_dependencies_expected.json",
+)

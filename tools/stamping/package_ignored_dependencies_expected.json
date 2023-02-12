@@ -1,0 +1,24 @@
+{
+  "name": "test",
+  "version": "1.2.3",
+  "dependencies": {
+    "rules_prerender": "1.2.3",
+    "ignored-dep": "0.0.0-PLACEHOLDER",
+    "@ignored/other-dep": "0.0.0-PLACEHOLDER"
+  },
+  "devDependencies": {
+    "rules_prerender": "1.2.3",
+    "ignored-dep": "0.0.0-PLACEHOLDER",
+    "@ignored/other-dep": "0.0.0-PLACEHOLDER"
+  },
+  "peerDependencies": {
+    "rules_prerender": "1.2.3",
+    "ignored-dep": "0.0.0-PLACEHOLDER",
+    "@ignored/other-dep": "0.0.0-PLACEHOLDER"
+  },
+  "optionalDependencies": {
+    "rules_prerender": "1.2.3",
+    "ignored-dep": "0.0.0-PLACEHOLDER",
+    "@ignored/other-dep": "0.0.0-PLACEHOLDER"
+  }
+}

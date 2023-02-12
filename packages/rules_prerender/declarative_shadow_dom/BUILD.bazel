@@ -10,6 +10,7 @@ load(
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
+load("//tools/stamping:stamp_package.bzl", "stamp_package")
 
 publish_files(
     name = "publish_files",
@@ -22,11 +23,12 @@ prerender_component_publish_files(
     dep = ":declarative_shadow_dom",
 )
 
+stamp_package(name = "package")
 npm_package(
     name = "pkg",
     srcs = [
         ":declarative_shadow_dom_publish_files",
-        "package.json",
+        ":package",
     ],
     package = "@rules_prerender/declarative_shadow_dom",
     visibility = ["//visibility:public"],
