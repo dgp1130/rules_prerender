@@ -44,9 +44,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_jasmine",
-        sha256 = "11797ef81f62121ef367b0d50eba1ce4f8fcb51a0fa2e99e18651b8cbc788c91",
-        strip_prefix = "rules_jasmine-0.2.5",
-        url = "https://github.com/aspect-build/rules_jasmine/archive/refs/tags/v0.2.5.tar.gz",
+        sha256 = "089250b6afda54099d7a3bc4e0f0765451356f329d105a32d1a78703edf70320",
+        strip_prefix = "rules_jasmine-0.3.0",
+        url = "https://github.com/aspect-build/rules_jasmine/archive/refs/tags/v0.3.0.tar.gz",
     )
 
     # TODO(#48): Remove from publicly visible dependencies.
