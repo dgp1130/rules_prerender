@@ -6,6 +6,7 @@ load("@npm_user//:defs.bzl", "npm_link_all_packages")
 load(
     "@rules_prerender//:index.bzl",
     "css_library",
+    "link_prerender_component",
     "prerender_pages",
     "web_resources",
     "web_resources_devserver",
@@ -18,6 +19,16 @@ npm_link_package(
     src = "@rules_prerender//:rules_prerender_pkg",
     visibility = ["//visibility:public"],
 )
+npm_link_package(
+    name = "node_modules/@rules_prerender/declarative_shadow_dom",
+    src = "@rules_prerender//packages/rules_prerender/declarative_shadow_dom:pkg",
+    visibility = ["//visibility:public"],
+)
+link_prerender_component(
+    name = "prerender_components/@rules_prerender/declarative_shadow_dom",
+    package = ":node_modules/@rules_prerender/declarative_shadow_dom",
+    visibility = ["//visibility:public"],
+)
 
 prerender_pages(
     name = "site",
@@ -28,6 +39,7 @@ prerender_pages(
     source_map = True, # TODO(#48): This doesn't seem to work?
     tsconfig = "//:tsconfig.json",
     lib_deps = ["//:node_modules/rules_prerender"],
+    deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
 )
 
 ts_project(
