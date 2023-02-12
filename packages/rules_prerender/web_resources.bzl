@@ -1,6 +1,7 @@
 """Defines `web_resources()` functionality."""
 
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_files_to_bin_actions")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_file_to_bin_action")
+load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@bazel_skylib//lib:collections.bzl", "collections")
 load("//common:label.bzl", "absolute")
 
@@ -80,11 +81,7 @@ def _web_resources_impl(ctx):
         ][0],
     ) for (url_path, file_ref) in ctx.attr.url_file_refs.items()])
 
-    entries_args = ctx.actions.args()
-
-    # Add each arg individually instead of using `entries_args.add_all()` so
-    # corresponding `--url-path` and `--file-ref` flags are adjacent to each
-    # other for easier debugging.
+    bin_file_refs = {}
     for (url_path, file_ref) in url_file_refs.items():
         files = file_ref.files.to_list()
         if len(files) != 1:
@@ -92,27 +89,25 @@ def _web_resources_impl(ctx):
                 file_ref.label,
                 "\n".join(["  %s" % file.path for file in files]),
             ))
-        ref = files[0]
+        bin_file_refs[url_path] = files[0]
 
+    # Add each arg individually instead of using `entries_args.add_all()` so
+    # corresponding `--url-path` and `--file-ref` flags are adjacent to each
+    # other for easier debugging.
+    entries_args = ctx.actions.args()
+    for (url_path, file_ref) in bin_file_refs.items():
         entries_args.add("--url-path", url_path)
-        entries_args.add("--file-ref", ref.short_path)
-
-    # We need to copy resource files to `bazel-bin/` so they can be resolved by the packager
-    # `js_binary()` target.
-    copied_files = copy_files_to_bin_actions(
-        ctx = ctx,
-        files = ctx.files.file_lbls,
-    )
+        entries_args.add("--file-ref", to_output_relative_path(file_ref))
 
     # Package all `entries` resources into a new directory.
     res_dir = ctx.actions.declare_directory("%s_entries" % ctx.attr.name)
-    entries_args.add("--dest-dir", res_dir.short_path)
+    entries_args.add("--dest-dir", to_output_relative_path(res_dir))
     ctx.actions.run(
         mnemonic = "ResourcePackager",
         progress_message = "Packing entries (%s)" % ctx.label,
         executable = ctx.executable._packager,
         arguments = [entries_args],
-        inputs = copied_files,
+        inputs = bin_file_refs.values(),
         outputs = [res_dir],
         env = {
             "BAZEL_BINDIR": ctx.bin_dir.path,
@@ -131,12 +126,12 @@ def _web_resources_impl(ctx):
     )
 
     # Merge all trasitive dependencies `entries` directory.
-    merge_args.add("--merge-dir", res_dir.short_path)
+    merge_args.add("--merge-dir", to_output_relative_path(res_dir))
     merge_args.add_all(
-        [dep.short_path for dep in transitive_entries_dirs],
+        [to_output_relative_path(dep) for dep in transitive_entries_dirs],
         before_each = "--merge-dir",
     )
-    merge_args.add("--dest-dir", dest_dir.short_path)
+    merge_args.add("--dest-dir", to_output_relative_path(dest_dir))
 
     # Merge the `entries` directories of all transitive dependencies into a
     # single directory.
