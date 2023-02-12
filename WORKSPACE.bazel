@@ -79,12 +79,9 @@ npm_repositories()
 
 http_archive(
     name = "aspect_rules_ts",
-    sha256 = "acb20a4e41295d07441fa940c8da9fd02f8637391fd74a14300586a3ee244d59",
-    strip_prefix = "rules_ts-1.2.0",
-    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.2.0.tar.gz",
-    # TODO(#48): Remove when fix is released by `@aspect_rules_ts`.
-    # See: https://github.com/aspect-build/rules_ts/pull/310
-    patches = ["//:aspect_rules_ts_issue_284.patch"],
+    sha256 = "db77d904284d21121ae63dbaaadfd8c75ff6d21ad229f92038b415c1ad5019cc",
+    strip_prefix = "rules_ts-1.3.0",
+    url = "https://github.com/aspect-build/rules_ts/releases/download/v1.3.0/rules_ts-v1.3.0.tar.gz",
 )
 
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
