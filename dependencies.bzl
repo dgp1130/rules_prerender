@@ -24,9 +24,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_rollup",
-        sha256 = "e0c1f17fccdeedb40b6864ee0708c8e2a9237b46dd97b596e1ba264483d63a7f",
-        strip_prefix = "rules_rollup-0.12.5",
-        url = "https://github.com/aspect-build/rules_rollup/archive/refs/tags/v0.12.5.tar.gz",
+        sha256 = "2a0c863fa4ca35cc2d49b63637792d38262f71fc0590c76b7946838614c94fda",
+        strip_prefix = "rules_rollup-0.13.0",
+        url = "https://github.com/aspect-build/rules_rollup/archive/refs/tags/v0.13.0.tar.gz",
     )
 
     maybe(
