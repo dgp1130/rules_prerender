@@ -1,0 +1,40 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load(
+    "@rules_prerender//:index.bzl",
+    "css_library",
+    "prerender_component",
+    "web_resources",
+)
+
+prerender_component(
+    name = "component",
+    srcs = ["component.ts"],
+    scripts = [":script"],
+    styles = [":style"],
+    resources = [":resources"],
+    source_map = True,
+    tsconfig = "//:tsconfig",
+    visibility = ["//:__subpackages__"],
+    lib_deps = ["//:node_modules/rules_prerender"],
+    deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
+)
+
+ts_project(
+    name = "script",
+    srcs = ["script.ts"],
+    declaration = True,
+    source_map = True,
+    tsconfig = "//:tsconfig_client",
+)
+
+css_library(
+    name = "style",
+    srcs = ["style.css"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/logo": "logo.png",
+    },
+)

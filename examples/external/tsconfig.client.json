@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Override module so `tsc` generates JS with ESM `import` instead of CommonJS `require()`.
+    "module": "ES2020",
+  }
+}

@@ -1,5 +1,5 @@
-import { includeScript, inlineStyle, PrerenderResource } from 'rules_prerender';
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
+import { PrerenderResource } from 'rules_prerender';
+import { renderComponent } from './component/component';
 
 export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.of('/index.html', `
@@ -11,16 +11,8 @@ export default function*(): Generator<PrerenderResource, void, void> {
     </head>
     <body>
         <h2>Hello, World!</h2>
-        <img src="/logo">
 
-        <div>
-            <template shadowroot="open">
-                ${polyfillDeclarativeShadowDom()}
-                <h2>Component</h2>
-                ${includeScript('script.js')}
-                ${inlineStyle('external/style.css')}
-            </template>
-        </div>
+        ${renderComponent()}
     </body>
 </html>
     `.trim());
