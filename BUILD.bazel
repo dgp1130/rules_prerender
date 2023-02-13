@@ -6,8 +6,11 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
+load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
 load("//:index.bzl", "link_prerender_component", "prerender_component", "prerender_component_publish_files")
+
+exports_files([".npmrc"], visibility = ["//visibility:public"])
 
 ts_config(
     name = "tsconfig",
@@ -40,6 +43,11 @@ npm_package(
     # TODO(#48): Remove when upstream is fixed.
     # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
     include_external_repositories = ["rules_prerender"],
+)
+npm_publish(
+    name = "rules_prerender_pkg_publish",
+    package = ":rules_prerender_pkg",
+    npmrc = ".npmrc",
 )
 npm_link_package(
     name = "node_modules/rules_prerender",

@@ -1,0 +1,8 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+exports_files(["npm_publish.sh"], visibility = ["//visibility:public"])
+
+bzl_library(
+    name = "npm_publish",
+    srcs = ["npm_publish.bzl"],
+)

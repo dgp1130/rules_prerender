@@ -10,6 +10,7 @@ load(
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
+load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
 
 publish_files(
@@ -36,6 +37,11 @@ npm_package(
     # TODO(#48): Remove when upstream is fixed.
     # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
     include_external_repositories = ["rules_prerender"],
+)
+npm_publish(
+    name = "pkg_publish",
+    package = ":pkg",
+    npmrc = "//:.npmrc",
 )
 
 prerender_component(
