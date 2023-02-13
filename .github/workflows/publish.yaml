@@ -53,7 +53,8 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_ACCESS_TOKEN }}" >> .npmrc
 
         # Publish the package.
-        bazel run //:pkg.publish --config ci --config release
+        bazel run --config ci --config release //:rules_prerender_pkg_publish
+        bazel run --config ci --config release //packages/rules_prerender/declarative_shadow_dom:pkg_publish
 
         # Remove the token from the `.npmrc` file, it should no longer be needed.
         sed -i "/${{ secrets.NPM_ACCESS_TOKEN }}/d" .npmrc
