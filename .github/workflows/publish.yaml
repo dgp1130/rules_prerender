@@ -53,7 +53,8 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_ACCESS_TOKEN }}" >> .npmrc
 
         # Publish the package.
-        bazel run //:pkg.publish --config ci --config release
+        bazel run --config ci --config release //:rules_prerender_pkg_publish
+        bazel run --config ci --config release //packages/rules_prerender/declarative_shadow_dom:pkg_publish
 
         # Remove the token from the `.npmrc` file, it should no longer be needed.
         sed -i "/${{ secrets.NPM_ACCESS_TOKEN }}/d" .npmrc
@@ -70,15 +71,18 @@ jobs:
         tag_name: releases/${{ github.event.inputs.version }}
         release_name: ${{ github.event.inputs.version }}
         prerelease: ${{ github.event.inputs.prerelease == 'true' }}
-        body: https://www.npmjs.com/package/rules_prerender/v/${{ github.event.inputs.version }}
         draft: true
 
     # Compress the built NPM package into a `.tar.gz` file.
-    - name: Tar Package
-      run: tar -czf rules_prerender-${{ github.event.inputs.version }}.tar.gz dist/bin/pkg/
+    - name: Tar Packages
+      run: |
+        tar -czf rules_prerender-${{ github.event.inputs.version }}.tar.gz \
+            dist/bin/rules_prerender_pkg/
+        tar -czf rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz \
+            dist/bin/packages/rules_prerender/declarative_shadow_dom/pkg/
 
-    # Upload the NPM package to the GitHub release.
-    - name: Upload Package to GitHub
+    # Upload `rules_prerender` to the GitHub release.
+    - name: Upload `rules_prerender` to GitHub
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -86,6 +90,17 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: rules_prerender-${{ github.event.inputs.version }}.tar.gz
         asset_name: rules_prerender-${{ github.event.inputs.version }}.tar.gz
+        asset_content_type: application/gzip
+
+    # Upload `@rules_prerender/declarative_shadow_dom` to the GitHub release.
+    - name: Upload `@rules_prerender/declarative_shadow_dom` to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz
+        asset_name: rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz
         asset_content_type: application/gzip
 
     # Notify the user that the release is completed.
