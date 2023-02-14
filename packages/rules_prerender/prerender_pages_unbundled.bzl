@@ -238,7 +238,7 @@ _multi_extract_annotations = rule(
         "_extractor": attr.label(
             default = "//tools/internal:annotation_extractor",
             executable = True,
-            cfg = "host", # TODO(#48): Use `exec`.
+            cfg = "exec",
         ),
     },
     doc = """Extracts annotations from HTML files in the provided directory.""",

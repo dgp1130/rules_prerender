@@ -29,7 +29,7 @@ script_entry_point = rule(
         "_generator": attr.label(
             default = "//tools/internal:script_entry_generator",
             executable = True,
-            cfg = "host", # TODO(#48): Switch to `js_run_binary()` when it can use `host`.
+            cfg = "exec", # TODO(#48): Switch to `js_run_binary()`.
         ),
     },
 )

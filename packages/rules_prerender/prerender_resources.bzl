@@ -173,7 +173,7 @@ _prerender_resources = rule(
         "renderer": attr.label(
             mandatory = True,
             executable = True,
-            cfg = "host", # TODO(#48): Use `exec`.
+            cfg = "exec",
         ),
     },
 )
