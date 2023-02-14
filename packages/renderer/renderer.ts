@@ -5,27 +5,11 @@ import type { MainFn } from '../../common/binary';
 import { mdSpacing } from '../../common/formatters';
 import { invoke } from './entry_point';
 
-// Can't import `rules_prerender` so we duplicate enough of the definitions to
-// do what the renderer needs. We _should_ be able to just `import type` and
-// simply make sure we don't use a value reference of the import, but this
-// doesn't work with `@aspect_rules_ts` which seems to not use the dependency at
-// all. See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1420299784
-// TODO(#48): Import just this type instead of duplicating the definitions.
-interface RulesPrerender {
-    readonly PrerenderResource: typeof PrerenderResource,
-    internalSetInlineStyleMap(map: Map<string, string>): void;
-    readonly InternalInlineStyleNotFoundError: typeof InlineStyleNotFoundError,
-}
-
-declare class PrerenderResource {
-    readonly path: string;
-    readonly contents: ArrayBuffer;
-}
-
-declare class InlineStyleNotFoundError extends Error {
-    readonly importPath: string;
-    readonly availableImportPaths: string[];
-}
+// Cannot include a value reference of `rules_prerender` because the user will
+// depend on it via the `npm_link_package()` in their own workspace, not the
+// `@rules_prerender//:node_modules/rules_prerender` dependency we use for type
+// checking.
+import type * as RulesPrerender from 'rules_prerender';
 
 /**
  * Creates the renderer's main function for the binary. We accept
@@ -34,7 +18,7 @@ declare class InlineStyleNotFoundError extends Error {
  * not the `@rules_prerender` workspace.
  */
 export function createRenderer(
-    rulesPrerender: RulesPrerender,
+    rulesPrerender: typeof RulesPrerender,
     entryModule: unknown,
     entryPoint: string,
 ): MainFn {

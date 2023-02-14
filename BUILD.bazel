@@ -8,6 +8,7 @@ load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
 load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
+load("//tools:typescript.bzl", "types_only")
 load("//:index.bzl", "link_prerender_component", "prerender_component", "prerender_component_publish_files")
 
 exports_files([".npmrc"], visibility = ["//visibility:public"])
@@ -52,6 +53,11 @@ npm_publish(
 npm_link_package(
     name = "node_modules/rules_prerender",
     src = ":rules_prerender_pkg",
+    visibility = ["//visibility:public"],
+)
+types_only(
+    name = "node_modules_types/rules_prerender",
+    dep = "//:node_modules/rules_prerender",
     visibility = ["//visibility:public"],
 )
 
