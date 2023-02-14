@@ -2,7 +2,6 @@ load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//tools:typescript.bzl", "ts_project")
 load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 
-# TODO(#48): Split prerender and scripts files from package.
 def link_prerender_component(name, package, visibility = None, testonly = None):
     """Links a `prerender_component()` from a linked NPM package.
     
@@ -56,7 +55,6 @@ def link_prerender_component(name, package, visibility = None, testonly = None):
         testonly = testonly,
     )
 
-    # TODO(#48): Support styles in `link_prerender_component()`.
     native.filegroup(
         name = "%s_styles" % name,
         srcs = [], # Empty.
@@ -64,7 +62,6 @@ def link_prerender_component(name, package, visibility = None, testonly = None):
         testonly = testonly,
     )
 
-    # TODO(#48): Support resources in `link_prerender_component()`.
     _empty_web_resources(
         name = "%s_resources" % name,
         visibility = visibility,

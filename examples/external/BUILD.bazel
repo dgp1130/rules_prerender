@@ -44,7 +44,7 @@ ts_config(
 prerender_pages(
     name = "site",
     src = "site.ts",
-    source_map = True, # TODO(#48): This doesn't seem to work?
+    source_map = True,
     tsconfig = "//:tsconfig",
     lib_deps = ["//:node_modules/rules_prerender"],
     deps = ["//component"],

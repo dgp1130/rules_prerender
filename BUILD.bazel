@@ -29,8 +29,6 @@ ts_config(
 npm_link_all_packages(name = "node_modules")
 
 # Makes an internal NPM package for `rules_prerender` and links it.
-# TODO(#48): Move to `//packages/rules_prerender` once dependencies outside
-# that package are addressed.
 stamp_package(name = "package")
 npm_package(
     name = "rules_prerender_pkg",
@@ -41,7 +39,7 @@ npm_package(
     package = "rules_prerender",
     visibility = ["//visibility:public"],
 
-    # TODO(#48): Remove when upstream is fixed.
+    # TODO(#59): Remove when upstream is fixed.
     # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
     include_external_repositories = ["rules_prerender"],
 )

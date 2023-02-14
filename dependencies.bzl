@@ -6,11 +6,9 @@ load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
 
 def rules_prerender_dependencies():
     """Installs workspace-level dependencies for `rules_prerender`."""
-    # TODO(#48): Remove this requirement eventually.
     if "build_bazel_rules_nodejs" not in native.existing_rules():
         fail("`rules_prerender` requires `build_bazel_rules_nodejs` workspace to be installed under that name.")
 
-    # TODO(#48): Remove this dependency.
     rules_postcss_dependencies()
 
     maybe(
@@ -37,7 +35,6 @@ def rules_prerender_dependencies():
         url = "https://github.com/aspect-build/rules_ts/releases/download/v1.3.0/rules_ts-v1.3.0.tar.gz",
     )
 
-    # TODO(#48): Remove from publicly visible dependencies.
     maybe(
         http_archive,
         name = "aspect_rules_jasmine",
@@ -46,7 +43,6 @@ def rules_prerender_dependencies():
         url = "https://github.com/aspect-build/rules_jasmine/archive/refs/tags/v0.3.0.tar.gz",
     )
 
-    # TODO(#48): Remove from publicly visible dependencies.
     maybe(
         http_archive,
         name = "io_bazel_rules_webtesting",
