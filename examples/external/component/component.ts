@@ -6,7 +6,7 @@ export function renderComponent(): string {
 <my-component>
   <template shadowroot="open">
     <img src="/logo" />
-    <div>Component</div>
+    <span>Component</span>
     <div id="replace">This text to be replaced by JavaScript.</div>
 
     ${polyfillDeclarativeShadowDom()}
