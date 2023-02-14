@@ -38,7 +38,5 @@ ts_project(
 
 jasmine_node_test(
     name = "blog_test",
-    # TODO(#48): Turn on after declarative shadow DOM can be used in `@aspect_rules_js`.
-    tags = ["manual"],
     deps = [":blog_test_lib"],
 )
