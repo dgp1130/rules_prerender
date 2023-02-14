@@ -1,35 +1,38 @@
 """Defines functionality to generate entry points for JS and CSS."""
 
-def _script_entry_point_impl(ctx):
-    package_depth = len(ctx.label.package.split("/")) if ctx.label.package != "" else 0
-    ctx.actions.run(
+load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
+load("//common:label.bzl", "absolute", "file_path_of")
+
+def script_entry_point(
+    name,
+    metadata,
+    output_entry_point,
+    testonly = None,
+    visibility = None,
+):
+    """Generates an entry point for scripts with the given metadata.
+    
+    Args:
+        name: Name of this target.
+        metadata: A metadata JSON file containing information about the scripts
+            to bundle.
+        output_entry_point: Location to write the generated script entry point.
+        testonly: https://bazel.build/reference/be/common-definitions#common-attributes
+        visibility: https://bazel.build/reference/be/common-definitions#common-attributes
+    """
+    package_depth = len(native.package_name().split("/")) if native.package_name() != "" else 0
+    js_run_binary(
+        name = name,
         mnemonic = "GenerateScriptEntryPoint",
         progress_message = "Generating script entry point %{label}",
-        executable = ctx.executable._generator,
-        arguments = [
-            "--metadata", ctx.file.metadata.short_path,
+        srcs = [metadata],
+        outs = [output_entry_point],
+        tool = Label("//tools/internal:script_entry_generator"),
+        args = [
+            "--metadata", file_path_of(absolute(metadata)),
             "--import-depth", str(package_depth),
-            "--output", ctx.outputs.output_entry_point.short_path,
+            "--output", file_path_of(absolute(output_entry_point)),
         ],
-        inputs = [ctx.file.metadata],
-        outputs = [ctx.outputs.output_entry_point],
-        env = {
-            "BAZEL_BINDIR": ctx.bin_dir.path,
-        },
+        testonly = testonly,
+        visibility = visibility,
     )
-
-script_entry_point = rule(
-    implementation = _script_entry_point_impl,
-    attrs = {
-        "metadata": attr.label(
-            mandatory = True,
-            allow_single_file = True,
-        ),
-        "output_entry_point": attr.output(mandatory = True),
-        "_generator": attr.label(
-            default = "//tools/internal:script_entry_generator",
-            executable = True,
-            cfg = "exec", # TODO(#48): Switch to `js_run_binary()`.
-        ),
-    },
-)
