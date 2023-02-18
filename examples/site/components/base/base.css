@@ -1,4 +1,4 @@
-@import 'rules_prerender/examples/site/common/theme.css';
+@import '../../common/theme.css';
 
 html[comp-base], [comp-base] body {
     margin: 0;

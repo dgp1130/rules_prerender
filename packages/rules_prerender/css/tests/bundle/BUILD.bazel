@@ -1,0 +1,25 @@
+load("@aspect_bazel_lib//lib:diff_test.bzl", "diff_test")
+load("//packages/css_bundler:css_bundle.bzl", "css_bundle")
+load("//packages/rules_prerender/css:css_library.bzl", "css_library")
+
+css_bundle(
+    name = "bundle",
+    dep = ":lib",
+)
+
+css_library(
+    name = "lib",
+    srcs = ["lib.css"],
+    deps = [":transitive"],
+)
+
+css_library(
+    name = "transitive",
+    srcs = ["transitive.css"],
+)
+
+diff_test(
+    name = "test",
+    file1 = ":bundle",
+    file2 = "expected.css",
+)

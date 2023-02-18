@@ -1,0 +1,5 @@
+@import './transitive.css';
+
+.lib {
+    color: red;
+}

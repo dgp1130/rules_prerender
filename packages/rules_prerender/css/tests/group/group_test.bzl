@@ -11,8 +11,8 @@ def _css_group_test_impl(ctx):
     # Verify that `css_group()` re-exports `DefaultInfo`.
     default_info = analysistest.target_under_test(env)[DefaultInfo]
     expected_files = sets.make([
-        "packages/rules_prerender/css/tests/group/lib1.css",
-        "packages/rules_prerender/css/tests/group/lib2.css",
+        "packages/rules_prerender/css/tests/group/bin1_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/group/lib1.css",
+        "packages/rules_prerender/css/tests/group/bin2_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/group/lib2.css",
     ])
     actual_files = sets.make([file.short_path for file in default_info.files.to_list()])
     asserts.new_set_equals(env, expected_files, actual_files)
@@ -22,11 +22,11 @@ def _css_group_test_impl(ctx):
     import_map = css_import_map.import_map
     asserts.equals(env, 2, len(import_map.items()))
 
-    expected_lib1 = "packages/rules_prerender/css/tests/group/lib1.css"
+    expected_lib1 = "packages/rules_prerender/css/tests/group/bin1_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/group/lib1.css"
     actual_lib1 = import_map["rules_prerender/packages/rules_prerender/css/tests/group/lib1.css"].short_path
     asserts.equals(env, expected_lib1, actual_lib1)
 
-    expected_lib2 = "packages/rules_prerender/css/tests/group/lib2.css"
+    expected_lib2 = "packages/rules_prerender/css/tests/group/bin2_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/group/lib2.css"
     actual_lib2 = import_map["rules_prerender/packages/rules_prerender/css/tests/group/lib2.css"].short_path
     asserts.equals(env, expected_lib2, actual_lib2)
 
@@ -80,9 +80,9 @@ def _css_group_fails_with_conflicting_maps_test_impl(ctx):
         "rules_prerender/packages/rules_prerender/css/tests/group/conflicting_lib.css")
     # Look for conflicting file paths.
     asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/conflicting_lib.css")
+        "packages/rules_prerender/css/tests/group/conflicting_bin1_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/group/conflicting_lib.css")
     asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/subpackage/conflicting_lib.css")
+        "packages/rules_prerender/css/tests/group/conflicting_bin2_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/group/conflicting_lib.css")
 
     return analysistest.end(env)
 
@@ -96,24 +96,28 @@ def _test_css_group_fails_with_conflicting_maps(name):
         name = "conflicting_lib",
         srcs = ["conflicting_lib.css"],
         tags = ["manual"],
-        visibility = ["//packages/rules_prerender/css/tests/group/subpackage:__pkg__"],
     )
 
-    # Generates an import map which points `:conflicting_lib` sources to CSS files
-    # generated in *this* package (`group`).
+    # Generates conflicting import maps which points `conflicting_lib.css` to both
+    # bundled CSS files under `conflicting_bin1/` _and_ `conflicting_bin2/`.
     css_binaries(
-        name = "conflicting_bin",
+        name = "conflicting_bin1",
+        deps = [":conflicting_lib"],
+        tags = ["manual"],
+    )
+    css_binaries(
+        name = "conflicting_bin2",
         deps = [":conflicting_lib"],
         tags = ["manual"],
     )
 
-    # Should try and fail to merge import maps because they both map `:conflicting_lib`
-    # sources to CSS files in different packages (`group` and `subpackage`).
+    # Should try and fail to merge import maps because they both map
+    # `conflicting_lib.css` to two different locations.
     css_group(
         name = "conflicting_group",
         deps = [
-            ":conflicting_bin",
-            "//packages/rules_prerender/css/tests/group/subpackage:bin",
+            ":conflicting_bin1",
+            ":conflicting_bin2",
         ],
         tags = ["manual"],
     )

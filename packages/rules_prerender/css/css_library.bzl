@@ -1,13 +1,18 @@
 """Defines the `css_library()` rule."""
 
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_files_to_bin_actions")
 load(":css_providers.bzl", "CssInfo")
 
 def _css_library_impl(ctx):
+    # Copy sources to bin so they are always available for downstream `js_binary()`
+    # tools.
+    copied = copy_files_to_bin_actions(ctx, ctx.files.srcs)
+
     return [
-        DefaultInfo(files = depset(ctx.files.srcs)),
+        DefaultInfo(files = depset(copied)),
         CssInfo(
-            direct_sources = ctx.files.srcs,
-            transitive_sources = depset(ctx.files.srcs,
+            direct_sources = copied,
+            transitive_sources = depset(copied,
                 transitive = [dep[CssInfo].transitive_sources
                             for dep in ctx.attr.deps],
             ),

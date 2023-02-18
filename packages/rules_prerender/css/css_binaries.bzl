@@ -1,10 +1,6 @@
 """Defines `css_binaries()` and related rules."""
 
-load("@npm//@bazel/postcss:index.bzl", "postcss_multi_binary")
-load(
-    "//packages/rules_prerender:postcss_import_plugin.bzl",
-    IMPORT_PLUGIN_CONFIG = "PLUGIN_CONFIG",
-)
+load("//packages/css_bundler:css_bundle.bzl", "css_bundle")
 load(":css_group.bzl", "css_group")
 load(":css_map.bzl", "css_map")
 load(":css_providers.bzl", "CssInfo")
@@ -88,33 +84,16 @@ def _css_binary(
         visibility: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
         tags: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
     """
-    # Collect all transitive CSS dependencies into a single `DefaultInfo` target.
-    css_transitive_deps = "%s_transitive_deps" % name
-    _css_deps(
-        name = css_transitive_deps,
-        dep = dep,
-        testonly = testonly,
-        tags = tags,
-    )
-
     # Compile the CSS. This only compiles one library, but that library may have many
     # source files, each one should be compiled into its own output, which requires
     # `postcss_multi_binary()` even though `postcss_binary()` sounds like it would be
     # sufficient here.
-    binary = "%s_postcss" % name
-    postcss_multi_binary(
+    binary = "%s_parcel" % name
+    css_bundle(
         name = binary,
-        srcs = [dep],
-        output_pattern = "{name}",
-        # Sourcemaps must be turned off because they don't work on Node.js versions v14+.
-        # https://github.com/bazelbuild/rules_postcss/issues/73/
-        sourcemap = False,
-        plugins = {
-            Label("//tools/internal:postcss_import_plugin"): IMPORT_PLUGIN_CONFIG,
-        },
+        dep = dep,
         testonly = testonly,
         tags = tags,
-        deps = [":%s" % css_transitive_deps],
     )
 
     # Return the binary outputs with a map of import name -> file path.
@@ -126,19 +105,3 @@ def _css_binary(
         visibility = visibility,
         tags = tags,
     )
-
-def _css_deps_impl(ctx):
-    return DefaultInfo(
-        files = ctx.attr.dep[CssInfo].transitive_sources,
-    )
-
-_css_deps = rule(
-    implementation = _css_deps_impl,
-    attrs = {
-        "dep": attr.label(
-            mandatory = True,
-            providers = [CssInfo],
-        ),
-    },
-    doc = "Returns transitive CSS sources in `DefaultInfo`.",
-)

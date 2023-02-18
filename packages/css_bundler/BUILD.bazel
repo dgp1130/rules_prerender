@@ -1,6 +1,13 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//tools:typescript.bzl", "ts_project")
 load("//tools:jasmine.bzl", "jasmine_node_test")
+
+bzl_library(
+    name = "css_bundle",
+    srcs = ["css_bundle.bzl"],
+    deps = ["//packages/rules_prerender/css:css_providers"],
+)
 
 js_binary(
     name = "css_bundler",

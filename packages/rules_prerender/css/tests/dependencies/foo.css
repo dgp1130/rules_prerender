@@ -1,4 +1,4 @@
-@import url("rules_prerender/packages/rules_prerender/css/tests/dependencies/bar.css");
+@import './bar.css';
 
 .foo {
     color: red;

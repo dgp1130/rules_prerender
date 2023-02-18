@@ -1,4 +1,4 @@
-@import url("rules_prerender/packages/rules_prerender/css/tests/dependencies/baz.css");
+@import './baz.css';
 
 .bar {
     color: green;

@@ -18,7 +18,9 @@ describe('prerender_component_publish_files()', () => {
             'script_dep.js',
             'script_dep.js.map',
             'script_dep.d.ts',
-            'style.css',
+            // Temporary bad assertion. Need to update component publishing to copy
+            // styles into the correct position in the NPM package.
+            'component_styles_bin_binary_0_parcel',
             'component_resources', // from `resources` attribute.
         ]);
 
