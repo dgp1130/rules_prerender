@@ -1,5 +1,4 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("//:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
 load("//tools:publish.bzl", "publish_files")
@@ -8,14 +7,6 @@ load("//tools:typescript.bzl", "ts_project")
 exports_files(
     ["rollup-default.config.js"],
     visibility = ["//visibility:public"],
-)
-
-# Wrap `ts_project()` in a `js_library()` to give it a module name to be imported.
-js_library(
-    name = "rules_prerender",
-    package_name = "rules_prerender",
-    visibility = ["//visibility:public"],
-    deps = [":rules_prerender_lib"],
 )
 
 ts_project(

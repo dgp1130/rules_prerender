@@ -3,7 +3,6 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools:publish.bzl", "publish_files")
 load("//tools/publish:npm_publish.bzl", "npm_publish")
@@ -122,52 +121,4 @@ publish_files(
         "package.json",
         ":declarative_shadow_dom_publish_files",
     ],
-)
-
-SUBSTITUTIONS = {
-    # Remap packages with a `BUILD.publish` file to use
-    # `@npm//rules_prerender/...` so they can be resolved at runtime.
-    "//common": "@npm//rules_prerender/common",
-    "//packages/renderer": "@npm//rules_prerender/packages/renderer",
-    "//packages/rules_prerender": "@npm//rules_prerender/packages/rules_prerender",
-    "//tools/internal": "@npm//rules_prerender/tools/internal",
-}
-
-pkg_npm(
-    name = "pkg",
-    package_name = "rules_prerender",
-    substitutions = select({
-        ":stamp": dicts.add(SUBSTITUTIONS, {
-            "0.0.0-PLACEHOLDER": "{STABLE_RULES_PRERENDER_VERSION}",
-        }),
-        "//conditions:default": dicts.add(SUBSTITUTIONS, {
-            "0.0.0-PLACEHOLDER": "0.0.0-unstamped",
-        }),
-    }),
-    deps = [
-        # Merge all tools and files to publish all together into the directory.
-        ":publish_files",
-        "//common:publish_files",
-        "//packages/renderer:publish_files",
-        "//packages/rules_prerender",
-        "//packages/rules_prerender:publish_files",
-        "//tools/internal:annotation_extractor",
-        "//tools/internal:renderer",
-        "//tools/internal:resource_injector",
-        "//tools/internal:resource_packager",
-        "//tools/internal:script_entry_generator",
-        "//tools/internal:publish_files",
-    ],
-)
-
-build_test(
-    name = "pkg_test",
-    targets = [":pkg"],
-)
-
-config_setting(
-    name = "stamp",
-    values = {
-        "stamp": "1",
-    },
 )
