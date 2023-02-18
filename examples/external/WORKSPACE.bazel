@@ -37,7 +37,6 @@ npm_translate_lock(
     pnpm_lock = "//:pnpm-lock.yaml",
     verify_node_modules_ignored = "//:.bazelignore",
     npmrc = "//:.npmrc",
-    data = ["//:rules_prerender-0.0.0-PLACEHOLDER.tgz"],
 )
 load("@npm_user//:repositories.bzl", "npm_repositories")
 npm_repositories()
