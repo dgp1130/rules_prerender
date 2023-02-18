@@ -1,5 +1,5 @@
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
-load("//packages/rules_prerender/css:css_providers.bzl", "CssInfo")
+load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo", "CssInfo")
 
 def _css_bundle_impl(ctx):
     # Map each direct dependency source file to an output of the same full file path
@@ -33,7 +33,10 @@ def _css_bundle_impl(ctx):
         },
     )
 
-    return DefaultInfo(files = depset(outputs))
+    return [
+        DefaultInfo(files = depset(outputs)),
+        CssImportMapInfo(import_map = _make_import_map(ctx, sources, outputs)),
+    ]
 
 css_bundle = rule(
     implementation = _css_bundle_impl,
@@ -63,3 +66,25 @@ def _workspace_short_path(file, current_wksp):
     else:
         # File is in the main workspace. Use the current workspace name.
         return "%s/%s" % (current_wksp, file.short_path)
+
+def _make_import_map(ctx, sources, outputs):
+    """Generates a map of import paths to the actual file location to import.
+    
+    When users call `inlineStyle()`, it resolves and looks up that path in this map
+    and actually inlines the file specified by the map. This allows the file path in
+    user code to differ from the actual path the bundled CSS file lives at.
+    """
+    import_map = dict()
+    for (source, output) in zip(sources, outputs):
+        wksp_path = _workspace_short_path(source, ctx.workspace_name)
+
+        if wksp_path in import_map:
+            fail("CSS library file (%s) mapped twice, once to %s and a second time to %s." % (
+                wksp_path,
+                import_map[wksp_path].path,
+                output.path,
+            ))
+
+        import_map[wksp_path] = output
+
+    return import_map

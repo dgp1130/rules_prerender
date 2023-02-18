@@ -13,7 +13,6 @@ bzl_library(
     visibility = ["//packages/rules_prerender:__pkg__"],
     deps = [
         ":css_group",
-        ":css_map",
         ":css_providers",
         "//packages/rules_prerender:postcss_import_plugin",
     ],
@@ -33,12 +32,6 @@ bzl_library(
     name = "css_library",
     srcs = ["css_library.bzl"],
     visibility = ["//:__pkg__"],
-    deps = [":css_providers"],
-)
-
-bzl_library(
-    name = "css_map",
-    srcs = ["css_map.bzl"],
     deps = [":css_providers"],
 )
 

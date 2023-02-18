@@ -10,11 +10,11 @@ def _import_map_test_impl(ctx):
     import_map = css_import_map.import_map
     asserts.equals(env, 2, len(import_map.items()))
 
-    expected_foo = "packages/rules_prerender/css/tests/import_map/bin_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/import_map/foo.css"
+    expected_foo = "packages/rules_prerender/css/tests/import_map/bin_binary_0/rules_prerender/packages/rules_prerender/css/tests/import_map/foo.css"
     actual_foo = import_map["rules_prerender/packages/rules_prerender/css/tests/import_map/foo.css"].short_path
     asserts.equals(env, expected_foo, actual_foo)
 
-    expected_bar = "packages/rules_prerender/css/tests/import_map/bin_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/import_map/bar.css"
+    expected_bar = "packages/rules_prerender/css/tests/import_map/bin_binary_0/rules_prerender/packages/rules_prerender/css/tests/import_map/bar.css"
     actual_bar = import_map["rules_prerender/packages/rules_prerender/css/tests/import_map/bar.css"].short_path
     asserts.equals(env, expected_bar, actual_bar)
 
@@ -49,7 +49,7 @@ def _import_map_from_different_packages_test_impl(ctx):
 
     # Import path contains `subpackage` because that's what the user would import.
     # But the actual file it points to uses the same name in the `css_binaries()` package.
-    expected_lib = "packages/rules_prerender/css/tests/import_map/different_packages_bin_binary_0_parcel/rules_prerender/packages/rules_prerender/css/tests/import_map/subpackage/lib.css"
+    expected_lib = "packages/rules_prerender/css/tests/import_map/different_packages_bin_binary_0/rules_prerender/packages/rules_prerender/css/tests/import_map/subpackage/lib.css"
     actual_lib = import_map["rules_prerender/packages/rules_prerender/css/tests/import_map/subpackage/lib.css"].short_path
     asserts.equals(env, expected_lib, actual_lib)
 
