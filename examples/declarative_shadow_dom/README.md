@@ -4,7 +4,7 @@ An example which uses
 [Declarative Shadow DOM](https://web.dev/declarative-shadow-dom/) to author
 components with strong style isolation.
 
-This uses the `@npm//rules_prerender:declarative_shadow_dom` component
+This uses the `//:node_modules/@rules_prerender/declarative_shadow_dom` component
 dependency to easily inject the Declarative Shadow DOM polyfill into the
 generated web page.
 

@@ -9,7 +9,7 @@ def extract_single_resource(name = None, resources = None, out = None):
 
     ```BUILD
     load(
-        "@npm//rules_prerender:index.bzl",
+        "@rules_prerender//:index.bzl",
         "extract_single_resource",
         "prerender_pages_unbundled",
     )
