@@ -1,0 +1,41 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("//tools:typescript.bzl", "ts_project")
+load("//tools:jasmine.bzl", "jasmine_node_test")
+
+js_binary(
+    name = "css_bundler",
+    entry_point = "css_bundler.js",
+    data = [":css_bundler_lib"],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "css_bundler_lib",
+    srcs = ["css_bundler.ts"],
+    data = ["//:node_modules/yargs"],
+    deps = [
+        "//common:binary",
+        "//common:formatters",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/lightningcss",
+    ],
+)
+
+ts_project(
+    name = "css_bundler_test_lib",
+    srcs = ["css_bundler_test.ts"],
+    testonly = True,
+    deps = [
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "css_bundler_test",
+    data = [":css_bundler"],
+    deps = [":css_bundler_test_lib"],
+)
