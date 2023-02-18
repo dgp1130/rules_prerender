@@ -5,9 +5,6 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def rules_prerender_dependencies():
     """Installs workspace-level dependencies for `rules_prerender`."""
-    if "build_bazel_rules_nodejs" not in native.existing_rules():
-        fail("`rules_prerender` requires `build_bazel_rules_nodejs` workspace to be installed under that name.")
-
     maybe(
         http_archive,
         name = "aspect_rules_js",
