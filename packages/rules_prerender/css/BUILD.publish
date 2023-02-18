@@ -1,5 +1,0 @@
-# This file exists simply so this directory is considered a Bazel package and
-# references to `//packages/rules_prerender/css:*.bzl` will resolve correctly.
-# Without this file, it would need to be `//packages/rules_prerender:css/*.bzl`,
-# meaning paths would be different between the local build of `rules_prerender`
-# and user code loading this through `rules_nodejs` and the `@npm` workspace.
