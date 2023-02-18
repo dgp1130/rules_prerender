@@ -44,18 +44,16 @@ nodejs_register_toolchains(
     node_version = "16.10.0",
 )
 
-# Load the `@aspect_rules_js` version of the `@npm` workspace. Named `@npm_rules_js` to avoid
-# conflicting with the existing workspace from `@build_bazel_rules_nodejs`.
-# TODO(#63): Rename to `@npm` once migrated off `@build_bazel_rules_nodejs`.
+# Install NPM packages from the lockfile.
 load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 npm_translate_lock(
-    name = "npm_rules_js",
+    name = "npm",
     pnpm_lock = "//:pnpm-lock.yaml",
     npmrc = "//:.npmrc",
     verify_node_modules_ignored = "//:.bazelignore",
 )
 
-load("@npm_rules_js//:repositories.bzl", "npm_repositories")
+load("@npm//:repositories.bzl", "npm_repositories")
 npm_repositories()
 
 http_archive(
