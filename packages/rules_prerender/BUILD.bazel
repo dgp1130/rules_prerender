@@ -1,7 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//:index.bzl", "prerender_component")
 load("//tools:jasmine.bzl", "jasmine_node_test")
-load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
 
 exports_files(
@@ -27,16 +26,6 @@ prerender_component(
     source_map = True,
     visibility = ["//visibility:public"],
     deps = ["//packages/rules_prerender/declarative_shadow_dom"],
-)
-
-publish_files(
-    name = "publish_files",
-    files = glob(["**/*.bzl"]) + [
-        "rollup-default.config.js",
-        "//packages/rules_prerender/css:publish_files",
-        "//packages/rules_prerender/declarative_shadow_dom:publish_files",
-    ],
-    visibility = ["//:__pkg__"],
 )
 
 bzl_library(

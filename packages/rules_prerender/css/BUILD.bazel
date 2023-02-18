@@ -1,11 +1,4 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("//tools:publish.bzl", "publish_files")
-
-publish_files(
-    name = "publish_files",
-    files = glob(["**/*.bzl"]),
-    visibility = ["//packages/rules_prerender:__pkg__"],
-)
 
 bzl_library(
     name = "css_binaries",

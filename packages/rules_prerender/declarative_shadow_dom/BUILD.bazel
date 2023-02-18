@@ -8,16 +8,9 @@ load(
     "prerender_component_publish_files",
 )
 load("//tools:jasmine.bzl", "jasmine_node_test")
-load("//tools:publish.bzl", "publish_files")
 load("//tools:typescript.bzl", "ts_project")
 load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
-
-publish_files(
-    name = "publish_files",
-    files = [":declarative_shadow_dom_publish_files"],
-    visibility = ["//packages/rules_prerender:__pkg__"],
-)
 
 prerender_component_publish_files(
     name = "declarative_shadow_dom_publish_files",

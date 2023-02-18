@@ -16,14 +16,7 @@ referenced when needed at build time in this repository. A sibling
 in the user's repository.
 """
 
-load("//tools:publish.bzl", "publish_files")
-
 package(default_visibility = ["//visibility:public"])
-
-publish_files(
-    name = "publish_files",
-    visibility = ["//:__pkg__"],
-)
 
 alias(
     name = "annotation_extractor",

@@ -20,9 +20,3 @@ bzl_library(
     srcs = ["jasmine_web_test_suite.bzl"],
     deps = [":jasmine_node_test"],
 )
-
-bzl_library(
-    name = "publish",
-    srcs = ["publish.bzl"],
-    visibility = ["//visibility:public"],
-)

@@ -4,7 +4,6 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//lib:dicts.bzl", "dicts")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
-load("//tools:publish.bzl", "publish_files")
 load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
 load("//tools:typescript.bzl", "types_only")
@@ -110,15 +109,4 @@ prerender_component(
 prerender_component_publish_files(
     name = "declarative_shadow_dom_publish_files",
     dep = ":declarative_shadow_dom",
-)
-
-publish_files(
-    name = "publish_files",
-    files = [
-        ".npmrc",
-        "README.md",
-        "index.bzl",
-        "package.json",
-        ":declarative_shadow_dom_publish_files",
-    ],
 )
