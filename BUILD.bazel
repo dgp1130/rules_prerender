@@ -7,7 +7,7 @@ load("@npm_rules_js//:defs.bzl", "npm_link_all_packages")
 load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
 load("//tools:typescript.bzl", "types_only")
-load("//:index.bzl", "link_prerender_component", "prerender_component", "prerender_component_publish_files")
+load("//:index.bzl", "link_prerender_component", "prerender_component")
 
 exports_files([".npmrc"], visibility = ["//visibility:public"])
 
@@ -81,7 +81,6 @@ bzl_library(
         "//packages/rules_prerender:extract_single_resource",
         "//packages/rules_prerender:inject_resources",
         "//packages/rules_prerender:prerender_component",
-        "//packages/rules_prerender:prerender_component_publish_files",
         "//packages/rules_prerender:prerender_pages",
         "//packages/rules_prerender:prerender_pages_unbundled",
         "//packages/rules_prerender:prerender_resources",
@@ -104,9 +103,4 @@ prerender_component(
     source_map = True,
     visibility = ["//visibility:public"],
     deps = ["//packages/rules_prerender/declarative_shadow_dom"],
-)
-
-prerender_component_publish_files(
-    name = "declarative_shadow_dom_publish_files",
-    dep = ":declarative_shadow_dom",
 )
