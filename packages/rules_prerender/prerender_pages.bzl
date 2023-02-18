@@ -2,11 +2,6 @@
 
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
-load(
-    "@build_bazel_rules_nodejs//:providers.bzl",
-    "JSEcmaScriptModuleInfo",
-    "JSModuleInfo",
-)
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
 load(":web_resources.bzl", "web_resources")
