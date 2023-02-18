@@ -6,7 +6,7 @@
     "engines": {
         "node": "^18.12.1",
         "npm": "^8.19.1",
-        "pnpm": "^7.27.1"
+        "pnpm": "^7.25.0"
     },
     "scripts": {
         "bazel": "bazel",
