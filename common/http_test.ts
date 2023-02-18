@@ -18,10 +18,10 @@ describe('http', () => {
                 }) as any,
             );
 
-            const res = await http.get(new URL('http://localhost/foo'));
+            const res = await http.get(new URL('http://127.0.0.1/foo'));
 
             expect(nodeHttp.get).toHaveBeenCalledOnceWith(
-                new URL('http://localhost/foo'),
+                new URL('http://127.0.0.1/foo'),
                 jasmine.any(Function),
             );
 
@@ -44,7 +44,7 @@ describe('http', () => {
             );
 
             const error = new Error('Network issue.');
-            const promise = http.get(new URL('http://localhost/foo'));
+            const promise = http.get(new URL('http://127.0.0.1/foo'));
             onError!(error);
 
             await expectAsync(promise).toBeRejectedWith(error);

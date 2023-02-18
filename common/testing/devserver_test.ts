@@ -12,12 +12,12 @@ describe('devserver', () => {
             it('spawns a devserver process for the given binary', async () => {
                 const server = await Server.spawn(devserver);
 
-                expect(server.host).toBe('localhost');
+                expect(server.host).toBe('127.0.0.1');
                 expect(typeof server.port).toBe('number');
                 expect(server.port).not.toBeNaN();
 
                 const res = await http.get(new URL(
-                    `http://localhost:${server.port}/devserver_test_page.html`,
+                    `http://${server.host}:${server.port}/devserver_test_page.html`,
                 ));
                 expect(res.statusCode).toBe(StatusCodes.OK);
 
@@ -35,7 +35,7 @@ describe('devserver', () => {
                 const server = await Server.spawn(devserver);
 
                 const res = await http.get(new URL(
-                    `http://localhost:${server.port}/devserver_test_page.html`,
+                    `http://${server.host}:${server.port}/devserver_test_page.html`,
                 ));
                 expect(res.statusCode).toBe(StatusCodes.OK);
 
@@ -43,7 +43,7 @@ describe('devserver', () => {
 
                 await expectAsync(
                     http.get(new URL(
-                        `http://localhost:${server.port}/devserver_test_page.html`,
+                        `http://${server.host}:${server.port}/devserver_test_page.html`,
                     )),
                 ).toBeRejected();
             });
@@ -53,7 +53,7 @@ describe('devserver', () => {
     describe('useDevserver()', () => {
         it('provides a `Server` effect', async () => {
             const mockServer = {
-                host: 'localhost',
+                host: '127.0.0.1',
                 kill: jasmine.createSpy('kill'),
             };
             spyOn(Server, 'spawn')
@@ -68,7 +68,7 @@ describe('devserver', () => {
             expect(mockServer.kill).not.toHaveBeenCalled();
 
             // Server is now available.
-            expect(tester.get().host).toBe('localhost');
+            expect(tester.get().host).toBe('127.0.0.1');
 
             // Cleanup kills the server.
             await tester.cleanup();

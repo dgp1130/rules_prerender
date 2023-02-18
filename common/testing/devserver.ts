@@ -55,7 +55,7 @@ export interface DevServer extends TestServer {
 
 /** A running devserver instance. */
 export class Server implements DevServer {
-    /** The host the server is running on (typically 'localhost'). */
+    /** The host the server is running on (typically '127.0.0.1'). */
     public readonly host: string;
     /** The port the server is running on. */
     public readonly port: number;
@@ -68,7 +68,7 @@ export class Server implements DevServer {
      * Constructs a new DevServer representing an already running
      * `web_resources_devserver()` child process.
      * 
-     * @param host The host the devserver is running on (typically 'localhost').
+     * @param host The host the devserver is running on (typically '127.0.0.1').
      * @param port The port the devserver is running on.
      * @param kill A function which kills the process running the devserver.
      */
@@ -120,6 +120,9 @@ export class Server implements DevServer {
         stderr?: (data: string) => void,
         onError?: (data: Error) => void,
     } = {}): Promise<Server> {
+        // We can't use `localhost` as the host in Node 18+ and need to use the
+        // IP address directly. See https://github.com/nodejs/node/issues/40702.
+        const host = '127.0.0.1';
         const port = await findPort();
 
         const serverPromise = execFile(binary, [ '--port', port.toString() ]);
@@ -134,12 +137,12 @@ export class Server implements DevServer {
         // instead. `await`-ing here propagates such an error to the caller of
         // `spawn()` rather than triggering an uncaught rejection.
         await Promise.race([
-            untilHealthy(new URL(`http://localhost:${port}/`)),
+            untilHealthy(new URL(`http://${host}:${port}/`)),
             serverPromise,
         ]);
     
         return new Server({
-            host: 'localhost',
+            host,
             port,
             kill: async () => {
                 // Send the kill signal.
