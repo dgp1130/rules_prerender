@@ -14,7 +14,6 @@ bzl_library(
     deps = [
         ":css_group",
         ":css_providers",
-        "//packages/rules_prerender:postcss_import_plugin",
     ],
 )
 

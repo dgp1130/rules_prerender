@@ -16,8 +16,6 @@ file defines the same tools as they will be loaded at build time in this
 repository for local contributors.
 """
 
-load("@npm//@bazel/postcss:index.bzl", "postcss_plugin")
-
 package(default_visibility = ["//visibility:public"])
 
 alias(
@@ -46,10 +44,4 @@ alias(
 alias(
     name = "script_entry_generator",
     actual = "@npm//rules_prerender/bin:script-entry-generator",
-)
-
-postcss_plugin(
-    name = "postcss_import_plugin",
-    node_require = "postcss-import",
-    deps = ["@npm//postcss-import"],
 )

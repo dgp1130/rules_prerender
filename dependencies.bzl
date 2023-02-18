@@ -2,14 +2,11 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load("@npm//@bazel/postcss:package.bzl", "rules_postcss_dependencies")
 
 def rules_prerender_dependencies():
     """Installs workspace-level dependencies for `rules_prerender`."""
     if "build_bazel_rules_nodejs" not in native.existing_rules():
         fail("`rules_prerender` requires `build_bazel_rules_nodejs` workspace to be installed under that name.")
-
-    rules_postcss_dependencies()
 
     maybe(
         http_archive,

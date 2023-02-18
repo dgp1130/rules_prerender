@@ -130,7 +130,6 @@ bzl_library(
     deps = [
         ":multi_inject_resources",
         ":prerender_pages_unbundled",
-        ":postcss_import_plugin",
         ":web_resources",
     ],
 )
@@ -145,12 +144,6 @@ bzl_library(
         "//packages/renderer:build_vars",
         "//packages/rules_prerender/css:css_providers",
     ],
-)
-
-bzl_library(
-    name = "postcss_import_plugin",
-    srcs = ["postcss_import_plugin.bzl"],
-    visibility = ["//packages/rules_prerender/css:__pkg__"],
 )
 
 bzl_library(

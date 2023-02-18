@@ -16,7 +16,6 @@ referenced when needed at build time in this repository. A sibling
 in the user's repository.
 """
 
-load("@npm//@bazel/postcss:index.bzl", "postcss_plugin")
 load("//tools:publish.bzl", "publish_files")
 
 package(default_visibility = ["//visibility:public"])
@@ -49,10 +48,4 @@ alias(
 alias(
     name = "script_entry_generator",
     actual = "//packages/script_entry_generator",
-)
-
-postcss_plugin(
-    name = "postcss_import_plugin",
-    node_require = "postcss-import",
-    deps = ["@npm//postcss-import"],
 )
