@@ -614,39 +614,6 @@ needed at run time, then a `publish_files()` macro is needed to copy them into
 the NPM package, and a `BUILD.publish` file may be needed to configure their
 runtime usage and provide consistency with build time usage.
 
-### Testing publishable builds
-
-Currently there are no automated tests of the published package or run time
-builds (aside from a simple build test of the NPM package directory). To test
-this manually, you need to:
-
-1.  Build the NPM package in `rules_prerender`.
-    *   This generates `dist/bin/pkg/` which contains the contents of the NPM
-        package.
-
-    ```shell
-    bazel build //:pkg.pack
-    ```
-1.  Set up a separate Bazel workspace and `cd` into it.
-    *   Easiest way to do this from scratch is:
-
-        ```shell
-        npx @bazel/create ${NAME}
-        cd ${NAME}
-        npm install
-        ```
-1.  Install the local `rules_prerender` build.
-
-    ```shell
-    npm install --save-dev path/to/rules_prerender/workspace/dist/bin/pkg
-    ```
-1.  Use `@npm//rules_prerender/...` and build some code.
-
-Check out the
-[`ref/external`](https://github.com/dgp1130/rules_prerender/tree/ref/external/)
-branch which includes an in-tree user workspace which can be used to more easily
-verify and debug run time execution.
-
 ### Releasing
 
 To actually publish a release to NPM, follow these steps:

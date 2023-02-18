@@ -2,9 +2,4 @@ node_modules
 dist
 bazel-out
 
-# The `ref/external` branch includes a user repository in `user/`. This ignores
-# it even outside that branch so checking out from that branch doesn't break the
-# main workspace in any other branch.
-user
-
 examples/external/
