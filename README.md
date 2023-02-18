@@ -10,51 +10,53 @@ quite yet.
 
 ## Installation
 
-Start with a
-[`rules_nodejs`](https://github.com/bazelbuild/rules_nodejs#quickstart) project,
-if you already have one, great! If not, the easiest way to make one is:
+Start with an [`@aspect_rules_js`](https://github.com/aspect-build/rules_js/)
+project.
 
-```shell
-npx @bazel/create ${NAME}
-cd ${NAME}
-npm install
-npm run build # Confirm project is buildable.
+Then add a workspace dependency on `@rules_prerender`. See the
+[releases](https://github.com/dgp1130/rules_prerender/releases/) page for the
+latest release and copy the snippet into your `WORKSPACE` file. Then install the
+`rules_prerender` NPM package.
+
+```bash
+pnpm install rules_prerender --save-dev
 ```
 
-Then install `rules_prerender` as a dev dependency. You must also satisfy a peer
-dep on [`@bazel/typescript`](https://www.npmjs.com/package/@bazel/typescript),
-which itself has a peer dep on
-[`typescript`](https://www.npmjs.com/package/typescript).
+### TypeScript
 
-```shell
-npm install rules_prerender @bazel/typescript typescript --save-dev
+Optionally, you likely want to configure TypeScript by installing it and
+creating a `tsconfig.json` file.
+
+```bash
+pnpm install typescript --save-dev
+node_modules/.bin/tsc --init
 ```
 
-You will also need a `tsconfig.json`. Easiest way to generate one is with:
+### Declarative Shadow DOM
 
-```shell
-npx typescript --init
+Also optional, but it is recommended to include the declarative shadow DOM
+package as it is a key part of `@rules_prerender` components.
+
+```bash
+pnpm install @rules_prerender/declarative-shadow-dom --save-dev
 ```
 
-See
-[`rules_typescript` suggestions](https://bazelbuild.github.io/rules_nodejs/TypeScript.html#writing-typescript-code-for-bazel)
-to set up absolute imports.
+Then update your root `BUILD.bazel` file to include:
 
-Last step is to update to your `WORKSPACE` file. Add:
+```starlark
+load("@rules_prerender//:index.bzl", "link_prerender_component")
 
-```python
-# Load other `rules_prerender` dependencies.
-load("@npm//rules_prerender:package.bzl", "rules_prerender_dependencies")
-rules_prerender_dependencies()
+link_prerender_component(
+    name = "prerender_components/@rules_prerender/declarative_shadow_dom",
+    package = ":node_modules/@rules_prerender/declarative_shadow_dom",
+    visibility = ["//visibility:public"],
+)
 ```
-
-And make sure your `npm_install()` rule has `strict_visibility = False`.
 
 With that all done, you should be ready to use `rules_prerender`! See the next
 section for how to use the API, or you can check out
 [some examples](/examples/site/) which shows most of the relevant features in
-action (note that where they depend on `//packages/rules_prerender`, you should
-depend on `@npm//rules_prerender`).
+action.
 
 ## API
 
@@ -68,24 +70,27 @@ resources (images, fonts, JSON) required for to it to function.
 ```python
 # my_component/BUILD.bazel
 
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
-load("@npm//rules_prerender:index.bzl", "prerender_component", "web_resources")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@rules_prerender//:index.bzl", "prerender_component", "web_resources")
 
 # A "library" target encapsulating the entire component.
 prerender_component(
     name = "my_component",
     # The library which will prerender the HTML at build time in a Node process.
     srcs = ["my_component_prerender.ts"],
-    # Other `ts_project()` targets used by `my_component_prerender.ts`.
-    lib_deps = ["@npm//rules_prerender"],
-    # Other `prerender_component()` rules used by `my_component_prerender.ts`.
-    deps = ["//my_other_component"],
+    # Other `ts_project()` or `js_library()` targets used by `my_component_prerender.ts`.
+    lib_deps = ["//:node_modules/rules_prerender"],
     # Client-side JavaScript to be executed in the browser.
     scripts = [":scripts"],
     # Styles for the component.
     styles = [":styles"],
-    # Other resources required by the component.
+    # Other resources required by the component (images, fonts, static JSON, etc.).
     resources = [":resources"],
+    # Other `prerender_component()` rules used by `my_component_prerender.ts`.
+    deps = [
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
+        "//my_other_component",
+    ],
 )
 
 # Client-side scripts to be executed in the browser.
@@ -93,13 +98,13 @@ ts_project(
     name = "scripts",
     srcs = ["my_component.ts"],
     declaration = True,
-    deps = ["//my_other_component:scripts"],
+    deps = ["//some/other/package:ts_proj"],
 )
 
 css_library(
     name = "styles",
     srcs = ["my_component.css"],
-    deps = ["//some_common_package:styles"],
+    deps = ["//some/other/package:css_lib"],
 )
 
 # Other resources required for this component to function at the URL paths they
@@ -116,6 +121,7 @@ web_resources(
 ```typescript
 // my_component/my_component_prerender.ts
 
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
 import { includeScript, inlineStyle } from 'rules_prerender';
 import { renderOtherComponent } from '../my_other_component/my_other_component_prerender';
 
@@ -131,6 +137,9 @@ export function renderMyComponent(name: string): string {
     to manually namespace your styles or else styles in different components could
     conflict with each other! -->
     <template shadowroot="open">
+        <!-- Polyfill declarative shadow DOM for any browsers which don't support it. -->
+        ${polyfillDeclarativeShadowDom()}
+
         <!-- Render some HTML. -->
         <h2 class="my-component-header">Hello, ${name}</h2>!
         <button id="show">Show</button>
@@ -138,7 +147,7 @@ export function renderMyComponent(name: string): string {
         <!-- Use related web resources. -->
         <img src="/images/foo.png" />
 
-        <!-- Compose other components via light DOM. -->
+        <!-- Compose other components from the light DOM. -->
         <slot></slot>
 
         <!-- Inject the associated client-side JavaScript. -->
@@ -154,14 +163,14 @@ export function renderMyComponent(name: string): string {
         name: name.reverse(),
     })}
 </div>
-    `;
+    `.trim();
 }
 ```
 
 ```typescript
 // my_component/my_component.ts
 
-import { show } from '../my_other_component/my_other_component';
+import { showDialog } from '../some/other/package/show_dialog';
 
 // Register an event handler to show the other component. Could just as easily
 // use a framework like Angular, LitElement, React, or just define an
@@ -171,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // When the "Show" button is clicked.
     document.getElementById('show').addEventListener('click', () => {
         // Show the composed `other` component.
-        show(document.getElementById('other'));
+        showDialog(document.getElementById('other'));
     });
 });
 ```
@@ -180,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* my_component/my_component.css */
 
 /* @import dependencies resolved and bundled at build time. */
-@import '../some_common_package/styles.css';
+@import '../some/other/package/styles.css';
 
 /* Styles for the component. */
 @font-face {
@@ -225,11 +234,7 @@ export default function* render(): Generator<PrerenderResource, void, void> {
 ```python
 # my_page/BUILD.bazel
 
-load(
-    "@npm//rules_prerender:index.bzl",
-    "prerender_pages",
-    "web_resources_devserver",
-)
+load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver")
 
 # Renders the page, bundles JavaScript and CSS, injects the relevant
 # `<script />` and `<style />` tags, and combines with all transitive resources
@@ -257,12 +262,12 @@ web_resources_devserver(
 )
 ```
 
-The page is built into a `web_resources()` rule which is a directory that
-contains its HTML, JavaScript, CSS, and other resources from all the
-transitively included components at their expected paths.
+The `//my_page:prerendered_page` target generates a directory which contains its
+HTML, JavaScript, CSS, and other resources from all the transitively included
+components at their expected paths.
 
 Multiple `prerender_pages()` directories can then be composed together into a
-single `web_resources()` rule which contains a final directory of everything
+single `web_resources()` target which contains a final directory of everything
 merged together, representing an entire prerendered web site.
 
 This final directory can be served with a simple devserver for local builds or
@@ -271,11 +276,7 @@ uploaded directly to a CDN for production deployments.
 ```python
 # my_site/BUILD.bazel
 
-load(
-    "@npm//rules_prerender:index.bzl",
-    "web_resources",
-    "web_resources_devserver",
-)
+load("@rules_prerender//:index.bzl", "web_resources", "web_resources_devserver")
 
 # Combines all the prerendered resources into a single directory, composing a
 # site from a bunch of `prerender_pages()` and `web_resources()` rules. Just
@@ -283,7 +284,7 @@ load(
 web_resources(
     name = "my_site",
     deps = [
-        "//my_page",
+        "//my_page:prerendered_page",
         "//another:page",
         "//blog:posts",
     ],
@@ -339,11 +340,7 @@ We can easily execute this at build time like so:
 ```python
 # my_blog/BUILD.bazel
 
-load(
-    "@npm//rules_prerender:index.bzl",
-    "prerender_pages",
-    "web_resources_devserver",
-)
+load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver")
 
 # Renders a page for every `posts/*.md` file. Also performs all the bundling and
 # merging of required JS, CSS, and other resources.
@@ -351,14 +348,14 @@ prerender_pages(
     name = "prerendered_posts",
     # Script to invoke the default export of to generate the page.
     src = "posts_prerender.ts",
-    # Other files needed to generate all the HTML.
+    # Include all the markdown files at runtime in runfiles.
     data = glob(["posts/*.md"]),
     # Plain TypeScript dependencies used by `posts_prerender.ts`.
     lib_deps = [
-        "@npm//rules_prerender",
-        "@npm//markdown-it",
-        "@npm//@types/markdown-it",
-        "@npm//@types/node",
+        "//:node_modules/@types/markdown-it",
+        "//:node_modules/@types/node",
+        "//:node_modules/rules_prerender",
+        "//:node_modules/markdown-it",
     ],
 )
 
@@ -391,19 +388,15 @@ resource with tools that expect a single file as input, rather than a directory.
 To get started, simply download / fork the repository and run:
 
 ```shell
-bazel run @nodejs_host//:npm -- ci
+bazel run @pnpm//:pnpm -- install --dir $PWD --frozen-lockfile
 bazel test //...
 ```
 
-Prefer using `bazel run @nodejs_host//:npm -- ...` and
-`bazel run @nodejs_host//:node -- ...` over using `npm` and `node` directly so they
-are strongly versioned with the repository. Alternatively, you can install
+Prefer using `bazel run @pnpm//:pnpm -- ...` and
+`bazel run @nodejs_host//:node -- ...` over using `pnpm` and `node` directly so
+they are strongly versioned with the repository. Alternatively, you can install
 [`nvm`](https://github.com/nvm-sh/nvm) and run `nvm use` to switch the `node`
-and `npm` commands to use the correct versions in this repository.
-
-NOTE: If you encounter "Missing inputs" errors from `fsevents` or other optional
-dependencies, make sure you are using `npm ci` instead of `npm install`.
-See: https://github.com/bazelbuild/rules_nodejs/issues/2395.
+version to the correct one for this repository.
 
 There are `bazel` and `ibazel` scripts in `package.json` so you can run any
 Bazel command with:
@@ -426,6 +419,8 @@ download the correct Bazel version for you and pass through all commands to it
 (not totally sure if it applies to `ibazel` though).
 
 You can also use `npm run build` and `npm test` to build and test everything.
+`npm test` also tests external workspaces used as test cases which would
+normally be skipped by `bazel test //...`.
 
 ## Testing
 
@@ -444,14 +439,6 @@ additional flags specifically for testing. Most notably, this includes
 You can use `chrome://inspect` or the "Attach" run configuration in VSCode to
 attach a debugger and start test execution.
 
-Source maps should be set up and usable, however `rules_nodejs` currently
-compiles everything to ES5, so `async/await` gets transpiled to generators,
-meaning stepping over an `await` can be quite fiddly sometimes. When using
-`chrome://inspect`, consider using the `debugger;` keyword at a particular file
-in order to stop execution programmatically and then set interactive breakpoints
-via the DevTools debugger itself. Otherwise most files are not loaded at the
-time `--inspect-brk` stops execution.
-
 ### Debugging WebDriver tests
 
 End-to-end tests using a real browser are done with WebDriver using
@@ -464,24 +451,8 @@ variable is set. For example, if debugging over SSH, you'll need to enable X11
 forwarding.
 
 When using [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
-there is also some additional configuration required. WSL 2 does not currently
-support graphical applications out of the box and Windows does not ship with an
-X server implementation (this may be unnecessary with
-[WSLg](https://github.com/microsoft/wslg), but that hasn't been tested). To
-debug end-to-end tests in WSL 2, you need to:
-
-1.  Install an X server for Windows (such as
-    [VcXsrv](https://sourceforge.net/projects/vcxsrv/))
-2.  Launch the X server and set it up enable public access (for VcXsrv, this is
-    the "Disable access control" box).
-3.  When Windows Defender pops up about network permissions, allow access for
-    private **and public** networks.
-4.  In the WSL Ubuntu terminal, run:
-    ```shell
-    export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
-    ```
-    Consider adding it to your `~/.bashrc` so you don't have to remember to do
-    this.
+make sure you have also installed [WSLg](https://github.com/microsoft/wslg).
+That will give you the X server implementation necessary to debug.
 
 Then running a `bazel test //path/to/pkg:target --config debug` for a WebDriver
 test should open Chrome visually and give you an opportunity to debug and
@@ -489,7 +460,7 @@ inspect the page.
 
 ### Mocking
 
-Most model types are stored under [//common/models/...](common/models/) and
+Most model types are stored under [//common/models/...](/common/models/) and
 generally consist of interfaces rather than classes. This provides immutable,
 pure-data structured types which work well with functional design patterns. They
 are also easy to assert in Jasmine with `expect().toEqual()`.
@@ -577,8 +548,6 @@ care of making sure certain values match as expected.
 
 To actually publish a release to NPM, follow these steps:
 
-1.  Consider [testing the release](#testing-publishable-builds).
-    *   No need for `bazel test //...`, the release process will do it for you.
 1.  Go to the
     [Publish workflow](https://github.com/dgp1130/rules_prerender/actions?query=workflow%3APublish)
     and click `Run workflow`.
