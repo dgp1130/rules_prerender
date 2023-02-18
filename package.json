@@ -4,8 +4,9 @@
     "main": "./packages/rules_prerender/index.js",
     "typings": "./packages/rules_prerender/index.d.ts",
     "engines": {
-        "node": "16.10.0",
-        "npm": "7.24.0"
+        "node": "^18.12.1",
+        "npm": "^8.19.1",
+        "pnpm": "^7.27.1"
     },
     "scripts": {
         "bazel": "bazel",
