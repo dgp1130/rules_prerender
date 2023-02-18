@@ -23,7 +23,7 @@ jobs:
         key: bazel
 
     - name: Install
-      run: bazel run @nodejs_host//:npm -- ci
+      run: bazel run @pnpm//:pnpm -- install --dir $PWD --frozen-lockfile
 
     # Lint each commit in the given PR.
     - name: Lint PR

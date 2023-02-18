@@ -39,7 +39,7 @@ jobs:
 
     # Install the package, including Bazel.
     - name: Install
-      run: bazel run @nodejs_host//:npm -- ci
+      run: bazel run @pnpm//:pnpm -- install --dir $PWD --frozen-lockfile
 
     # Build and test the entire repository.
     - name: Test
