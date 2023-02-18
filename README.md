@@ -43,7 +43,7 @@ pnpm install @rules_prerender/declarative-shadow-dom --save-dev
 
 Then update your root `BUILD.bazel` file to include:
 
-```starlark
+```python
 load("@rules_prerender//:index.bzl", "link_prerender_component")
 
 link_prerender_component(

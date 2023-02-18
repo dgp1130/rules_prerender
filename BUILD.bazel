@@ -31,6 +31,7 @@ stamp_package(name = "package")
 npm_package(
     name = "rules_prerender_pkg",
     srcs = [
+        "README.md",
         ":package",
         "//packages/rules_prerender:rules_prerender_lib",
     ],

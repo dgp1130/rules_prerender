@@ -21,6 +21,7 @@ stamp_package(name = "package")
 npm_package(
     name = "pkg",
     srcs = [
+        "README.md",
         ":declarative_shadow_dom_publish_files",
         ":package",
     ],
