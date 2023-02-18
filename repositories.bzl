@@ -8,12 +8,12 @@ load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 def rules_prerender_repositories():
     rules_js_dependencies()
     npm_translate_lock(
-        name = "npm",
-        pnpm_lock = "@rules_prerender//:pnpm-lock.yaml",
-        npmrc = "@rules_prerender//:.npmrc",
+        name = "rules_prerender_npm",
+        pnpm_lock = Label("//:pnpm-lock.yaml"),
+        npmrc = Label("//:.npmrc"),
     )
 
-    rules_ts_dependencies(ts_version_from = "@rules_prerender//:package.json")
+    rules_ts_dependencies(ts_version_from = Label("//:package.json"))
 
     if "rollup" not in native.existing_rules():
         rules_rollup_dependencies()

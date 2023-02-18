@@ -45,15 +45,17 @@ nodejs_register_toolchains(
 )
 
 # Install NPM packages from the lockfile.
+# NOTE: We can't name this `@npm` because that name is very likely used by the
+# user's workspace, and we would conflict with that.
 load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 npm_translate_lock(
-    name = "npm",
+    name = "rules_prerender_npm",
     pnpm_lock = "//:pnpm-lock.yaml",
     npmrc = "//:.npmrc",
     verify_node_modules_ignored = "//:.bazelignore",
 )
 
-load("@npm//:repositories.bzl", "npm_repositories")
+load("@rules_prerender_npm//:repositories.bzl", "npm_repositories")
 npm_repositories()
 
 http_archive(
