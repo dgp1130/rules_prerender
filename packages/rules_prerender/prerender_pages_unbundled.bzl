@@ -236,7 +236,7 @@ _multi_extract_annotations = rule(
             """,
         ),
         "_extractor": attr.label(
-            default = "//tools/internal:annotation_extractor",
+            default = "//tools/binaries/annotation_extractor",
             executable = True,
             cfg = "exec",
         ),

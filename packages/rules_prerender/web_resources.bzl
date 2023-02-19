@@ -206,7 +206,7 @@ _web_resources_rule = rule(
             """,
         ),
         "_packager": attr.label(
-            default = "//tools/internal:resource_packager",
+            default = "//tools/binaries/resource_packager",
             executable = True,
             cfg = "exec",
         ),

@@ -6,7 +6,7 @@ load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 ts_project(
     name = "renderer",
     srcs = ["renderer.ts"],
-    visibility = ["//tools/internal:__pkg__"],
+    visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
         "//common:binary",

@@ -5,7 +5,7 @@ load("//tools/typescript:defs.bzl", "ts_project")
 js_binary(
     name = "script_entry_generator",
     entry_point = ":script_entry_generator.js",
-    visibility = ["//tools/internal:__pkg__"],
+    visibility = ["//visibility:public"],
     data = [":script_entry_generator_lib"],
 )
 

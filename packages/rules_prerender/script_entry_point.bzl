@@ -27,7 +27,7 @@ def script_entry_point(
         progress_message = "Generating script entry point %{label}",
         srcs = [metadata],
         outs = [output_entry_point],
-        tool = Label("//tools/internal:script_entry_generator"),
+        tool = Label("//tools/binaries/script_entry_generator"),
         args = [
             "--metadata", file_path_of(absolute(metadata)),
             "--import-depth", str(package_depth),

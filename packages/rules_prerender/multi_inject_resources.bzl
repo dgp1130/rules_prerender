@@ -51,7 +51,7 @@ multi_inject_resources = rule(
         "scripts": attr.string_list(),
         "styles": attr.label(),
         "_injector": attr.label(
-            default = "//tools/internal:resource_injector",
+            default = "//tools/binaries/resource_injector",
             executable = True,
             cfg = "exec",
         ),

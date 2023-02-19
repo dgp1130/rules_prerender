@@ -122,7 +122,7 @@ main(render);
             # Use the `rules_prerender` dependency from user-space.
             "//:node_modules/rules_prerender",
             Label("//common:binary"),
-            Label("//tools/internal:renderer"),
+            Label("//tools/binaries/renderer"),
         ],
     )
 
