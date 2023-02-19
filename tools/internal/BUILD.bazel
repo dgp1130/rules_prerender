@@ -9,7 +9,7 @@ package(default_visibility = ["//visibility:public"])
 
 alias(
     name = "annotation_extractor",
-    actual = "//packages/annotation_extractor",
+    actual = "//tools/binaries/annotation_extractor",
 )
 
 alias(

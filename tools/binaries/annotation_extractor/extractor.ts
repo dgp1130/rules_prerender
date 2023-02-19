@@ -1,6 +1,6 @@
 import { parse, HTMLElement } from 'node-html-parser';
-import { PrerenderAnnotation } from '../../common/models/prerender_annotation';
-import { walkAllAnnotations } from '../../common/prerender_annotation_walker';
+import { PrerenderAnnotation } from '../../../common/models/prerender_annotation';
+import { walkAllAnnotations } from '../../../common/prerender_annotation_walker';
 
 /**
  * Parses the given string as HTML and return a tuple of the input HTML with

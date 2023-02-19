@@ -1,5 +1,5 @@
 import { extract } from './extractor';
-import { createAnnotation } from '../../common/models/prerender_annotation';
+import { createAnnotation } from '../../../common/models/prerender_annotation';
 
 describe('extractor', () => {
     describe('extract()', () => {

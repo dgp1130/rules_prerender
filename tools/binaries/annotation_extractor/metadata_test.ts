@@ -1,5 +1,5 @@
-import { mockScriptAnnotation, mockStyleAnnotation } from '../../common/models/prerender_annotation_mock';
-import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';
+import { mockScriptAnnotation, mockStyleAnnotation } from '../../../common/models/prerender_annotation_mock';
+import { mockPrerenderMetadata, mockScriptMetadata } from '../../../common/models/prerender_metadata_mock';
 import { assembleMetadata } from './metadata';
 
 describe('metadata', () => {

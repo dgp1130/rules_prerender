@@ -1,11 +1,11 @@
 import { promises as fs } from 'fs';
-import { mockPrerenderMetadata, mockScriptMetadata } from '../../common/models/prerender_metadata_mock';
-import { PrerenderMetadata } from '../../common/models/prerender_metadata';
-import { execBinary, ProcessResult } from '../../common/testing/binary';
-import { useTempDir } from '../../common/testing/temp_dir';
-import { createAnnotation } from '../../common/models/prerender_annotation';
+import { mockPrerenderMetadata, mockScriptMetadata } from '../../../common/models/prerender_metadata_mock';
+import { PrerenderMetadata } from '../../../common/models/prerender_metadata';
+import { execBinary, ProcessResult } from '../../../common/testing/binary';
+import { useTempDir } from '../../../common/testing/temp_dir';
+import { createAnnotation } from '../../../common/models/prerender_annotation';
 
-const extractor = 'packages/annotation_extractor/annotation_extractor.sh';
+const extractor = 'tools/binaries/annotation_extractor/annotation_extractor.sh';
 
 async function run({ inputDir, outputHtmlDir, outputMetadata }: {
     inputDir: string,

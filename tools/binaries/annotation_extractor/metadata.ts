@@ -1,5 +1,5 @@
-import { PrerenderAnnotation } from '../../common/models/prerender_annotation';
-import { PrerenderMetadata, ScriptMetadata } from '../../common/models/prerender_metadata';
+import { PrerenderAnnotation } from '../../../common/models/prerender_annotation';
+import { PrerenderMetadata, ScriptMetadata } from '../../../common/models/prerender_metadata';
 
 /**
  * Converts the provided {@link Set} of {@link PrerenderAnnotation} into a
