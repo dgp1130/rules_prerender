@@ -1,0 +1,42 @@
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+npm_package(
+    name = "collections",
+    srcs = [
+        "package.json",
+        ":index",
+    ],
+    package = "@rules_prerender/collections",
+    # TODO(#59): Remove when upstream is fixed.
+    # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
+    include_external_repositories = ["rules_prerender"],
+    visibility = ["//:__pkg__"],
+)
+
+ts_project(
+    name = "index",
+    srcs = ["index.ts"],
+    deps = [":collections_lib"],
+)
+
+ts_project(
+    name = "collections_lib",
+    srcs = ["collections.ts"],
+)
+
+ts_project(
+    name = "collections_test_lib",
+    srcs = ["collections_test.ts"],
+    testonly = True,
+    deps = [
+        ":collections_lib",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "collections_test",
+    deps = [":collections_test_lib"],
+)

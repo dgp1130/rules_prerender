@@ -1,3 +1,4 @@
+import { unique } from '@rules_prerender/collections';
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
 import * as path from 'path';
@@ -6,7 +7,6 @@ import { mdSpacing } from '../../../common/formatters';
 import { extract } from './extractor';
 import { assembleMetadata } from './metadata';
 import { PrerenderAnnotation, annotationsEqual } from '../../../common/models/prerender_annotation';
-import { unique } from '../../../common/collections';
 
 main(async () => {
     const {
