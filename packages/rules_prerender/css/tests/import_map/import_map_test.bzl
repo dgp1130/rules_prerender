@@ -38,6 +38,7 @@ def _test_import_map(name):
     _import_map_test(
         name = name,
         target_under_test = ":bin",
+        size = "small",
     )
 
 def _import_map_from_different_packages_test_impl(ctx):
@@ -68,6 +69,7 @@ def _test_import_map_from_different_packages(name):
     _import_map_from_different_packages_test(
         name = name,
         target_under_test = ":different_packages_bin",
+        size = "small",
     )
 
 def import_map_test_suite(name):

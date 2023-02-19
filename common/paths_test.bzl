@@ -1,5 +1,6 @@
 """Tests for `paths.bzl`."""
 
+load("@bazel_skylib//lib:partial.bzl", "partial")
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
 load(":paths.bzl", "is_js_file")
 
@@ -19,4 +20,7 @@ def _is_js_file_impl(ctx):
 _is_js_file_test = unittest.make(_is_js_file_impl)
 
 def paths_test_suite(name):
-    unittest.suite(name, _is_js_file_test)
+    unittest.suite(
+        name,
+        partial.make(_is_js_file_test, size = "small"),
+    )

@@ -69,6 +69,7 @@ def _test_css_group(name):
     _css_group_test(
         name = name,
         target_under_test = ":group",
+        size = "small",
     )
 
 def _css_group_fails_with_conflicting_maps_test_impl(ctx):
@@ -125,6 +126,7 @@ def _test_css_group_fails_with_conflicting_maps(name):
     _css_group_fails_with_conflicting_maps_test(
         name = name,
         target_under_test = ":conflicting_group",
+        size = "small",
     )
 
 def group_test_suite(name):

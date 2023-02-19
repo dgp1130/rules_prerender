@@ -3,7 +3,7 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 
-def jasmine_node_test(name, deps, data = [], **kwargs):
+def jasmine_node_test(name, deps, data = [], size = "small", **kwargs):
     """Wrapper for the `jasmine_node_test()` rule.
     
     Args:
@@ -27,6 +27,7 @@ def jasmine_node_test(name, deps, data = [], **kwargs):
             ":%s" % config_file,
         ],
         testonly = True,
+        size = size,
         **kwargs,
     )
 

@@ -18,6 +18,7 @@ diff_test(
     name = "single_resource_test",
     file1 = "single_resource.txt",
     file2 = "single_resource_expected.txt",
+    size = "small",
 )
 
 prerender_pages_unbundled(
@@ -37,4 +38,5 @@ diff_test(
     name = "nested_resource_test",
     file1 = "nested_resource.txt",
     file2 = "nested_resource_expected.txt",
+    size = "small",
 )

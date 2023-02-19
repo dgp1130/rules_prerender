@@ -45,7 +45,7 @@ def jasmine_web_test_suite(
     flaky = None,
     local = None,
     shard_count = None,
-    size = None,
+    size = "small",
     tags = _DEFAULT_WEB_TEST_SUITE_TAGS,
     wrapped_test_tags = ["manual", "noci"],
     test_suite_tags = ["manual"],

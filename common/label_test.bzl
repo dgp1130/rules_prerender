@@ -1,5 +1,6 @@
 """Tests for `label.bzl`."""
 
+load("@bazel_skylib//lib:partial.bzl", "partial")
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
 load(":label.bzl", "absolute", "file_path_of", "rel_path")
 
@@ -163,15 +164,27 @@ _rel_path_of_root_package_test = unittest.make(_rel_path_of_root_package_impl)
 def label_test_suite(name):
     unittest.suite(
         name,
-        _absolute_given_relative_target_test,
-        _absolute_given_absolute_target_test,
-        _absolute_given_external_target_test,
-        _absolute_given_relative_path_in_external_workspace_test,
-        _absolute_given_absolute_path_in_external_workspace_test,
-        _file_path_of_given_absolute_target_test,
-        _file_path_of_given_external_target_test,
-        _file_path_of_given_root_package_target_test,
-        _file_path_of_given_external_root_package_target_test,
-        _rel_path_of_absolute_path_test,
-        _rel_path_of_root_package_test,
+        partial.make(_absolute_given_relative_target_test, size = "small"),
+        partial.make(_absolute_given_absolute_target_test, size = "small"),
+        partial.make(_absolute_given_external_target_test, size = "small"),
+        partial.make(
+            _absolute_given_relative_path_in_external_workspace_test,
+            size = "small",
+        ),
+        partial.make(
+            _absolute_given_absolute_path_in_external_workspace_test,
+            size = "small",
+        ),
+        partial.make(_file_path_of_given_absolute_target_test, size = "small"),
+        partial.make(_file_path_of_given_external_target_test, size = "small"),
+        partial.make(
+            _file_path_of_given_root_package_target_test,
+            size = "small",
+        ),
+        partial.make(
+            _file_path_of_given_external_root_package_target_test,
+            size = "small",
+        ),
+        partial.make(_rel_path_of_absolute_path_test, size = "small"),
+        partial.make(_rel_path_of_root_package_test, size = "small"),
     )

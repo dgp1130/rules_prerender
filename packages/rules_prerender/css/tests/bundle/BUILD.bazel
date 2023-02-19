@@ -22,4 +22,5 @@ diff_test(
     name = "test",
     file1 = ":bundle",
     file2 = "expected.css",
+    size = "small",
 )

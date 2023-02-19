@@ -8,6 +8,7 @@ diff_test(
     name = "bin_test",
     file1 = ":bin",
     file2 = "expected.css",
+    size = "small",
 )
 
 css_binaries(
