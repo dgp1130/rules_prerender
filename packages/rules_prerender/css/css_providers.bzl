@@ -1,3 +1,5 @@
+visibility(["//packages/rules_prerender/...", "//tools/binaries/css_bundler/..."])
+
 # Provider of information related to CSS compilation.
 CssInfo = provider(fields = {
     "direct_sources": "Direct sources of the target.",

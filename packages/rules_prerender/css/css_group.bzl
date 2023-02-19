@@ -2,6 +2,8 @@
 
 load(":css_providers.bzl", "CssImportMapInfo")
 
+visibility(["//packages/rules_prerender/..."])
+
 def _css_group_impl(ctx):
     return [
         DefaultInfo(

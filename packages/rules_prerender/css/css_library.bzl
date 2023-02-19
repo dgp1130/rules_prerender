@@ -3,6 +3,8 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_files_to_bin_actions")
 load(":css_providers.bzl", "CssInfo")
 
+visibility(["//", "//packages/rules_prerender/..."])
+
 def _css_library_impl(ctx):
     # Copy sources to bin so they are always available for downstream `js_binary()`
     # tools.

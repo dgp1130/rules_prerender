@@ -4,6 +4,8 @@ load(":extract_single_resource.bzl", "extract_single_resource")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":web_resources.bzl", "web_resources")
 
+visibility(["//"])
+
 def inject_resources(
     name,
     input,

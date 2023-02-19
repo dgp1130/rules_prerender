@@ -1,5 +1,7 @@
 """Defines `extract_single_resource()` functionality."""
 
+visibility(["//"])
+
 def extract_single_resource(name = None, resources = None, out = None):
     """Takes the single file in the given resources directory and copies it to `out`.
 

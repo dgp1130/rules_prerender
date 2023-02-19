@@ -9,6 +9,8 @@ load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
 load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load(":web_resources.bzl", "web_resources")
 
+visibility(["//"])
+
 def prerender_component(
     name,
     srcs,

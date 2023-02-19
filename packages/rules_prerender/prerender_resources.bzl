@@ -8,6 +8,8 @@ load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo")
 load("//tools/binaries/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":web_resources.bzl", "WebResourceInfo")
 
+visibility(["//"])
+
 def prerender_resources(
     name,
     entry_point,

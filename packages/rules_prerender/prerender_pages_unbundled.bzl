@@ -7,6 +7,8 @@ load(":prerender_resources.bzl", "prerender_resources_internal")
 load(":script_entry_point.bzl", "script_entry_point")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
+visibility(["//"])
+
 def prerender_pages_unbundled(
     name,
     src,

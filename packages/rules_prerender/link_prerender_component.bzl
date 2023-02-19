@@ -2,6 +2,8 @@ load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//tools/typescript:defs.bzl", "ts_project")
 load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 
+visibility(["//"])
+
 def link_prerender_component(name, package, visibility = None, testonly = None):
     """Links a `prerender_component()` from a linked NPM package.
     

@@ -1,10 +1,7 @@
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load(
-    "//packages/rules_prerender:prerender_component.bzl",
+    "//:index.bzl",
     "prerender_component",
-)
-load(
-    "//packages/rules_prerender:prerender_component_publish_files.bzl",
     "prerender_component_publish_files",
 )
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")

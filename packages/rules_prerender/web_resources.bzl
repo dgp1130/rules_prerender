@@ -5,6 +5,8 @@ load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@bazel_skylib//lib:collections.bzl", "collections")
 load("//common:label.bzl", "absolute")
 
+visibility(["//", "//packages/rules_prerender/..."])
+
 WebResourceInfo = provider(
     "Resources for web projects.",
     fields = ["transitive_entries"],

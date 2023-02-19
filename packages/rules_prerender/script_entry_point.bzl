@@ -3,6 +3,8 @@
 load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
 load("//common:label.bzl", "absolute", "file_path_of")
 
+visibility(["//"])
+
 def script_entry_point(
     name,
     metadata,

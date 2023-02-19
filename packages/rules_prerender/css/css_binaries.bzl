@@ -4,6 +4,8 @@ load("//tools/binaries/css_bundler:css_bundle.bzl", "css_bundle")
 load(":css_group.bzl", "css_group")
 load(":css_providers.bzl", "CssInfo")
 
+visibility(["//packages/rules_prerender/..."])
+
 def css_binaries(
     name,
     deps,

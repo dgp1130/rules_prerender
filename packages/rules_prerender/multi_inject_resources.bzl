@@ -2,6 +2,8 @@
 
 load(":web_resources.bzl", "WebResourceInfo")
 
+visibility(["//"])
+
 def _multi_inject_resources_impl(ctx):
     # Generate configuration JSON from inputs.
     script_injections = [{"type": "script", "path": script}

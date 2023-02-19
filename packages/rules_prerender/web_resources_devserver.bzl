@@ -4,6 +4,8 @@ load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
 load("@rules_prerender_npm//:http-server/package_json.bzl", http_server_bin = "bin")
 load("//common:label.bzl", "absolute", "file_path_of")
 
+visibility(["//"])
+
 def web_resources_devserver(
     name,
     resources,

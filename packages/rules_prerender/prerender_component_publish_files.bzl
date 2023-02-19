@@ -3,6 +3,8 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("//common:label.bzl", "absolute")
 
+visibility(["//"])
+
 def prerender_component_publish_files(
     name,
     dep,
