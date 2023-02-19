@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as yargs from 'yargs';
-import type { MainFn } from '../../common/binary';
-import { mdSpacing } from '../../common/formatters';
+import type { MainFn } from '../../../common/binary';
+import { mdSpacing } from '../../../common/formatters';
 import { invoke } from './entry_point';
 
 // Cannot include a value reference of `rules_prerender` because the user will

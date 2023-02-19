@@ -1,5 +1,5 @@
-import { PrerenderResource } from '../../common/models/prerender_resource';
-import { Probably } from '../../common/probably';
+import { PrerenderResource } from '../../../common/models/prerender_resource';
+import { Probably } from '../../../common/probably';
 import { invoke } from './entry_point';
 
 function definitelyIterable<T>(probably: Iterable<Probably<T>> | AsyncIterable<Probably<T>>): Iterable<T> | AsyncIterable<T> {

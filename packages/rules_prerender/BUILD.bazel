@@ -112,8 +112,8 @@ bzl_library(
     deps = [
         ":web_resources",
         "//common:paths",
-        "//packages/renderer:build_vars",
         "//packages/rules_prerender/css:css_providers",
+        "//tools/binaries/renderer:build_vars",
     ],
 )
 

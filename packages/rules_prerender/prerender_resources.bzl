@@ -4,8 +4,8 @@ load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "is_js_file")
-load("//packages/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo")
+load("//tools/binaries/renderer:build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 load(":web_resources.bzl", "WebResourceInfo")
 
 def prerender_resources(
@@ -106,7 +106,7 @@ const render = createRenderer(rulesPrerender, mod, '{entry_point}');
 main(render);
         """.format(
             binary_helper = rel_path(file_path_of(Label("//common:binary"))),
-            renderer = rel_path(file_path_of(Label("//packages/renderer"))),
+            renderer = rel_path(file_path_of(Label("//tools/binaries/renderer"))),
             entry_point = entry_point,
         ).strip()],
         testonly = testonly,

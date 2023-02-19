@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 import * as rulesPrerender from 'rules_prerender';
-import { ProcessResult } from '../../common/testing/binary';
-import { useTempDir } from '../../common/testing/temp_dir';
-import { createAnnotation } from '../../common/models/prerender_annotation';
+import { ProcessResult } from '../../../common/testing/binary';
+import { useTempDir } from '../../../common/testing/temp_dir';
+import { createAnnotation } from '../../../common/models/prerender_annotation';
 import { createRenderer } from './renderer';
 
 /**

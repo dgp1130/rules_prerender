@@ -1,5 +1,5 @@
-import { PrerenderResource } from '../../common/models/prerender_resource';
-import { Probably } from '../../common/probably';
+import { PrerenderResource } from '../../../common/models/prerender_resource';
+import { Probably } from '../../../common/probably';
 
 /**
  * Invokes the default function export of the given CommonJS module, and validates the

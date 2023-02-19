@@ -14,7 +14,7 @@ alias(
 
 alias(
     name = "renderer",
-    actual = "//packages/renderer",
+    actual = "//tools/binaries/renderer",
 )
 
 alias(
