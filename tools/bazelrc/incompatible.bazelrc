@@ -16,7 +16,6 @@ build:incompatible --incompatible_default_to_explicit_init_py
 build:incompatible --incompatible_depset_for_libraries_to_link_getter
 build:incompatible --incompatible_disable_expand_if_all_available_in_flag_set
 build:incompatible --incompatible_disable_native_android_rules
-build:incompatible --incompatible_disable_native_apple_binary_rule 
 build:incompatible --incompatible_disable_third_party_license_checking
 build:incompatible --incompatible_disallow_legacy_javainfo
 build:incompatible --incompatible_disallow_legacy_py_provider
