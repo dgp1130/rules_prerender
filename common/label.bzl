@@ -66,7 +66,7 @@ def file_path_of(lbl):
 
     # Build a file path to the given target.
     path_to_target = "%s/%s" % (pkg, target) if pkg else target
-    if not wksp:
+    if not wksp or wksp == "@":
         return "./%s" % path_to_target
 
     return "../%s/%s" % (wksp.replace("@", ""), path_to_target)

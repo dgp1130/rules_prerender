@@ -96,6 +96,9 @@ def _file_path_of_given_absolute_target_impl(ctx):
     path = file_path_of("//path/to/some/other/pkg:foo")
     asserts.equals(env, "./path/to/some/other/pkg/foo", str(path))
     
+    at_path = file_path_of("@//path/to/some/other/pkg:foo")
+    asserts.equals(env, "./path/to/some/other/pkg/foo", str(at_path))
+    
     return unittest.end(env)
 
 _file_path_of_given_absolute_target_test = unittest.make(
@@ -117,6 +120,9 @@ def _file_path_of_given_root_package_target_impl(ctx):
     
     path = file_path_of("//:foo")
     asserts.equals(env, "./foo", str(path))
+    
+    at_path = file_path_of("@//:foo")
+    asserts.equals(env, "./foo", str(at_path))
     
     return unittest.end(env)
 
