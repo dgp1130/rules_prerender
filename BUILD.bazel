@@ -91,17 +91,3 @@ bzl_library(
         "//packages/rules_prerender/css:css_library",
     ],
 )
-
-# Re-export the `declarative_shadow_dom` component at the root of the package
-# for easy import by consumers. This isn't needed for content in `//examples/...`
-# as they should directly depend on `//packages/rules_prerender/declarative_shadow_dom`.
-# However this is needed in the published version so external workspaces can import
-# from `rules_prerender/declarative_shadow_dom`.
-prerender_component(
-    name = "declarative_shadow_dom",
-    srcs = ["declarative_shadow_dom.ts"],
-    tsconfig = "//:tsconfig",
-    source_map = True,
-    visibility = ["//visibility:public"],
-    deps = ["//packages/rules_prerender/declarative_shadow_dom"],
-)
