@@ -1,5 +1,5 @@
-import * as fs from '../../common/fs';
-import { createAnnotation } from '../../common/models/prerender_annotation';
+import * as fs from '../../../common/fs';
+import { createAnnotation } from '../../../common/models/prerender_annotation';
 import { InjectorConfig } from './config';
 import { inject } from './injector';
 

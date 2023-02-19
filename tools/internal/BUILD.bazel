@@ -19,7 +19,7 @@ alias(
 
 alias(
     name = "resource_injector",
-    actual = "//packages/resource_injector",
+    actual = "//tools/binaries/resource_injector",
 )
 
 alias(

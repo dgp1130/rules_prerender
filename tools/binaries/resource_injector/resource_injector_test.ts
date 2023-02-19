@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 import { InjectorConfig } from './config';
-import { execBinary, ProcessResult } from '../../common/testing/binary';
-import { useTempDir } from '../../common/testing/temp_dir';
+import { execBinary, ProcessResult } from '../../../common/testing/binary';
+import { useTempDir } from '../../../common/testing/temp_dir';
 
-const injector = 'packages/resource_injector/resource_injector.sh';
+const injector = 'tools/binaries/resource_injector/resource_injector.sh';
 
 /** Invokes the resource injector binary. */
 async function run({ inputDir, config, bundle, outputDir }: {
@@ -330,6 +330,6 @@ describe('injector', () => {
             `Binary unexpectedly succeeded. STDERR:\n${stderr}`,
         );
         expect(stdout).toBe('');
-        expect(stderr).toContain('packages/resource_injector/injector.js');
+        expect(stderr).toContain('tools/binaries/resource_injector/injector.js');
     });
 });
