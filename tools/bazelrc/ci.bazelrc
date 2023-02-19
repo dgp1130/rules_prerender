@@ -17,4 +17,4 @@ build:ci --disk_cache ~/.gh-actions-cache/bazel/
 build:ci --show_progress_rate_limit 5 --curses yes --color yes --terminal_columns 140 --show_timestamps --verbose_failures --announce_rc
 
 # Profile the build.
-build:ci --profile bazel.profile.gz --experimental_generate_json_trace_profile --experimental_profile_cpu_usage --experimental_json_trace_compression
+build:ci --profile bazel.profile.gz --experimental_generate_json_trace_profile
