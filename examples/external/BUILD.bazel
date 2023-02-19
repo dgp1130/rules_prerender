@@ -17,6 +17,7 @@ npm_link_package(
     src = "@rules_prerender//:rules_prerender_pkg",
     visibility = ["//visibility:public"],
 )
+# Works
 npm_link_package(
     name = "node_modules/@rules_prerender/declarative_shadow_dom",
     src = "@rules_prerender//packages/declarative_shadow_dom:pkg",

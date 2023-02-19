@@ -12,7 +12,10 @@ npm_package(
     # TODO(#59): Remove when upstream is fixed.
     # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
     include_external_repositories = ["rules_prerender"],
-    visibility = ["//:__pkg__"],
+    visibility = [
+        "//:__pkg__",
+        "//packages/declarative_shadow_dom:__pkg__",
+    ],
 )
 
 ts_project(

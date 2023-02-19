@@ -6,12 +6,17 @@ load(
 )
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
-load("//tools/publish:defs.bzl", "npm_publish")
+load("//tools/publish:defs.bzl", "npm_bundle_deps", "npm_publish")
 load("//tools/stamping:defs.bzl", "stamp_package")
 
 prerender_component_publish_files(
     name = "declarative_shadow_dom_publish_files",
     dep = ":declarative_shadow_dom",
+)
+
+npm_bundle_deps(
+    name = "node_modules",
+    deps = ["//:node_modules/@rules_prerender/collections"],
 )
 
 stamp_package(name = "package")
@@ -21,7 +26,9 @@ npm_package(
         "README.md",
         ":declarative_shadow_dom_publish_files",
         ":package",
+        ":node_modules",
     ],
+    exclude_srcs_patterns = [], # Unset default `**/node_modules/**`.
     package = "@rules_prerender/declarative_shadow_dom",
     visibility = ["//visibility:public"],
 
@@ -41,7 +48,10 @@ prerender_component(
     tsconfig = "//:tsconfig",
     source_map = True,
     scripts = [":declarative_shadow_dom_polyfill"],
-    lib_deps = ["//:node_modules/rules_prerender"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/collections",
+        "//:node_modules/rules_prerender",
+    ],
     visibility = [
         "//:__pkg__",
         "//packages/rules_prerender:__pkg__",

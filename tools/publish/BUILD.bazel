@@ -5,7 +5,15 @@ exports_files(["npm_publish.sh"], visibility = ["//visibility:public"])
 bzl_library(
     name = "defs",
     srcs = ["defs.bzl"],
-    deps = [":npm_publish"],
+    deps = [
+        ":npm_bundle_deps",
+        ":npm_publish",
+    ],
+)
+
+bzl_library(
+    name = "npm_bundle_deps",
+    srcs = ["npm_bundle_deps.bzl"],
 )
 
 bzl_library(

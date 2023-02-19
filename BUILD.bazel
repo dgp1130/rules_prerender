@@ -58,7 +58,8 @@ types_only(
     visibility = ["//visibility:public"],
 )
 
-npm_link_package(
+# TODO: How do I use this?
+linked_collections = npm_link_package(
     name = "node_modules/@rules_prerender/collections",
     src = "//packages/collections",
     visibility = ["//visibility:public"],
