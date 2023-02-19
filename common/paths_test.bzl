@@ -4,6 +4,8 @@ load("@bazel_skylib//lib:partial.bzl", "partial")
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
 load(":paths.bzl", "is_js_file")
 
+visibility("private")
+
 def _is_js_file_impl(ctx):
     env = unittest.begin(ctx)
 

@@ -5,6 +5,8 @@ load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo")
 
+visibility("private")
+
 def _css_group_test_impl(ctx):
     env = analysistest.begin(ctx)
 

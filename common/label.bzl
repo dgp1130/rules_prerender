@@ -1,5 +1,7 @@
 """Utilities related to Bazel labels."""
 
+visibility("public")
+
 def absolute(
     target,
     repository_name = native.repository_name,

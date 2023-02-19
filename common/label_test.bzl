@@ -4,6 +4,8 @@ load("@bazel_skylib//lib:partial.bzl", "partial")
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
 load(":label.bzl", "absolute", "file_path_of", "rel_path")
 
+visibility("private")
+
 def _mock_self_repository_name():
     return "@"
 
