@@ -31,7 +31,7 @@ bzl_library(
     name = "css_providers",
     srcs = ["css_providers.bzl"],
     visibility = [
-        "//packages/css_bundler:__subpackages__",
         "//packages/rules_prerender:__pkg__",
+        "//tools/binaries/css_bundler:__subpackages__",
     ],
 )

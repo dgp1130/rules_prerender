@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
-import { useTempDir } from '../../common/testing/temp_dir';
-import { execBinary, ProcessResult } from '../../common/testing/binary';
+import { useTempDir } from '../../../common/testing/temp_dir';
+import { execBinary, ProcessResult } from '../../../common/testing/binary';
 
-const binary = 'packages/css_bundler/css_bundler.sh';
+const binary = 'tools/binaries/css_bundler/css_bundler.sh';
 
 async function run({ entryPoints, outputs }: {
     entryPoints: string[],

@@ -47,7 +47,7 @@ css_bundle = rule(
             doc = "The `css_library()` target to bundle all its direct sources.",
         ),
         "_bundler": attr.label(
-            default = "//packages/css_bundler",
+            default = "//tools/binaries/css_bundler",
             executable = True,
             cfg = "exec",
         ),

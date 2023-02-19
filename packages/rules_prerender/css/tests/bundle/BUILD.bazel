@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:diff_test.bzl", "diff_test")
-load("//packages/css_bundler:css_bundle.bzl", "css_bundle")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")
+load("//tools/binaries/css_bundler:css_bundle.bzl", "css_bundle")
 
 css_bundle(
     name = "bundle",

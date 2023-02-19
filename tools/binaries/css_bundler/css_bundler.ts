@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 import { bundleAsync } from 'lightningcss';
 import * as yargs from 'yargs';
-import { main } from '../../common/binary';
-import { mdSpacing } from '../../common/formatters';
+import { main } from '../../../common/binary';
+import { mdSpacing } from '../../../common/formatters';
 
 main(async () => {
     const {
