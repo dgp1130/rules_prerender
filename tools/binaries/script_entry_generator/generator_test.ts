@@ -1,4 +1,4 @@
-import { mockPrerenderMetadata } from '../../common/models/prerender_metadata_mock';
+import { mockPrerenderMetadata } from '../../../common/models/prerender_metadata_mock';
 import { generateEntryPoint } from './generator';
 
 describe('generator', () => {

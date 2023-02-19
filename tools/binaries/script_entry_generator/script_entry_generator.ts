@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
 import * as yargs from 'yargs';
-import { main } from '../../common/binary';
-import { mdSpacing } from '../../common/formatters';
-import { PrerenderMetadata } from '../../common/models/prerender_metadata';
+import { main } from '../../../common/binary';
+import { mdSpacing } from '../../../common/formatters';
+import { PrerenderMetadata } from '../../../common/models/prerender_metadata';
 import { generateEntryPoint } from './generator';
 
 main(async () => {

@@ -29,5 +29,5 @@ alias(
 
 alias(
     name = "script_entry_generator",
-    actual = "//packages/script_entry_generator",
+    actual = "//tools/binaries/script_entry_generator",
 )
