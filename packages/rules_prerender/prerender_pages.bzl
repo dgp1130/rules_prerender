@@ -1,6 +1,5 @@
 """Defines `prerender_pages()` functionality."""
 
-load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
@@ -125,19 +124,11 @@ def prerender_pages(
 
     bundle = "%s_bundle" % name
     if bundle_js:
-        # Copy Rollup config to current package's bin directory so it can be used by Rollup.
-        bundle_config = "%s_bundle_config.js" % name
-        copy_file(
-            name = "%s_bundle_config" % name,
-            src = Label("//packages/rules_prerender:rollup-default.config.js"),
-            out = bundle_config,
-        )
-
         # Bundle all client-side scripts at `%{name}_bundle.js`.
         rollup_bundle(
             name = bundle,
             entry_point = ":%s_scripts.js" % prerender_name,
-            config_file = ":%s" % bundle_config,
+            config_file = Label("//packages/rules_prerender:rollup_config"),
             silent = True,
             testonly = testonly,
             deps = [

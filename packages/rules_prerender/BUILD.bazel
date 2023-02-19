@@ -1,10 +1,12 @@
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//:index.bzl", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
-exports_files(
-    ["rollup-default.config.js"],
+copy_to_bin(
+    name = "rollup_config",
+    srcs = ["rollup-default.config.js"],
     visibility = ["//visibility:public"],
 )
 
