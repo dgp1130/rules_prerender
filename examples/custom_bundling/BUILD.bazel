@@ -1,5 +1,5 @@
 load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
-load("//tools:typescript.bzl", "ts_project")
+load("//tools/typescript:defs.bzl", "ts_project")
 load(
     "//:index.bzl",
     "extract_single_resource",

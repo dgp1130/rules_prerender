@@ -1,6 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
-load("//tools:typescript.bzl", "ts_project")
+load("//tools/typescript:defs.bzl", "ts_project")
 load(":label_test.bzl", "label_test_suite")
 load(":paths_test.bzl", "paths_test_suite")
 

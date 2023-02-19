@@ -1,6 +1,6 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
-load("//tools:typescript.bzl", "ts_project")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "resource_injector",

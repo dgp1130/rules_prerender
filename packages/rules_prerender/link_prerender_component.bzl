@@ -1,5 +1,5 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
-load("//tools:typescript.bzl", "ts_project")
+load("//tools/typescript:defs.bzl", "ts_project")
 load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 
 def link_prerender_component(name, package, visibility = None, testonly = None):

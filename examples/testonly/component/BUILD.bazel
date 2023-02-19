@@ -1,4 +1,4 @@
-load("//tools:typescript.bzl", "ts_project")
+load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "css_library", "prerender_component", "web_resources")
 
 prerender_component(

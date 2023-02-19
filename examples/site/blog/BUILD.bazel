@@ -1,4 +1,4 @@
-load("//tools:typescript.bzl", "ts_project")
+load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
