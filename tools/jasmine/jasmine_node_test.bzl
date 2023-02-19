@@ -3,6 +3,8 @@
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 
+visibility("private")
+
 def jasmine_node_test(name, deps, data = [], size = "small", **kwargs):
     """Wrapper for the `jasmine_node_test()` rule.
     

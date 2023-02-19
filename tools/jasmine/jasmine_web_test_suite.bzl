@@ -7,6 +7,8 @@ https://github.com/bazelbuild/rules_webtesting/blob/6b47a3f11b7f302c2620a3552cf8
 load("@io_bazel_rules_webtesting//web:web.bzl", "web_test_suite")
 load(":jasmine_node_test.bzl", "jasmine_node_test")
 
+visibility("private")
+
 # Copied from https://github.com/bazelbuild/rules_webtesting/blob/6b47a3f11b7f302c2620a3552cf8eea8855e8c9e/web/internal/constants.bzl#L20-L45.
 # When a browser target name matches with one of these tags, they are used for
 # the generated `web_test()`.
