@@ -3,6 +3,8 @@ load("@aspect_rules_js//npm:providers.bzl", "NpmPackageInfo")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("//common:label.bzl", "absolute", "file_path_of")
 
+visibility("private")
+
 def npm_publish(name, package, npmrc, testonly = None, visibility = None):
     """Publishes the given `npm_package()` to NPM.
 
