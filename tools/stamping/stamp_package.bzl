@@ -1,6 +1,8 @@
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
+visibility("private")
+
 def stamp_package(
     name,
     package = "package.json",

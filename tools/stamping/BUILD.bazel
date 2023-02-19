@@ -5,6 +5,12 @@ load(":stamp_package.bzl", "stamp_package")
 exports_files(["stamp.jq"], visibility = ["//visibility:public"])
 
 bzl_library(
+    name = "defs",
+    srcs = ["defs.bzl"],
+    deps = [":stamp_package"],
+)
+
+bzl_library(
     name = "stamp_package",
     srcs = ["stamp_package.bzl"],
 )

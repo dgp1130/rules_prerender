@@ -10,7 +10,7 @@ load(
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 load("//tools/publish:defs.bzl", "npm_publish")
-load("//tools/stamping:stamp_package.bzl", "stamp_package")
+load("//tools/stamping:defs.bzl", "stamp_package")
 
 prerender_component_publish_files(
     name = "declarative_shadow_dom_publish_files",
