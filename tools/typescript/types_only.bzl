@@ -1,5 +1,7 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 
+visibility("private")
+
 def _types_only_impl(ctx):
     info = ctx.attr.dep[JsInfo]
     return js_info(
