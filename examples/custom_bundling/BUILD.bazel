@@ -8,7 +8,7 @@ load(
     "web_resources",
     "web_resources_devserver",
 )
-load("//tools:jasmine.bzl", "jasmine_web_test_suite")
+load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 # Prerender a single HTML file.
 prerender_pages_unbundled(

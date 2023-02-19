@@ -7,7 +7,7 @@ load(
     "//packages/rules_prerender:prerender_component_publish_files.bzl",
     "prerender_component_publish_files",
 )
-load("//tools:jasmine.bzl", "jasmine_node_test")
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools:typescript.bzl", "ts_project")
 load("//tools/publish:npm_publish.bzl", "npm_publish")
 load("//tools/stamping:stamp_package.bzl", "stamp_package")
