@@ -426,7 +426,7 @@ normally be skipped by `bazel test //...`.
 
 Most tests are run in [Jasmine](https://jasmine.github.io/) using
 `jasmine_node_test()`, a
-[slightly customized implementation of `@aspect_rules_jasmine`](/tools/jasmine.bzl).
+[slightly customized implementation of `@aspect_rules_jasmine`](/tools/jasmine/jasmine_node_test.bzl).
 These tests run in a Node Jasmine environment with no available browser (unless
 they depend on WebDriverIO). The test can be executed with a simple
 `bazel test //path/to/pkg:target`.
@@ -442,7 +442,7 @@ attach a debugger and start test execution.
 ### Debugging WebDriver tests
 
 End-to-end tests using a real browser are done with WebDriver using
-[`jasmine_web_test_suite()`](./tools/jasmine_web_test_suite.bzl).
+[`jasmine_web_test_suite()`](./tools/jasmine/jasmine_web_test_suite.bzl).
 
 When executing WebDriver tests and using `--config debug`, the browser will open
 non-headless, giving you the opportunity to visually inspect the page under test
