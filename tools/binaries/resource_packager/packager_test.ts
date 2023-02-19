@@ -1,4 +1,4 @@
-import * as fs from '../../common/fs';
+import * as fs from '../../../common/fs';
 import { pack } from './packager';
 import { ResourceMap } from './resource_map';
 import { mockFileRef } from './resource_map_mock';

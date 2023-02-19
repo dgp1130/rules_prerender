@@ -24,7 +24,7 @@ alias(
 
 alias(
     name = "resource_packager",
-    actual = "//packages/resource_packager",
+    actual = "//tools/binaries/resource_packager",
 )
 
 alias(

@@ -1,8 +1,8 @@
 import { promises as fs } from 'fs';
-import { useTempDir } from '../../common/testing/temp_dir';
-import { ProcessResult, execBinary } from '../../common/testing/binary';
+import { useTempDir } from '../../../common/testing/temp_dir';
+import { ProcessResult, execBinary } from '../../../common/testing/binary';
 
-const binary = 'packages/resource_packager/resource_packager.sh';
+const binary = 'tools/binaries/resource_packager/resource_packager.sh';
 
 async function run({ urlPaths, fileRefs, mergeDirs, destDir }: {
     urlPaths: string[],

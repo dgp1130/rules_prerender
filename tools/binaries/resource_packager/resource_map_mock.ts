@@ -4,7 +4,7 @@
  */
 
 import { UrlPath, FileRef, ResourceMap } from './resource_map';
-import { Public, unmockedFunc } from '../../common/testing/mocks';
+import { Public, unmockedFunc } from '../../../common/testing/mocks';
 
 /** Mocks a {@link ResourceMap} object with the given property overrides. */
 export function mockResourceMap(overrides: Partial<ResourceMap> = {}):

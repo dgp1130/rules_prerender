@@ -1,4 +1,4 @@
-import * as fs from '../../common/fs';
+import * as fs from '../../../common/fs';
 import { ResourceMap } from './resource_map';
 
 /**

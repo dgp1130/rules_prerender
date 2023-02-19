@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
-import { main } from '../../common/binary';
-import { mdSpacing } from '../../common/formatters';
+import { main } from '../../../common/binary';
+import { mdSpacing } from '../../../common/formatters';
 import { pack } from './packager';
 import { ResourceMap } from './resource_map';
 import { loadPackage } from './package_loader';
