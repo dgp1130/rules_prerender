@@ -19,7 +19,7 @@ npm_link_package(
 )
 npm_link_package(
     name = "node_modules/@rules_prerender/declarative_shadow_dom",
-    src = "@rules_prerender//packages/rules_prerender/declarative_shadow_dom:pkg",
+    src = "@rules_prerender//packages/declarative_shadow_dom:pkg",
     visibility = ["//visibility:public"],
 )
 link_prerender_component(

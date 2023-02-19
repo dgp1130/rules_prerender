@@ -134,7 +134,6 @@ bzl_library(
 ts_project(
     name = "scripts",
     srcs = ["scripts.ts"],
-    visibility = ["//packages/rules_prerender/declarative_shadow_dom:__pkg__"],
     deps = ["//common/models:prerender_annotation"],
 )
 

@@ -1,4 +1,4 @@
-import { createAnnotation } from '../../../common/models/prerender_annotation';
+import { createAnnotation } from '../../common/models/prerender_annotation';
 import { polyfillDeclarativeShadowDom } from './declarative_shadow_dom';
 
 describe('declarative_shadow_dom', () => {

@@ -60,7 +60,7 @@ types_only(
 
 npm_link_package(
     name = "node_modules/@rules_prerender/declarative_shadow_dom",
-    src = "//packages/rules_prerender/declarative_shadow_dom:pkg",
+    src = "//packages/declarative_shadow_dom:pkg",
     visibility = ["//visibility:public"],
 )
 link_prerender_component(
