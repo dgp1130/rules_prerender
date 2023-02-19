@@ -23,7 +23,7 @@ def _absolute_given_relative_target_impl(ctx):
         repository_name = _mock_self_repository_name,
         package_name = _mock_package_name,
     )
-    asserts.equals(env, "//path/to/some/pkg:foo", str(lbl))
+    asserts.equals(env, "@//path/to/some/pkg:foo", str(lbl))
     
     return unittest.end(env)
 
@@ -38,7 +38,7 @@ def _absolute_given_absolute_target_impl(ctx):
         repository_name = _mock_self_repository_name,
         package_name = _mock_package_name,
     )
-    asserts.equals(env, "//path/to/some/other/pkg:foo", str(lbl))
+    asserts.equals(env, "@//path/to/some/other/pkg:foo", str(lbl))
     
     return unittest.end(env)
 
