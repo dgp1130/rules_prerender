@@ -1,0 +1,28 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@rules_prerender_npm//:rollup/package_json.bzl", "bin")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+bin.rollup_binary(name = "rollup")
+
+bzl_library(
+    name = "bundle",
+    srcs = ["bundle.bzl"],
+)
+
+js_binary(
+    name = "script_bundler",
+    entry_point = "script_bundler.js",
+    data = [":script_bundler_lib"],
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "script_bundler_lib",
+    srcs = ["script_bundler.ts"],
+    data = [":rollup"],
+    deps = [
+        "//common:binary",
+        "//:node_modules/@types/node",
+    ],
+)

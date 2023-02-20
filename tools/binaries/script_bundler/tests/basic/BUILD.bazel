@@ -1,0 +1,29 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("//tools/binaries/script_bundler:bundle.bzl", "bundle")
+
+bundle(
+    name = "bundle",
+    entry_points = "entries.manifest",
+    config = "config.js",
+    deps = [
+        ":foo",
+        ":bar",
+        "//:node_modules/@rollup/plugin-node-resolve",
+    ],
+)
+
+js_library(
+    name = "foo",
+    srcs = ["foo.js"],
+)
+
+js_library(
+    name = "bar",
+    srcs = ["bar.js"],
+    deps = [":baz"],
+)
+
+js_library(
+    name = "baz",
+    srcs = ["baz.js"],
+)
