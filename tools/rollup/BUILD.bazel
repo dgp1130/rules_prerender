@@ -1,0 +1,18 @@
+load("@rules_prerender_npm//:rollup/package_json.bzl", "bin")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+bin.rollup_binary(
+    name = "rollup",
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "defs",
+    srcs = ["defs.bzl"],
+    deps = [":rollup_bundle"],
+)
+
+bzl_library(
+    name = "rollup_bundle",
+    srcs = ["rollup_bundle.bzl"],
+)

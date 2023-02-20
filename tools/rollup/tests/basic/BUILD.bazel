@@ -1,0 +1,35 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("//tools/rollup:defs.bzl", "rollup_bundle")
+load("//tools/rollup/tests:tree.bzl", "tree")
+
+rollup_bundle(
+    name = "bundle",
+    entry_points = ":entry_points",
+    config = "config.js",
+    deps = [
+        ":foo",
+        ":bar",
+        "//:node_modules/@rollup/plugin-node-resolve",
+    ],
+)
+
+tree(
+    name = "entry_points",
+    srcs = ["foo.js", "bar.js"],
+)
+
+js_library(
+    name = "foo",
+    srcs = ["foo.js"],
+)
+
+js_library(
+    name = "bar",
+    srcs = ["bar.js"],
+    deps = [":baz"],
+)
+
+js_library(
+    name = "baz",
+    srcs = ["baz.js"],
+)
