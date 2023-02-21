@@ -11,7 +11,7 @@ main(async () => {
     const {
         'input-dir': inputDir,
         config: configFile,
-        bundle,
+        bundles,
         'output-dir': outputDir,
     } = yargs.usage(mdSpacing(`
             Injects web resources specified by the config file into all the HTML
@@ -40,12 +40,9 @@ main(async () => {
                 the resources to inject. Must match the \`InjectorConfig\` type.
             `),
         })
-        .option('bundle', {
+        .option('bundles', {
             type: 'string',
-            description: mdSpacing(`
-                Path to a standalone JavaScript bundle file to inject into each
-                HTML file.
-            `),
+            description: mdSpacing(`TODO`),
         })
         .option('output-dir', {
             type: 'string',
@@ -92,11 +89,12 @@ main(async () => {
             // Wait for the configuration to be read and parsed.
             const inputConfig = await configPromise;
 
+            const bundleRelPath = bundles ? await getBundle(relPath, bundles) : undefined;
+
             // If there is a bundle, inject a <script /> tag for it.
-            const siblingJs = relPath.split('.').slice(0, -1).join('.') + '.js';
-            const config = !bundle ? inputConfig : inputConfig.concat({
+            const config = !bundleRelPath ? inputConfig : inputConfig.concat({
                 type: 'script',
-                path: `/${siblingJs}`,
+                path: `/${bundleRelPath}`,
             });
 
             // Inject the requested resources into the HTML content.
@@ -107,13 +105,16 @@ main(async () => {
             const outputPath = path.join(outputDir, relPath);
             await mkParentDir(outputPath);
             await fs.writeFile(outputPath, output);
-
-            // Copy JavaScript bundle to the output HTML location, but with a
-            // `.js` extension.
-            if (bundle) {
-                await fs.copyFile(bundle, path.join(outputDir, siblingJs));
-            }
         })());
+    }
+
+    if (bundles) {
+        for await (const bundle of listRecursiveFiles(bundles)) {
+            operations.push(fs.copyFile(
+                path.join(bundles!, bundle),
+                path.join(outputDir, bundle),
+            ));
+        }
     }
 
     // Wait for all files to be processed.
@@ -121,6 +122,19 @@ main(async () => {
 
     return 0;
 });
+
+async function getBundle(htmlRelPath: string, bundlesLocation: string):
+        Promise<string | undefined> {
+    const jsRelPath = htmlRelPath.split('.').slice(0, -1).join('.') + '.js';
+    const jsPath = path.join(bundlesLocation, jsRelPath);
+
+    try {
+        await fs.access(jsPath);
+        return jsRelPath;
+    } catch {
+        return undefined;
+    }
+}
 
 /**
  * Yields all the relative paths to files recursively in the given directory.

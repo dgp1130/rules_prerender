@@ -1,6 +1,6 @@
 """Defines `prerender_pages()` functionality."""
 
-load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
+load("//tools/binaries/script_bundler:bundle.bzl", "bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
 load(":web_resources.bzl", "web_resources")
@@ -122,14 +122,12 @@ def prerender_pages(
         testonly = True,
     )
 
-    bundle = "%s_bundle" % name
+    bundle_name = "%s_bundle" % name
     if bundle_js:
-        # Bundle all client-side scripts at `%{name}_bundle.js`.
-        rollup_bundle(
-            name = bundle,
-            entry_point = ":%s_scripts.js" % prerender_name,
-            config_file = Label("//packages/rules_prerender:rollup_config"),
-            silent = True,
+        bundle(
+            name = bundle_name,
+            entry_points = ":%s_scripts_entries" % prerender_name,
+            config = Label("//packages/rules_prerender:rollup_config"),
             testonly = testonly,
             deps = [
                 ":%s_scripts" % prerender_name,
@@ -142,7 +140,7 @@ def prerender_pages(
     multi_inject_resources(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
-        bundle = ":%s" % bundle if bundle_js else None,
+        bundles = ":%s" % bundle_name if bundle_js else None,
         styles = ":%s_styles" % prerender_name,
         testonly = testonly,
     )

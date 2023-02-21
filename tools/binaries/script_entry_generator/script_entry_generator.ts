@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import * as path from 'path';
 import * as yargs from 'yargs';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
@@ -7,7 +8,11 @@ import { generateEntryPoint } from './generator';
 
 main(async () => {
     // Parse options and flags.
-    const { metadata: metadataFile, 'import-depth': importDepth, output } = yargs
+    const {
+        metadata: metadataFile,
+        'import-depth': importDepth,
+        'output-dir': outputDir,
+    } = yargs
         .usage(mdSpacing(`
             Generates an entry point for all the scripts in the given metadata
             file. The entry point is a TypeScript source file which
@@ -33,13 +38,10 @@ main(async () => {
                 \`foo\` and \`bar\`.
             `),
         })
-        .option('output', {
+        .option('output-dir', {
             type: 'string',
             demandOption: true,
-            description: mdSpacing(`
-                A path to a file which will be written to by this tool,
-                containing TypeScript source of the entry point generated.
-            `),
+            description: mdSpacing(`TODO`),
         })
         .argv;
 
@@ -48,10 +50,18 @@ main(async () => {
     const metadata = JSON.parse(metadataText) as PrerenderMetadata;
 
     // Generate an entry point from metadata.
-    const entryPoint = generateEntryPoint(metadata, importDepth);
+    for (const [ htmlRelPath, scripts ] of Object.entries(metadata.includedScripts)) {
+        const jsRelPath = htmlRelPath.split('.').slice(0, -1).join('.') + '.js';
+        const jsFileDepth = jsRelPath.split('/')
+            .filter((part) => part !== '.' && part !== '')
+            .length - 1;
+        const fileDepth = importDepth + jsFileDepth;
+        const jsOutputPath = path.join(outputDir, jsRelPath);
 
-    // Write the entry point to the output file.
-    await fs.writeFile(output, entryPoint);
+        const entryPoint = generateEntryPoint(scripts, fileDepth);
+        await fs.mkdir(path.dirname(jsOutputPath), { recursive: true });
+        await fs.writeFile(jsOutputPath, entryPoint);
+    }
 
     return 0;
 });

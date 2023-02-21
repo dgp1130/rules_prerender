@@ -14,7 +14,7 @@ prerender_pages(
 
 ts_project(
     name = "script",
-    srcs = ["script.ts"],
+    srcs = ["script.ts", "other.ts"],
     tsconfig = "//:tsconfig_client",
 )
 

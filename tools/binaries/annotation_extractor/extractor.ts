@@ -39,7 +39,7 @@ export function extract(html: string): [
 function* stripAnnotations(root: HTMLElement):
         Generator<PrerenderAnnotation, void, void> {
     for (const node of walkAllAnnotations(root)) {
-        // Ignore styles as they are handled in a later part of the BUILD  pipeline.
+        // Ignore styles as they are handled in a later part of the BUILD pipeline.
         // Extracting them here would lose the context of where each style is
         // supposed to be inlined.
         if (node.annotation.type === 'style') continue;

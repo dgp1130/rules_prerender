@@ -9,20 +9,20 @@ const rollup = `${process.env['RUNFILES']}/rules_prerender/tools/binaries/script
 
 main(async () => {
     const args = process.argv.slice(2);
-    const [ manifest, ...rollupArgs ] = args as [ string, ...string[] ];
+    const [ ...rollupArgs ] = args as [ string, ...string[] ];
 
-    const manifestContent = await fs.readFile(manifest, 'utf8');
-    const entryPoints = manifestContent.trim().split('\n');
+    // const manifestContent = await fs.readFile(manifest, 'utf8');
+    // const entryPoints = manifestContent.trim().split('\n');
 
-    const flaggedEntryPoints = entryPoints.flatMap((entryPoint) => ['-i', entryPoint]);
-    const subProcessArgs = [ ...rollupArgs, ...flaggedEntryPoints];
-    console.error(`Running subcommand:\n$ rollup ${
-        subProcessArgs
-            .map((arg) => arg.includes(' ') ? `"${arg}"` : arg)
-            .join(' ')
-    }`);
+    // const flaggedEntryPoints = entryPoints.flatMap((entryPoint) => ['-i', entryPoint]);
+    // const subProcessArgs = [ ...rollupArgs, ...flaggedEntryPoints];
+    // console.error(`Running subcommand:\n$ rollup ${
+    //     subProcessArgs
+    //         .map((arg) => arg.includes(' ') ? `"${arg}"` : arg)
+    //         .join(' ')
+    // }`);
 
-    const proc = execFile(rollup, subProcessArgs);
+    const proc = execFile(rollup, rollupArgs);
     proc.child.stdout?.on('data', console.log.bind(console));
     proc.child.stderr?.on('data', console.error.bind(console));
 

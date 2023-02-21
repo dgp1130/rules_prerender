@@ -19,4 +19,21 @@ export default function*(): Generator<PrerenderResource, void, void> {
             </body>
         </html>
     `);
+
+    yield PrerenderResource.of('/nested/other.html', `
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Scripts</title>
+            </head>
+            <body>
+                <h2>Scripts</h2>
+                <div id="other-replace">
+                    This text to be overwritten by client-side JavaScript.
+                </div>
+                ${includeScript('examples/scripts/other')}
+                ${renderComponent()}
+            </body>
+        </html>
+    `);
 }

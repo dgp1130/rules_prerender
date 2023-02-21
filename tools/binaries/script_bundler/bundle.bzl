@@ -20,18 +20,27 @@ def _bundle_impl(ctx):
 
     # Copy everything to bin so they are accessible by the `js_binary()` tool.
     sources = copy_files_to_bin_actions(ctx, raw_sources.to_list())
-    manifest = copy_file_to_bin_action(ctx, ctx.file.entry_points)
     config = copy_file_to_bin_action(ctx, ctx.file.config)
 
     output = ctx.actions.declare_directory(ctx.label.name)
 
     args = ctx.actions.args()
-    args.add(to_output_relative_path(manifest)) # Manifest must be the first argument.
     # Remaining arguments are passed through to Rollup.
+    entry_points_path = ctx.file.entry_points.path
+    args.add_all(
+        [ctx.file.entry_points],
+        map_each = lambda entry: "%s=%s" % (
+            entry.path[len(entry_points_path) + 1:-len(".js")],
+            to_output_relative_path(entry),
+        ),
+        before_each = "-i",
+        allow_closure = True,
+    )
     args.add("--config", to_output_relative_path(config))
     args.add("--output.dir", to_output_relative_path(output))
     args.add("--format", "esm")
     args.add("--silent")
+    args.add("--failAfterWarnings")
 
     # Bundle the specified entry points to the output directory.
     ctx.actions.run(
@@ -39,7 +48,7 @@ def _bundle_impl(ctx):
         progress_message = "Bundling JavaScript %{label}",
         executable = ctx.executable._bundler,
         arguments = [args],
-        inputs = sources + node_modules.to_list() + [manifest, config],
+        inputs = sources + node_modules.to_list() + [config, ctx.file.entry_points],
         outputs = [output],
         env = {"BAZEL_BINDIR": ctx.bin_dir.path},
     )
@@ -51,7 +60,7 @@ bundle = rule(
     attrs = {
         "entry_points": attr.label(
             mandatory = True,
-            allow_single_file = [".manifest"],
+            allow_single_file = True,
         ),
         "config": attr.label(
             mandatory = True,

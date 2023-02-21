@@ -83,8 +83,8 @@ function injectScript(root: HTMLElement, action: InjectScript): void {
     // Insert a `<script />` tag at the end of the `<head />` element.
     const script = new HTMLElement('script', {});
     script.setAttribute('src', action.path);
+    script.setAttribute('type', 'module');
     script.setAttribute('async', '');
-    script.setAttribute('defer', '');
     head.appendChild(script);
 
     // Insert a trailing newline so subsequent insertions look a little better.
