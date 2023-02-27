@@ -66,9 +66,9 @@ describe('injector', () => {
 <html>
     <head>
         <title>Some title</title>
-    <script src="/foo.js" async defer></script>
-<script src="/bar.js" async defer></script>
-<script src="/baz.js" async defer></script>
+    <script src="/foo.js" type="module" async></script>
+<script src="/bar.js" type="module" async></script>
+<script src="/baz.js" type="module" async></script>
 </head>
     <body>
         <h2>Hello, World!</h2>
@@ -117,7 +117,7 @@ describe('injector', () => {
 <html>
     <head>
         <title>Some title</title>
-    <script src="/page.js" async defer></script>
+    <script src="/page.js" type="module" async></script>
 </head>
     <body>
         <h2>Hello, World!</h2>
@@ -192,7 +192,7 @@ describe('injector', () => {
 <html>
     <head>
         <title>Some title</title>
-    <script src="/baz.js" async defer></script>
+    <script src="/baz.js" type="module" async></script>
 </head>
     <body>
         <h2>Foo</h2>
@@ -209,7 +209,7 @@ describe('injector', () => {
 <html>
     <head>
         <title>Some title</title>
-    <script src="/baz.js" async defer></script>
+    <script src="/baz.js" type="module" async></script>
 </head>
     <body>
         <h2>Bar</h2>
@@ -226,7 +226,7 @@ describe('injector', () => {
 <html>
     <head>
         <title>Some title</title>
-    <script src="/baz.js" async defer></script>
+    <script src="/baz.js" type="module" async></script>
 </head>
     <body>
         <h2>Hello World</h2>
