@@ -52,9 +52,16 @@ jobs:
         # Append NPM token to `.npmrc` file.
         echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_ACCESS_TOKEN }}" >> .npmrc
 
-        # Publish the package.
+        # Build all the packages to make sure they are buildable and the labels haven't
+        # changed. This helps prevent publishing one package and then failing to build
+        # the next one.
+        bazel build --config ci --config release \
+          //:rules_prerender_pkg_publish \
+          //packages/declarative_shadow_dom:pkg_publish
+
+        # Publish the packages.
         bazel run --config ci --config release //:rules_prerender_pkg_publish
-        bazel run --config ci --config release //packages/rules_prerender/declarative_shadow_dom:pkg_publish
+        bazel run --config ci --config release //packages/declarative_shadow_dom:pkg_publish
 
         # Remove the token from the `.npmrc` file, it should no longer be needed.
         sed -i "/${{ secrets.NPM_ACCESS_TOKEN }}/d" .npmrc
