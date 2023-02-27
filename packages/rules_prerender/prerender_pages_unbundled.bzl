@@ -4,7 +4,7 @@ load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
-load(":script_entry_point.bzl", "script_entry_point")
+load(":script_entry_point.bzl", "script_entry_points")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
 visibility(["//"])
@@ -60,10 +60,12 @@ def prerender_pages_unbundled(
     Outputs:
         %{name}: A `web_resources()` target containing all the files generated
             by the `src` file at their corresponding locations.
-        %{name}_scripts: A `js_library()` rule containing all the client-side
+        %{name}_scripts: A `js_library()` target containing all the client-side
             scripts used by the page. This includes a generated file
             `%{name}_scripts.js` which acts as an entry point, importing all
             scripts that were included in the page via `includeScript()`.
+        %{name}_scripts_entries: A `TreeArtifact` containing all the entry points
+            used for bundling laid out in the generated directory format.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
         %{name}_prerender_for_test: An alias to the `ts_project()` target which
@@ -144,11 +146,9 @@ def prerender_pages_unbundled(
 
     # Generate the entry point importing all included scripts.
     client_scripts = "%s_scripts" % name
-    script_entry = "%s.js" % client_scripts
-    script_entry_point(
-        name = "%s_entry" % client_scripts,
+    script_entry_points(
+        name = "%s_entries" % client_scripts,
         metadata = metadata,
-        output_entry_point = script_entry,
         testonly = testonly,
         # Export this file so Rollup can have a direct, label reference to the
         # entry point, since including the file in a `depset()` with other files
@@ -157,10 +157,9 @@ def prerender_pages_unbundled(
     )
 
     # Reexport all included scripts at `%{name}_scripts`.
-    js_library(
+    native.alias(
         name = client_scripts,
-        srcs = [script_entry],
-        deps = [":%s" % component_scripts],
+        actual = ":%s" % component_scripts,
         testonly = testonly,
         visibility = visibility,
     )

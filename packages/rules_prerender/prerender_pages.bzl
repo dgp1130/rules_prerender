@@ -1,8 +1,8 @@
 """Defines `prerender_pages()` functionality."""
 
-load("@aspect_rules_rollup//rollup:defs.bzl", "rollup_bundle")
 load(":multi_inject_resources.bzl", "multi_inject_resources")
 load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
+load(":scripts_bundle.bzl", "scripts_bundle")
 load(":web_resources.bzl", "web_resources")
 
 visibility(["//"])
@@ -124,17 +124,12 @@ def prerender_pages(
 
     bundle = "%s_bundle" % name
     if bundle_js:
-        # Bundle all client-side scripts at `%{name}_bundle.js`.
-        rollup_bundle(
+        # Bundle all client-side scripts in a `TreeArtifact` at `%{name}_bundle`.
+        scripts_bundle(
             name = bundle,
-            entry_point = ":%s_scripts.js" % prerender_name,
-            config_file = Label("//packages/rules_prerender:rollup_config"),
-            silent = True,
+            entry_points = ":%s_scripts_entries" % prerender_name,
             testonly = testonly,
-            deps = [
-                ":%s_scripts" % prerender_name,
-                "//:node_modules/@rollup/plugin-node-resolve",
-            ],
+            deps = [":%s_scripts" % prerender_name],
         )
 
     # Inject bundled JS and CSS into the HTML.
@@ -142,7 +137,7 @@ def prerender_pages(
     multi_inject_resources(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
-        bundle = ":%s" % bundle if bundle_js else None,
+        bundles = ":%s" % bundle if bundle_js else None,
         styles = ":%s_styles" % prerender_name,
         testonly = testonly,
     )

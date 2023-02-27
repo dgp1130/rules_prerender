@@ -1,13 +1,23 @@
+load("@rules_prerender_npm//:rollup/package_json.bzl", "bin")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//:index.bzl", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
-copy_to_bin(
-    name = "rollup_config",
-    srcs = ["rollup-default.config.js"],
+bin.rollup_binary(
+    name = "rollup",
     visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "rollup_config",
+    srcs = ["rollup.config.ts"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@rollup/plugin-node-resolve",
+        "//:node_modules/rollup",
+    ],
 )
 
 ts_project(
@@ -103,6 +113,7 @@ bzl_library(
     deps = [
         ":multi_inject_resources",
         ":prerender_pages_unbundled",
+        ":scripts_bundle",
         ":web_resources",
     ],
 )
@@ -117,6 +128,11 @@ bzl_library(
         "//packages/rules_prerender/css:css_providers",
         "//tools/binaries/renderer:build_vars",
     ],
+)
+
+bzl_library(
+    name = "scripts_bundle",
+    srcs = ["scripts_bundle.bzl"],
 )
 
 bzl_library(

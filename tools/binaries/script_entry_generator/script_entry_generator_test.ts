@@ -6,61 +6,103 @@ import { useTempDir } from '../../../common/testing/temp_dir';
 const entryGenerator = 'tools/binaries/script_entry_generator/script_entry_generator.sh';
 
 /** Invokes the entry generator binary. */
-async function run({ metadata, importDepth, output }: {
+async function run({ metadata, outputDir, root }: {
     metadata: string,
-    importDepth: number,
-    output: string,
+    outputDir: string,
+    root: string,
 }): Promise<ProcessResult> {
     return await execBinary(entryGenerator, [
         '--metadata', metadata,
-        '--import-depth', importDepth.toString(),
-        '--output', output,
+        '--output-dir', outputDir,
+        '--root', root,
     ]);
 }
 
 describe('script_entry_generator', () => {
     const tmpDir = useTempDir();
 
-    it('generates an entry point', async () => {
+    it('generates entry points', async () => {
+        await fs.mkdir(`${tmpDir.get()}/output`, { recursive: true });
+
         const metadata = mockPrerenderMetadata({
-            scripts: [
-                mockScriptMetadata({ path: 'foo/bar/baz' }),
-                mockScriptMetadata({ path: 'hello/world' }),
-            ],
+            includedScripts: {
+                '/page.html': [ mockScriptMetadata({ path: 'foo/bar/baz' }) ],
+                '/nested/other.html': [
+                    mockScriptMetadata({ path: 'foo/bar/baz' }),
+                    mockScriptMetadata({ path: 'hello/world' }),
+                ],
+            },
         });
         await fs.writeFile(`${tmpDir.get()}/metadata.json`,
             JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
-        
+
         const { code, stdout, stderr } = await run({
             metadata: `${tmpDir.get()}/metadata.json`,
-            importDepth: 2,
-            output: `${tmpDir.get()}/entryPoint.ts`,
+            outputDir: `${tmpDir.get()}/output`,
+            root: tmpDir.get(),
         });
 
-        expect(code).toBe(0);
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
         expect(stderr).toBe('');
 
-        const entryPoint = await fs.readFile(`${tmpDir.get()}/entryPoint.ts`, {
-            encoding: 'utf8',
-        });
+        const pageEntryPoint = await fs.readFile(
+            `${tmpDir.get()}/output/page.js`, 'utf8');
 
-        expect(entryPoint).toBe(`
+        expect(pageEntryPoint).toBe(`
+import '../foo/bar/baz';
+        `.trim());
+
+        const otherEntryPoint = await fs.readFile(
+            `${tmpDir.get()}/output/nested/other.js`, 'utf8');
+
+        expect(otherEntryPoint).toBe(`
 import '../../foo/bar/baz';
 import '../../hello/world';
         `.trim());
     });
 
+    it('ignores empty entry points', async () => {
+        await fs.mkdir(`${tmpDir.get()}/output`, { recursive: true });
+
+        const metadata = mockPrerenderMetadata({
+            includedScripts: {
+                '/page.html': [ mockScriptMetadata({ path: 'foo/bar/baz' }) ],
+                '/empty.html': [],
+            },
+        });
+        await fs.writeFile(`${tmpDir.get()}/metadata.json`,
+            JSON.stringify(metadata, null /* replacer */, 4 /* tabSize */));
+
+        const { code, stdout, stderr } = await run({
+            metadata: `${tmpDir.get()}/metadata.json`,
+            outputDir: `${tmpDir.get()}/output`,
+            root: tmpDir.get(),
+        });
+
+        expect(code).toBe(0, `Binary unexpectedly failed. STDERR:\n${stderr}`);
+        expect(stdout).toBe('');
+        expect(stderr).toBe('');
+
+        // `/empty.js` should *not* be generated, because it would be empty.
+        await expectAsync(fs.access(`${tmpDir.get()}/output/page.js`))
+            .toBeResolved();
+        await expectAsync(fs.access(`${tmpDir.get()}/output/empty.js`))
+            .toBeRejected();
+    });
+
     it('exits with non-zero exit code if metadata is not valid JSON', async () => {
+        await fs.mkdir(`${tmpDir.get()}/output`, { recursive: true });
         await fs.writeFile(`${tmpDir.get()}/metadata.json`, 'not JSON');
 
         const { code, stdout, stderr } = await run({
             metadata: `${tmpDir.get()}/metadata.json`,
-            importDepth: 2,
-            output: `${tmpDir.get()}/entryPoint.ts`,
+            outputDir: `${tmpDir.get()}/output`,
+            root: tmpDir.get(),
         });
 
-        expect(code).toBe(1);
+        expect(code)
+            .toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
         expect(stderr).toContain('JSON');
     });

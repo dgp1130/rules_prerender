@@ -4,9 +4,10 @@ import * as path from 'path';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
 import { extract } from './extractor';
-import { assembleMetadata } from './metadata';
-import { PrerenderAnnotation, annotationsEqual } from '../../../common/models/prerender_annotation';
+import { metadataFromPrerenderAnnotations } from './metadata';
+import { annotationsEqual } from '../../../common/models/prerender_annotation';
 import { unique } from '../../../common/collections';
+import { PrerenderMetadata } from 'common/models/prerender_metadata';
 
 main(async () => {
     const {
@@ -50,8 +51,8 @@ main(async () => {
         })
         .argv;
 
-    const annotations = [] as Array<PrerenderAnnotation>;
     const outputWrites = [] as Array<Promise<void>>;
+    const metadata: PrerenderMetadata = { includedScripts: { } };
     for await (const relPath of listRecursiveFiles(inputDir)) {
         // Ignore non-HTML files by simply copying them to the output directory.
         if (!relPath.endsWith('.html')) {
@@ -73,8 +74,13 @@ main(async () => {
         });
 
         // Extract annotations from the HTML.
-        const [ outputHtml, newAnnotations ] = extract(contents);
-        annotations.push(...newAnnotations);
+        const [ outputHtml, annotations ] = extract(contents);
+        const scriptMetadataList = metadataFromPrerenderAnnotations(
+            unique(annotations, annotationsEqual));
+        if (metadata.includedScripts[relPath] !== undefined) {
+            throw new Error(`Generated metadata for \`${relPath}\` twice.`);
+        }
+        metadata.includedScripts[relPath] = scriptMetadataList;
     
         // Write the output HTML file to disk. Don't `await` these directly in
         // the `for-await` loop or each write will be done sequentially.
@@ -87,9 +93,6 @@ main(async () => {
             await fs.writeFile(outputHtmlPath, outputHtml);
         })());
     }
-
-    // Assemble annotations into the metadata format.
-    const metadata = assembleMetadata(unique(annotations, annotationsEqual));
 
     // Write output HTML and metadata JSON.
     const metadataOutput =
@@ -129,7 +132,7 @@ function listRecursiveFiles(dir: string): AsyncIterable<string> {
         }
     }
 
-    return listRecursiveFilesImpl(''); // Start the recursion.
+    return listRecursiveFilesImpl('/'); // Start the recursion.
 }
 
 /** Recursively creates the parent directories of the given path. */

@@ -10,7 +10,9 @@ export function mockPrerenderMetadata(
     overrides: Partial<PrerenderMetadata> = {},
 ): PrerenderMetadata {
     return {
-        scripts: [],
+        includedScripts: {
+            ...overrides.includedScripts,
+        },
         ...overrides,
     };
 }

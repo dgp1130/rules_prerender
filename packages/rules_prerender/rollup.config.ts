@@ -1,4 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { RollupOptions } from 'rollup';
 
 export default {
     plugins: [
@@ -19,4 +20,4 @@ export default {
 
         throw new Error(warning.message);
     },
-};
+} as RollupOptions;

@@ -11,7 +11,7 @@ main(async () => {
     const {
         'input-dir': inputDir,
         config: configFile,
-        bundle,
+        bundles,
         'output-dir': outputDir,
     } = yargs.usage(mdSpacing(`
             Injects web resources specified by the config file into all the HTML
@@ -40,11 +40,12 @@ main(async () => {
                 the resources to inject. Must match the \`InjectorConfig\` type.
             `),
         })
-        .option('bundle', {
+        .option('bundles', {
             type: 'string',
             description: mdSpacing(`
-                Path to a standalone JavaScript bundle file to inject into each
-                HTML file.
+                Path to a directory containing all the JavaScript bundles to
+                inject into HTML pages with the same relative paths (except
+                using the \`*.html\` extension).
             `),
         })
         .option('output-dir', {
@@ -63,6 +64,10 @@ main(async () => {
     })();
 
     const operations = [] as Array<Promise<void>>;
+
+    // Copy all the JavaScript bundles asynchronously.
+    if (bundles) operations.push(copyBundles(bundles, outputDir));
+
     for await (const relPath of listRecursiveFiles(inputDir)) {
         // Ignore non-HTML files by simply copying them to the output directory.
         if (!relPath.endsWith('.html')) {
@@ -84,19 +89,23 @@ main(async () => {
         // on it to start processing the next file. Only at the end do we wait
         // for all file I/O operations to complete.
         operations.push((async () => {
-            // Read the HTML input.
-            const input = await fs.readFile(path.join(inputDir, relPath), {
-                encoding: 'utf8',
-            });
+            const [ input, inputConfig, bundleRelPath ] = await Promise.all([
+                // Read the HTML input.
+                fs.readFile(path.join(inputDir, relPath), {
+                    encoding: 'utf8',
+                }),
 
-            // Wait for the configuration to be read and parsed.
-            const inputConfig = await configPromise;
+                // Wait for the configuration to be read and parsed.
+                configPromise,
+
+                // Look for a bundle for this HTML file.
+                bundles ? getBundle(relPath, bundles) : Promise.resolve(undefined),
+            ]);
 
             // If there is a bundle, inject a <script /> tag for it.
-            const siblingJs = relPath.split('.').slice(0, -1).join('.') + '.js';
-            const config = !bundle ? inputConfig : inputConfig.concat({
+            const config = !bundleRelPath ? inputConfig : inputConfig.concat({
                 type: 'script',
-                path: `/${siblingJs}`,
+                path: `/${bundleRelPath}`,
             });
 
             // Inject the requested resources into the HTML content.
@@ -107,12 +116,6 @@ main(async () => {
             const outputPath = path.join(outputDir, relPath);
             await mkParentDir(outputPath);
             await fs.writeFile(outputPath, output);
-
-            // Copy JavaScript bundle to the output HTML location, but with a
-            // `.js` extension.
-            if (bundle) {
-                await fs.copyFile(bundle, path.join(outputDir, siblingJs));
-            }
         })());
     }
 
@@ -121,6 +124,42 @@ main(async () => {
 
     return 0;
 });
+
+/**
+ * Copies all the JavaScript bundles under the given directory to their
+ * associated paths in the output directory.
+ */
+async function copyBundles(bundles: string, outputDir: string): Promise<void> {
+    const copies: Promise<void>[] = [];
+    for await (const bundle of listRecursiveFiles(bundles)) {
+        // Don't `await` directly, so each copy only depends on its own source
+        // file, rather copying each file one at a time.
+        copies.push((async () => {
+            const outputPath = path.join(outputDir, bundle);
+            await mkParentDir(outputPath);
+            await fs.copyFile(path.join(bundles, bundle), outputPath);
+        })());
+    }
+
+    await Promise.all(copies);
+}
+
+/**
+ * Look for a JavaScript bundle for the given HTML file and returns its relative
+ * path. Returns `undefined` if no bundle exists for the HTML file.
+ */
+async function getBundle(htmlRelPath: string, bundlesLocation: string):
+        Promise<string | undefined> {
+    const jsRelPath = htmlRelPath.split('.').slice(0, -1).join('.') + '.js';
+    const jsPath = path.join(bundlesLocation, jsRelPath);
+
+    try {
+        await fs.access(jsPath);
+        return jsRelPath;
+    } catch {
+        return undefined;
+    }
+}
 
 /**
  * Yields all the relative paths to files recursively in the given directory.

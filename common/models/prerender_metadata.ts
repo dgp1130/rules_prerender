@@ -1,7 +1,7 @@
 /** Metadata about a prerendered HTML file. */
 export interface PrerenderMetadata {
-    /** Scripts to include. */
-    readonly scripts: readonly ScriptMetadata[];
+    /** Map of HTML relative path to a list of scripts it includes. */
+    readonly includedScripts: Record<string /* htmlRelPath */, ScriptMetadata[]>;
 }
 
 /** Metadata for a script to be included in a prerendered HTML file. */

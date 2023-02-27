@@ -106,10 +106,10 @@ describe('annotation_extractor', () => {
             ),
         ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
-            scripts: jasmine.arrayWithExactContents([
-                mockScriptMetadata({ path: 'foo.js' }),
-                mockScriptMetadata({ path: 'bar.js' }),
-            ]) as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+            includedScripts: {
+                '/foo.html': [ mockScriptMetadata({ path: 'foo.js' }) ],
+                '/bar.html': [ mockScriptMetadata({ path: 'bar.js' }) ],
+            },
         }));
     });
 
@@ -162,9 +162,10 @@ describe('annotation_extractor', () => {
             ),
         ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
-            scripts: [
-                mockScriptMetadata({ path: 'foo.js' }),
-            ],
+            includedScripts: {
+                '/foo.html': [ mockScriptMetadata({ path: 'foo.js' }) ],
+                '/bar.html': [ mockScriptMetadata({ path: 'foo.js' }) ],
+            },
         }));
     });
 
@@ -223,9 +224,9 @@ describe('annotation_extractor', () => {
             ),
         ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
-            scripts: [
-                mockScriptMetadata({ path: 'foo.js' }),
-            ],
+            includedScripts: {
+                '/hello/world.html': [ mockScriptMetadata({ path: 'foo.js' }) ],
+            },
         }));
     });
 
@@ -272,7 +273,7 @@ Annotation should **not** be processed.
             ),
         ) as PrerenderMetadata;
         expect(metadata).toEqual(mockPrerenderMetadata({
-            scripts: [],
+            includedScripts: {},
         }));
     });
 });

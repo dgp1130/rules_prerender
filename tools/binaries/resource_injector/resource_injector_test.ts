@@ -6,16 +6,16 @@ import { useTempDir } from '../../../common/testing/temp_dir';
 const injector = 'tools/binaries/resource_injector/resource_injector.sh';
 
 /** Invokes the resource injector binary. */
-async function run({ inputDir, config, bundle, outputDir }: {
+async function run({ inputDir, config, bundles, outputDir }: {
     inputDir: string,
     config: string,
-    bundle?: string,
+    bundles?: string,
     outputDir: string,
 }): Promise<ProcessResult> {
     return await execBinary(injector, [
         '--input-dir', inputDir,
         '--config', config,
-        ...(bundle ? [ '--bundle', bundle ] : []),
+        ...(bundles ? [ '--bundles', bundles ] : []),
         '--output-dir', outputDir,
     ]);
 }
@@ -77,9 +77,10 @@ describe('injector', () => {
         `.trim());
     });
 
-    it('injects bundle', async () => {
+    it('injects bundle for page', async () => {
         await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });
+        await fs.mkdir(`${tmpDir.get()}/bundles`, { recursive: true });
 
         await fs.writeFile(`${tmpDir.get()}/input_dir/page.html`, `
 <!DOCTYPE html>
@@ -95,12 +96,12 @@ describe('injector', () => {
 
         await fs.writeFile(`${tmpDir.get()}/config.json`, `[]`);
 
-        await fs.writeFile(`${tmpDir.get()}/bundle.js`, '');
+        await fs.writeFile(`${tmpDir.get()}/bundles/page.js`, '');
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,
             config: `${tmpDir.get()}/config.json`,
-            bundle: `${tmpDir.get()}/bundle.js`,
+            bundles: `${tmpDir.get()}/bundles`,
             outputDir: `${tmpDir.get()}/output_dir`,
         });
 
@@ -235,9 +236,10 @@ describe('injector', () => {
         `.trim());
     });
 
-    it('copies input JavaScript bundle for each HTML file', async () => {
+    it('skips injecting JS bundle for files without one', async () => {
         await fs.mkdir(`${tmpDir.get()}/input_dir`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_dir`, { recursive: true });
+        await fs.mkdir(`${tmpDir.get()}/bundles`, { recursive: true });
 
         await fs.writeFile(`${tmpDir.get()}/input_dir/page.html`, `
 <!DOCTYPE html>
@@ -250,16 +252,27 @@ describe('injector', () => {
     </body>
 </html>
         `.trim());
+        await fs.writeFile(`${tmpDir.get()}/input_dir/other.html`, `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Some other title</title>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+        `.trim());
 
         await fs.writeFile(`${tmpDir.get()}/config.json`, `[]`);
 
         await fs.writeFile(
-            `${tmpDir.get()}/bundle.js`, `console.log('Hello, World!');`);
+            `${tmpDir.get()}/bundles/page.js`, `console.log('Hello, World!');`);
 
         const { code, stdout, stderr } = await run({
             inputDir: `${tmpDir.get()}/input_dir`,
             config: `${tmpDir.get()}/config.json`,
-            bundle: `${tmpDir.get()}/bundle.js`,
+            bundles: `${tmpDir.get()}/bundles`,
             outputDir: `${tmpDir.get()}/output_dir`,
         });
 
@@ -267,11 +280,19 @@ describe('injector', () => {
         expect(stdout).toBe('');
         expect(stderr).toBe('');
 
-        const output = await fs.readFile(
+        // Copies bundle for `/page.html`.
+        const pageJs = await fs.readFile(
             `${tmpDir.get()}/output_dir/page.js`,
             { encoding: 'utf8' },
         );
-        expect(output).toBe(`console.log('Hello, World!');`);
+        expect(pageJs).toBe(`console.log('Hello, World!');`);
+
+        // Does *not* copy or inject bundle for `/other.html`.
+        await expectAsync(fs.access(`${tmpDir.get()}/output_dir/other.js`))
+            .toBeRejected();
+        const otherHtml = await fs.readFile(
+            `${tmpDir.get()}/output_dir/other.html`, 'utf8');
+        expect(otherHtml).not.toContain('other.js');
     });
 
     it('passes through non-HTML files', async () => {
