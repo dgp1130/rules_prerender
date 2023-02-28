@@ -1,4 +1,4 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
 import { pack } from './packager';
@@ -11,7 +11,7 @@ main(async (args) => {
         'file-ref': fileRefs,
         'merge-dir': mergeDirs,
         'dest-dir': destDir,
-    } = yargs
+    } = yargs(process.argv.slice(2))
         .usage(mdSpacing(`
             Packages all the given resources (file references) by moving them to
             their associated URL path relative to the destination directory.

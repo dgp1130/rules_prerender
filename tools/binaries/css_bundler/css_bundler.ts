@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { bundleAsync } from 'lightningcss';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
 
@@ -8,7 +8,7 @@ main(async () => {
     const {
         'entry-point': entryPoints = [],
         'output': outputs = [],
-    } = yargs
+    } = yargs(process.argv.slice(2))
         .usage(mdSpacing(`
             Bundles the given CSS files by resolving and inlining \`@import\`
             statements.

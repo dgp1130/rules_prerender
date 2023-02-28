@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
 import { PrerenderMetadata } from '../../../common/models/prerender_metadata';
@@ -12,7 +12,7 @@ main(async () => {
         metadata: metadataFile,
         'output-dir': outputDir,
         root
-    } = yargs
+    } = yargs(process.argv.slice(2))
         .usage(mdSpacing(`
             Generates an entry point for all the scripts in the given metadata
             file. The entry point is a TypeScript source file which

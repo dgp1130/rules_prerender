@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import * as path from 'path';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
@@ -14,7 +14,7 @@ main(async () => {
         'input-dir': inputDir,
         'output-dir': outputDir,
         'output-metadata': outputMetadata,
-    } = yargs
+    } = yargs(process.argv.slice(2))
         .usage(mdSpacing(`
             Extracts annotations from the all HTML files in the given directory.
             Outputs the input HTML files with the annotations removed to the

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import type { MainFn } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
 import { invoke } from './entry_point';
@@ -34,7 +34,7 @@ export function createRenderer(
             'output-dir': outputDir,
             'inline-style-import': inlineStyleImports = [],
             'inline-style-path': inlineStylePaths = [],
-        } = yargs
+        } = yargs(args)
             .usage(mdSpacing(`
                 Invokes the given entry point which returns \`PrerenderResources\`
                 and writes each resource to the relevant location under
@@ -71,7 +71,7 @@ export function createRenderer(
                     of the \`--inline-style-import\` at the same index.
                 `),
             })
-            .parse(args);
+            .argv;
 
         // Pass through `--inline-style-import` and `--inline-style-path` flags as the
         // inline style map to be looked up by `inlineStyle()` calls.

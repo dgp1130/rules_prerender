@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import { main } from '../../../common/binary';
 import { mdSpacing } from '../../../common/formatters';
 import { InjectorConfig } from './config';
@@ -13,7 +13,8 @@ main(async () => {
         config: configFile,
         bundles,
         'output-dir': outputDir,
-    } = yargs.usage(mdSpacing(`
+    } = yargs(process.argv.slice(2))
+        .usage(mdSpacing(`
             Injects web resources specified by the config file into all the HTML
             files within the input directory and writes them to the same
             relative paths in the output directory. Non-HTML files in the input
