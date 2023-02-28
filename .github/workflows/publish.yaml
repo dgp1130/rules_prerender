@@ -59,6 +59,12 @@ jobs:
           //:rules_prerender_pkg_publish \
           //packages/declarative_shadow_dom:pkg_publish
 
+        # Tar the NPM packages prior to publish to make sure the file paths are correct.
+        tar -czf rules_prerender-${{ github.event.inputs.version }}.tar.gz \
+            dist/bin/rules_prerender_pkg/
+        tar -czf rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz \
+            dist/bin/packages/declarative_shadow_dom/pkg/
+
         # Publish the packages.
         bazel run --config ci --config release //:rules_prerender_pkg_publish
         bazel run --config ci --config release //packages/declarative_shadow_dom:pkg_publish
@@ -79,14 +85,6 @@ jobs:
         release_name: ${{ github.event.inputs.version }}
         prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         draft: true
-
-    # Compress the built NPM package into a `.tar.gz` file.
-    - name: Tar Packages
-      run: |
-        tar -czf rules_prerender-${{ github.event.inputs.version }}.tar.gz \
-            dist/bin/rules_prerender_pkg/
-        tar -czf rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz \
-            dist/bin/packages/rules_prerender/declarative_shadow_dom/pkg/
 
     # Upload `rules_prerender` to the GitHub release.
     - name: Upload `rules_prerender` to GitHub
