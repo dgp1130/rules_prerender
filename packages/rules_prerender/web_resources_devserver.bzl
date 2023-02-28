@@ -26,18 +26,12 @@ def web_resources_devserver(
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         tags: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
-    # Generate an `http-server` binary.
-    server = "%s_http_server" % name
     root_dir = file_path_of(absolute(resources))
-    http_server_bin.http_server_binary(
-        name = server,
-        testonly = testonly,
-    )
+    disable_cache = "-c-1" # Set cache (`-c`) time to `-1` to disable it.
 
     # Bake in the `resources` directory as the first argument, so the server can
     # never be run on a different directory.
     baked = "%s_baked_server" % name
-    disable_cache = "-c-1" # Set cache (`-c`) time to `-1` to disable it.
     _baked_binary(
         name = baked,
         baked_args = [root_dir, disable_cache],
@@ -46,7 +40,7 @@ def web_resources_devserver(
         # `_baked_server` directly, then it is needed, even if a user should
         # never do that in practice.
         data = [resources],
-        binary = ":%s" % server,
+        binary = Label("//packages/rules_prerender:http_server"),
         testonly = testonly,
     )
 
