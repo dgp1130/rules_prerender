@@ -41,21 +41,7 @@
       "rules_prerender": ["packages/rules_prerender"], // Map `rules_prerender` module to its implementation.
       "@rules_prerender/declarative_shadow_dom": ["packages/declarative_shadow_dom"]
     },
-    "rootDirs": [                             /* List of root folders whose combined content represents the structure of the project at runtime. */
-      ".",
-      // List out generated directories for module resolution.
-      // https://bazelbuild.github.io/rules_nodejs/TypeScript.html#ts_project
-      "./bazel-out/host/bin",
-      "./bazel-out/darwin-fastbuild/bin",
-      "./bazel-out/k8-fastbuild/bin",
-      "./bazel-out/x64_windows-fastbuild/bin",
-      "./bazel-out/darwin-dbg/bin",
-      "./bazel-out/k8-dbg/bin",
-      "./bazel-out/x64_windows-dbg/bin",
-      "./bazel-out/darwin-opt/bin",
-      "./bazel-out/k8-opt/bin",
-      "./bazel-out/x64_windows-opt/bin",
-    ],
+    // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                       /* List of folders to include type definitions from. */
     // "types": [],                           /* Automatically managed by `ts_project()`. */
     // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
