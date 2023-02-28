@@ -37,9 +37,10 @@ def web_resources_devserver(
     # Bake in the `resources` directory as the first argument, so the server can
     # never be run on a different directory.
     baked = "%s_baked_server" % name
+    disable_cache = "-c-1" # Set cache (`-c`) time to `-1` to disable it.
     _baked_binary(
         name = baked,
-        baked_args = [root_dir],
+        baked_args = [root_dir, disable_cache],
         # Technically `resources` isn't required here, since it will actually
         # use the one under `js_run_devserver()`, but if you `blaze run`
         # `_baked_server` directly, then it is needed, even if a user should
