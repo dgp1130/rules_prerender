@@ -27,6 +27,7 @@ def rules_prerender_dependencies():
         sha256 = "089250b6afda54099d7a3bc4e0f0765451356f329d105a32d1a78703edf70320",
         strip_prefix = "rules_jasmine-0.3.0",
         url = "https://github.com/aspect-build/rules_jasmine/archive/refs/tags/v0.3.0.tar.gz",
+        patches = ["@rules_prerender//tools/patches:aspect_rules_jasmine-esm.patch"],
     )
 
     maybe(
