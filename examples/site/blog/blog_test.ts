@@ -10,7 +10,7 @@ describe('Blog', () => {
 
         // Renders the blog page.
         const page = parse(new TextDecoder().decode(index!.contents));
-        expect(page.querySelector('title').text).toBe('Blog');
+        expect(page.querySelector('title')!.text).toBe('Blog');
 
         // Renders links to all generated pages.
         const posts = Object.fromEntries(page.querySelectorAll('article ul a')
@@ -31,9 +31,9 @@ describe('Blog', () => {
 
         // Renders the Foo post.
         const page = parse(new TextDecoder().decode(post!.contents));
-        expect(page.querySelector('title').text).toBe('Foo');
+        expect(page.querySelector('title')!.text).toBe('Foo');
 
-        const article = page.querySelector('article');
+        const article = page.querySelector('article')!;
         expect(article.text).toContain('This is a blog post about Foo!');
     });
 
@@ -46,9 +46,9 @@ describe('Blog', () => {
 
         // Renders the Bar post.
         const page = parse(new TextDecoder().decode(post!.contents));
-        expect(page.querySelector('title').text).toBe('Bar');
+        expect(page.querySelector('title')!.text).toBe('Bar');
 
-        const article = page.querySelector('article');
+        const article = page.querySelector('article')!;
         expect(article.text)
             .toContain('This is another blog post generated from markdown.');
     });
@@ -62,9 +62,9 @@ describe('Blog', () => {
 
         // Renders the Baz post.
         const page = parse(new TextDecoder().decode(post!.contents));
-        expect(page.querySelector('title').text).toBe('Baz');
+        expect(page.querySelector('title')!.text).toBe('Baz');
 
-        const article = page.querySelector('article');
+        const article = page.querySelector('article')!;
         expect(article.text).toContain(
             'Here is one more blog post about nothing in particular');
     });

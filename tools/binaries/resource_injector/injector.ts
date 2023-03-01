@@ -60,7 +60,13 @@ function getOrInjectHead(root: HTMLElement): HTMLElement {
     const existingHead = root.querySelector('head');
     if (existingHead) return existingHead;
 
-    const head = new HTMLElement('head', {});
+    const head = new HTMLElement(
+        'head' /* tagName */,
+        {} /* keyAttrs */,
+        '' /* rawAttrs */,
+        null /* parentNode */,
+        [0, 0] /* range */,
+    );
     const html = root.querySelector('html');
     if (!html) throw new Error('<html /> element could not be found.');
 
@@ -81,7 +87,13 @@ function injectScript(root: HTMLElement, action: InjectScript): void {
     const head = getOrInjectHead(root);
 
     // Insert a `<script />` tag at the end of the `<head />` element.
-    const script = new HTMLElement('script', {});
+    const script = new HTMLElement(
+        'script' /* tagName */,
+        {} /* keyAttrs */,
+        '' /* rawAttrs */,
+        null /* parentNode */,
+        [0, 0] /* range */,
+    );
     script.setAttribute('src', action.path);
     script.setAttribute('type', 'module');
     script.setAttribute('async', '');
@@ -109,7 +121,13 @@ async function replaceInlineStyleAnnotations(
                 JSON.stringify(annotation, null, 4)}`);
         }
 
-        const inlineStyle = new HTMLElement('style', {});
+        const inlineStyle = new HTMLElement(
+            'style' /* tagName */,
+            {} /* keyAttrs */,
+            '' /* rawAttrs */,
+            null /* parentNode */,
+            [0, 0] /* range */,
+        );
         inlineStyle.set_content(await fs.readFile(annotation.path, 'utf-8'));
         node.replace(inlineStyle);
     }

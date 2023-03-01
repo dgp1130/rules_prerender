@@ -84,7 +84,13 @@ describe('prerender_annotation_walker', () => {
             const nodes = Array.from(walkAllAnnotations(root));
             expect(nodes.length).toBe(1);
             const node = nodes[0]!;
-            node.replace(new HTMLElement('script', {}));
+            node.replace(new HTMLElement(
+                'script' /* tagName */,
+                {} /* keyAttrs */,
+                '' /* rawAttrs */,
+                null /* parentNode */,
+                [0, 0] /* range */,
+            ));
 
             const extracted = root.toString();
             expect(extracted).toBe(`
@@ -146,8 +152,13 @@ describe('prerender_annotation_walker', () => {
             node.remove(); // Update the node.
 
             // Try to update it again.
-            expect(() => node.replace(new HTMLElement('script', {})))
-                .toThrowError('Node was already updated, cannot replace it.');
+            expect(() => node.replace(new HTMLElement(
+                'script' /* tagName */,
+                {} /* keyAttrs */,
+                '' /* rawAttrs */,
+                null /* parentNode */,
+                [0, 0] /* range */,
+            ))).toThrowError('Node was already updated, cannot replace it.');
         });
     });
 });

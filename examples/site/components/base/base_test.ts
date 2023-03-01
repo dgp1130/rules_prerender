@@ -12,7 +12,7 @@ describe('base', () => {
             expect(callback).toHaveBeenCalledOnceWith();
 
             // Title should be set.
-            expect(fragment.querySelector('html head title').text)
+            expect(fragment.querySelector('html head title')!.text)
                 .toBe('Some title');
 
             // Renders the header and footer.
@@ -20,7 +20,7 @@ describe('base', () => {
             expect(fragment.querySelector('[comp-footer]')).toBeDefined();
 
             // Callback should be placed under `<main />` tag.
-            const main = fragment.querySelector('body main');
+            const main = fragment.querySelector('body main')!;
             const mainChildren = main.childNodes
                 .filter((node) => node.nodeType === NodeType.ELEMENT_NODE);
             expect(mainChildren.length).toBe(1);
@@ -36,7 +36,7 @@ describe('base', () => {
             expect(callback).toHaveBeenCalledOnceWith();
 
             // Title should be set.
-            expect(fragment.querySelector('html head title').text)
+            expect(fragment.querySelector('html head title')!.text)
                 .toBe('Some title');
 
             // Renders the header and footer.
@@ -44,7 +44,7 @@ describe('base', () => {
             expect(fragment.querySelector('[comp-footer]')).toBeDefined();
 
             // Callback should be placed under `<main />` tag.
-            const main = fragment.querySelector('body main');
+            const main = fragment.querySelector('body main')!;
             const mainChildren = main.childNodes
                 .filter((node) => node.nodeType === NodeType.ELEMENT_NODE);
             expect(mainChildren.length).toBe(1);

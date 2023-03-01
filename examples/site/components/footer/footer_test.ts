@@ -6,8 +6,12 @@ describe('footer', () => {
         it('renders a footer', () => {
             const fragment = parse(renderFooter());
 
-            expect(fragment.structuredText)
-                .toContain('Made with Bazel and rules_prerender.');
+            const footerText = fragment.textContent
+                .trim()
+                .split('\n')
+                .map((line) => line.trim())
+                .join(' ');
+            expect(footerText).toBe('Made with Bazel and rules_prerender.');
         });
     });
 });
