@@ -76,6 +76,24 @@ ts_project(
 )
 
 ts_project(
+    name = "file_system",
+    srcs = ["file_system.ts"],
+    visibility = ["//visibility:public"],
+    deps = ["//:node_modules/@types/node"],
+)
+
+ts_project(
+    name = "file_system_fake",
+    srcs = ["file_system_fake.ts"],
+    visibility = ["//visibility:public"],
+    testonly = True,
+    deps = [
+        ":file_system",
+        "//:node_modules/@types/node",
+    ],
+)
+
+ts_project(
     name = "http",
     srcs = ["http.ts"],
     visibility = ["//visibility:public"],
