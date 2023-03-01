@@ -1,4 +1,4 @@
-import * as fs from '../../../common/fs';
+import { diskFs, FileSystem } from '../../../common/file_system';
 import { ResourceMap } from './resource_map';
 
 /**
@@ -18,9 +18,13 @@ import { ResourceMap } from './resource_map';
  * @param destDir The destination directory to copy all the resources to.
  * @param resources A {@link ResourceMap} which maps the desired URL paths to
  *     their source files.
+ * @param fs File system to use. Optional, only specify for testing purposes.
  */
-export async function pack(destDir: string, resources: ResourceMap):
-        Promise<void> {
+export async function pack(
+    destDir: string,
+    resources: ResourceMap,
+    fs: FileSystem = diskFs,
+): Promise<void> {
     // Make all the directories containing files.
     const dirs = new Set(Array.from(resources.urlPaths())
         // Drop paths at root, no directory to create.

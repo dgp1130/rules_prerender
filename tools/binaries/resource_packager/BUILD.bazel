@@ -72,7 +72,7 @@ ts_project(
     srcs = ["packager.ts"],
     deps = [
         ":resource_map",
-        "//common:fs",
+        "//common:file_system",
     ],
 )
 
@@ -84,7 +84,7 @@ ts_project(
         ":packager",
         ":resource_map",
         ":resource_map_mock",
-        "//common:fs",
+        "//common:file_system_fake",
         "//:node_modules/@types/jasmine",
     ],
 )
