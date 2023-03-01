@@ -4,14 +4,14 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "resource_injector",
-    entry_point = "resource_injector.js",
+    entry_point = "resource_injector.mjs",
     visibility = ["//visibility:public"],
     data = [":resource_injector_lib"],
 )
 
 ts_project(
     name = "resource_injector_lib",
-    srcs = ["resource_injector.ts"],
+    srcs = ["resource_injector.mts"],
     data = ["//:node_modules/yargs"],
     deps = [
         ":config",
@@ -25,7 +25,7 @@ ts_project(
 
 ts_project(
     name = "resource_injector_test_lib",
-    srcs = ["resource_injector_test.ts"],
+    srcs = ["resource_injector_test.mts"],
     testonly = True,
     deps = [
         ":config",
@@ -44,12 +44,12 @@ jasmine_node_test(
 
 ts_project(
     name = "config",
-    srcs = ["config.ts"],
+    srcs = ["config.mts"],
 )
 
 ts_project(
     name = "injector",
-    srcs = ["injector.ts"],
+    srcs = ["injector.mts"],
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":config",
@@ -60,7 +60,7 @@ ts_project(
 
 ts_project(
     name = "injector_test_lib",
-    srcs = ["injector_test.ts"],
+    srcs = ["injector_test.mts"],
     testonly = True,
     deps = [
         ":config",

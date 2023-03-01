@@ -3,7 +3,7 @@ load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "component",
-    srcs = ["component.js"],
+    srcs = ["component.mjs"],
     lib_deps = [
         ":prerender_lib",
         "//:node_modules/rules_prerender",
@@ -17,21 +17,21 @@ prerender_component(
 
 js_library(
     name = "prerender_lib",
-    srcs = ["prerender_lib.js"],
+    srcs = ["prerender_lib.mjs"],
 )
 
 js_library(
     name = "component_script",
-    srcs = ["component_script.js"],
+    srcs = ["component_script.mjs"],
     deps = [":component_script_dep"],
 )
 
 js_library(
     name = "component_script_dep",
-    srcs = ["component_script_dep.js"],
+    srcs = ["component_script_dep.mjs"],
 )
 
 js_library(
     name = "component_script_unused",
-    srcs = ["component_script_unused.js"],
+    srcs = ["component_script_unused.mjs"],
 )

@@ -4,14 +4,14 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "resource_packager",
-    entry_point = ":resource_packager.js",
+    entry_point = ":resource_packager.mjs",
     visibility = ["//visibility:public"],
     data = [":resource_packager_lib"],
 )
 
 ts_project(
     name = "resource_packager_lib",
-    srcs = ["resource_packager.ts"],
+    srcs = ["resource_packager.mts"],
     data = ["//:node_modules/yargs"],
     deps = [
         ":package_loader",
@@ -25,7 +25,7 @@ ts_project(
 
 ts_project(
     name = "resource_packager_test_lib",
-    srcs = ["resource_packager_test.ts"],
+    srcs = ["resource_packager_test.mts"],
     testonly = True,
     deps = [
         "//common/testing:binary",
@@ -43,7 +43,7 @@ jasmine_node_test(
 
 ts_project(
     name = "package_loader",
-    srcs = ["package_loader.ts"],
+    srcs = ["package_loader.mts"],
     deps = [
         ":resource_map",
         "//:node_modules/@types/node",
@@ -52,7 +52,7 @@ ts_project(
 
 ts_project(
     name = "package_loader_test_lib",
-    srcs = ["package_loader_test.ts"],
+    srcs = ["package_loader_test.mts"],
     testonly = True,
     deps = [
         ":package_loader",
@@ -69,7 +69,7 @@ jasmine_node_test(
 
 ts_project(
     name = "packager",
-    srcs = ["packager.ts"],
+    srcs = ["packager.mts"],
     deps = [
         ":resource_map",
         "//common:file_system",
@@ -78,7 +78,7 @@ ts_project(
 
 ts_project(
     name = "packager_test_lib",
-    srcs = ["packager_test.ts"],
+    srcs = ["packager_test.mts"],
     testonly = True,
     deps = [
         ":packager",
@@ -96,12 +96,12 @@ jasmine_node_test(
 
 ts_project(
     name = "resource_map",
-    srcs = ["resource_map.ts"],
+    srcs = ["resource_map.mts"],
 )
 
 ts_project(
     name = "resource_map_test_lib",
-    srcs = ["resource_map_test.ts"],
+    srcs = ["resource_map_test.mts"],
     testonly = True,
     deps = [
         ":resource_map",
@@ -117,7 +117,7 @@ jasmine_node_test(
 
 ts_project(
     name = "resource_map_mock",
-    srcs = ["resource_map_mock.ts"],
+    srcs = ["resource_map_mock.mts"],
     testonly = True,
     deps = [
         ":resource_map",

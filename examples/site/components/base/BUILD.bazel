@@ -4,7 +4,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
 prerender_component(
     name = "base",
-    srcs = ["base.ts"],
+    srcs = ["base.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
@@ -25,7 +25,7 @@ css_library(
 
 ts_project(
     name = "base_test_lib",
-    srcs = ["base_test.ts"],
+    srcs = ["base_test.mts"],
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [

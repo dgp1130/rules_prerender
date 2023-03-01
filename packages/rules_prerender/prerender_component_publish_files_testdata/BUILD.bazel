@@ -10,7 +10,7 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "component",
-    srcs = ["component.ts"],
+    srcs = ["component.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = [":prerender_dep"],
@@ -21,12 +21,12 @@ prerender_component(
 
 ts_project(
     name = "prerender_dep",
-    srcs = ["prerender_dep.ts"],
+    srcs = ["prerender_dep.mts"],
 )
 
 ts_project(
     name = "scripts",
-    srcs = ["script.ts"],
+    srcs = ["script.mts"],
     deps = [":script_dep"],
 )
 
@@ -37,7 +37,7 @@ css_library(
 
 ts_project(
     name = "script_dep",
-    srcs = ["script_dep.ts"],
+    srcs = ["script_dep.mts"],
 )
 
 web_resources(

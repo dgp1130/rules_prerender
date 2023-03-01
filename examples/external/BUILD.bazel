@@ -43,7 +43,7 @@ ts_config(
 
 prerender_pages(
     name = "site",
-    src = "site.ts",
+    src = "site.mts",
     source_map = True,
     tsconfig = "//:tsconfig",
     lib_deps = ["//:node_modules/rules_prerender"],

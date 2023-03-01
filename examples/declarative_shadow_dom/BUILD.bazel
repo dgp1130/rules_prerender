@@ -10,7 +10,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
     name = "site",
-    src = "site.ts",
+    src = "site.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -19,7 +19,7 @@ prerender_pages(
 
 prerender_component(
     name = "component",
-    srcs = ["component.ts"],
+    srcs = ["component.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     styles = [":styles"],
@@ -39,7 +39,7 @@ web_resources_devserver(
 
 ts_project(
     name = "test_lib",
-    srcs = ["test.ts"],
+    srcs = ["test.mts"],
     data = [":devserver"],
     testonly = True,
     deps = [

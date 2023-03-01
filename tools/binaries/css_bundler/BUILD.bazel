@@ -11,14 +11,14 @@ bzl_library(
 
 js_binary(
     name = "css_bundler",
-    entry_point = "css_bundler.js",
+    entry_point = "css_bundler.mjs",
     data = [":css_bundler_lib"],
     visibility = ["//visibility:public"],
 )
 
 ts_project(
     name = "css_bundler_lib",
-    srcs = ["css_bundler.ts"],
+    srcs = ["css_bundler.mts"],
     data = ["//:node_modules/yargs"],
     deps = [
         "//common:binary",
@@ -31,7 +31,7 @@ ts_project(
 
 ts_project(
     name = "css_bundler_test_lib",
-    srcs = ["css_bundler_test.ts"],
+    srcs = ["css_bundler_test.mts"],
     testonly = True,
     deps = [
         "//common/testing:binary",

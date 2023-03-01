@@ -37,7 +37,7 @@ npm_publish(
 
 prerender_component(
     name = "declarative_shadow_dom",
-    srcs = ["declarative_shadow_dom.ts"],
+    srcs = ["declarative_shadow_dom.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     scripts = [":declarative_shadow_dom_polyfill"],
@@ -50,7 +50,7 @@ prerender_component(
 
 ts_project(
     name = "declarative_shadow_dom_test_lib",
-    srcs = ["declarative_shadow_dom_test.ts"],
+    srcs = ["declarative_shadow_dom_test.mts"],
     testonly = True,
     deps = [
         ":declarative_shadow_dom_prerender_for_test",
@@ -66,6 +66,6 @@ jasmine_node_test(
 
 ts_project(
     name = "declarative_shadow_dom_polyfill",
-    srcs = ["declarative_shadow_dom_polyfill.ts"],
+    srcs = ["declarative_shadow_dom_polyfill.mts"],
     tsconfig = "//:tsconfig_client",
 )

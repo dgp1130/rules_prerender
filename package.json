@@ -1,8 +1,9 @@
 {
     "name": "rules_prerender",
     "version": "0.0.0-PLACEHOLDER",
-    "main": "./packages/rules_prerender/index.js",
-    "typings": "./packages/rules_prerender/index.d.ts",
+    "main": "./packages/rules_prerender/index.mjs",
+    "typings": "./packages/rules_prerender/index.d.mts",
+    "type": "module",
     "engines": {
         "node": "^18.12.1",
         "npm": "^8.19.1",

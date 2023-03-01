@@ -4,7 +4,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
 prerender_component(
     name = "header",
-    srcs = ["header.ts"],
+    srcs = ["header.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
@@ -21,7 +21,7 @@ css_library(
 
 ts_project(
     name = "header_test_lib",
-    srcs = ["header_test.ts"],
+    srcs = ["header_test.mts"],
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [

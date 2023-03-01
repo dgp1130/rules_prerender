@@ -3,7 +3,7 @@ load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "component",
-    srcs = ["component.ts"],
+    srcs = ["component.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -14,6 +14,6 @@ prerender_component(
 
 ts_project(
     name = "component_script",
-    srcs = ["component_script.ts"],
+    srcs = ["component_script.mts"],
     tsconfig = "//:tsconfig_client",
 )

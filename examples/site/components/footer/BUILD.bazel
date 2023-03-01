@@ -4,7 +4,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
 prerender_component(
     name = "footer",
-    srcs = ["footer.ts"],
+    srcs = ["footer.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
@@ -24,7 +24,7 @@ css_library(
 
 ts_project(
     name = "footer_test_lib",
-    srcs = ["footer_test.ts"],
+    srcs = ["footer_test.mts"],
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [

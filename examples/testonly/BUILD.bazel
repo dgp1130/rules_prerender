@@ -10,7 +10,7 @@ load(
 
 prerender_pages(
     name = "page",
-    src = "page.ts",
+    src = "page.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -29,7 +29,7 @@ css_library(
 
 ts_project(
     name = "scripts",
-    srcs = ["page_script.ts"],
+    srcs = ["page_script.mts"],
     testonly = True,
 )
 

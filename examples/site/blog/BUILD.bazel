@@ -4,7 +4,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
 prerender_pages(
     name = "blog",
-    src = "blog.ts",
+    src = "blog.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     data = glob(["posts/*.md"]) + [
@@ -26,7 +26,7 @@ prerender_pages(
 
 ts_project(
     name = "blog_test_lib",
-    srcs = ["blog_test.ts"],
+    srcs = ["blog_test.mts"],
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [

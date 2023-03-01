@@ -94,21 +94,21 @@ def prerender_resources_internal(
                 + " format: \"path/to/pkg/file.js\"") % entry_point)
 
     # Generate binary entry point.
-    binary_entry = "%s_binary_entry.js" % name
+    binary_entry = "%s_binary_entry.mjs" % name
     write_file(
         name = "%s_binary_entry" % name,
         out = binary_entry,
         content = ["""
-const rulesPrerender = require('rules_prerender');
-const {{ main }} = require('{binary_helper}');
-const {{ createRenderer }} = require('{renderer}');
-const mod = require('{entry_point}');
+import * as rulesPrerender from 'rules_prerender';
+import {{ main }} from '{binary_helper}';
+import {{ createRenderer }} from '{renderer}';
+import * as mod from '{entry_point}';
 
 const render = createRenderer(rulesPrerender, mod, '{entry_point}');
 main(render);
         """.format(
-            binary_helper = rel_path(file_path_of(Label("//common:binary"))),
-            renderer = rel_path(file_path_of(Label("//tools/binaries/renderer"))),
+            binary_helper = rel_path(file_path_of(Label("//common:binary"))) + ".mjs",
+            renderer = rel_path(file_path_of(Label("//tools/binaries/renderer"))) + ".mjs",
             entry_point = entry_point,
         ).strip()],
         testonly = testonly,

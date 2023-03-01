@@ -3,7 +3,7 @@ load("//:index.bzl", "css_library")
 
 ts_project(
     name = "links",
-    srcs = ["links.ts"],
+    srcs = ["links.mts"],
     visibility = ["//examples/site:__subpackages__"],
 )
 

@@ -3,7 +3,7 @@ load("//:index.bzl", "prerender_component", "web_resources")
 
 prerender_component(
     name = "component",
-    srcs = ["component.ts"],
+    srcs = ["component.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     resources = [":resources"],

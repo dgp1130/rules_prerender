@@ -4,14 +4,14 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "script_entry_generator",
-    entry_point = ":script_entry_generator.js",
+    entry_point = ":script_entry_generator.mjs",
     visibility = ["//visibility:public"],
     data = [":script_entry_generator_lib"],
 )
 
 ts_project(
     name = "script_entry_generator_lib",
-    srcs = ["script_entry_generator.ts"],
+    srcs = ["script_entry_generator.mts"],
     data = ["//:node_modules/yargs"],
     deps = [
         ":generator",
@@ -25,7 +25,7 @@ ts_project(
 
 ts_project(
     name = "script_entry_generator_test_lib",
-    srcs = ["script_entry_generator_test.ts"],
+    srcs = ["script_entry_generator_test.mts"],
     testonly = True,
     deps = [
         "//common/models:prerender_metadata_mock",
@@ -44,13 +44,13 @@ jasmine_node_test(
 
 ts_project(
     name = "generator",
-    srcs = ["generator.ts"],
+    srcs = ["generator.mts"],
     deps = ["//common/models:prerender_metadata"],
 )
 
 ts_project(
     name = "generator_test_lib",
-    srcs = ["generator_test.ts"],
+    srcs = ["generator_test.mts"],
     testonly = True,
     deps = [
         ":generator",

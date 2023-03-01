@@ -6,6 +6,11 @@ load("//:index.bzl", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
+# Unused `package.json` file exists for IDE intellisense of imports in
+# `//examples/external/...`. This is necessary to have a `main` field which
+# points at `index.mts.`
+exports_files(["package.json"], visibility = ["//visibility:private"])
+
 rollup_bin.rollup_binary(
     name = "rollup",
     visibility = ["//visibility:public"],
@@ -18,7 +23,7 @@ http_server_bin.http_server_binary(
 
 ts_project(
     name = "rollup_config",
-    srcs = ["rollup.config.ts"],
+    srcs = ["rollup.config.mts"],
     visibility = ["//visibility:public"],
     deps = [
         "//:node_modules/@rollup/plugin-node-resolve",
@@ -28,7 +33,7 @@ ts_project(
 
 ts_project(
     name = "rules_prerender_lib",
-    srcs = ["index.ts"],
+    srcs = ["index.mts"],
     visibility = ["//:__pkg__"],
     deps = [
         ":scripts",
@@ -88,7 +93,7 @@ bzl_library(
 
 ts_project(
     name = "prerender_component_publish_files_test_lib",
-    srcs = ["prerender_component_publish_files_test.ts"],
+    srcs = ["prerender_component_publish_files_test.mts"],
     data = ["//packages/rules_prerender/prerender_component_publish_files_testdata:component_publish_files"],
     deps = [
         "//:node_modules/@types/jasmine",
@@ -157,13 +162,13 @@ bzl_library(
 
 ts_project(
     name = "scripts",
-    srcs = ["scripts.ts"],
+    srcs = ["scripts.mts"],
     deps = ["//common/models:prerender_annotation"],
 )
 
 ts_project(
     name = "scripts_test_lib",
-    srcs = ["scripts_test.ts"],
+    srcs = ["scripts_test.mts"],
     testonly = True,
     deps = [
         ":scripts",
@@ -179,7 +184,7 @@ jasmine_node_test(
 
 ts_project(
     name = "styles",
-    srcs = ["styles.ts"],
+    srcs = ["styles.mts"],
     visibility = ["//packages/renderer:__subpackages__"],
     deps = [
         ":inline_style_map",
@@ -189,7 +194,7 @@ ts_project(
 
 ts_project(
     name = "styles_test_lib",
-    srcs = ["styles_test.ts"],
+    srcs = ["styles_test.mts"],
     testonly = True,
     deps = [
         ":inline_style_map",
@@ -206,6 +211,6 @@ jasmine_node_test(
 
 ts_project(
     name = "inline_style_map",
-    srcs = ["inline_style_map.ts"],
+    srcs = ["inline_style_map.mts"],
     visibility = ["//packages/renderer:__subpackages__"],
 )

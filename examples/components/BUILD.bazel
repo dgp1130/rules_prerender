@@ -9,7 +9,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
     name = "page",
-    src = "page.ts",
+    src = "page.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     bundle_js = False, # Optimization: No client-side JavaScript on this page.
@@ -19,7 +19,7 @@ prerender_pages(
 
 prerender_component(
     name = "component",
-    srcs = ["component.ts"],
+    srcs = ["component.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = [":ts_dep"],
@@ -28,12 +28,12 @@ prerender_component(
 
 ts_project(
     name = "ts_dep",
-    srcs = ["ts_dep.ts"],
+    srcs = ["ts_dep.mts"],
 )
 
 prerender_component(
     name = "dep",
-    srcs = ["dep.ts"],
+    srcs = ["dep.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     deps = [":transitive"],
@@ -41,7 +41,7 @@ prerender_component(
 
 prerender_component(
     name = "transitive",
-    srcs = ["transitive.ts"],
+    srcs = ["transitive.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
 )
@@ -53,7 +53,7 @@ web_resources_devserver(
 
 ts_project(
     name = "test_lib",
-    srcs = ["test.ts"],
+    srcs = ["test.mts"],
     testonly = True,
     deps = [
         "//common/testing:devserver",

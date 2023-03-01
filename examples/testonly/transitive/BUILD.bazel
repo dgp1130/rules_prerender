@@ -3,7 +3,7 @@ load("//:index.bzl", "css_library", "prerender_component", "web_resources")
 
 prerender_component(
     name = "transitive",
-    srcs = ["transitive.ts"],
+    srcs = ["transitive.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -16,7 +16,7 @@ prerender_component(
 
 ts_project(
     name = "scripts",
-    srcs = ["transitive_script.ts"],
+    srcs = ["transitive_script.mts"],
     testonly = True,
 )
 

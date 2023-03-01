@@ -4,7 +4,7 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 ts_project(
     name = "binary",
-    srcs = ["binary.ts"],
+    srcs = ["binary.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = ["//:node_modules/@types/node"],
@@ -12,7 +12,7 @@ ts_project(
 
 ts_project(
     name = "binary_test_lib",
-    srcs = ["binary_test.ts"],
+    srcs = ["binary_test.mts"],
     testonly = True,
     deps = [
         ":binary",
@@ -29,7 +29,7 @@ jasmine_node_test(
 
 ts_project(
     name = "devserver",
-    srcs = ["devserver.ts"],
+    srcs = ["devserver.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     data = [
@@ -49,7 +49,7 @@ ts_project(
 
 ts_project(
     name = "devserver_test_lib",
-    srcs = ["devserver_test.ts"],
+    srcs = ["devserver_test.mts"],
     testonly = True,
     data = ["//:node_modules/http-status-codes"],
     deps = [
@@ -84,7 +84,7 @@ jasmine_node_test(
 
 ts_project(
     name = "effects",
-    srcs = ["effects.ts"],
+    srcs = ["effects.mts"],
     testonly = True,
     deps = [
         "//:node_modules/@types/jasmine",
@@ -93,7 +93,7 @@ ts_project(
 
 ts_project(
     name = "effects_test_lib",
-    srcs = ["effects_test.ts"],
+    srcs = ["effects_test.mts"],
     testonly = True,
     deps = [
         ":effects",
@@ -108,7 +108,7 @@ jasmine_node_test(
 
 ts_project(
     name = "effect_fake",
-    srcs = ["effect_fake.ts"],
+    srcs = ["effect_fake.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = [":effects"],
@@ -116,7 +116,7 @@ ts_project(
 
 ts_project(
     name = "effect_fake_test_lib",
-    srcs = ["effect_fake_test.ts"],
+    srcs = ["effect_fake_test.mts"],
     testonly = True,
     deps = [
         ":effects",
@@ -132,7 +132,7 @@ jasmine_node_test(
 
 ts_project(
     name = "effect_tester",
-    srcs = ["effect_tester.ts"],
+    srcs = ["effect_tester.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = [
@@ -143,7 +143,7 @@ ts_project(
 
 ts_project(
     name = "effect_tester_test_lib",
-    srcs = ["effect_tester_test.ts"],
+    srcs = ["effect_tester_test.mts"],
     testonly = True,
     deps = [
         ":effects",
@@ -160,7 +160,7 @@ jasmine_node_test(
 
 ts_project(
     name = "mocks",
-    srcs = ["mocks.ts"],
+    srcs = ["mocks.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = ["//:node_modules/@types/jasmine"],
@@ -168,7 +168,7 @@ ts_project(
 
 ts_project(
     name = "mocks_test_lib",
-    srcs = ["mocks_test.ts"],
+    srcs = ["mocks_test.mts"],
     testonly = True,
     deps = [
         ":mocks",
@@ -183,7 +183,7 @@ jasmine_node_test(
 
 ts_project(
     name = "temp_dir",
-    srcs = ["temp_dir.ts"],
+    srcs = ["temp_dir.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = [
@@ -194,7 +194,7 @@ ts_project(
 
 ts_project(
     name = "temp_dir_test_lib",
-    srcs = ["temp_dir_test.ts"],
+    srcs = ["temp_dir_test.mts"],
     testonly = True,
     deps = [
         ":temp_dir",
@@ -211,13 +211,13 @@ jasmine_node_test(
 
 ts_project(
     name = "test_server",
-    srcs = ["test_server.ts"],
+    srcs = ["test_server.mts"],
     testonly = True,
 )
 
 ts_project(
     name = "test_server_test_lib",
-    srcs = ["test_server_test.ts"],
+    srcs = ["test_server_test.mts"],
     testonly = True,
     deps = [
         ":test_server",
@@ -232,7 +232,7 @@ jasmine_node_test(
 
 ts_project(
     name = "webdriver",
-    srcs = ["webdriver.ts"],
+    srcs = ["webdriver.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     data = ["//:node_modules/webdriverio"],
@@ -246,7 +246,7 @@ ts_project(
 
 ts_project(
     name = "webdriver_test_lib",
-    srcs = ["webdriver_test.ts"],
+    srcs = ["webdriver_test.mts"],
     testonly = True,
     deps = [
         ":devserver",

@@ -2,7 +2,7 @@ load("//:index.bzl", "prerender_pages")
 
 prerender_pages(
     name = "counter",
-    src = "counter.ts",
+    src = "counter.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = [

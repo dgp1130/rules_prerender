@@ -4,14 +4,14 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "annotation_extractor",
-    entry_point = "annotation_extractor.js",
+    entry_point = "annotation_extractor.mjs",
     visibility = ["//visibility:public"],
     data = [":annotation_extractor_lib"],
 )
 
 ts_project(
     name = "annotation_extractor_lib",
-    srcs = ["annotation_extractor.ts"],
+    srcs = ["annotation_extractor.mts"],
     data = ["//:node_modules/yargs"],
     deps = [
         ":extractor",
@@ -27,7 +27,7 @@ ts_project(
 
 ts_project(
     name = "annotation_extractor_test_lib",
-    srcs = ["annotation_extractor_test.ts"],
+    srcs = ["annotation_extractor_test.mts"],
     testonly = True,
     deps = [
         "//common/models:prerender_annotation",
@@ -48,7 +48,7 @@ jasmine_node_test(
 
 ts_project(
     name = "extractor",
-    srcs = ["extractor.ts"],
+    srcs = ["extractor.mts"],
     data = ["//:node_modules/node-html-parser"],
     deps = [
         "//common:prerender_annotation_walker",
@@ -58,7 +58,7 @@ ts_project(
 
 ts_project(
     name = "extractor_test_lib",
-    srcs = ["extractor_test.ts"],
+    srcs = ["extractor_test.mts"],
     testonly = True,
     deps = [
         ":extractor",
@@ -74,7 +74,7 @@ jasmine_node_test(
 
 ts_project(
     name = "metadata",
-    srcs = ["metadata.ts"],
+    srcs = ["metadata.mts"],
     deps = [
         "//common/models:prerender_annotation",
         "//common/models:prerender_metadata",
@@ -83,7 +83,7 @@ ts_project(
 
 ts_project(
     name = "metadata_test_lib",
-    srcs = ["metadata_test.ts"],
+    srcs = ["metadata_test.mts"],
     testonly = True,
     deps = [
         ":metadata",

@@ -5,7 +5,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
     name = "page",
-    src = "page.ts",
+    src = "page.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     scripts = [
@@ -21,7 +21,7 @@ prerender_pages(
 
 ts_project(
     name = "ts_parent_script",
-    srcs = ["ts_parent_script.ts"],
+    srcs = ["ts_parent_script.mts"],
     tsconfig = "//:tsconfig_client",
     deps = [":js_child_script"],
 )
@@ -29,20 +29,20 @@ ts_project(
 js_library(
     name = "js_child_script",
     srcs = [
-        "js_child_script.js",
-        "js_child_script.d.ts",
+        "js_child_script.mjs",
+        "js_child_script.d.mts",
     ],
 )
 
 js_library(
     name = "js_parent_script",
-    srcs = ["js_parent_script.js"],
+    srcs = ["js_parent_script.mjs"],
     deps = [":ts_child_script"],
 )
 
 ts_project(
     name = "ts_child_script",
-    srcs = ["ts_child_script.ts"],
+    srcs = ["ts_child_script.mts"],
     tsconfig = "//:tsconfig_client",
 )
 
@@ -53,7 +53,7 @@ web_resources_devserver(
 
 ts_project(
     name = "test_lib",
-    srcs = ["test.ts"],
+    srcs = ["test.mts"],
     data = [":devserver"],
     testonly = True,
     deps = [

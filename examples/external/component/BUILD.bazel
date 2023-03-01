@@ -8,7 +8,7 @@ load(
 
 prerender_component(
     name = "component",
-    srcs = ["component.ts"],
+    srcs = ["component.mts"],
     scripts = [":script"],
     styles = [":style"],
     resources = [":resources"],
@@ -21,7 +21,7 @@ prerender_component(
 
 ts_project(
     name = "script",
-    srcs = ["script.ts"],
+    srcs = ["script.mts"],
     declaration = True,
     source_map = True,
     tsconfig = "//:tsconfig_client",

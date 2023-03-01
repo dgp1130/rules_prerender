@@ -3,7 +3,7 @@ load("//:index.bzl", "extract_single_resource", "prerender_pages_unbundled")
 
 prerender_pages_unbundled(
     name = "single_resource",
-    src = "single_resource.ts",
+    src = "single_resource.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -23,7 +23,7 @@ diff_test(
 
 prerender_pages_unbundled(
     name = "nested_resource",
-    src = "nested_resource.ts",
+    src = "nested_resource.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],

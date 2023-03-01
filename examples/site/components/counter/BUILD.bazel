@@ -9,7 +9,7 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test", "jasmine_web_test_suite")
 
 prerender_component(
     name = "counter",
-    srcs = ["counter_prerender.ts"],
+    srcs = ["counter_prerender.mts"],
     tsconfig = "//:tsconfig",
     source_map = True,
     data = ["//:node_modules/rules_prerender"],
@@ -20,13 +20,13 @@ prerender_component(
 
 ts_project(
     name = "scripts",
-    srcs = ["counter_script.ts"],
+    srcs = ["counter_script.mts"],
     tsconfig = "//:tsconfig_client",
 )
 
 ts_project(
     name = "counter_prerender_test_lib",
-    srcs = ["counter_prerender_test.ts"],
+    srcs = ["counter_prerender_test.mts"],
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [
@@ -43,7 +43,7 @@ jasmine_node_test(
 
 prerender_pages(
     name = "counter_test_cases",
-    src = "counter_test_cases.ts",
+    src = "counter_test_cases.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     testonly = True,
@@ -59,7 +59,7 @@ web_resources_devserver(
 
 ts_project(
     name = "counter_test_lib",
-    srcs = ["counter_test.ts"],
+    srcs = ["counter_test.mts"],
     testonly = True,
     deps = [
         "//common/testing:devserver",

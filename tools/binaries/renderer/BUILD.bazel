@@ -5,7 +5,7 @@ load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
 ts_project(
     name = "renderer",
-    srcs = ["renderer.ts"],
+    srcs = ["renderer.mts"],
     visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
@@ -19,7 +19,7 @@ ts_project(
 
 ts_project(
     name = "renderer_test_lib",
-    srcs = ["renderer_test.ts"],
+    srcs = ["renderer_test.mts"],
     testonly = True,
     deps = [
         ":renderer",
@@ -39,7 +39,7 @@ jasmine_node_test(
 
 ts_project(
     name = "entry_point",
-    srcs = ["entry_point.ts"],
+    srcs = ["entry_point.mts"],
     deps = [
         "//common:probably",
         "//common/models:prerender_resource",
@@ -48,7 +48,7 @@ ts_project(
 
 ts_project(
     name = "entry_point_test_lib",
-    srcs = ["entry_point_test.ts"],
+    srcs = ["entry_point_test.mts"],
     deps = [
         ":entry_point",
         "//common:probably",

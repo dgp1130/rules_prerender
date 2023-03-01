@@ -3,13 +3,13 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 ts_project(
     name = "prerender_annotation",
-    srcs = ["prerender_annotation.ts"],
+    srcs = ["prerender_annotation.mts"],
     visibility = ["//visibility:public"],
 )
 
 ts_project(
     name = "prerender_annotation_test_lib",
-    srcs = ["prerender_annotation_test.ts"],
+    srcs = ["prerender_annotation_test.mts"],
     testonly = True,
     deps = [
         ":prerender_annotation",
@@ -24,7 +24,7 @@ jasmine_node_test(
 
 ts_project(
     name = "prerender_annotation_mock",
-    srcs = ["prerender_annotation_mock.ts"],
+    srcs = ["prerender_annotation_mock.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = [":prerender_annotation"],
@@ -32,13 +32,13 @@ ts_project(
 
 ts_project(
     name = "prerender_metadata",
-    srcs = ["prerender_metadata.ts"],
+    srcs = ["prerender_metadata.mts"],
     visibility = ["//visibility:public"],
 )
 
 ts_project(
     name = "prerender_metadata_test_lib",
-    srcs = ["prerender_metadata_test.ts"],
+    srcs = ["prerender_metadata_test.mts"],
     testonly = True,
     deps = [
         ":prerender_metadata",
@@ -53,7 +53,7 @@ jasmine_node_test(
 
 ts_project(
     name = "prerender_metadata_mock",
-    srcs = ["prerender_metadata_mock.ts"],
+    srcs = ["prerender_metadata_mock.mts"],
     testonly = True,
     visibility = ["//visibility:public"],
     deps = [":prerender_metadata"],
@@ -61,14 +61,14 @@ ts_project(
 
 ts_project(
     name = "prerender_resource",
-    srcs = ["prerender_resource.ts"],
+    srcs = ["prerender_resource.mts"],
     visibility = ["//visibility:public"],
     deps = [":url_path"],
 )
 
 ts_project(
     name = "prerender_resource_test_lib",
-    srcs = ["prerender_resource_test.ts"],
+    srcs = ["prerender_resource_test.mts"],
     testonly = True,
     deps = [
         ":prerender_resource",
@@ -83,12 +83,12 @@ jasmine_node_test(
 
 ts_project(
     name = "url_path",
-    srcs = ["url_path.ts"],
+    srcs = ["url_path.mts"],
 )
 
 ts_project(
     name = "url_path_test_lib",
-    srcs = ["url_path_test.ts"],
+    srcs = ["url_path_test.mts"],
     testonly = True,
     deps = [
         ":url_path",

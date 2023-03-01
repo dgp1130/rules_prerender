@@ -4,19 +4,19 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
 ts_project(
     name = "generator",
-    srcs = ["generator.ts"],
+    srcs = ["generator.mts"],
     deps = ["//:node_modules/rules_prerender"],
 )
 
 prerender_resources(
     name = "prerender",
-    entry_point = "./generator.js",
+    entry_point = "./generator.mjs",
     data = [":generator"],
 )
 
 ts_project(
     name = "generator_test",
-    srcs = ["generator_test.ts"],
+    srcs = ["generator_test.mts"],
     testonly = True,
     data = [":prerender"],
     deps = [
