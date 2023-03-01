@@ -1,4 +1,4 @@
-import * as fs from '../../../common/fs';
+import { FileSystemFake } from '../../../common/file_system_fake';
 import { createAnnotation } from '../../../common/models/prerender_annotation';
 import { InjectorConfig } from './config';
 import { inject } from './injector';
@@ -111,10 +111,13 @@ describe('injector', () => {
 </html>
             `.trim();
 
-            spyOn(fs, 'readFile').and.resolveTo('.foo { color: red; }');
+            const fs = FileSystemFake.of({
+                'foo.css': '.foo { color: red; }',
+            });
+            spyOn(fs, 'readFile').and.callThrough();
 
-            const injected = await inject(input, []);
-            expect(fs.readFile).toHaveBeenCalledWith('foo.css', 'utf-8');
+            const injected = await inject(input, [], fs);
+            expect(fs.readFile).toHaveBeenCalledWith('foo.css', 'utf8');
 
             expect(injected).toBe(`
 <!DOCTYPE html>

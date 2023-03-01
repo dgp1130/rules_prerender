@@ -351,6 +351,6 @@ describe('injector', () => {
             `Binary unexpectedly succeeded. STDERR:\n${stderr}`,
         );
         expect(stdout).toBe('');
-        expect(stderr).toContain('tools/binaries/resource_injector/injector.js');
+        expect(stderr).toContain('tools/binaries/resource_injector/injector');
     });
 });

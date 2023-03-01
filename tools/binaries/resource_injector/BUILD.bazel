@@ -53,7 +53,7 @@ ts_project(
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":config",
-        "//common:fs",
+        "//common:file_system",
         "//common:prerender_annotation_walker",
     ],
 )
@@ -65,7 +65,7 @@ ts_project(
     deps = [
         ":config",
         ":injector",
-        "//common:fs",
+        "//common:file_system_fake",
         "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
     ],

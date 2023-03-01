@@ -1,7 +1,7 @@
-import * as fs from '../../../common/fs';
 import { HTMLElement, parse } from 'node-html-parser';
 import { InjectorConfig, InjectScript } from './config';
 import { AnnotationNode, walkAllAnnotations } from '../../../common/prerender_annotation_walker';
+import { FileSystem, diskFs } from '../../../common/file_system';
 
 /**
  * Parses the given HTML document and injects all the resources specified by the
@@ -14,8 +14,11 @@ import { AnnotationNode, walkAllAnnotations } from '../../../common/prerender_an
  *     injected into the HTML document.
  * @returns A new HTML document with all the resources injected into it.
  */
-export async function inject(html: string, config: InjectorConfig):
-        Promise<string> {
+export async function inject(
+    html: string,
+    config: InjectorConfig,
+    fs: FileSystem = diskFs,
+): Promise<string> {
     // Parse input HTML.
     const root = parse(html, {
         comment: true,
@@ -40,7 +43,7 @@ export async function inject(html: string, config: InjectorConfig):
     }
 
     // Inject `<style />` tags for each inline style annotation in the document.
-    await replaceInlineStyleAnnotations(walkAllAnnotations(root));
+    await replaceInlineStyleAnnotations(walkAllAnnotations(root), fs);
 
     // Return the new document.
     return root.toString();
@@ -109,6 +112,7 @@ function injectScript(root: HTMLElement, action: InjectScript): void {
  */
 async function replaceInlineStyleAnnotations(
     nodes: Generator<AnnotationNode, void, void>,
+    fs: FileSystem,
 ): Promise<void> {
     for (const node of nodes) {
         const { annotation } = node;
@@ -128,7 +132,7 @@ async function replaceInlineStyleAnnotations(
             null /* parentNode */,
             [0, 0] /* range */,
         );
-        inlineStyle.set_content(await fs.readFile(annotation.path, 'utf-8'));
+        inlineStyle.set_content(await fs.readFile(annotation.path, 'utf8'));
         node.replace(inlineStyle);
     }
 }
