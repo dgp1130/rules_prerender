@@ -73,7 +73,10 @@ load("@aspect_rules_jasmine//jasmine:dependencies.bzl", "rules_jasmine_dependenc
 rules_jasmine_dependencies()
 
 load("@aspect_rules_jasmine//jasmine:repositories.bzl", "jasmine_repositories")
-jasmine_repositories(name = "jasmine")
+jasmine_repositories(
+    name = "jasmine",
+    jasmine_version = "v4.3.0",
+)
 
 load("@jasmine//:npm_repositories.bzl", jasmine_npm_repositories = "npm_repositories")
 jasmine_npm_repositories()
