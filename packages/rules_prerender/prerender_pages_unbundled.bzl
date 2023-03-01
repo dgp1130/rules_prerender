@@ -2,6 +2,7 @@
 
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
+load("//common:paths.bzl", "js_output", "is_js_file")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
 load(":script_entry_point.bzl", "script_entry_points")
@@ -121,11 +122,7 @@ def prerender_pages_unbundled(
 
     # Execute the runner to generate annotated resources.
     annotated = "%s_annotated" % name
-    js_src = (
-        ".ts".join(src.split(".ts")[:-1]) + ".js"
-        if src.endswith(".ts")
-        else src
-    )
+    js_src = src if is_js_file(src) else js_output(src)
     prerender_resources_internal(
         name = annotated,
         entry_point = rel_path(file_path_of(absolute(js_src))),

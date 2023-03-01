@@ -2,6 +2,7 @@
 
 load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
+load("//common:paths.bzl", "is_js_file")
 
 visibility("private")
 
@@ -39,7 +40,7 @@ def _jasmine_config_impl(ctx):
     ctx.actions.write(config, json.encode_indent({
         "spec_dir": "",
         "spec_files": [file.short_path for file in ctx.files.deps
-                       if file.extension == "js"],
+                       if is_js_file(file.path)],
         "failSpecWithNoExpectations": True,
     }))
 

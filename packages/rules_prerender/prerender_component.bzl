@@ -4,7 +4,7 @@ load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("//common:label.bzl", "absolute")
-load("//common:paths.bzl", "is_js_file")
+load("//common:paths.bzl", "is_js_file", "is_ts_file", "is_ts_declaration_file")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
 load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load(":web_resources.bzl", "web_resources")
@@ -39,10 +39,11 @@ def prerender_component(
     
     Args:
         name: The name of this rule.
-        srcs: The source files for use in prerendering. May be `*.ts` files or
-            `*.js`/`*.mjs`/`*.cjs`. All source files must be JavaScript, or all
-            source files must be TypeScript. However, mixing the two is not
-            allowed. `*.d.ts` files are also allowed in either case.
+        srcs: The source files for use in prerendering. May be
+            `*.ts`/`*.mts`/`*.cts` or `*.js`/`*.mjs`/`*.cjs` files. All source
+            files must be JavaScript, or all source files must be TypeScript.
+            However, mixing the two is not allowed. `*.d.ts` files are also
+            allowed in either case.
         tsconfig: A label referencing a tsconfig.json file or `ts_config()`
             target. Will be used to compile `*.ts` files in `srcs`.
         source_map: A boolean indicating whether or not to generate source maps for
@@ -79,7 +80,7 @@ def prerender_component(
     """
 
     prerender_lib = "%s_prerender" % name
-    if all([src.endswith(".ts") or src.endswith(".d.ts") for src in srcs]):
+    if all([is_ts_file(src) for src in srcs]):
         ts_project(
             name = prerender_lib,
             srcs = srcs,
@@ -93,7 +94,7 @@ def prerender_component(
             testonly = testonly,
             visibility = visibility,
         )
-    elif all([is_js_file(src) or src.endswith(".d.ts") for src in srcs]):
+    elif all([is_js_file(src) or is_ts_declaration_file(src) for src in srcs]):
         if tsconfig:
             fail("Cannot set a `tsconfig.json` file for a JS-based" +
                 " `prerender_component()`, don't set the `tsconfig` attribute.")
