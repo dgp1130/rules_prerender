@@ -27,7 +27,6 @@ export class FileSystemFake implements FileSystem {
         this.fs.set(dest, contents);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async mkdir(_dir: string, _options?: { recursive?: boolean }):
             Promise<void> {
         // Nothing to do.
@@ -37,7 +36,6 @@ export class FileSystemFake implements FileSystem {
     readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
     readFile(path: string, options?: string | { encoding?: string }):
         Promise<string | Buffer>;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async readFile(inputPath: string, _options?: string | { encoding?: string }): Promise<string | Buffer> {
         const filePath = path.normalize(inputPath);
         const content = this.fs.get(filePath);

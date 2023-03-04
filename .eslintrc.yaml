@@ -40,6 +40,12 @@ rules:
   no-constant-condition:
   - error
   - checkLoops: false # `while (true) { /* ... */ }` is ok.
+  no-unused-vars:
+  - error
+  - argsIgnorePattern: "^_"
+    destructuredArrayIgnorePattern: "^_"
+    # Deliberately _not_ setting `varsIgnorePattern`, since that benefits from
+    # an explicit ignore comment instead of a load-bearing `_`.
 
 # Enable TypeScript rules only for `*.[cm]?ts` files.
 overrides:
@@ -61,6 +67,13 @@ overrides:
     # TypeScript already disallows undeclared variables.
     no-undef:
       - off
+
+    '@typescript-eslint/no-unused-vars':
+    - error
+    - argsIgnorePattern: "^_"
+      destructuredArrayIgnorePattern: "^_"
+      # Deliberately _not_ setting `varsIgnorePattern`, since that benefits from
+      # an explicit ignore comment instead of a load-bearing `_`.
 
 - files:
   - "**/*_test.ts"
