@@ -52,6 +52,15 @@ overrides:
   - "**/*.d.cts"
   extends:
   - 'plugin:@typescript-eslint/recommended'
+  rules:
+    # TypeScript already disallows duplicated class members and sometimes allows
+    # it (ex. method overrides).
+    no-dupe-class-members:
+      - off
+
+    # TypeScript already disallows undeclared variables.
+    no-undef:
+      - off
 
 - files:
   - "**/*_test.ts"
