@@ -5,6 +5,7 @@ load(
 )
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
+load("//common:paths.bzl", "is_js_file")
 
 visibility("public")
 
@@ -12,11 +13,14 @@ def _scripts_bundle_impl(ctx):
     # Extract the config file.
     config_sources = [src
                       for src in ctx.attr._config[JsInfo].sources.to_list()
-                      if src.path.endswith(".js")]
+                      if is_js_file(src.path)]
     if len(config_sources) != 1:
-        fail("Expected a single source file for `config`, but got:\n%s" % "\n".join(
-            [src.path for src in config_sources],
-        ))
+        fail("Expected a single source file for `config`, but got %s:\n%s" % (
+            len(config_sources),
+            "\n".join(
+                [src.path for src in config_sources],
+            )),
+        )
     config = config_sources[0]
 
     # Gather all the transitive `*.js` files and `node_modules/` from `deps` and
