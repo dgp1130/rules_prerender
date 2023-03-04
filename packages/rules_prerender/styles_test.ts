@@ -4,8 +4,12 @@ import { inlineStyle, InlineStyleNotFoundError } from './styles';
 
 describe('styles', () => {
     describe('inlineStyle()', () => {
+        beforeEach(() => {
+            inlineStyleMap.resetMapForTesting();
+        });
+
         it('returns an inline style annotation in an HTML comment', () => {
-            spyOn(inlineStyleMap, 'getMap').and.returnValue(new Map(Object.entries({
+            inlineStyleMap.setMap(new Map(Object.entries({
                 'wksp/foo/bar/baz.css': 'wksp/some/real/file.css',
             })));
 
@@ -18,24 +22,19 @@ describe('styles', () => {
         });
 
         it('throws an error when the requested style import is not present', () => {
-            spyOn(inlineStyleMap, 'getMap').and.returnValue(new Map(Object.entries({
+            const map = new Map(Object.entries({
                 'wksp/foo/bar/baz.css': 'wksp/some/dir/baz.css',
                 'wksp/hello/world.css': 'wksp/goodbye/mars.css',
-            })));
+            }));
+
+            inlineStyleMap.setMap(map);
 
             expect(() => inlineStyle('wksp/does/not/exist.css'))
                 .toThrow(InlineStyleNotFoundError.from(
-                    'wksp/does/not/exist.css',
-                    new Map(Object.entries({
-                        'wksp/foo/bar/baz.css': 'wksp/some/dir/baz.css',
-                        'wksp/hello/world.css': 'wksp/goodbye/mars.css',
-                    })),
-                ));
+                    'wksp/does/not/exist.css', map));
         });
 
         it('ignores the inline style map when not defined', () => {
-            spyOn(inlineStyleMap, 'getMap').and.returnValue(undefined);
-
             expect(inlineStyle('wksp/foo/bar/baz.css')).toBe(`<!-- ${createAnnotation({
                 type: 'style',
                 path: 'wksp/foo/bar/baz.css',
