@@ -10,7 +10,7 @@ export function renderComponent(): string {
     <div id="replace">This text to be replaced by JavaScript.</div>
 
     ${polyfillDeclarativeShadowDom()}
-    ${includeScript('component/script.js')}
+    ${includeScript('component/script')}
     ${inlineStyle('external/component/style.css')}
   </template>
 </my-component>
