@@ -1,4 +1,4 @@
-import parse from 'node-html-parser';
+import { parse } from 'node-html-parser';
 import renderBlog from './blog';
 
 describe('Blog', () => {
