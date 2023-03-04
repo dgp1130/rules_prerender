@@ -41,16 +41,25 @@ rules:
   - error
   - checkLoops: false # `while (true) { /* ... */ }` is ok.
 
-# Enable TypeScript rules only for `*.ts` files.
+# Enable TypeScript rules only for `*.[cm]?ts` files.
 overrides:
 - files:
   - "**/*.ts"
   - "**/*.d.ts"
+  - "**/*.mts"
+  - "**/*.d.mts"
+  - "**/*.cts"
+  - "**/*.d.cts"
   extends:
   - 'plugin:@typescript-eslint/recommended'
+
 - files:
   - "**/*_test.ts"
   - "**/test.ts"
+  - "**/*_test.mts"
+  - "**/test.mts"
+  - "**/*_test.cts"
+  - "**/test.cts"
   rules:
     # Disable non-null assertions in test files.
     '@typescript-eslint/no-non-null-assertion':
