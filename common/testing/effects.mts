@@ -34,7 +34,6 @@
  */
 
 // Not `undefined` or `null`.
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Defined = string | number | boolean | symbol | object;
 
 /**

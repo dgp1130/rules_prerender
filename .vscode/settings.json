@@ -38,5 +38,6 @@
     ],
     "files.associations": {
         "BUILD.publish": "bazel"
-    }
+    },
+    "eslint.packageManager": "pnpm"
 }
