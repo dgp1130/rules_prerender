@@ -35,11 +35,6 @@ def web_resources_devserver(
     _baked_binary(
         name = baked,
         baked_args = [root_dir, disable_cache],
-        # Technically `resources` isn't required here, since it will actually
-        # use the one under `js_run_devserver()`, but if you `blaze run`
-        # `_baked_server` directly, then it is needed, even if a user should
-        # never do that in practice.
-        data = [resources],
         binary = Label("//packages/rules_prerender:http_server"),
         testonly = testonly,
     )
@@ -66,7 +61,7 @@ def _baked_binary(
     name,
     baked_args,
     binary,
-    data = None,
+    data = [],
     testonly = None,
     visibility = None,
 ):
