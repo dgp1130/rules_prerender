@@ -18,21 +18,6 @@
       "rules_prerender": ["../../packages/rules_prerender"], // Map `rules_prerender` module to its implementation.
       "rules_prerender/*": ["*"] // Map workspace-relative imports.
     },
-    "rootDirs": [                             /* List of root folders whose combined content represents the structure of the project at runtime. */
-      "../..",
-      // List out generated directories for module resolution.
-      // https://bazelbuild.github.io/rules_nodejs/TypeScript.html#ts_project
-      "../../bazel-out/host/bin",
-      "../../bazel-out/darwin-fastbuild/bin",
-      "../../bazel-out/k8-fastbuild/bin",
-      "../../bazel-out/x64_windows-fastbuild/bin",
-      "../../bazel-out/darwin-dbg/bin",
-      "../../bazel-out/k8-dbg/bin",
-      "../../bazel-out/x64_windows-dbg/bin",
-      "../../bazel-out/darwin-opt/bin",
-      "../../bazel-out/k8-opt/bin",
-      "../../bazel-out/x64_windows-opt/bin",
-    ],
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
 
     /* Advanced Options */
