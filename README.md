@@ -175,13 +175,9 @@ import { showDialog } from '../some/other/package/show_dialog';
 // Register an event handler to show the other component. Could just as easily
 // use a framework like Angular, LitElement, React, or just define an
 // implementation for a custom element that was prerendered.
-
-document.addEventListener('DOMContentLoaded', () => {
-    // When the "Show" button is clicked.
-    document.getElementById('show').addEventListener('click', () => {
-        // Show the composed `other` component.
-        showDialog(document.getElementById('other'));
-    });
+document.getElementById('show').addEventListener('click', () => {
+    // Show the composed `other` component.
+    showDialog(document.getElementById('other'));
 });
 ```
 

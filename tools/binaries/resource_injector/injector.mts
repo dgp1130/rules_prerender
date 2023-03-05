@@ -99,7 +99,6 @@ function injectScript(root: HTMLElement, action: InjectScript): void {
     );
     script.setAttribute('src', action.path);
     script.setAttribute('type', 'module');
-    script.setAttribute('async', '');
     head.appendChild(script);
 
     // Insert a trailing newline so subsequent insertions look a little better.
