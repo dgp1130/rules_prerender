@@ -10,7 +10,7 @@ export function renderComponent(): string {
         <slot></slot>
 
         ${includeScript('./component_script.mjs', import.meta)}
-        ${inlineStyle('rules_prerender/examples/testonly/component/component_styles.css')}
+        ${inlineStyle('./component_styles.css', import.meta)}
     </template>
     ${renderTransitive()}
 </div>

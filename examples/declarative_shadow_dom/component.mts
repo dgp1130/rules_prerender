@@ -13,7 +13,7 @@ export async function renderComponent(lightDom: string): Promise<string> {
                 ${polyfillDeclarativeShadowDom()}
 
                 <!-- Inline styles to apply them within this shadow root. -->
-                ${inlineStyle('rules_prerender/examples/declarative_shadow_dom/component.css')}
+                ${inlineStyle('./component.css', import.meta)}
 
                 <!-- Shadow DOM content, styled with the associated style
                 sheet. -->

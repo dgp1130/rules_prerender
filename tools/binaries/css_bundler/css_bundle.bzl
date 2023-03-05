@@ -8,11 +8,11 @@ def _css_bundle_impl(ctx):
     # be usable anyways). So instead we "namespace" each file under the target name
     # and include the full execroot-relative path to file to be truly unambiguous.
     # The output file structure will look like:
-    # path/to/pkg/css_bundle_target/file_wksp_name/path/to/file.css
+    # path/to/pkg/css_bundle_target/path/to/file.css
     sources = ctx.attr.dep[CssInfo].direct_sources
     outputs = [ctx.actions.declare_file("%s/%s" % (
         ctx.label.name,
-        _workspace_short_path(src, ctx.label.workspace_name or ctx.workspace_name),
+        to_output_relative_path(src),
     )) for src in sources]
 
     # Map each entry point to its associated output.
@@ -58,15 +58,6 @@ css_bundle = rule(
     """,
 )
 
-def _workspace_short_path(file, current_wksp):
-    if file.short_path.startswith("../"):
-        # File is in an external workspace with path: `../external_wksp/path/to/file`.
-        # Just drop the `../` and we have the right path.
-        return file.short_path[len("../"):]
-    else:
-        # File is in the main workspace. Use the current workspace name.
-        return "%s/%s" % (current_wksp, file.short_path)
-
 def _make_import_map(ctx, sources, outputs):
     """Generates a map of import paths to the actual file location to import.
     
@@ -76,7 +67,7 @@ def _make_import_map(ctx, sources, outputs):
     """
     import_map = dict()
     for (source, output) in zip(sources, outputs):
-        wksp_path = _workspace_short_path(source, ctx.workspace_name)
+        wksp_path = to_output_relative_path(source)
 
         if wksp_path in import_map:
             fail("CSS library file (%s) mapped twice, once to %s and a second time to %s." % (

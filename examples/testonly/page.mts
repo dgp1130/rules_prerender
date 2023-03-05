@@ -8,7 +8,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
             <head>
                 <title>Testonly</title>
 
-                ${inlineStyle('rules_prerender/examples/testonly/page_styles.css')}
+                ${inlineStyle('./page_styles.css', import.meta)}
             </head>
             <body>
                 <h2>Testonly</h2>

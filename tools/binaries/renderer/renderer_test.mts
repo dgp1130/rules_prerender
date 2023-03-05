@@ -142,6 +142,10 @@ describe('renderer', () => {
     });
 
     it('renders mapped inline style paths', async () => {
+        const meta: ImportMeta = {
+            url: 'file:///bazel/.../execroot/my_wksp/bazel-out/k8-opt/bin/path/to/pkg/prerender.mjs',
+        };
+
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
                 yield PrerenderResource.of('/index.html', `
@@ -151,7 +155,7 @@ describe('renderer', () => {
         <title>Test Page</title>
     </head>
     <body>
-        ${inlineStyle('wksp/foo/bar/baz.css')}
+        ${inlineStyle('./baz.css', meta)}
     </body>
 </html>
                 `.trim());
@@ -159,7 +163,7 @@ describe('renderer', () => {
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
             inlineStyles: new Map(Object.entries({
-                'wksp/foo/bar/baz.css': 'wksp/hello/world.css',
+                'path/to/pkg/baz.css': 'hello/world.css',
             })),
         });
 
@@ -171,7 +175,7 @@ describe('renderer', () => {
             `${tmpDir.get()}/output/index.html`, 'utf8');
         const expectedAnnotation = createAnnotation({
             type: 'style',
-            path: 'wksp/hello/world.css',
+            path: 'hello/world.css',
         });
         expect(index).toBe(`
 <!DOCTYPE html>
@@ -222,6 +226,10 @@ describe('renderer', () => {
     });
 
     it('fails when inlining a style not in the inline style map', async () => {
+        const meta: ImportMeta = {
+            url: 'file:///bazel/.../execroot/my_wksp/bazel-out/k8-opt/bin/path/to/pkg/prerender.mjs',
+        };
+
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
                 yield PrerenderResource.of('/index.html', `
@@ -231,7 +239,7 @@ describe('renderer', () => {
                     <title>Test Page</title>
                 </head>
                 <body>
-                    ${inlineStyle('wksp/does/not/exist.css')}
+                    ${inlineStyle('./does_not_exist.css', meta)}
                 </body>
             </html>
                 `.trim());
@@ -239,18 +247,18 @@ describe('renderer', () => {
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
             inlineStyles: new Map(Object.entries({
-                'wksp/foo/bar/baz.css': 'wksp/hello/world.css',
-                'wksp/some/other/file.css': 'wksp/place/with/file.css',
+                'foo/bar/baz.css': 'hello/world.css',
+                'some/other/file.css': 'place/with/file.css',
             })),
         });
 
         expect(code).toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
         expect(stderr).toBe(`
-Inline style "wksp/does/not/exist.css" was not in the inline style map. Did you forget to depend on it in \`styles\`? CSS files available to inline are:
+Inline style "./does_not_exist.css" resolved to "path/to/pkg/does_not_exist.css", but was not in the inline style map. Did you forget to depend on it in \`styles\`? CSS files available to inline are:
 
-wksp/foo/bar/baz.css
-wksp/some/other/file.css
+foo/bar/baz.css
+some/other/file.css
         `.trim() + '\n');
     });
 });

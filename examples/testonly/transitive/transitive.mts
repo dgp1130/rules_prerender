@@ -8,7 +8,7 @@ export function renderTransitive(): string {
         <img src="/images/transitive.png" />
 
         ${includeScript('./transitive_script.mjs', import.meta)}
-        ${inlineStyle('rules_prerender/examples/testonly/transitive/transitive_styles.css')}
+        ${inlineStyle('./transitive_styles.css', import.meta)}
     </template>
 </div>
     `;

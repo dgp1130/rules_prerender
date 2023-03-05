@@ -57,7 +57,7 @@ export default async function*():
         dignissim quis, venenatis non mi. Curabitur lacinia tincidunt vulputate.
         Proin non vehicula risus, id pharetra lorem.</p>
 
-        ${inlineStyle('rules_prerender/examples/site/about/about.css')}
+        ${inlineStyle('./about.css', import.meta)}
     </template>
 </article>
         `),

@@ -29,7 +29,7 @@ function generate(content: string): string {
         <meta charset="utf-8">
 
         ${includeScript('./script.mjs', import.meta)}
-        ${inlineStyle('rules_prerender/examples/multi_page/styles.css')}
+        ${inlineStyle('./styles.css', import.meta)}
     </head>
     <body>
         ${content}

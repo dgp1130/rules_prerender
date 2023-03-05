@@ -11,7 +11,7 @@ export function renderFooter(): string {
             <a href="https://bazel.build/" rel="noopener" target="_blank">Bazel</a> and
             <a href="${repo}" rel="noopener" target="_blank">rules_prerender</a>.
         </div>
-        ${inlineStyle('rules_prerender/examples/site/components/footer/footer.css')}
+        ${inlineStyle('./footer.css', import.meta)}
     </template>
 </footer>
     `.trim();

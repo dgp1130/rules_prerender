@@ -11,7 +11,7 @@ export function renderComponent(): string {
 
     ${polyfillDeclarativeShadowDom()}
     ${includeScript('./script.mjs', import.meta)}
-    ${inlineStyle('external/component/style.css')}
+    ${inlineStyle('./style.css', import.meta)}
   </template>
 </my-component>
   `.trim();

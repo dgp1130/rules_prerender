@@ -13,8 +13,8 @@ def _css_group_test_impl(ctx):
     # Verify that `css_group()` re-exports `DefaultInfo`.
     default_info = analysistest.target_under_test(env)[DefaultInfo]
     expected_files = sets.make([
-        "packages/rules_prerender/css/tests/group/bin1_binary_0/rules_prerender/packages/rules_prerender/css/tests/group/lib1.css",
-        "packages/rules_prerender/css/tests/group/bin2_binary_0/rules_prerender/packages/rules_prerender/css/tests/group/lib2.css",
+        "packages/rules_prerender/css/tests/group/bin1_binary_0/packages/rules_prerender/css/tests/group/lib1.css",
+        "packages/rules_prerender/css/tests/group/bin2_binary_0/packages/rules_prerender/css/tests/group/lib2.css",
     ])
     actual_files = sets.make([file.short_path for file in default_info.files.to_list()])
     asserts.new_set_equals(env, expected_files, actual_files)
@@ -24,12 +24,12 @@ def _css_group_test_impl(ctx):
     import_map = css_import_map.import_map
     asserts.equals(env, 2, len(import_map.items()))
 
-    expected_lib1 = "packages/rules_prerender/css/tests/group/bin1_binary_0/rules_prerender/packages/rules_prerender/css/tests/group/lib1.css"
-    actual_lib1 = import_map["rules_prerender/packages/rules_prerender/css/tests/group/lib1.css"].short_path
+    expected_lib1 = "packages/rules_prerender/css/tests/group/bin1_binary_0/packages/rules_prerender/css/tests/group/lib1.css"
+    actual_lib1 = import_map["packages/rules_prerender/css/tests/group/lib1.css"].short_path
     asserts.equals(env, expected_lib1, actual_lib1)
 
-    expected_lib2 = "packages/rules_prerender/css/tests/group/bin2_binary_0/rules_prerender/packages/rules_prerender/css/tests/group/lib2.css"
-    actual_lib2 = import_map["rules_prerender/packages/rules_prerender/css/tests/group/lib2.css"].short_path
+    expected_lib2 = "packages/rules_prerender/css/tests/group/bin2_binary_0/packages/rules_prerender/css/tests/group/lib2.css"
+    actual_lib2 = import_map["packages/rules_prerender/css/tests/group/lib2.css"].short_path
     asserts.equals(env, expected_lib2, actual_lib2)
 
     return analysistest.end(env)
@@ -80,12 +80,12 @@ def _css_group_fails_with_conflicting_maps_test_impl(ctx):
     asserts.expect_failure(env, "Found duplicate CSS import path in `_css_group()`.")
     # Look for conflicting import path.
     asserts.expect_failure(env,
-        "rules_prerender/packages/rules_prerender/css/tests/group/conflicting_lib.css")
+        "packages/rules_prerender/css/tests/group/conflicting_lib.css")
     # Look for conflicting file paths.
     asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/conflicting_bin1_binary_0/rules_prerender/packages/rules_prerender/css/tests/group/conflicting_lib.css")
+        "packages/rules_prerender/css/tests/group/conflicting_bin1_binary_0/packages/rules_prerender/css/tests/group/conflicting_lib.css")
     asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/conflicting_bin2_binary_0/rules_prerender/packages/rules_prerender/css/tests/group/conflicting_lib.css")
+        "packages/rules_prerender/css/tests/group/conflicting_bin2_binary_0/packages/rules_prerender/css/tests/group/conflicting_lib.css")
 
     return analysistest.end(env)
 

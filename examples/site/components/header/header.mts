@@ -15,7 +15,7 @@ export function renderHeader(): string {
             </ul>
         </nav>
 
-        ${inlineStyle('rules_prerender/examples/site/components/header/header.css')}
+        ${inlineStyle('./header.css', import.meta)}
     </template>
 </header>
     `.trim();

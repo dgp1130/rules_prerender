@@ -73,7 +73,7 @@ export function renderMyComponent(): string {
         <span>Shadow DOM content goes inside the template.</span>
 
         <!-- Inline styles inside the template. -->
-        ${inlineStyle('my_workspace/my_component/my_style.css')}
+        ${inlineStyle('./my_style.css', import.meta)}
     </template>
 
     <span>Light DOM content goes outside the template.</span>

@@ -20,7 +20,7 @@ export async function baseLayout(
     <head>
         <title>${title}</title>
         <meta charset="utf-8">
-        ${inlineStyle('rules_prerender/examples/site/components/base/base.css')}
+        ${inlineStyle('./base.css', import.meta)}
     </head>
     <body>
         ${renderHeader()}

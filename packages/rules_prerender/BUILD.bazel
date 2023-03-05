@@ -213,7 +213,9 @@ ts_project(
     visibility = ["//packages/renderer:__subpackages__"],
     deps = [
         ":inline_style_map",
+        ":paths",
         "//common/models:prerender_annotation",
+        "//:node_modules/@types/node",
     ],
 )
 

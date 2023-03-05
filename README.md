@@ -154,7 +154,7 @@ export function renderMyComponent(name: string): string {
         ${includeScript('./my_component.mjs', import.meta)}
 
         <!-- Inline the associated CSS styles, scoped to this shadow root. -->
-        ${inlineStyle('my_workspace/my_component/my_component.css')}
+        ${inlineStyle('./my_component.css', import.meta)}
     </template>
     
     <!-- Other components are placed in light DOM and visible at the \`<slot />\`. -->

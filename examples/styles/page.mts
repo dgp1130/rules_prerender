@@ -12,7 +12,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
         <div id="shadowroot">
             <template shadowroot="open">
                 <div id="hello">Hello, World!</div>
-                ${inlineStyle('rules_prerender/examples/styles/styles.css')}
+                ${inlineStyle('./styles.css', import.meta)}
             </template>
         </div>
         <div id="goodbye">Goodbye, World!</div>
