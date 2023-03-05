@@ -34,9 +34,9 @@ export function inlineStyle(importPath: string, meta: ImportMeta): string {
     // since such tests would not actually care.
     const inlineStyleMap = getInlineStyleMap();
     const filePath = inlineStyleMap ? inlineStyleMap.get(resolved) : resolved;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (!filePath) {
         throw InlineStyleNotFoundError.from(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             importPath, resolved, inlineStyleMap!);
     }
 
