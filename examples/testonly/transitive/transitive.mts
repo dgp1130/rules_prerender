@@ -7,7 +7,7 @@ export function renderTransitive(): string {
         <span>Hello from the transitive component!</span>
         <img src="/images/transitive.png" />
 
-        ${includeScript('examples/testonly/transitive/transitive_script.mjs')}
+        ${includeScript('./transitive_script.mjs', import.meta)}
         ${inlineStyle('rules_prerender/examples/testonly/transitive/transitive_styles.css')}
     </template>
 </div>

@@ -9,7 +9,7 @@ export function renderComponent(): string {
         <img src="/images/component.png" />
         <slot></slot>
 
-        ${includeScript('examples/testonly/component/component_script.mjs')}
+        ${includeScript('./component_script.mjs', import.meta)}
         ${inlineStyle('rules_prerender/examples/testonly/component/component_styles.css')}
     </template>
     ${renderTransitive()}

@@ -13,6 +13,8 @@
         "devserver",
         "effectful",
         "effectfully",
+        "execroot",
+        "genfiles",
         "inlines",
         "lightningcss",
         "npmjs",

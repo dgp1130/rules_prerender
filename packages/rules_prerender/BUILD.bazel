@@ -161,9 +161,34 @@ bzl_library(
 )
 
 ts_project(
+    name = "paths",
+    srcs = ["paths.mts"],
+    deps = ["//:node_modules/@types/node"],
+)
+
+ts_project(
+    name = "paths_test_lib",
+    srcs = ["paths_test.mts"],
+    testonly = True,
+    deps = [
+        ":paths",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "paths_test",
+    deps = [":paths_test_lib"],
+)
+
+ts_project(
     name = "scripts",
     srcs = ["scripts.mts"],
-    deps = ["//common/models:prerender_annotation"],
+    deps = [
+        ":paths",
+        "//common/models:prerender_annotation",
+        "//:node_modules/@types/node",
+    ],
 )
 
 ts_project(

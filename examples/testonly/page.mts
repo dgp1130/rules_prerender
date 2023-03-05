@@ -17,7 +17,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
                     <span class="hello">Hello from a testonly page!</span>
                     <img src="/images/page.png" />
                     ${renderComponent()}
-                    ${includeScript('examples/testonly/page_script.mjs')}
+                    ${includeScript('./page_script.mjs', import.meta)}
                 </div>
             </body>
         </html>

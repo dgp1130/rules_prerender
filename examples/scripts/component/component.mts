@@ -8,7 +8,7 @@ export function renderComponent(): string {
         <div id="component-replace">
             This text to be overwritten by client-side JavaScript.
         </div>
-        ${includeScript('examples/scripts/component/component_script.mjs')}
+        ${includeScript('./component_script.mjs', import.meta)}
         ${renderTransitive()}
     `;
 }

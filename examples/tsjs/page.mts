@@ -67,7 +67,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
             Text to be replaced by client-side JS.
         <div>
 
-        ${includeScript('examples/tsjs/ts_parent_script.mjs')}
+        ${includeScript('./ts_parent_script.mjs', import.meta)}
     </body>
 </html>
     `.trim());
@@ -85,7 +85,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
             Text to be replaced by client-side JS.
         <div>
 
-        ${includeScript('examples/tsjs/js_parent_script.mjs')}
+        ${includeScript('./js_parent_script.mjs', import.meta)}
     </body>
 </html>
     `.trim());

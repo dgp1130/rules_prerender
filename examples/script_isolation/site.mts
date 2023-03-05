@@ -27,7 +27,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     <body>
         <div id="replace-foo">Text to be replaced.</div>
         <div id="replace-bar">Text to be replaced.</div>
-        ${includeScript('examples/script_isolation/foo.mjs')}
+        ${includeScript('./foo.mjs', import.meta)}
     </body>
 </html>
     `.trim());
@@ -42,7 +42,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     <body>
         <div id="replace-foo">Text to be replaced.</div>
         <div id="replace-bar">Text to be replaced.</div>
-        ${includeScript('examples/script_isolation/bar.mjs')}
+        ${includeScript('./bar.mjs', import.meta)}
     </body>
 </html>
     `.trim());

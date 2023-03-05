@@ -12,7 +12,7 @@ export function renderCounter(initialValue: number): string {
         <button id="decrement" disabled>-</button>
         <button id="increment" disabled>+</button>
 
-        ${includeScript('examples/site/components/counter/counter_script.mjs')}
+        ${includeScript('./counter_script.mjs', import.meta)}
     </template>
 </site-counter>
     `;
