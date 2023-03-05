@@ -26,7 +26,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     </head>
     <body>
         <h2>Check console</h2>
-        ${includeScript('examples/shared_chunks/hello')}
+        ${includeScript('examples/shared_chunks/hello.mjs')}
     </body>
 </html>
     `.trim());
@@ -40,7 +40,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     </head>
     <body>
         <h2>Check console</h2>
-        ${includeScript('examples/shared_chunks/goodbye')}
+        ${includeScript('examples/shared_chunks/goodbye.mjs')}
     </body>
 </html>
     `.trim());

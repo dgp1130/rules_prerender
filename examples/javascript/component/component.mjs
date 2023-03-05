@@ -8,7 +8,7 @@ export function renderComponent() {
 <div id="component-replace">
     This text to be overwritten by client-side JavaScript.
 </div>
-${includeScript('examples/javascript/component/component_script')}
+${includeScript('examples/javascript/component/component_script.mjs')}
     `.trim();
 }
 
@@ -19,6 +19,6 @@ ${includeScript('examples/javascript/component/component_script')}
 export function renderUnused() {
     return `
 <div>ERROR: Should never be rendered.</div>
-${includeScript('examples/javascript/component/component_script_unused')}
+${includeScript('examples/javascript/component/component_script_unused.mjs')}
     `.trim();
 }

@@ -20,6 +20,6 @@ This is to support tree shaking resources from components. If a file exports a
 `renderSomeComponent()` function which happens to include `some_component.js`,
 that JavaScript should be bundle into the final page **only** if
 `renderSomeComponent()` is actually called. With this design, the developer uses
-`includeScript('some_component.js')` in `renderSomeComponent()` so an annotation
-is placed. The actual JavaScript is only included if that annotation is later
-read from the final HTML page.
+`includeScript('path/to/pkg/some_component.mjs')` in `renderSomeComponent()` so
+an annotation is placed. The actual JavaScript is only included if that
+annotation is later read from the final HTML page.
