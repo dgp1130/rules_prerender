@@ -42,7 +42,7 @@ ts_project(
     srcs = ["entry_point.mts"],
     deps = [
         "//common:probably",
-        "//common/models:prerender_resource",
+        "//:node_modules_types/rules_prerender",
     ],
 )
 
@@ -52,9 +52,9 @@ ts_project(
     deps = [
         ":entry_point",
         "//common:probably",
-        "//common/models:prerender_resource",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
+        "//:node_modules/rules_prerender",
     ],
 )
 

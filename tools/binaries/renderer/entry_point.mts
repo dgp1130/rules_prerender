@@ -1,4 +1,4 @@
-import { PrerenderResource } from '../../../common/models/prerender_resource.mjs';
+import type { PrerenderResource } from 'rules_prerender';
 import { Probably } from '../../../common/probably.mjs';
 
 /**
