@@ -1,0 +1,13 @@
+{
+    "name": "@rules_prerender/lit_engine",
+    "version": "0.0.0-PLACEHOLDER",
+    "type": "module",
+    "main": "./index.mjs",
+    "dependencies": {
+        "@lit-labs/ssr": "^3.0.1"
+    },
+    "peerDependencies": {
+        "lit-html": "^2.6.1",
+        "rules_prerender": "^0.0.0-PLACEHOLDER"
+    }
+}

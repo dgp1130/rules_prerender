@@ -1,9 +1,11 @@
 import { bar, foo } from './dep.mjs';
-import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
+import { html, renderToHtml } from '@rules_prerender/lit_engine';
+import { PrerenderResource } from 'rules_prerender';
 
 /** Renders the page. */
-export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
+export default async function*(): AsyncGenerator<PrerenderResource, void, void> {
+    yield PrerenderResource.fromHtml('/index.html', await renderToHtml(html`
+        <!DOCTYPE html>
         <html>
             <head>
                 <title>Minimal</title>
@@ -11,9 +13,9 @@ export default function*(): Generator<PrerenderResource, void, void> {
             </head>
             <body>
                 <h2 id="hello">Hello, World!</h2>
-                <span id="foo">{foo}</span>
-                <span id="bar">{bar}</span>
+                <span id="foo">${foo}</span>
+                <span id="bar">${bar}</span>
             </body>
         </html>
-    ));
+    `));
 }

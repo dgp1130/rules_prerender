@@ -21,9 +21,9 @@ ts_project(
     data = [":package"],
     deps = [
         ":dep",
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
-    ]
+        "//:node_modules/@rules_prerender/lit_engine",
+        "//:node_modules/rules_prerender",
+    ],
 )
 
 ts_project(
