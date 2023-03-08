@@ -10,61 +10,61 @@ describe('entry_point', () => {
     describe('invoke()', () => {
         it('invokes the given entry point and returns its `Iterable<PrerenderResource>` value', async () => {
             const rendered = definitelyIterable(await invoke(() => [
-                PrerenderResource.of('/foo.html', 'Hello, foo!'),
-                PrerenderResource.of('/bar.html', 'Hello, bar!'),
-                PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
+                PrerenderResource.fromText('/bar.txt', 'Hello, bar!'),
+                PrerenderResource.fromText('/baz.txt', 'Hello, baz!'),
             ], './foo.js'));
 
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>)).toEqual([
-                PrerenderResource.of('/foo.html', 'Hello, foo!'),
-                PrerenderResource.of('/bar.html', 'Hello, bar!'),
-                PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
+                PrerenderResource.fromText('/bar.txt', 'Hello, bar!'),
+                PrerenderResource.fromText('/baz.txt', 'Hello, baz!'),
             ]);
         });
 
         it('invokes the given entry point and awaits its `Promise<Iterable<PrerenderResource>>` value', async () => {
             const rendered = definitelyIterable(await invoke(() => [
-                PrerenderResource.of('/foo.html', 'Hello, foo!'),
-                PrerenderResource.of('/bar.html', 'Hello, bar!'),
-                PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
+                PrerenderResource.fromText('/bar.txt', 'Hello, bar!'),
+                PrerenderResource.fromText('/baz.txt', 'Hello, baz!'),
             ], './foo.js'));
 
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>)).toEqual([
-                PrerenderResource.of('/foo.html', 'Hello, foo!'),
-                PrerenderResource.of('/bar.html', 'Hello, bar!'),
-                PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
+                PrerenderResource.fromText('/bar.txt', 'Hello, bar!'),
+                PrerenderResource.fromText('/baz.txt', 'Hello, baz!'),
             ]);
         });
 
         it('invokes the given entry point and returns its `AsyncIterable<PrerenderResource>` value', async () => {
             const rendered = definitelyIterable(await invoke(async function*() {
-                yield PrerenderResource.of('/foo.html', 'Hello, foo!');
-                yield PrerenderResource.of('/bar.html', 'Hello, bar!');
-                yield PrerenderResource.of('/baz.html', 'Hello, baz!');
+                yield PrerenderResource.fromText('/foo.txt', 'Hello, foo!');
+                yield PrerenderResource.fromText('/bar.txt', 'Hello, bar!');
+                yield PrerenderResource.fromText('/baz.txt', 'Hello, baz!');
             }, './foo.js'));
 
             expect((rendered as any)[Symbol.asyncIterator]).toBeDefined();
             const renderedArray = await asyncIterableToArray(
                 rendered as AsyncIterable<PrerenderResource>);
             expect(renderedArray).toEqual([
-                PrerenderResource.of('/foo.html', 'Hello, foo!'),
-                PrerenderResource.of('/bar.html', 'Hello, bar!'),
-                PrerenderResource.of('/baz.html', 'Hello, baz!'),
+                PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
+                PrerenderResource.fromText('/bar.txt', 'Hello, bar!'),
+                PrerenderResource.fromText('/baz.txt', 'Hello, baz!'),
             ]);
         });
 
         it('invokes the given entry point when it is an object with a `default` property', async () => {
             const rendered = definitelyIterable(await invoke({
                 default: () => [
-                    PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                    PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
                 ],
             }, './foo.js'));
 
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>)).toEqual([
-                PrerenderResource.of('/foo.html', 'Hello, foo!'),
+                PrerenderResource.fromText('/foo.txt', 'Hello, foo!'),
             ]);
         });
 

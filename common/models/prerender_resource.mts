@@ -22,7 +22,7 @@ export class PrerenderResource {
     }
 
     /**
-     * Returns a `PrerenderResource` representing a file with the provided
+     * Returns a {@link PrerenderResource} representing a file with the provided
      * {@param contents} at the given {@param path} within the site.
      * 
      * @param path The path the file will be generated at relative to the final
@@ -33,11 +33,39 @@ export class PrerenderResource {
      *     {@link ArrayBuffer} or {@link TypedArray} is given, it used as is.
      * @returns A `PrerenderResource` object representing the resource.
      */
-    public static of(path: string, contents: string | SafeHtml | ArrayBuffer | TypedArray):
-            PrerenderResource {
+    public static of(
+        path: string,
+        contents: SafeHtml | ArrayBuffer | TypedArray,
+    ): PrerenderResource {
         return new PrerenderResource({
             urlPath: UrlPath.of(path),
             contents: normalizeContents(contents),
+        });
+    }
+
+    /**
+     * Returns a {@link PrerenderResource} representing a file with the provided
+     * {@param contents} at the given {@param path} within the site.
+     * 
+     * @param path The path the file will be generated at relative to the final
+     *     generated site. Must begin with a `/` character. Must *not* end in 
+     *     `.html` or `.htm`. Use {@link PrerenderResource.of} with
+     *     {@link SafeHtml} to generate HTML content.
+     * @param contents A UTF-8 encoded string to output at the given path.
+     * @returns A `PrerenderResource` object representing the resource.
+     */
+    public static fromText(path: string, contents: string): PrerenderResource {
+        // Reject outputting `*.html` and `*.htm` files from plain text. There
+        // is no general expectation that the input raw string was safely
+        // constructed and there could be injection attacks within it.
+        if (path.endsWith('.html') || path.endsWith('.htm')) {
+            throw new Error(`Cannot generate a \`*.html\` or \`*.htm\` file (${
+                path}) from a raw string (this would be unsafe!). HTML content should be rendered to \`SafeHtml\` first, and then written to a file in \`PrerenderResource.of()\`.`);
+        }
+
+        return new PrerenderResource({
+            urlPath: UrlPath.of(path),
+            contents: new TextEncoder().encode(contents).buffer,
         });
     }
 }
@@ -55,12 +83,9 @@ export class PrerenderResource {
  * This is an easy foot-gun for users to encounter, so we should support such
  * inputs as a result.
  */
-function normalizeContents(contents: string | SafeHtml | ArrayBuffer | TypedArray):
+function normalizeContents(contents: SafeHtml | ArrayBuffer | TypedArray):
         ArrayBuffer {
     if (contents instanceof ArrayBuffer) return contents;
-    if (typeof contents === 'string') {
-        return new TextEncoder().encode(contents).buffer;
-    }
     if (isTypedArray(contents)) return contents.buffer;
     if (isSafeHtml(contents)) {
         return new TextEncoder().encode(contents.getHtmlAsString()).buffer;

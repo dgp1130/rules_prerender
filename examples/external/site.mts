@@ -1,8 +1,11 @@
-import { PrerenderResource } from 'rules_prerender';
+import { PrerenderResource, unsafeTreatStringAsSafeHtml } from 'rules_prerender';
 import { renderComponent } from './component/component.mjs';
 
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', `
+    // TODO: Migrate to Preact once we figure out how to handle
+    // `@rules_prerender/preact`'s peer dep in an external repository with
+    // manual `npm_link_package()` dependencies.
+    yield PrerenderResource.of('/index.html', unsafeTreatStringAsSafeHtml(`
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,5 +18,5 @@ export default function*(): Generator<PrerenderResource, void, void> {
         ${renderComponent()}
     </body>
 </html>
-    `.trim());
+    `.trim()));
 }

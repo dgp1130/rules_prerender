@@ -57,9 +57,10 @@ describe('renderer', () => {
     it('renders `Iterable<PrerenderResource>`', async () => {
         const { code, stdout, stderr } = await run({
             entryModule: function* () {
-                yield PrerenderResource.of('/foo.html', 'foo');
-                yield PrerenderResource.of('/bar.html', 'bar');
-                yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
+                yield PrerenderResource.fromText('/foo.txt', 'foo');
+                yield PrerenderResource.fromText('/bar.txt', 'bar');
+                yield PrerenderResource.fromText(
+                    '/hello/world.txt', 'Hello, World!');
             },
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
@@ -70,15 +71,15 @@ describe('renderer', () => {
         expect(stderr).toBe('');
 
         const foo = await fs.readFile(
-            `${tmpDir.get()}/output/foo.html`, 'utf8');
+            `${tmpDir.get()}/output/foo.txt`, 'utf8');
         expect(foo).toBe('foo');
 
         const bar = await fs.readFile(
-            `${tmpDir.get()}/output/bar.html`, 'utf8');
+            `${tmpDir.get()}/output/bar.txt`, 'utf8');
         expect(bar).toBe('bar');
             
         const world = await fs.readFile(
-            `${tmpDir.get()}/output/hello/world.html`, 'utf8');
+            `${tmpDir.get()}/output/hello/world.txt`, 'utf8');
         expect(world).toBe('Hello, World!');
     });
 
@@ -86,9 +87,10 @@ describe('renderer', () => {
         const { code, stdout, stderr } = await run({
             entryModule: () => {
                 return Promise.resolve(function* () {
-                    yield PrerenderResource.of('/foo.html', 'foo');
-                    yield PrerenderResource.of('/bar.html', 'bar');
-                    yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
+                    yield PrerenderResource.fromText('/foo.txt', 'foo');
+                    yield PrerenderResource.fromText('/bar.txt', 'bar');
+                    yield PrerenderResource.fromText(
+                        '/hello/world.txt', 'Hello, World!');
                 }());
             },
             entryPoint: `./foo.js`,
@@ -100,24 +102,25 @@ describe('renderer', () => {
         expect(stderr).toBe('');
 
         const foo = await fs.readFile(
-            `${tmpDir.get()}/output/foo.html`, 'utf8');
+            `${tmpDir.get()}/output/foo.txt`, 'utf8');
         expect(foo).toBe('foo');
 
         const bar = await fs.readFile(
-            `${tmpDir.get()}/output/bar.html`, 'utf8');
+            `${tmpDir.get()}/output/bar.txt`, 'utf8');
         expect(bar).toBe('bar');
             
         const world = await fs.readFile(
-            `${tmpDir.get()}/output/hello/world.html`, 'utf8');
+            `${tmpDir.get()}/output/hello/world.txt`, 'utf8');
         expect(world).toBe('Hello, World!');
     });
 
     it('renders `AsyncIterable<PrerenderResource>`', async () => {
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
-                yield PrerenderResource.of('/foo.html', 'foo');
-                yield PrerenderResource.of('/bar.html', 'bar');
-                yield PrerenderResource.of('/hello/world.html', 'Hello, World!');
+                yield PrerenderResource.fromText('/foo.txt', 'foo');
+                yield PrerenderResource.fromText('/bar.txt', 'bar');
+                yield PrerenderResource.fromText(
+                    '/hello/world.txt', 'Hello, World!');
             },
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
@@ -128,15 +131,15 @@ describe('renderer', () => {
         expect(stderr).toBe('');
 
         const foo = await fs.readFile(
-            `${tmpDir.get()}/output/foo.html`, 'utf8');
+            `${tmpDir.get()}/output/foo.txt`, 'utf8');
         expect(foo).toBe('foo');
 
         const bar = await fs.readFile(
-            `${tmpDir.get()}/output/bar.html`, 'utf8');
+            `${tmpDir.get()}/output/bar.txt`, 'utf8');
         expect(bar).toBe('bar');
             
         const world = await fs.readFile(
-            `${tmpDir.get()}/output/hello/world.html`, 'utf8');
+            `${tmpDir.get()}/output/hello/world.txt`, 'utf8');
         expect(world).toBe('Hello, World!');
     });
 
@@ -147,7 +150,9 @@ describe('renderer', () => {
 
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
-                yield PrerenderResource.of('/index.html', `
+                yield PrerenderResource.of(
+                    '/index.html',
+                    rulesPrerender.unsafeTreatStringAsSafeHtml(`
 <!DOCTYPE html>
 <html>
     <head>
@@ -157,7 +162,8 @@ describe('renderer', () => {
         ${inlineStyle('./baz.css', meta)}
     </body>
 </html>
-                `.trim());
+                    `.trim()),
+                );
             },
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
@@ -208,11 +214,11 @@ describe('renderer', () => {
     it('fails when the same path is generated multiple times', async () => {
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
-                yield PrerenderResource.of('/foo.html', 'foo');
+                yield PrerenderResource.fromText('/foo.txt', 'foo');
             
                 // Error: Generating /bar.html twice.
-                yield PrerenderResource.of('/bar.html', 'bar');
-                yield PrerenderResource.of('/bar.html', 'baz');
+                yield PrerenderResource.fromText('/bar.txt', 'bar');
+                yield PrerenderResource.fromText('/bar.txt', 'baz');
             },
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
@@ -221,7 +227,7 @@ describe('renderer', () => {
         expect(code)
             .toBe(1, `Binary unexpectedly succeeded. STDERR:\n${stderr}`);
         expect(stdout).toBe('');
-        expect(stderr).toContain('Generated path `/bar.html` twice.');
+        expect(stderr).toContain('Generated path `/bar.txt` twice.');
     });
 
     it('fails when inlining a style not in the inline style map', async () => {
@@ -231,17 +237,20 @@ describe('renderer', () => {
 
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
-                yield PrerenderResource.of('/index.html', `
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    <title>Test Page</title>
-                </head>
-                <body>
-                    ${inlineStyle('./does_not_exist.css', meta)}
-                </body>
-            </html>
-                `.trim());
+                yield PrerenderResource.of(
+                    '/index.html',
+                    rulesPrerender.unsafeTreatStringAsSafeHtml(`
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Page</title>
+    </head>
+    <body>
+        ${inlineStyle('./does_not_exist.css', meta)}
+    </body>
+</html>
+                    `.trim()),
+                );
             },
             entryPoint: `./foo.js`,
             outputDir: `${tmpDir.get()}/output`,
