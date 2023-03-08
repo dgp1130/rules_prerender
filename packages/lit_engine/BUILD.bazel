@@ -45,6 +45,7 @@ ts_project(
     testonly = True,
     deps = [
         ":lit_engine",
+        "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
     ],
 )

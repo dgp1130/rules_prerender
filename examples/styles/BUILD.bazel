@@ -26,8 +26,7 @@ ts_project(
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = [":package"],
     deps = [
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
+        "//:node_modules/@rules_prerender/lit_engine",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )

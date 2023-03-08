@@ -10,10 +10,9 @@ prerender_component(
 
 ts_project(
     name = "prerender",
-    srcs = ["transitive.tsx"],
+    srcs = ["transitive.mts"],
     deps = [
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
+        "//:node_modules/@rules_prerender/lit_engine",
     ],
 )
 
