@@ -1,3 +1,4 @@
+import { SafeHtml, isSafeHtml } from '../safe_html/safe_html.mjs';
 import { UrlPath } from './url_path.mjs';
 
 /** Represents a resource to be rendered / generated at a particular path. */
@@ -26,13 +27,13 @@ export class PrerenderResource {
      * 
      * @param path The path the file will be generated at relative to the final
      *     generated site. Must begin with a `/` character.
-     * @param contents A `string`, {@link ArrayBuffer}, or {@link TypedArray}
-     *     object with the file contents of the resource. If a string is given,
-     *     it is encoded in UTF-8. If an {@link ArrayBuffer} or
-     *     {@link TypedArray} is given, it used as is.
+     * @param contents A {@link SafeHtml}, {@link ArrayBuffer}, or
+     *     {@link TypedArray} object with the file contents of the resource. If
+     *     {@link SafeHtml} is given, it is encoded as a UTF-8 string. If an
+     *     {@link ArrayBuffer} or {@link TypedArray} is given, it used as is.
      * @returns A `PrerenderResource` object representing the resource.
      */
-    public static of(path: string, contents: string | ArrayBuffer | TypedArray):
+    public static of(path: string, contents: string | SafeHtml | ArrayBuffer | TypedArray):
             PrerenderResource {
         return new PrerenderResource({
             urlPath: UrlPath.of(path),
@@ -44,8 +45,8 @@ export class PrerenderResource {
 /**
  * Accepts various input types and normalizes them to a simple
  * {@link ArrayBuffer} representing the input content. If the input is a
- * `string`, it will be encoded as UTF-8. If the input is an {@link ArrayBuffer}
- * or a {@link TypedArray}, its content is used as is.
+ * {@link SafeHtml}, it will be encoded as a UTF-8 string. If the input is an
+ * {@link ArrayBuffer} or a {@link TypedArray}, its content is used as is.
  * 
  * NOTE: {@link TypedArray} does **not** extend {@link ArrayBuffer}, however
  * they are unfortunately compatible from a structural typing perspective, so
@@ -54,18 +55,23 @@ export class PrerenderResource {
  * This is an easy foot-gun for users to encounter, so we should support such
  * inputs as a result.
  */
-function normalizeContents(contents: string | ArrayBuffer | TypedArray):
+function normalizeContents(contents: string | SafeHtml | ArrayBuffer | TypedArray):
         ArrayBuffer {
     if (contents instanceof ArrayBuffer) return contents;
     if (typeof contents === 'string') {
         return new TextEncoder().encode(contents).buffer;
     }
     if (isTypedArray(contents)) return contents.buffer;
+    if (isSafeHtml(contents)) {
+        return new TextEncoder().encode(contents.getHtmlAsString()).buffer;
+    }
 
     // Should never happen if TypeScript types are respected, but JavaScript
     // users or unsound input types may hit this case.
     throw new Error(
-        `Input is not a string, ArrayBuffer, or TypedArray:\n${contents}`);
+        `Input is not a \`SafeHtml\`, \`ArrayBuffer\`, or \`TypedArray\`:\n${
+            contents}`,
+    );
 }
 
 /**

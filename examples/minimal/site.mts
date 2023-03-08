@@ -1,9 +1,9 @@
 import { bar, foo } from './dep.mjs';
-import { PrerenderResource } from 'rules_prerender';
+import { PrerenderResource, unsafeTreatStringAsSafeHtml } from 'rules_prerender';
 
 /** Renders the page. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', `
+    yield PrerenderResource.of('/index.html', unsafeTreatStringAsSafeHtml(`
         <!DOCTYPE html>
         <html>
             <head>
@@ -15,5 +15,5 @@ export default function*(): Generator<PrerenderResource, void, void> {
                 <span id="bar">${bar}</span>
             </body>
         </html>
-    `.trim());
+    `.trim()));
 }

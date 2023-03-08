@@ -1,0 +1,38 @@
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+ts_project(
+    name = "safe_html",
+    srcs = ["safe_html.mts"],
+    visibility = ["//visibility:public"],
+    deps = [":safe_html_impl"],
+)
+
+ts_project(
+    name = "unsafe_html",
+    srcs = ["unsafe_html.mts"],
+    visibility = [
+        "//packages/rules_prerender:__pkg__",
+    ],
+    deps = [":safe_html_impl"],
+)
+
+ts_project(
+    name = "safe_html_impl",
+    srcs = ["safe_html_impl.mts"],
+)
+
+ts_project(
+    name = "safe_html_impl_test_lib",
+    srcs = ["safe_html_impl_test.mts"],
+    testonly = True,
+    deps = [
+        ":safe_html_impl",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "safe_html_impl_test",
+    deps = [":safe_html_impl_test_lib"],
+)

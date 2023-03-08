@@ -63,7 +63,10 @@ ts_project(
     name = "prerender_resource",
     srcs = ["prerender_resource.mts"],
     visibility = ["//:__subpackages__"],
-    deps = [":url_path"],
+    deps = [
+        ":url_path",
+        "//common/safe_html",
+    ],
 )
 
 ts_project(
@@ -72,6 +75,7 @@ ts_project(
     testonly = True,
     deps = [
         ":prerender_resource",
+        "//common/safe_html",
         "//:node_modules/@types/jasmine",
     ],
 )

@@ -39,6 +39,8 @@ ts_project(
         ":scripts",
         ":styles",
         "//common/models:prerender_resource",
+        "//common/safe_html",
+        "//common/safe_html:unsafe_html",
     ],
 )
 

@@ -1,3 +1,4 @@
+import { safe } from '../safe_html/safe_html.mjs';
 import { PrerenderResource } from './prerender_resource.mjs';
 
 describe('PrerenderResource', () => {
@@ -7,6 +8,14 @@ describe('PrerenderResource', () => {
 
             expect(res.path).toBe('/foo/bar.html');
             expect(new TextDecoder().decode(res.contents)).toBe('Hello World!');
+        });
+
+        it('returns a `PrerenderResource` from `SafeHtml` data', () => {
+            const res = PrerenderResource.of(
+                '/foo/bar.html', safe`<div></div>`);
+
+            expect(res.path).toBe('/foo/bar.html');
+            expect(new TextDecoder().decode(res.contents)).toBe('<div></div>');
         });
 
         it('returns a `PrerenderResource` from binary data', () => {
