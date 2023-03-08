@@ -13,7 +13,7 @@ def rules_prerender_repositories():
         name = "rules_prerender_npm",
         pnpm_lock = Label("//:pnpm-lock.yaml"),
         npmrc = Label("//:.npmrc"),
-        verify_node_modules_ignored = "//:.bazelignore",
+        verify_node_modules_ignored = Label("//:.bazelignore"),
     )
 
     rules_ts_dependencies(ts_version_from = Label("//:package.json"))

@@ -1,5 +1,11 @@
+# Ignore deeply nested `node_modules/` directories.
 node_modules
+packages/declarative_shadow_dom/node_modules
+packages/rules_prerender/node_modules
+
+# Ignore generated files.
 dist
 bazel-out
 
+# Ignore external workspaces in the repository.
 examples/external/
