@@ -106,7 +106,7 @@ def prerender_pages(
             providing intuitive flag behavior in macros.
     """
     # Render the HTML page at `%{name}_page.html`.
-    prerender_name = "%s_page" % name
+    prerender_name = "%s_unbundled" % name
     prerender_pages_unbundled(
         name = prerender_name,
         src = src,
