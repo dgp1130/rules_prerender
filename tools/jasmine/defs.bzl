@@ -4,7 +4,7 @@ load(
     _jasmine_web_test_suite = "jasmine_web_test_suite",
 )
 
-visibility("public")
+visibility("//...")
 
 jasmine_node_test = _jasmine_node_test
 jasmine_web_test_suite = _jasmine_web_test_suite

@@ -1,5 +1,5 @@
 load(":stamp_package.bzl", _stamp_package = "stamp_package")
 
-visibility("public")
+visibility("//...")
 
 stamp_package = _stamp_package

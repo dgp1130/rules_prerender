@@ -7,7 +7,7 @@ load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//common:paths.bzl", "is_js_file")
 
-visibility("public")
+visibility("private")
 
 def _scripts_bundle_impl(ctx):
     # Extract the config file.
