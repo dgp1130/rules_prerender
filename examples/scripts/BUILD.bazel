@@ -3,8 +3,8 @@ load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
-    name = "page",
-    src = "page.mts",
+    name = "site",
+    src = "site.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -20,7 +20,7 @@ ts_project(
 
 web_resources_devserver(
     name = "devserver",
-    resources = ":page",
+    resources = ":site",
 )
 
 ts_project(

@@ -8,16 +8,16 @@ export default function*(): Generator<PrerenderResource, void, void> {
             <head>
                 <title>Testonly</title>
 
-                ${inlineStyle('./page_styles.css', import.meta)}
+                ${inlineStyle('./site_styles.css', import.meta)}
             </head>
             <body>
                 <h2>Testonly</h2>
 
-                <div class="page">
+                <div class="site">
                     <span class="hello">Hello from a testonly page!</span>
-                    <img src="/images/page.png" />
+                    <img src="/images/site.png" />
                     ${renderComponent()}
-                    ${includeScript('./page_script.mjs', import.meta)}
+                    ${includeScript('./site_script.mjs', import.meta)}
                 </div>
             </body>
         </html>

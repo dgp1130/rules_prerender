@@ -2,17 +2,17 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 
 prerender_pages(
-    name = "page",
-    src = "page.mts",
+    name = "site",
+    src = "site.mts",
     tsconfig = "tsconfig.json",
     source_map = True,
-    bundle_js = False, # Optimization: No client-side JavaScript on this page.
+    bundle_js = False, # Optimization: No client-side JavaScript on this site.
     lib_deps = ["//:node_modules/rules_prerender"],
 )
 
 web_resources_devserver(
     name = "devserver",
-    resources = ":page",
+    resources = ":site",
 )
 
 build_test(

@@ -8,11 +8,11 @@ load(
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
-    name = "page",
-    src = "page.mts",
+    name = "site",
+    src = "site.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
-    bundle_js = False, # Optimization: No client-side JavaScript on this page.
+    bundle_js = False, # Optimization: No client-side JavaScript on this site.
     lib_deps = ["//:node_modules/rules_prerender"],
     deps = [":component"],
 )
@@ -48,7 +48,7 @@ prerender_component(
 
 web_resources_devserver(
     name = "devserver",
-    resources = ":page",
+    resources = ":site",
 )
 
 ts_project(

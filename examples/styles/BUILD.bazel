@@ -3,12 +3,12 @@ load("//:index.bzl", "css_library", "prerender_pages", "web_resources_devserver"
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 prerender_pages(
-    name = "page",
-    src = "page.mts",
+    name = "site",
+    src = "site.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     styles = [":styles"],
-    bundle_js = False, # Optimization: No client-side JavaScript on this page.
+    bundle_js = False, # Optimization: No client-side JavaScript on this site.
     lib_deps = ["//:node_modules/rules_prerender"],
 )
 
@@ -25,7 +25,7 @@ css_library(
 
 web_resources_devserver(
     name = "devserver",
-    resources = ":page",
+    resources = ":site",
 )
 
 ts_project(

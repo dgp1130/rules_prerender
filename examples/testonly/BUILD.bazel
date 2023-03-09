@@ -9,8 +9,8 @@ load(
 )
 
 prerender_pages(
-    name = "page",
-    src = "page.mts",
+    name = "site",
+    src = "site.mts",
     tsconfig = "//:tsconfig",
     source_map = True,
     lib_deps = ["//:node_modules/rules_prerender"],
@@ -23,27 +23,27 @@ prerender_pages(
 
 css_library(
     name = "styles",
-    srcs = ["page_styles.css"],
+    srcs = ["site_styles.css"],
     testonly = True,
 )
 
 ts_project(
     name = "scripts",
-    srcs = ["page_script.mts"],
+    srcs = ["site_script.mts"],
     testonly = True,
 )
 
 web_resources(
     name = "resources",
     entries = {
-        "/images/page.png": "image.png",
+        "/images/site.png": "image.png",
     },
     testonly = True,
 )
 
 web_resources_devserver(
     name = "devserver",
-    resources = ":page",
+    resources = ":site",
     testonly = True,
 )
 
