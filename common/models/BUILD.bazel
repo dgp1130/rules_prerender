@@ -4,7 +4,7 @@ load("//tools/typescript:defs.bzl", "ts_project")
 ts_project(
     name = "prerender_annotation",
     srcs = ["prerender_annotation.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 ts_project(
@@ -26,14 +26,14 @@ ts_project(
     name = "prerender_annotation_mock",
     srcs = ["prerender_annotation_mock.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [":prerender_annotation"],
 )
 
 ts_project(
     name = "prerender_metadata",
     srcs = ["prerender_metadata.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 ts_project(
@@ -55,14 +55,14 @@ ts_project(
     name = "prerender_metadata_mock",
     srcs = ["prerender_metadata_mock.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [":prerender_metadata"],
 )
 
 ts_project(
     name = "prerender_resource",
     srcs = ["prerender_resource.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [":url_path"],
 )
 

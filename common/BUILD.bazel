@@ -7,6 +7,8 @@ load(":paths_test.bzl", "paths_test_suite")
 ts_project(
     name = "binary",
     srcs = ["binary.mts"],
+    # Needs to be public because this gets directly linked in the renderer entry
+    # point generated in the user's workspace.
     visibility = ["//visibility:public"],
     deps = ["//:node_modules/@types/node"],
 )
@@ -29,7 +31,7 @@ jasmine_node_test(
 ts_project(
     name = "collections",
     srcs = ["collections.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 ts_project(
@@ -50,7 +52,7 @@ jasmine_node_test(
 ts_project(
     name = "formatters",
     srcs = ["formatters.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 ts_project(
@@ -71,14 +73,14 @@ jasmine_node_test(
 ts_project(
     name = "file_system",
     srcs = ["file_system.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
     name = "file_system_fake",
     srcs = ["file_system_fake.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     testonly = True,
     deps = [
         ":file_system",
@@ -89,7 +91,7 @@ ts_project(
 ts_project(
     name = "http",
     srcs = ["http.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = ["//:node_modules/@types/node"],
 )
 
@@ -112,7 +114,7 @@ jasmine_node_test(
 bzl_library(
     name = "label",
     srcs = ["label.bzl"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
@@ -126,7 +128,7 @@ label_test_suite(name = "label_test")
 bzl_library(
     name = "paths",
     srcs = ["paths.bzl"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
@@ -140,7 +142,7 @@ paths_test_suite(name = "paths_test")
 ts_project(
     name = "prerender_annotation_walker",
     srcs = ["prerender_annotation_walker.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [
         "//common/models:prerender_annotation",
         "//:node_modules/node-html-parser",
@@ -168,7 +170,7 @@ jasmine_node_test(
 ts_project(
     name = "probably",
     srcs = ["probably.mts"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 ts_project(

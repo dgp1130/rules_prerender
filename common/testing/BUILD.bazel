@@ -6,7 +6,7 @@ ts_project(
     name = "binary",
     srcs = ["binary.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = ["//:node_modules/@types/node"],
 )
 
@@ -31,7 +31,7 @@ ts_project(
     name = "devserver",
     srcs = ["devserver.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     data = [
         "//:node_modules/http-status-codes",
         "//:node_modules/tree-kill",
@@ -110,7 +110,7 @@ ts_project(
     name = "effect_fake",
     srcs = ["effect_fake.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [":effects"],
 )
 
@@ -134,7 +134,7 @@ ts_project(
     name = "effect_tester",
     srcs = ["effect_tester.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [
         ":effects",
         "//:node_modules/@types/jasmine",
@@ -162,7 +162,7 @@ ts_project(
     name = "mocks",
     srcs = ["mocks.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = ["//:node_modules/@types/jasmine"],
 )
 
@@ -185,7 +185,7 @@ ts_project(
     name = "temp_dir",
     srcs = ["temp_dir.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [
         ":effects",
         "//:node_modules/@types/node",
@@ -234,7 +234,7 @@ ts_project(
     name = "webdriver",
     srcs = ["webdriver.mts"],
     testonly = True,
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     data = ["//:node_modules/webdriverio"],
     deps = [
         ":effects",

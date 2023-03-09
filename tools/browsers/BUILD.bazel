@@ -27,7 +27,7 @@ custom_browser(
         "//conditions:default": "chromium_local.json",
         ":use_debug_browsers_config": "chromium_local_debug.json",
     }),
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     tags = ["native"],
     environment = select({
         "//conditions:default": None,

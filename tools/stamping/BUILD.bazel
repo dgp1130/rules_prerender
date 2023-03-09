@@ -2,7 +2,7 @@ load("@aspect_bazel_lib//lib:diff_test.bzl", "diff_test")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load(":stamp_package.bzl", "stamp_package")
 
-exports_files(["stamp.jq"], visibility = ["//visibility:public"])
+exports_files(["stamp.jq"], visibility = ["//:__subpackages__"])
 
 bzl_library(
     name = "defs",

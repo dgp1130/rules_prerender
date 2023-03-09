@@ -9,18 +9,18 @@ load("//tools/stamping:defs.bzl", "stamp_package")
 load("//tools/typescript:defs.bzl", "types_only")
 load("//:index.bzl", "link_prerender_component", "prerender_component")
 
-exports_files([".npmrc"], visibility = ["//visibility:public"])
+exports_files([".npmrc"], visibility = ["//:__subpackages__"])
 
 ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 ts_config(
     name = "tsconfig_client",
     src = "tsconfig.client.json",
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
     deps = [":tsconfig"],
 )
 
@@ -50,23 +50,23 @@ npm_publish(
 npm_link_package(
     name = "node_modules/rules_prerender",
     src = ":rules_prerender_pkg",
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 types_only(
     name = "node_modules_types/rules_prerender",
     dep = "//:node_modules/rules_prerender",
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 npm_link_package(
     name = "node_modules/@rules_prerender/declarative_shadow_dom",
     src = "//packages/declarative_shadow_dom:pkg",
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 link_prerender_component(
     name = "prerender_components/@rules_prerender/declarative_shadow_dom",
     package = ":node_modules/@rules_prerender/declarative_shadow_dom",
-    visibility = ["//visibility:public"],
+    visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
