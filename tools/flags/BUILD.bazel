@@ -1,0 +1,11 @@
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
+# When set, instructs `@rules_prerender` to debug the specified target. It will
+# open a debugger at build time to inspect the action. Supports
+# `prerender_pages()`, `prerender_pages_unbundled()`, and
+# `prerender_resources()` targets.
+string_flag(
+    name = "debug_prerender",
+    build_setting_default = "",
+    visibility = ["//visibility:public"],
+)

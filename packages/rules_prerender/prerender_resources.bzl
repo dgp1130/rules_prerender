@@ -1,6 +1,7 @@
 """Defines `prerender_resources()` functionality."""
 
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "is_js_file")
@@ -17,6 +18,7 @@ def prerender_resources(
     styles = None,
     testonly = None,
     visibility = None,
+    debug_target = None,
 ):
     """Renders a directory of resources with the given entry point at build time.
 
@@ -66,6 +68,11 @@ def prerender_resources(
         styles: A `css_group()` of inline styles used by the entry point program.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        debug_target: The label to check
+            `@rules_prerender//tools/flags:debug_prerender` for. If the flag is
+            set to this label, then the renderer binary with open a debugger for
+            local debugging. Defaults to this target's label. Useful for
+            providing intuitive flag behavior in macros.
     """
     prerender_resources_internal(
         name = name,
@@ -73,6 +80,7 @@ def prerender_resources(
         data = data,
         testonly = testonly,
         visibility = visibility,
+        debug_target = "//%s:%s" % (native.package_name(), name),
         # Not supported in public API because this would require exposing `css_group()` or
         # `css_binaries()` and is only useful for prerendering HTML pages which should be
         # done with `prerender_pages()`, not `prerender_resources()`.
@@ -83,6 +91,7 @@ def prerender_resources_internal(
     name,
     entry_point,
     data,
+    debug_target,
     styles = None,
     testonly = None,
     visibility = None,
@@ -133,6 +142,7 @@ main(render);
         name = name,
         styles = styles,
         renderer = ":%s" % binary,
+        debug_target = debug_target,
         testonly = testonly,
         visibility = visibility,
     )
@@ -148,6 +158,13 @@ def _prerender_resources_impl(ctx):
             args.add("--inline-style-import", import_path)
             args.add("--inline-style-path", file.short_path)
 
+    # Set up a debugger if the user specifies it.
+    debug_arg = ctx.attr._debug_prerender[BuildSettingInfo].value
+    debugging = debug_arg and Label(debug_arg) == Label(ctx.attr.debug_target)
+    if debugging:
+        print("Debugging %s from %s" % (ctx.label, debug_arg))
+        args.add("--node_options=--inspect-brk")
+
     ctx.actions.run(
         mnemonic = "Prerender",
         progress_message = "Prerendering (%s)" % ctx.label,
@@ -156,6 +173,15 @@ def _prerender_resources_impl(ctx):
         outputs = [output_dir],
         env = {
             "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
+        execution_requirements = {} if not debugging else {
+            # Don't cache the output of this action. The debugger may have
+            # altered execution.
+            "no-cache": "1",
+
+            # Don't run this action remotely so it will stay local and we can
+            # attach a debugger more easily.
+            "no-remote": "1",
         },
     )
 
@@ -176,6 +202,10 @@ _prerender_resources = rule(
             mandatory = True,
             executable = True,
             cfg = "exec",
+        ),
+        "debug_target": attr.string(mandatory = True),
+        "_debug_prerender": attr.label(
+            default = "//tools/flags:debug_prerender",
         ),
     },
 )

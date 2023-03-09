@@ -48,3 +48,6 @@ test --experimental_run_validations
 # When running `bazel coverage` --instrument_test_targets needs to be set in order to 
 # collect coverage information from test targets
 coverage --instrument_test_targets
+
+# `@rules_prerender` specific options.
+build --flag_alias=debug_prerender=@rules_prerender//tools/flags:debug_prerender

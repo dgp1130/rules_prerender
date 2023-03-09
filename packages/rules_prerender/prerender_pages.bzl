@@ -21,6 +21,7 @@ def prerender_pages(
     bundle_js = True,
     testonly = None,
     visibility = None,
+    debug_target = None,
 ):
     """Renders multiple resources at build time and bundles client-side resources.
 
@@ -98,6 +99,11 @@ def prerender_pages(
             Defaults to `True`.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        debug_target: The label to check
+            `@rules_prerender//tools/flags:debug_prerender` for. If the flag is
+            set to this label, then the renderer binary with open a debugger for
+            local debugging. Defaults to this target's label. Useful for
+            providing intuitive flag behavior in macros.
     """
     # Render the HTML page at `%{name}_page.html`.
     prerender_name = "%s_page" % name
@@ -114,6 +120,7 @@ def prerender_pages(
         deps = deps,
         testonly = testonly,
         visibility = visibility,
+        debug_target = debug_target or "//%s:%s" % (native.package_name(), name),
     )
 
     native.alias(

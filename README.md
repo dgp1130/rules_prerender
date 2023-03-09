@@ -367,6 +367,45 @@ With this, all markdown posts in the `posts/` directory will get generated into
 HTML files. Using this strategy, we can scale static-site generation for a large
 number of files with common generation patterns.
 
+### Debugging
+
+Since `prerender_pages()` and related rules invoke user code at build time,
+debugging can get a little complicated. Add the following to your `.bazelrc`:
+
+```
+# `@rules_prerender` specific options.
+build --flag_alias=debug_prerender=@rules_prerender//tools/flags:debug_prerender
+```
+
+Then, you can use the `--debug_prerender` flag to specify a target which you
+want to open a breakpoint on. Use it with:
+
+```shell
+bazel run //path/to/my:devserver --debug_prerender=//path/to/my:prerender_pages_target
+```
+
+You should then see a log statement indicating that a target is being debugged
+and a hung execution on the `Prerendering` action.
+
+```
+DEBUG: /home/doug/Source/rules_prerender/packages/rules_prerender/prerender_resources.bzl:165:14: Debugging @//examples/minimal:page_page_annotated from //examples/minimal:page
+INFO: Analyzed target //examples/minimal:devserver (1 packages loaded, 5038 targets configured).
+INFO: Found 1 target...
+[290 / 294] Prerendering (@//examples/minimal:page_page_annotated); 8s linux-sandbox
+```
+
+This target is hanging because it has `--inspect-brk` set on the Node invocation
+and is waiting for the debugger. Connect your preferred Node debugger and you
+should be able to step through rendering.
+
+Note that the Bazel cache can get a little tricky here, as repeated runs may
+skip the target altogether. If so, make any arbitrary whitespace change to a the
+rendering code to invalidate the cache and rerun.
+
+The target you actually `bazel run` or `bazel build` (`//path/to/my:devserver`
+above) doesn't actually matter, as long as it includes
+`//path/to/my:prerender_pages_target` as a transitive dependency.
+
 ### Custom Bundling
 
 The previous example automatically bundled all the JavaScript and CSS for a

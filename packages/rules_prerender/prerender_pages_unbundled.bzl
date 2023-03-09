@@ -23,6 +23,7 @@ def prerender_pages_unbundled(
     deps = [],
     testonly = None,
     visibility = None,
+    debug_target = None,
 ):
     """Renders a directory of resources with the given TypeScript source at build time.
 
@@ -92,6 +93,11 @@ def prerender_pages_unbundled(
         deps: `prerender_component()` dependencies for the generated pages.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        debug_target: The label to check
+            `@rules_prerender//tools/flags:debug_prerender` for. If the flag is
+            set to this label, then the renderer binary with open a debugger for
+            local debugging. Defaults to this target's label. Useful for
+            providing intuitive flag behavior in macros.
     """
     # Generate a component of the user's code.
     component = "%s_component" % name
@@ -127,6 +133,7 @@ def prerender_pages_unbundled(
         name = annotated,
         entry_point = rel_path(file_path_of(absolute(js_src))),
         styles = ":%s" % component_styles,
+        debug_target = debug_target or "//%s:%s" % (native.package_name(), name),
         data = [":%s" % component_prerender],
         testonly = testonly,
     )
