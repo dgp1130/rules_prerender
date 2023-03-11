@@ -24,7 +24,10 @@
 export function safe(literals: TemplateStringsArray, ...args: unknown[]):
         SafeHtml {
     if (args.length !== 0) {
-        throw new Error(`\`safe\` template literal only supports a raw string, no interpolations.`);
+        throw new Error('`safe` template literal only supports a raw string, no interpolations.');
+    }
+    if (!literals.hasOwnProperty('raw')) {
+        throw new Error('`safe` must be called as a template literal, not with a standard array.');
     }
 
     return unsafeTreatStringAsSafeHtml(literals.join(''));

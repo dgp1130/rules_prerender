@@ -66,6 +66,10 @@ describe('safe_html', () => {
         it('throws when given an interpolation', () => {
             expect(() => safe`<${'div'}></div>`).toThrow();
         });
+
+        it('throws when called with a regular array', () => {
+            expect(() => safe(['<div></div>'] as any)).toThrow();
+        });
     });
 
     describe('unsafeTreatStringAsSafeHtml()', () => {
