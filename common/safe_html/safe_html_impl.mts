@@ -26,7 +26,7 @@ export function safe(literals: TemplateStringsArray, ...args: unknown[]):
     if (args.length !== 0) {
         throw new Error('`safe` template literal only supports a raw string, no interpolations.');
     }
-    if (!literals.hasOwnProperty('raw')) {
+    if (!Object.prototype.hasOwnProperty.call(literals, 'raw')) {
         throw new Error('`safe` must be called as a template literal, not with a standard array.');
     }
 
