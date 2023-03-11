@@ -14,7 +14,6 @@ describe('http', () => {
                         nodeHttp.ClientRequest => {
                     cb(mockRes);
                     return mockReq;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }) as any,
             );
 
@@ -39,7 +38,6 @@ describe('http', () => {
                 ),
             } as unknown as nodeHttp.ClientRequest;
             spyOn(nodeHttp, 'get').and.callFake(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (() => mockReq) as any,
             );
 

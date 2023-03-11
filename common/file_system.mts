@@ -44,7 +44,6 @@ class DiskFs implements FileSystem {
             Promise<string | Buffer> {
         return await fs.readFile(
             path,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             options as any,
         ) as unknown as Promise<string | Buffer>;
     }

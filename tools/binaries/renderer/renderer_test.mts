@@ -25,7 +25,6 @@ async function run({ entryModule, entryPoint, outputDir, inlineStyles = new Map(
 
     // Constructor types of the real and copied `rulesPrerender` types don't
     // exactly match, easier to just cast to `any` than copy them too.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const render = createRenderer(rulesPrerender as any, entryModule, entryPoint);
     const code = await render([
         '--output-dir', outputDir,

@@ -15,7 +15,6 @@ describe('entry_point', () => {
                 PrerenderResource.of('/baz.html', 'Hello, baz!'),
             ], './foo.js'));
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>)).toEqual([
                 PrerenderResource.of('/foo.html', 'Hello, foo!'),
@@ -31,7 +30,6 @@ describe('entry_point', () => {
                 PrerenderResource.of('/baz.html', 'Hello, baz!'),
             ], './foo.js'));
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>)).toEqual([
                 PrerenderResource.of('/foo.html', 'Hello, foo!'),
@@ -47,7 +45,6 @@ describe('entry_point', () => {
                 yield PrerenderResource.of('/baz.html', 'Hello, baz!');
             }, './foo.js'));
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.asyncIterator]).toBeDefined();
             const renderedArray = await asyncIterableToArray(
                 rendered as AsyncIterable<PrerenderResource>);
@@ -65,7 +62,6 @@ describe('entry_point', () => {
                 ],
             }, './foo.js'));
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((rendered as any)[Symbol.iterator]).toBeDefined();
             expect(Array.from(rendered as Iterable<PrerenderResource>)).toEqual([
                 PrerenderResource.of('/foo.html', 'Hello, foo!'),
