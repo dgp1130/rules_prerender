@@ -26,7 +26,8 @@ describe('safe_html', () => {
             expect(() => { (safeHtml as any).foo = 'test'; }).toThrow();
 
             // Mutating an existing property.
-            expect(() => { safeHtml.getHtmlAsString = () => 'test' }).toThrow();
+            expect(() => { safeHtml.getHtmlAsString = () => 'test'; })
+                .toThrow();
 
             // Mutating the prototype.
             const SafeHtml = Object.getPrototypeOf(safeHtml);
@@ -48,9 +49,9 @@ describe('safe_html', () => {
             }).toThrow();
 
             // Mutating prototype.
-            expect(() => { Object.getPrototypeOf(SafeHtml).foo = 'test' })
+            expect(() => { Object.getPrototypeOf(SafeHtml).foo = 'test'; })
                 .toThrow();
-            expect(() => { SafeHtml.__proto__.foo = 'test' }).toThrow();
+            expect(() => { SafeHtml.__proto__.foo = 'test'; }).toThrow();
         });
     });
 
@@ -92,7 +93,10 @@ describe('safe_html', () => {
             // Assignable to `SafeHtml` because it matches the same structure,
             // but is not the same nominal type.
             const fakeSafeHtml = new class {
-                public static unsafeTrustRawStringContent(_html: string): void {}
+                public static unsafeTrustRawStringContent(_html: string):
+                        SafeHtml {
+                    return safe``;
+                }
 
                 public getHtmlAsString(): string {
                     return '<div></div>';
