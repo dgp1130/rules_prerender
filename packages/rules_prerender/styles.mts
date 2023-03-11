@@ -45,7 +45,9 @@ export function inlineStyle(importPath: string, meta: ImportMeta): string {
         type: 'style',
         path: filePath,
     });
-    return `<!-- ${annotation} -->`;
+    return `<rules_prerender:annotation>${
+        annotation
+    }</rules_prerender:annotation>`;
 }
 
 /** An error thrown when an inline style is not found in the inline style map. */

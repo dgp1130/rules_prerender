@@ -16,12 +16,12 @@ describe('prerender_annotation_walker', () => {
         <title>Test Page</title>
     </head>
     <body>
-        <!-- ${annotation1} -->
-        <!-- ${annotation2} -->
-        <!-- ${annotation3} -->
+        <rules_prerender:annotation>${annotation1}</rules_prerender:annotation>
+        <rules_prerender:annotation>${annotation2}</rules_prerender:annotation>
+        <rules_prerender:annotation>${annotation3}</rules_prerender:annotation>
     </body>
 </html>
-            `.trim(), { comment: true });
+            `.trim());
 
             const annotations = Array.from(walkAllAnnotations(root))
                 .map((node) => node.annotation);
@@ -42,15 +42,15 @@ describe('prerender_annotation_walker', () => {
         <title>Test Page</title>
     </head>
     <body>
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
     </body>
 </html>
-            `.trim(), { comment: true });
+            `.trim());
 
-            const nodes = Array.from(walkAllAnnotations(root));
-            expect(nodes.length).toBe(1);
-            const node = nodes[0]!;
-            node.remove();
+            const annotationEls = Array.from(walkAllAnnotations(root));
+            expect(annotationEls.length).toBe(1);
+            const { el } = annotationEls[0]!;
+            el.remove();
 
             const extracted = root.toString();
             expect(extracted).toBe(`
@@ -76,15 +76,15 @@ describe('prerender_annotation_walker', () => {
         <title>Test Page</title>
     </head>
     <body>
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
     </body>
 </html>
-            `.trim(), { comment: true });
+            `.trim());
 
-            const nodes = Array.from(walkAllAnnotations(root));
-            expect(nodes.length).toBe(1);
-            const node = nodes[0]!;
-            node.replace(new HTMLElement(
+            const annotationEls = Array.from(walkAllAnnotations(root));
+            expect(annotationEls.length).toBe(1);
+            const { el } = annotationEls[0]!;
+            el.replaceWith(new HTMLElement(
                 'script' /* tagName */,
                 {} /* keyAttrs */,
                 '' /* rawAttrs */,
@@ -106,9 +106,7 @@ describe('prerender_annotation_walker', () => {
             `.trim());
         });
 
-        it('throws an error when a node is removed after being updated', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
-
+        it('throws an error when given an invalid annotation', () => {
             const root = parse(`
 <!DOCTYPE html>
 <html>
@@ -116,49 +114,13 @@ describe('prerender_annotation_walker', () => {
         <title>Test Page</title>
     </head>
     <body>
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>not an annotation</rules_prerender:annotation>
     </body>
 </html>
-            `.trim(), { comment: true });
+            `.trim());
 
-            const nodes = Array.from(walkAllAnnotations(root));
-            expect(nodes.length).toBe(1);
-            const node = nodes[0]!;
-            node.remove(); // Update the node.
-
-            // Try to update it again.
-            expect(() => node.remove())
-                .toThrowError('Node was already updated, cannot remove it.');
-        });
-
-        it('throws an error when a node is replaced after being updated', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
-
-            const root = parse(`
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Test Page</title>
-    </head>
-    <body>
-        <!-- ${annotation} -->
-    </body>
-</html>
-            `.trim(), { comment: true });
-
-            const nodes = Array.from(walkAllAnnotations(root));
-            expect(nodes.length).toBe(1);
-            const node = nodes[0]!;
-            node.remove(); // Update the node.
-
-            // Try to update it again.
-            expect(() => node.replace(new HTMLElement(
-                'script' /* tagName */,
-                {} /* keyAttrs */,
-                '' /* rawAttrs */,
-                null /* parentNode */,
-                [0, 0] /* range */,
-            ))).toThrowError('Node was already updated, cannot replace it.');
+            expect(() => Array.from(walkAllAnnotations(root)))
+                .toThrowError(/Failed to parse annotation/);
         });
     });
 });

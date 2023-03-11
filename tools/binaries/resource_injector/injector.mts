@@ -1,6 +1,6 @@
 import { HTMLElement, parse } from 'node-html-parser';
 import { InjectorConfig, InjectScript } from './config.mjs';
-import { AnnotationNode, walkAllAnnotations } from '../../../common/prerender_annotation_walker.mjs';
+import { AnnotationEl, walkAllAnnotations } from '../../../common/prerender_annotation_walker.mjs';
 import { FileSystem, diskFs } from '../../../common/file_system.mjs';
 
 /**
@@ -110,12 +110,10 @@ function injectScript(root: HTMLElement, action: InjectScript): void {
  * file.
  */
 async function replaceInlineStyleAnnotations(
-    nodes: Generator<AnnotationNode, void, void>,
+    els: Generator<AnnotationEl, void, void>,
     fs: FileSystem,
 ): Promise<void> {
-    for (const node of nodes) {
-        const { annotation } = node;
-
+    for (const { annotation, el } of els) {
         // Only inline styles should still be in the HTML, everything else should have
         // been extracted already.
         if (annotation.type !== 'style'){
@@ -132,7 +130,7 @@ async function replaceInlineStyleAnnotations(
             [0, 0] /* range */,
         );
         inlineStyle.set_content(await fs.readFile(annotation.path, 'utf8'));
-        node.replace(inlineStyle);
+        el.replaceWith(inlineStyle);
     }
 }
 

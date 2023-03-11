@@ -11,7 +11,8 @@ describe('footer', () => {
                 .split('\n')
                 .map((line) => line.trim())
                 .join(' ');
-            expect(footerText).toBe('Made with Bazel and rules_prerender.');
+            expect(footerText)
+                .toContain('Made with Bazel and rules_prerender.');
         });
     });
 });

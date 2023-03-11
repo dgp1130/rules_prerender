@@ -38,7 +38,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- ${annotation1} -->
+        <rules_prerender:annotation>${annotation1}</rules_prerender:annotation>
     </body>
 </html>
         `.trim());
@@ -51,7 +51,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- ${annotation2} -->
+        <rules_prerender:annotation>${annotation2}</rules_prerender:annotation>
     </body>
 </html>
         `.trim());
@@ -128,7 +128,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
     </body>
 </html>
         `.trim());
@@ -141,7 +141,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
     </body>
 </html>
         `.trim());
@@ -185,7 +185,7 @@ describe('annotation_extractor', () => {
     <body>
         <h2>Some header</h2>
 
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
     </body>
 </html>
         `.trim());
@@ -243,7 +243,7 @@ describe('annotation_extractor', () => {
 Hello, World!
 
 Annotation should **not** be processed.
-<!-- ${annotation} -->
+<rules_prerender:annotation>${annotation}</rules_prerender:annotation>
         `.trim());
 
         const { code, stdout, stderr } = await run({
@@ -264,7 +264,7 @@ Annotation should **not** be processed.
 Hello, World!
 
 Annotation should **not** be processed.
-<!-- ${annotation} -->
+<rules_prerender:annotation>${annotation}</rules_prerender:annotation>
         `.trim());
 
         const metadata = JSON.parse(

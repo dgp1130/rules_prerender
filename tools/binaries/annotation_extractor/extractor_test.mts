@@ -6,30 +6,30 @@ describe('extractor', () => {
         it('extracts annotations from the given HTML contents', () => {
             const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                        <!-- ${annotation} -->
-                    </head>
-                    <body>
-                        <h2>Hello, World!</h2>
-                    </body>
-                </html>
-            `);
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+            `.trim());
 
             expect(extracted).toBe(`
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                        
-                    </head>
-                    <body>
-                        <h2>Hello, World!</h2>
-                    </body>
-                </html>
-            `);
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        
+    </head>
+    <body>
+        <h2>Hello, World!</h2>
+    </body>
+</html>
+            `.trim());
             expect(Array.from(annotations.values())).toEqual([
                 {
                     type: 'script',
@@ -40,25 +40,25 @@ describe('extractor', () => {
 
         it('extracts a first node annotation', () => {
             const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
-            const [ extracted, annotations ] = extract(`<!-- ${annotation} -->
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                    </head>
-                    <body></body>
-                </html>
-            `);
+            const [ extracted, annotations ] = extract(`
+<rules_prerender:annotation>${annotation}</rules_prerender:annotation><!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+    </head>
+    <body></body>
+</html>
+            `.trim());
 
             expect(extracted).toBe(`
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                    </head>
-                    <body></body>
-                </html>
-            `);
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+    </head>
+    <body></body>
+</html>
+            `.trim());
             expect(Array.from(annotations.values())).toEqual([
                 {
                     type: 'script',
@@ -70,34 +70,34 @@ describe('extractor', () => {
         it('ignores unrelated comments', () => {
             const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
-                <!-- Some leading comment. -->
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <!-- Another comment -->
-                        <title>Title</title>
-                    </head>
-                    <!-- One more comment. -->
-                    <body>
-                        <!-- ${annotation} -->
-                    </body>
-                </html>
-            `);
+<!-- Some leading comment. -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Another comment -->
+        <title>Title</title>
+    </head>
+    <!-- One more comment. -->
+    <body>
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
+    </body>
+</html>
+            `.trim());
 
             expect(extracted).toBe(`
-                <!-- Some leading comment. -->
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <!-- Another comment -->
-                        <title>Title</title>
-                    </head>
-                    <!-- One more comment. -->
-                    <body>
-                        
-                    </body>
-                </html>
-            `);
+<!-- Some leading comment. -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Another comment -->
+        <title>Title</title>
+    </head>
+    <!-- One more comment. -->
+    <body>
+        
+    </body>
+</html>
+            `.trim());
             expect(Array.from(annotations.values())).toEqual([
                 {
                     type: 'script',
@@ -110,28 +110,28 @@ describe('extractor', () => {
             const annotation = createAnnotation({ type: 'style', path: 'wksp/foo.css' });
 
             const [ extracted, annotations ] = extract(`
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                    </head>
-                    <body>
-                        <!-- ${annotation} -->
-                    </body>
-                </html>
-            `);
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+    </head>
+    <body>
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
+    </body>
+</html>
+            `.trim());
 
             expect(extracted).toBe(`
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>Title</title>
-                    </head>
-                    <body>
-                        <!-- ${annotation} -->
-                    </body>
-                </html>
-            `);
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+    </head>
+    <body>
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
+    </body>
+</html>
+            `.trim());
             expect(Array.from(annotations.values())).toEqual([]);
         });
     });

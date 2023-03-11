@@ -106,7 +106,7 @@ describe('injector', () => {
     </head>
     <body>
         <h2>Hello, World!</h2>
-        <!-- ${annotation} -->
+        <rules_prerender:annotation>${annotation}</rules_prerender:annotation>
     </body>
 </html>
             `.trim();
@@ -147,7 +147,7 @@ describe('injector', () => {
     </head>
     <body>
         <h2>Hello, World!</h2>
-        <!-- ${scriptAnnotation} -->
+        <rules_prerender:annotation>${scriptAnnotation}</rules_prerender:annotation>
     </body>
 </html>
             `.trim();

@@ -9,10 +9,14 @@ describe('scripts', () => {
             };
             const annotation = includeScript('./baz.mjs', meta);
 
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'script',
-                path: 'path/to/pkg/baz.mjs',
-            })} -->`);
+            expect(annotation).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'script',
+        path: 'path/to/pkg/baz.mjs',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('creates an annotation for a script in a sub directory of the given `import.meta`', () => {
@@ -21,10 +25,14 @@ describe('scripts', () => {
             };
             const annotation = includeScript('./some/subdir/foo.mjs', meta);
 
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'script',
-                path: 'path/to/pkg/some/subdir/foo.mjs',
-            })} -->`);
+            expect(annotation).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'script',
+        path: 'path/to/pkg/some/subdir/foo.mjs',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('creates an annotation for a script in a parent directory of the given `import.meta`', () => {
@@ -33,10 +41,14 @@ describe('scripts', () => {
             };
             const annotation = includeScript('../../foo.mjs', meta);
 
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'script',
-                path: 'path/foo.mjs',
-            })} -->`);
+            expect(annotation).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'script',
+        path: 'path/foo.mjs',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('creates annotations for relative paths with common JS extensions', () => {

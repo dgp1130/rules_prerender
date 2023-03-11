@@ -30,5 +30,7 @@ export function includeScript(filePath: string, meta: ImportMeta): string {
         type: 'script',
         path: resolved,
     });
-    return `<!-- ${annotation} -->`;
+    return `<rules_prerender:annotation>${
+        annotation
+    }</rules_prerender:annotation>`;
 }

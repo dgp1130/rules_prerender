@@ -183,7 +183,7 @@ describe('renderer', () => {
         <title>Test Page</title>
     </head>
     <body>
-        <!-- ${expectedAnnotation} -->
+        <rules_prerender:annotation>${expectedAnnotation}</rules_prerender:annotation>
     </body>
 </html>
         `.trim());

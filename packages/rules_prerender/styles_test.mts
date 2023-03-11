@@ -18,10 +18,14 @@ describe('styles', () => {
             };
             const annotation = inlineStyle('./foo.css', meta);
 
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'style',
-                path: 'some/real/file.css',
-            })} -->`);
+            expect(annotation).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'style',
+        path: 'some/real/file.css',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('returns an inline style annotation for a file in a sub directory of the given `import.meta`', () => {
@@ -34,10 +38,14 @@ describe('styles', () => {
             };
             const annotation = inlineStyle('./some/subdir/foo.css', meta);
 
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'style',
-                path: 'some/real/file.css',
-            })} -->`);
+            expect(annotation).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'style',
+        path: 'some/real/file.css',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('returns an inline style annotation for a file in a parent directory of the given `import.meta`', () => {
@@ -50,10 +58,14 @@ describe('styles', () => {
             };
             const annotation = inlineStyle('../../foo.css', meta);
 
-            expect(annotation).toBe(`<!-- ${createAnnotation({
-                type: 'style',
-                path: 'some/real/file.css',
-            })} -->`);
+            expect(annotation).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'style',
+        path: 'some/real/file.css',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('throws an error when the requested style import is not present', () => {
@@ -78,11 +90,14 @@ describe('styles', () => {
                 url: 'file:///bazel/.../execroot/my_wksp/bazel-out/k8-opt/bin/path/to/pkg/prerender.mjs',
             };
 
-            expect(inlineStyle('./foo.css', meta))
-                .toBe(`<!-- ${createAnnotation({
-                    type: 'style',
-                    path: 'path/to/pkg/foo.css',
-                })} -->`);
+            expect(inlineStyle('./foo.css', meta)).toBe(`
+<rules_prerender:annotation>${
+    createAnnotation({
+        type: 'style',
+        path: 'path/to/pkg/foo.css',
+    })
+}</rules_prerender:annotation>
+            `.trim());
         });
 
         it('throws an error when given a bare import', () => {

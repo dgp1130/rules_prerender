@@ -1,141 +1,55 @@
-import { CommentNode, HTMLElement, Node } from 'node-html-parser';
+import { HTMLElement } from 'node-html-parser';
 import { parseAnnotation, PrerenderAnnotation } from './models/prerender_annotation.mjs';
 
 /**
  * A reference to a `node-html-parser` `Node` which contains a
  * {@link PrerenderAnnotation} and can be updated (removed from / replaced in the tree).
  */
-export class AnnotationNode {
+export interface AnnotationEl {
     /** The annotation this node contains. */
-    public annotation: PrerenderAnnotation;
+    annotation: PrerenderAnnotation;
 
-    private updateableNode: UpdateableNode<CommentNode>;
-
-    private constructor({ annotation, updateableNode }: {
-        annotation: PrerenderAnnotation,
-        updateableNode: UpdateableNode<CommentNode>,
-    }) {
-        this.annotation = annotation;
-        this.updateableNode = updateableNode;
-    }
-
-    /** Returns an `AnnotationNode` for the given annotation and its node. */
-    public static from(
-        annotation: PrerenderAnnotation,
-        updateableNode: UpdateableNode<CommentNode>,
-    ): AnnotationNode {
-        return new AnnotationNode({ annotation, updateableNode });
-    }
-
-    /**
-     * Removes this annotation's node from the tree.
-     * @throws if the annotation's node has already been updated.
-     */
-    public remove(): void {
-        this.updateableNode.remove();
-    }
-
-    /**
-     * Replaces this annotation's node in the DOM tree with the given node.
-     * @throws if the node has already been updated.
-     */
-    public replace(replacement: Node): void {
-        this.updateableNode.replace(replacement);
-    }
-}
-
-/**
- * A reference to a `node-html-parser` `Node` which can be updated (removed / replaced).
- * This is useful a `Node` cannot normally be removed or replaced without also knowing
- * its parent, which can be annoying to track.
- */
-class UpdateableNode<T extends Node> {
-    /** The `node-html-parser` `Node` this references. */
-    public node: T;
-
-    private parent: HTMLElement;
-    private updated = false;
-
-    private constructor({ node, parent }: { node: T, parent: HTMLElement }) {
-        this.node = node;
-        this.parent = parent;
-    }
-
-    /** Returns an `UpdateableNode` for the given node and its parent. */
-    public static from<T extends Node>(
-        { node, parent }: { node: T, parent: HTMLElement },
-    ): UpdateableNode<T> {
-        return new UpdateableNode({ node, parent });
-    }
-
-    /**
-     * Removes this node from the tree.
-     * @throws if the node has already been updated.
-     */
-    public remove(): void {
-        if (this.updated) throw new Error(`Node was already updated, cannot remove it.`);
-        this.updated = true;
-
-        this.parent.removeChild(this.node);
-    }
-
-    /**
-     * Replaces this node in the DOM tree with the given node.
-     * @throws if the node has already been updated.
-     */
-    public replace(replacement: Node): void {
-        if (this.updated) throw new Error(`Node was already updated, cannot replace it.`);
-        this.updated = true;
-
-        this.parent.exchangeChild(this.node, replacement);
-    }
+    /** The element containing the annotation. */
+    el: HTMLElement;
 }
 
 /** Returns a {@link Generator} of all annotations in the tree. */
 export function walkAllAnnotations(root: HTMLElement):
-        Generator<AnnotationNode, void, void> {
-    return walkAnnotations(walkComments(walk(root)));
+        Generator<AnnotationEl, void, void> {
+    return walkAnnotations(walk(root));
 }
 
 /**
- * Parses the given {@link Generator} of {@link CommentNode}s, filtering out any which
- * aren't annotations and returning a new {@link Generator} of {@link AnnotationNode}.
+ * Parses the given {@link Generator} of {@link HTMLElement}s, filtering
+ * out any which aren't annotations and returning a new {@link Generator} of
+ * {@link AnnotationEl}.
  */
-function* walkAnnotations(
-    nodes: Generator<UpdateableNode<CommentNode>, void, void>,
-): Generator<AnnotationNode, void, void> {
-    for (const updateableNode of nodes) {
-        const annotation = parseAnnotation(updateableNode.node.text);
-        if (!annotation) continue;
+function* walkAnnotations(els: Generator<HTMLElement, void, void>):
+        Generator<AnnotationEl, void, void> {
+    for (const el of els) {
+        // Root element has a `null` `tagName`.
+        if (el.tagName?.toLowerCase() !== 'rules_prerender:annotation') continue;
 
-        yield AnnotationNode.from(annotation, updateableNode);
+        // Parse the annotation.
+        const annotation = parseAnnotation(el.textContent);
+        if (!annotation) throw new Error(`Failed to parse annotation:\n${el.outerHTML}`);
+
+        yield { annotation, el };
     }
 }
 
 /**
- * Filters the given {@link Generator} of {@link Node}s to limit to only
- * {@link CommentNode}s.
+ * Returns a {@link Generator} of {@link UpdateableElement}s for each descendant
+ * of the given root and their parent. The root node without a parent is
+ * dropped.
  */
-function* walkComments(nodes: Generator<UpdateableNode<Node>, void, void>):
-        Generator<UpdateableNode<CommentNode>> {
-    for (const updateableNode of nodes) {
-        if (updateableNode.node instanceof CommentNode) {
-            yield updateableNode;
-        }
-    }
-}
+function* walk(el: HTMLElement): Generator<HTMLElement, void, void> {
+    yield el;
 
-/**
- * Returns a {@link Generator} of {@link UpdateableNode}s for each descendant of the
- * given root and their parent. The root node without a parent is dropped.
- */
-function* walk(node: Node, parent?: HTMLElement):
-        Generator<UpdateableNode<Node>, void, void> {
-    if (parent) yield UpdateableNode.from({ node, parent });
-
-    if (node instanceof HTMLElement) {
-        for (const child of node.childNodes) {
-            yield* walk(child, node);
+    for (const child of el.childNodes) {
+        // Ignore `Nodes`, all annotations are `HTMLElements`.
+        if (child instanceof HTMLElement) {
+            yield* walk(child);
         }
     }
 }
