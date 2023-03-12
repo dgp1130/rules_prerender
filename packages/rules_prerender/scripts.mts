@@ -8,6 +8,18 @@ import { wkspRelative } from './paths.mjs';
  * client-side JavaScript file in the final bundle for the page.
  */
 export function includeScript(filePath: string, meta: ImportMeta): string {
+    return `<rules_prerender:annotation>${
+        includeScriptAnnotation(filePath, meta)
+    }</rules_prerender:annotation>`;
+}
+
+/**
+ * Returns the annotation to include a script as a string without any HTML
+ * wrapping. This is useful for templating engines which don't have easy "parse
+ * HTML into safe type" utilities.
+ */
+export function includeScriptAnnotation(
+        filePath: string, meta: ImportMeta): string {
     if (!filePath.startsWith('.')) {
         throw new Error(`Only relative imports are supported and must start with \`./\` or \`../\`: "${filePath}".`);
     }
@@ -26,11 +38,8 @@ export function includeScript(filePath: string, meta: ImportMeta): string {
             filePath}" from "${wkspRelativePath}".`);
     }
 
-    const annotation = serialize({
+    return serialize({
         type: 'script',
         path: resolved,
     });
-    return `<rules_prerender:annotation>${
-        annotation
-    }</rules_prerender:annotation>`;
 }

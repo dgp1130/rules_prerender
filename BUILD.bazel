@@ -69,6 +69,12 @@ link_prerender_component(
     visibility = ["//:__subpackages__"],
 )
 
+npm_link_package(
+    name = "node_modules/@rules_prerender/preact",
+    src = "//packages/preact:pkg",
+    visibility = ["//:__subpackages__"],
+)
+
 bzl_library(
     name = "rules_prerender",
     srcs = [

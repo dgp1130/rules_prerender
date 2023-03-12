@@ -57,7 +57,8 @@ jobs:
         # the next one.
         bazel build --config ci --config release \
           //:rules_prerender_pkg_publish \
-          //packages/declarative_shadow_dom:pkg_publish
+          //packages/declarative_shadow_dom:pkg_publish \
+          //packages/preact:pkg_publish
 
         # Tar the NPM packages prior to publish to make sure the file paths are correct.
         tar -czf rules_prerender-${{ github.event.inputs.version }}.tar.gz \
@@ -68,6 +69,7 @@ jobs:
         # Publish the packages.
         bazel run --config ci --config release //:rules_prerender_pkg_publish
         bazel run --config ci --config release //packages/declarative_shadow_dom:pkg_publish
+        bazel run --config ci --config release //packages/preact:pkg_publish
 
         # Remove the token from the `.npmrc` file, it should no longer be needed.
         sed -i "/${{ secrets.NPM_ACCESS_TOKEN }}/d" .npmrc

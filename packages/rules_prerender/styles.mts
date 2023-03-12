@@ -9,6 +9,17 @@ import { wkspRelative } from './paths.mjs';
  * CSS file at the annotation's location in the page.
  */
 export function inlineStyle(importPath: string, meta: ImportMeta): string {
+    return `<rules_prerender:annotation>${
+        inlineStyleAnnotation(importPath, meta)
+    }</rules_prerender:annotation>`;
+}
+
+/**
+ * Returns the annotation to inline a style as a string without any HTML
+ * wrapping. This is useful for templating engines which don't have easy "parse
+ * HTML into safe type" utilities.
+ */
+export function inlineStyleAnnotation(importPath: string, meta: ImportMeta): string {
     if (!importPath.startsWith('.')) {
         throw new Error(`Only relative imports are supported and must start with \`./\` or \`../\`: "${importPath}".`);
     }
@@ -41,13 +52,10 @@ export function inlineStyle(importPath: string, meta: ImportMeta): string {
     }
 
     // Return an annotation with the real file path.
-    const annotation = serialize({
+    return serialize({
         type: 'style',
         path: filePath,
     });
-    return `<rules_prerender:annotation>${
-        annotation
-    }</rules_prerender:annotation>`;
 }
 
 /** An error thrown when an inline style is not found in the inline style map. */

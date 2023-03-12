@@ -1,0 +1,13 @@
+{
+  "name": "@rules_prerender/preact",
+  "version": "0.0.0-PLACEHOLDER",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "preact-render-to-string": "^5.2.6"
+  },
+  "peerDependencies": {
+    "preact": "^10.13.1",
+    "rules_prerender": "^0.0.0-PLACEHOLDER"
+  }
+}

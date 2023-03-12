@@ -1,0 +1,55 @@
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@rules_prerender_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/publish:defs.bzl", "npm_publish")
+load("//tools/stamping:defs.bzl", "stamp_package")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+npm_link_all_packages(name = "node_modules")
+
+stamp_package(name = "package")
+npm_package(
+    name = "pkg",
+    srcs = [
+        "README.md",
+        ":package",
+        ":preact",
+    ],
+    package = "@rules_prerender/preact",
+    visibility = ["//visibility:public"],
+
+    # TODO(#59): Remove when upstream is fixed.
+    # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
+    include_external_repositories = ["rules_prerender"],
+)
+npm_publish(
+    name = "pkg_publish",
+    package = ":pkg",
+    npmrc = "//:.npmrc",
+)
+
+ts_project(
+    name = "preact",
+    srcs = ["index.mts"],
+    deps = [
+        ":node_modules/preact-render-to-string",
+        "//:node_modules/preact",
+        "//:node_modules/rules_prerender",
+    ],
+)
+
+ts_project(
+    name = "preact_test_lib",
+    srcs = ["index_test.mts"],
+    deps = [
+        ":preact",
+        ":node_modules/preact-render-to-string",
+        "//common/models:prerender_annotation",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "preact_test",
+    deps = [":preact_test_lib"],
+)
