@@ -3,7 +3,7 @@ import { mockPrerenderMetadata, mockScriptMetadata } from '../../../common/model
 import { PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
 import { execBinary, ProcessResult } from '../../../common/testing/binary.mjs';
 import { useTempDir } from '../../../common/testing/temp_dir.mjs';
-import { createAnnotation } from '../../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../../common/models/prerender_annotation.mjs';
 
 const extractor = 'tools/binaries/annotation_extractor/annotation_extractor.sh';
 
@@ -23,8 +23,8 @@ describe('annotation_extractor', () => {
     const tmpDir = useTempDir();
 
     it('extracts annotations', async () => {
-        const annotation1 = createAnnotation({ type: 'script', path: 'foo.js' });
-        const annotation2 = createAnnotation({ type: 'script', path: 'bar.js' });
+        const annotation1 = serialize({ type: 'script', path: 'foo.js' });
+        const annotation2 = serialize({ type: 'script', path: 'bar.js' });
 
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
@@ -114,7 +114,7 @@ describe('annotation_extractor', () => {
     });
 
     it('deduplicates extracted annotations', async () => {
-        const annotation = createAnnotation({ type: 'script', path: 'foo.js' });
+        const annotation = serialize({ type: 'script', path: 'foo.js' });
 
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
@@ -170,7 +170,7 @@ describe('annotation_extractor', () => {
     });
 
     it('extracts annotations from a file in a nested directory', async () => {
-        const annotation = createAnnotation({ type: 'script', path: 'foo.js' });
+        const annotation = serialize({ type: 'script', path: 'foo.js' });
 
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });
@@ -231,7 +231,7 @@ describe('annotation_extractor', () => {
     });
 
     it('passes through non-HTML files', async () => {
-        const annotation = createAnnotation({ type: 'script', path: 'foo.js' });
+        const annotation = serialize({ type: 'script', path: 'foo.js' });
 
         await fs.mkdir(`${tmpDir.get()}/input_html`, { recursive: true });
         await fs.mkdir(`${tmpDir.get()}/output_html`, { recursive: true });

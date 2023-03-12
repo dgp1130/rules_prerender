@@ -1,13 +1,13 @@
 import { HTMLElement, parse } from 'node-html-parser';
-import { createAnnotation } from './models/prerender_annotation.mjs';
+import { serialize } from './models/prerender_annotation.mjs';
 import { walkAllAnnotations } from './prerender_annotation_walker.mjs';
 
 describe('prerender_annotation_walker', () => {
     describe('walkAllAnnotations()', () => {
         it('walks all annotations', () => {
-            const annotation1 = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
-            const annotation2 = createAnnotation({ type: 'script', path: 'wksp/bar.js' });
-            const annotation3 = createAnnotation({ type: 'script', path: 'wksp/baz.js' });
+            const annotation1 = serialize({ type: 'script', path: 'wksp/foo.js' });
+            const annotation2 = serialize({ type: 'script', path: 'wksp/bar.js' });
+            const annotation3 = serialize({ type: 'script', path: 'wksp/baz.js' });
 
             const root = parse(`
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ describe('prerender_annotation_walker', () => {
         });
 
         it('can remove nodes from the tree', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
+            const annotation = serialize({ type: 'script', path: 'wksp/foo.js' });
 
             const root = parse(`
 <!DOCTYPE html>
@@ -67,7 +67,7 @@ describe('prerender_annotation_walker', () => {
         });
 
         it('can replace nodes in the tree', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
+            const annotation = serialize({ type: 'script', path: 'wksp/foo.js' });
 
             const root = parse(`
 <!DOCTYPE html>
@@ -119,8 +119,7 @@ describe('prerender_annotation_walker', () => {
 </html>
             `.trim());
 
-            expect(() => Array.from(walkAllAnnotations(root)))
-                .toThrowError(/Failed to parse annotation/);
+            expect(() => Array.from(walkAllAnnotations(root))).toThrow();
         });
     });
 });

@@ -1,4 +1,4 @@
-import { createAnnotation } from '../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { includeScript } from './scripts.mjs';
 
 describe('scripts', () => {
@@ -11,7 +11,7 @@ describe('scripts', () => {
 
             expect(annotation).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'script',
         path: 'path/to/pkg/baz.mjs',
     })
@@ -27,7 +27,7 @@ describe('scripts', () => {
 
             expect(annotation).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'script',
         path: 'path/to/pkg/some/subdir/foo.mjs',
     })
@@ -43,7 +43,7 @@ describe('scripts', () => {
 
             expect(annotation).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'script',
         path: 'path/foo.mjs',
     })

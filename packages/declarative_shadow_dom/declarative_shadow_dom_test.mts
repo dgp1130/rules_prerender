@@ -1,4 +1,4 @@
-import { createAnnotation } from '../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { polyfillDeclarativeShadowDom } from './declarative_shadow_dom.mjs';
 
 describe('declarative_shadow_dom', () => {
@@ -7,7 +7,7 @@ describe('declarative_shadow_dom', () => {
             expect(polyfillDeclarativeShadowDom())
                 .toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'script',
         path: 'packages/declarative_shadow_dom/declarative_shadow_dom_polyfill.mjs',
     })

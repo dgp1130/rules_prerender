@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { createAnnotation } from '../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { getMap as getInlineStyleMap } from './inline_style_map.mjs';
 import { wkspRelative } from './paths.mjs';
 
@@ -41,7 +41,7 @@ export function inlineStyle(importPath: string, meta: ImportMeta): string {
     }
 
     // Return an annotation with the real file path.
-    const annotation = createAnnotation({
+    const annotation = serialize({
         type: 'style',
         path: filePath,
     });

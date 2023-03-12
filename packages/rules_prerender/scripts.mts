@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { createAnnotation } from '../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { wkspRelative } from './paths.mjs';
 
 /**
@@ -26,7 +26,7 @@ export function includeScript(filePath: string, meta: ImportMeta): string {
             filePath}" from "${wkspRelativePath}".`);
     }
 
-    const annotation = createAnnotation({
+    const annotation = serialize({
         type: 'script',
         path: resolved,
     });

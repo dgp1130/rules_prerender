@@ -1,37 +1,28 @@
-const prefix = 'bazel:rules_prerender:PRIVATE_DO_NOT_DEPEND_OR_ELSE';
-
 /**
- * Creates an annotation comment and returns it, should be rendered directly
- * into prerendered HTML for the build process to use.
+ * Serializes an annotation and returns it, should be rendered directly into
+ * prerendered HTML for the build process to use.
  * 
  * @param annotation The annotation to convert to a string.
  * @return The annotation expressed as a string where it can be easily parsed by
  *     tooling.
  */
-export function createAnnotation(annotation: PrerenderAnnotation): string {
-    return `${prefix} - ${JSON.stringify(annotation)}`;
+export function serialize(annotation: PrerenderAnnotation): string {
+    return JSON.stringify(annotation, null, 4);
 }
 
 /**
- * Parse an annotation from HTML comment text. The input must **not** contain
- * the leading `<!--` or trailing `-->` of an HTML comment. Returns `undefined`
- * if the comment does not appear to be an annotation.
+ * Parse an annotation from HTML text content. The input must **not** contain
+ * the leading or trailing `<rules_prerender:annotation>` tag of the HTML
+ * element.
  * 
- * @param comment The comment to parse an annotation from.
- * @returns The parsed annotation or `undefined` if the comment does not appear
- *     to be an annotation.
+ * @param content The text content to parse an annotation from.
+ * @returns The parsed annotation.
  * @throws If the parsed annotation does not contain valid JSON. This is
  *     indicative of an annotation creation error, so this is effectively an
  *     assertion error.
  */
-export function parseAnnotation(comment: string): PrerenderAnnotation|undefined {
-    if (!comment.trim().startsWith(prefix)) {
-        return undefined;
-    }
-    const separatorIndex = comment.indexOf('-');
-    if (separatorIndex === -1) return undefined;
-    const json = comment.substring(separatorIndex + 1).trim();
-    return JSON.parse(json) as PrerenderAnnotation;
+export function deserialize(content: string): PrerenderAnnotation {
+    return JSON.parse(content) as PrerenderAnnotation;
 }
 
 /**

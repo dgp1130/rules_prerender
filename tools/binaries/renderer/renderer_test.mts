@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import * as rulesPrerender from 'rules_prerender';
 import { ProcessResult } from '../../../common/testing/binary.mjs';
 import { useTempDir } from '../../../common/testing/temp_dir.mjs';
-import { createAnnotation } from '../../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../../common/models/prerender_annotation.mjs';
 import { createRenderer } from './renderer.mjs';
 
 /**
@@ -172,7 +172,7 @@ describe('renderer', () => {
 
         const index = await fs.readFile(
             `${tmpDir.get()}/output/index.html`, 'utf8');
-        const expectedAnnotation = createAnnotation({
+        const expectedAnnotation = serialize({
             type: 'style',
             path: 'hello/world.css',
         });

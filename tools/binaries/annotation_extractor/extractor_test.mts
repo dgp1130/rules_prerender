@@ -1,10 +1,10 @@
 import { extract } from './extractor.mjs';
-import { createAnnotation } from '../../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../../common/models/prerender_annotation.mjs';
 
 describe('extractor', () => {
     describe('extract()', () => {
         it('extracts annotations from the given HTML contents', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
+            const annotation = serialize({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
 <!DOCTYPE html>
 <html>
@@ -39,7 +39,7 @@ describe('extractor', () => {
         });
 
         it('extracts a first node annotation', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
+            const annotation = serialize({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
 <rules_prerender:annotation>${annotation}</rules_prerender:annotation><!DOCTYPE html>
 <html>
@@ -68,7 +68,7 @@ describe('extractor', () => {
         });
 
         it('ignores unrelated comments', () => {
-            const annotation = createAnnotation({ type: 'script', path: 'wksp/foo.js' });
+            const annotation = serialize({ type: 'script', path: 'wksp/foo.js' });
             const [ extracted, annotations ] = extract(`
 <!-- Some leading comment. -->
 <!DOCTYPE html>
@@ -107,7 +107,7 @@ describe('extractor', () => {
         });
 
         it('ignores styles', () => {
-            const annotation = createAnnotation({ type: 'style', path: 'wksp/foo.css' });
+            const annotation = serialize({ type: 'style', path: 'wksp/foo.css' });
 
             const [ extracted, annotations ] = extract(`
 <!DOCTYPE html>

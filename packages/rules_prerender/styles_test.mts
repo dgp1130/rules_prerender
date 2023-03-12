@@ -1,5 +1,5 @@
 import * as inlineStyleMap from './inline_style_map.mjs';
-import { createAnnotation } from '../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { inlineStyle, InlineStyleNotFoundError } from './styles.mjs';
 
 describe('styles', () => {
@@ -20,7 +20,7 @@ describe('styles', () => {
 
             expect(annotation).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'style',
         path: 'some/real/file.css',
     })
@@ -40,7 +40,7 @@ describe('styles', () => {
 
             expect(annotation).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'style',
         path: 'some/real/file.css',
     })
@@ -60,7 +60,7 @@ describe('styles', () => {
 
             expect(annotation).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'style',
         path: 'some/real/file.css',
     })
@@ -92,7 +92,7 @@ describe('styles', () => {
 
             expect(inlineStyle('./foo.css', meta)).toBe(`
 <rules_prerender:annotation>${
-    createAnnotation({
+    serialize({
         type: 'style',
         path: 'path/to/pkg/foo.css',
     })

@@ -1,5 +1,5 @@
 import { HTMLElement } from 'node-html-parser';
-import { parseAnnotation, PrerenderAnnotation } from './models/prerender_annotation.mjs';
+import { deserialize, PrerenderAnnotation } from './models/prerender_annotation.mjs';
 
 /**
  * A reference to a `node-html-parser` `Node` which contains a
@@ -31,9 +31,7 @@ function* walkAnnotations(els: Generator<HTMLElement, void, void>):
         if (el.tagName?.toLowerCase() !== 'rules_prerender:annotation') continue;
 
         // Parse the annotation.
-        const annotation = parseAnnotation(el.textContent);
-        if (!annotation) throw new Error(`Failed to parse annotation:\n${el.outerHTML}`);
-
+        const annotation = deserialize(el.textContent);
         yield { annotation, el };
     }
 }

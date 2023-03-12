@@ -1,5 +1,5 @@
 import { FileSystemFake } from '../../../common/file_system_fake.mjs';
-import { createAnnotation } from '../../../common/models/prerender_annotation.mjs';
+import { serialize } from '../../../common/models/prerender_annotation.mjs';
 import { InjectorConfig } from './config.mjs';
 import { inject } from './injector.mjs';
 
@@ -96,7 +96,7 @@ describe('injector', () => {
         });
 
         it('inlines style annotations', async () => {
-            const annotation = createAnnotation({ type: 'style', path: 'foo.css' });
+            const annotation = serialize({ type: 'style', path: 'foo.css' });
 
             const input = `
 <!DOCTYPE html>
@@ -135,7 +135,7 @@ describe('injector', () => {
 
         it('throws on any annotations other than style annotations', async () => {
             // Should fail when given a script annotation.
-            const scriptAnnotation = createAnnotation({
+            const scriptAnnotation = serialize({
                 type: 'script',
                 path: 'foo.js',
             });
