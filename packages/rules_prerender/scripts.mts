@@ -18,8 +18,8 @@ export function includeScript(filePath: string, meta: ImportMeta): string {
  * wrapping. This is useful for templating engines which don't have easy "parse
  * HTML into safe type" utilities.
  */
-export function includeScriptAnnotation(
-        filePath: string, meta: ImportMeta): string {
+export function includeScriptAnnotation(filePath: string, meta: ImportMeta):
+        string {
     if (!filePath.startsWith('.')) {
         throw new Error(`Only relative imports are supported and must start with \`./\` or \`../\`: "${filePath}".`);
     }
