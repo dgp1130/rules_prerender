@@ -1,7 +1,7 @@
 import { PrerenderResource, includeScript, renderToHtml } from '@rules_prerender/preact';
 
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Script Isolation</title>
@@ -16,7 +16,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
         </html>
     ));
 
-    yield PrerenderResource.of('/foo.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/foo.html', renderToHtml(
         <html>
             <head>
                 <title>Script Isolation</title>
@@ -30,7 +30,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
         </html>
     ));
 
-    yield PrerenderResource.of('/bar.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/bar.html', renderToHtml(
         <html>
             <head>
                 <title>Script Isolation</title>

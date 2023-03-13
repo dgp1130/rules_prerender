@@ -6,7 +6,7 @@ import { Counter } from '../components/counter/counter_prerender.js';
 
 /** Renders the counter page. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of(
+    yield PrerenderResource.fromHtml(
         '/counter/index.html',
         renderToHtml(baseLayout('Counter',
             <article>

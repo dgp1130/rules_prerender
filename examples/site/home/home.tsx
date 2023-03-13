@@ -5,7 +5,8 @@ import { repo, srcLink } from '../common/links.mjs';
 
 /** Renders the entire home page. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(baseLayout('Home',
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(baseLayout(
+        'Home',
         <article>
             <Template shadowroot='open'>
                 {polyfillDeclarativeShadowDom()}
@@ -78,6 +79,6 @@ export default function*(): Generator<PrerenderResource, void, void> {
                     of <code>rules_prerender</code>!
                 </p>
             </Template>
-        </article>
+        </article>,
     )));
 }

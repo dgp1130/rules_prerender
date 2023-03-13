@@ -11,7 +11,7 @@ export default async function*():
     const files = entries.filter((entry) => entry.isFile());
 
     // Generate an index page which links to all posts.
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Data</title>
@@ -40,7 +40,7 @@ export default async function*():
             encoding: 'utf8',
         });
 
-        yield PrerenderResource.of(`/posts/${baseName}.html`, renderToHtml(
+        yield PrerenderResource.fromHtml(`/posts/${baseName}.html`, renderToHtml(
             <html>
                 <head>
                     <title>{baseName}</title>

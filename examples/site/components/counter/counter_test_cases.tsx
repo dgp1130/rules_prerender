@@ -4,7 +4,7 @@ import { Counter } from './counter_prerender.js';
 /** Generates prerendered test cases of the counter. */
 export default function* (): Generator<PrerenderResource, void, void> {
     // Prerendered counter with an initial value of zero.
-    yield PrerenderResource.of('/zero.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/zero.html', renderToHtml(
         <html>
             <head>
                 <title>Zero</title>
@@ -16,7 +16,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
     ));
 
     // Prerendered counter with a positive initial value (4).
-    yield PrerenderResource.of('/positive.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/positive.html', renderToHtml(
         <html>
             <head>
                 <title>Positive</title>
@@ -28,7 +28,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
     ));
 
     // Prerendered counter with a negative initial value (-7).
-    yield PrerenderResource.of('/negative.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/negative.html', renderToHtml(
         <html>
             <head>
                 <title>Negative</title>

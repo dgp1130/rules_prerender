@@ -3,7 +3,7 @@ import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 
 /** Renders the page. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Minimal</title>

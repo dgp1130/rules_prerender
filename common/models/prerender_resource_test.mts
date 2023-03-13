@@ -4,7 +4,7 @@ import { PrerenderResource } from './prerender_resource.mjs';
 describe('PrerenderResource', () => {
     describe('of()', () => {
         it('returns a `PrerenderResource` from `SafeHtml` data', () => {
-            const res = PrerenderResource.of(
+            const res = PrerenderResource.fromHtml(
                 '/foo/bar.html', safe`<div></div>`);
 
             expect(res.path).toBe('/foo/bar.html');
@@ -12,19 +12,19 @@ describe('PrerenderResource', () => {
         });
 
         it('throws when given non-`SafeHtml` input', () => {
-            expect(() => PrerenderResource.of(
+            expect(() => PrerenderResource.fromHtml(
                 '/foo/bar.html',
                 'unsafe HTML content' as unknown as SafeHtml,
             )).toThrowError(/Only `SafeHtml` objects can be used in `\*.html` or `\*.htm` files\./);
 
-            expect(() => PrerenderResource.of(
+            expect(() => PrerenderResource.fromHtml(
                 '/foo/bar.html',
                 { getHtmlAsString: () => 'unsafe HTML content' } as SafeHtml,
             )).toThrowError(/Only `SafeHtml` objects can be used in `\*.html` or `\*.htm` files\./);
         });
 
         it('throws when given an invalid URL path', () => {
-            expect(() => PrerenderResource.of(
+            expect(() => PrerenderResource.fromHtml(
                 'does/not/start/with/a/slash.ext',
                 safe`Hello, World!`,
             )).toThrowError(/must start with a "\/"/);

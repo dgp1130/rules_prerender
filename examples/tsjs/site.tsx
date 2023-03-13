@@ -4,7 +4,7 @@ import { TsParent } from './ts_parent/ts_parent.js';
 
 export default function*(): Generator<PrerenderResource, void, void> {
     // Index page to list the various test cases.
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>TS/JS</title>
@@ -26,7 +26,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     ));
 
     // Test case for JS depending on TS.
-    yield PrerenderResource.of('/js-depends-on-ts.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/js-depends-on-ts.html', renderToHtml(
         <html>
             <head>
                 <title>JS depends on TS</title>
@@ -39,7 +39,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     ));
 
     // Test case for TS depending on JS.
-    yield PrerenderResource.of('/ts-depends-on-js.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/ts-depends-on-js.html', renderToHtml(
         <html>
             <head>
                 <title>TS depends on JS</title>
@@ -52,7 +52,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     ));
 
     // Test case for client-side TS depending on JS.
-    yield PrerenderResource.of(
+    yield PrerenderResource.fromHtml(
         '/ts-script-depends-on-js-script.html',
         renderToHtml(
             <html>
@@ -72,7 +72,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     );
 
     // Test case for client-side JS depending on TS.
-    yield PrerenderResource.of(
+    yield PrerenderResource.fromHtml(
         '/js-script-depends-on-ts-script.html',
         renderToHtml(
             <html>

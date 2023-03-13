@@ -1,7 +1,7 @@
 import { PrerenderResource, includeScript, renderToHtml } from '@rules_prerender/preact';
 
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Shared Chunks</title>
@@ -16,7 +16,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
         </html>
     ));
 
-    yield PrerenderResource.of('/hello.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/hello.html', renderToHtml(
         <html>
             <head>
                 <title>Shared Chunks</title>
@@ -29,7 +29,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
         </html>
     ));
 
-    yield PrerenderResource.of('/goodbye.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/goodbye.html', renderToHtml(
         <html>
             <head>
                 <title>Shared Chunks</title>

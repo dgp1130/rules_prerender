@@ -150,7 +150,7 @@ describe('renderer', () => {
 
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
-                yield PrerenderResource.of(
+                yield PrerenderResource.fromHtml(
                     '/index.html',
                     rulesPrerender.unsafeTreatStringAsSafeHtml(`
 <!DOCTYPE html>
@@ -237,7 +237,7 @@ describe('renderer', () => {
 
         const { code, stdout, stderr } = await run({
             entryModule: async function* () {
-                yield PrerenderResource.of(
+                yield PrerenderResource.fromHtml(
                     '/index.html',
                     rulesPrerender.unsafeTreatStringAsSafeHtml(`
 <!DOCTYPE html>

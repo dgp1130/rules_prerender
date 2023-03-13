@@ -4,7 +4,7 @@ import { Component } from './component/component.mjs';
 
 /* Renders the page. */
 export default function* () {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         h('html', {}, [
             h('head', {}, [
                 h('meta', { charSet: 'utf8' }),

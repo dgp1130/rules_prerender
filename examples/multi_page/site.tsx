@@ -2,7 +2,7 @@ import { PrerenderResource, includeScript, inlineStyle, renderToHtml } from '@ru
 import { ComponentChildren, VNode } from 'preact';
 
 export default function* (): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <Page>
             <h2>Multi-Page</h2>
             <img src="/logo.png" />
@@ -16,17 +16,17 @@ export default function* (): Generator<PrerenderResource, void, void> {
         </Page>,
     ));
 
-    yield PrerenderResource.of('/foo.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/foo.html', renderToHtml(
         <Page>
             <h2>Foo</h2>
         </Page>,
     ));
-    yield PrerenderResource.of('/bar.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/bar.html', renderToHtml(
         <Page>
             <h2>Bar</h2>
         </Page>,
     ));
-    yield PrerenderResource.of('/hello/world.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/hello/world.html', renderToHtml(
         <Page>
             <h2>Hello, World!</h2>
         </Page>,

@@ -54,7 +54,7 @@ prerender_pages(
 import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 
 export default function* (): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>My Preact Page</title>

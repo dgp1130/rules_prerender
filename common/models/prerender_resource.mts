@@ -30,7 +30,8 @@ export class PrerenderResource {
      * @param contents A {@link SafeHtml} object to encode as a UTF-8 string.
      * @returns A {@link PrerenderResource} object representing the resource.
      */
-    public static of(path: string, contents: SafeHtml): PrerenderResource {
+    public static fromHtml(path: string, contents: SafeHtml):
+            PrerenderResource {
         if (!isSafeHtml(contents)) {
             throw new Error(`Only \`SafeHtml\` objects can be used in \`*.html\` or \`*.htm\` files. Use a rendering engine like \`@rules_prerender/preact\` to render to \`SafeHtml\`.`);
         }
@@ -49,7 +50,7 @@ export class PrerenderResource {
      * 
      * @param path The path the file will be generated at relative to the final
      *     generated site. Must begin with a `/` character. Must *not* end in 
-     *     `.html` or `.htm`. Use {@link PrerenderResource.of} with
+     *     `.html` or `.htm`. Use {@link PrerenderResource.fromHtml} with
      *     {@link SafeHtml} to generate HTML content.
      * @param contents A UTF-8 encoded string to output at the given path.
      * @returns A {@link PrerenderResource} object representing the resource.
@@ -60,7 +61,7 @@ export class PrerenderResource {
         // constructed and there could be injection attacks within it.
         if (path.endsWith('.html') || path.endsWith('.htm')) {
             throw new Error(`Cannot generate a \`*.html\` or \`*.htm\` file (${
-                path}) from a raw string (this would be unsafe!). HTML content should be rendered to \`SafeHtml\` first, and then written to a file in \`PrerenderResource.of()\`.`);
+                path}) from a raw string (this would be unsafe!). HTML content should be rendered to \`SafeHtml\` first, and then written to a file in \`PrerenderResource.fromHtml()\`.`);
         }
 
         return new PrerenderResource({
@@ -75,7 +76,7 @@ export class PrerenderResource {
      * 
      * @param path The path the file will be generated at relative to the final
      *     generated site. Must begin with a `/` character. Must *not* end in 
-     *     `.html` or `.htm`. Use {@link PrerenderResource.of} with
+     *     `.html` or `.htm`. Use {@link PrerenderResource.fromHtml} with
      *     {@link SafeHtml} to generate HTML content.
      * @param contents Binary content to associate with the given path.
      * @returns A {@link PrerenderResource} object representing the resource.
@@ -89,7 +90,7 @@ export class PrerenderResource {
         // constructed and there could be injection attacks within it.
         if (path.endsWith('.html') || path.endsWith('.htm')) {
             throw new Error(`Cannot generate a \`*.html\` or \`*.htm\` file (${
-                path}) from a raw string (this would be unsafe!). HTML content should be rendered to \`SafeHtml\` first, and then written to a file in \`PrerenderResource.of()\`.`);
+                path}) from a raw string (this would be unsafe!). HTML content should be rendered to \`SafeHtml\` first, and then written to a file in \`PrerenderResource.fromHtml()\`.`);
         }
 
         return new PrerenderResource({

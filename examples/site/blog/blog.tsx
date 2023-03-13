@@ -47,7 +47,7 @@ export default async function*():
 
 /** Generate and return a resource with the list of posts at the given path. */
 function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
-    return PrerenderResource.of(path, renderToHtml(baseLayout('Blog', 
+    return PrerenderResource.fromHtml(path, renderToHtml(baseLayout('Blog', 
         <article>
             <Template shadowroot='open'>
                 {polyfillDeclarativeShadowDom()}
@@ -76,7 +76,7 @@ async function generatePost({ urlPath, title, fileName }: PostMeta):
     });
     const link = srcLink(`/examples/site/blog/posts/${fileName}`);
 
-    return PrerenderResource.of(urlPath, renderToHtml(baseLayout(title, 
+    return PrerenderResource.fromHtml(urlPath, renderToHtml(baseLayout(title, 
         <article>
             <Template shadowroot='open'>
                 {polyfillDeclarativeShadowDom()}

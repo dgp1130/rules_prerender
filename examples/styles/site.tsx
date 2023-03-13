@@ -2,7 +2,7 @@ import { PrerenderResource, Template, inlineStyle, renderToHtml } from '@rules_p
 
 /** Generates a page with an inline style in a declarative shadow root. */
 export default function* (): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Inline Styles</title>

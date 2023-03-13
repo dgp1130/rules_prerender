@@ -7,7 +7,7 @@ import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
  *     tsconfig file used to compile this file.
  */
 export default function*(foo): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', renderToHtml(
+    yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <html>
             <head>
                 <title>tsconfig</title>

@@ -5,7 +5,7 @@ import { srcLink } from '../common/links.mjs';
 
 /** Renders the about page. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of(
+    yield PrerenderResource.fromHtml(
         '/about/index.html',
         renderToHtml(baseLayout('About',
             <article>
