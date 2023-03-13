@@ -7,5 +7,6 @@ export default function* (): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.fromText('/goodbye.txt', 'Goodbye, World!');
 
     // Can prerender binary files.
-    yield PrerenderResource.of('/data.bin', new Uint8Array([ 0, 1, 2, 3 ]));
+    yield PrerenderResource.fromBinary(
+        '/data.bin', new Uint8Array([ 0, 1, 2, 3 ]));
 }

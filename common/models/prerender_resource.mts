@@ -27,19 +27,19 @@ export class PrerenderResource {
      * 
      * @param path The path the file will be generated at relative to the final
      *     generated site. Must begin with a `/` character.
-     * @param contents A {@link SafeHtml}, {@link ArrayBuffer}, or
-     *     {@link TypedArray} object with the file contents of the resource. If
-     *     {@link SafeHtml} is given, it is encoded as a UTF-8 string. If an
-     *     {@link ArrayBuffer} or {@link TypedArray} is given, it used as is.
-     * @returns A `PrerenderResource` object representing the resource.
+     * @param contents A {@link SafeHtml} object to encode as a UTF-8 string.
+     * @returns A {@link PrerenderResource} object representing the resource.
      */
-    public static of(
-        path: string,
-        contents: SafeHtml | ArrayBuffer | TypedArray,
-    ): PrerenderResource {
+    public static of(path: string, contents: SafeHtml): PrerenderResource {
+        if (!isSafeHtml(contents)) {
+            throw new Error(`Only \`SafeHtml\` objects can be used in \`*.html\` or \`*.htm\` files. Use a rendering engine like \`@rules_prerender/preact\` to render to \`SafeHtml\`.`);
+        }
+
+        const binary =
+            new TextEncoder().encode(contents.getHtmlAsString()).buffer;
         return new PrerenderResource({
             urlPath: UrlPath.of(path),
-            contents: normalizeContents(contents),
+            contents: binary,
         });
     }
 
@@ -52,7 +52,7 @@ export class PrerenderResource {
      *     `.html` or `.htm`. Use {@link PrerenderResource.of} with
      *     {@link SafeHtml} to generate HTML content.
      * @param contents A UTF-8 encoded string to output at the given path.
-     * @returns A `PrerenderResource` object representing the resource.
+     * @returns A {@link PrerenderResource} object representing the resource.
      */
     public static fromText(path: string, contents: string): PrerenderResource {
         // Reject outputting `*.html` and `*.htm` files from plain text. There
@@ -68,35 +68,35 @@ export class PrerenderResource {
             contents: new TextEncoder().encode(contents).buffer,
         });
     }
-}
 
-/**
- * Accepts various input types and normalizes them to a simple
- * {@link ArrayBuffer} representing the input content. If the input is a
- * {@link SafeHtml}, it will be encoded as a UTF-8 string. If the input is an
- * {@link ArrayBuffer} or a {@link TypedArray}, its content is used as is.
- * 
- * NOTE: {@link TypedArray} does **not** extend {@link ArrayBuffer}, however
- * they are unfortunately compatible from a structural typing perspective, so
- * TypeScript allows a {@link Uint8Array} in place of an {@link ArrayBuffer},
- * even though something like `instanceof ArrayBuffer` would return `false`.
- * This is an easy foot-gun for users to encounter, so we should support such
- * inputs as a result.
- */
-function normalizeContents(contents: SafeHtml | ArrayBuffer | TypedArray):
-        ArrayBuffer {
-    if (contents instanceof ArrayBuffer) return contents;
-    if (isTypedArray(contents)) return contents.buffer;
-    if (isSafeHtml(contents)) {
-        return new TextEncoder().encode(contents.getHtmlAsString()).buffer;
+    /**
+     * Returns a {@link PrerenderResource} representing a file with the provided
+     * {@param contents} at the given {@param path} within the site.
+     * 
+     * @param path The path the file will be generated at relative to the final
+     *     generated site. Must begin with a `/` character. Must *not* end in 
+     *     `.html` or `.htm`. Use {@link PrerenderResource.of} with
+     *     {@link SafeHtml} to generate HTML content.
+     * @param contents Binary content to associate with the given path.
+     * @returns A {@link PrerenderResource} object representing the resource.
+     */
+    public static fromBinary(
+        path: string,
+        contents: ArrayBuffer | TypedArray,
+    ): PrerenderResource {
+        // Reject outputting `*.html` and `*.htm` files from plain text. There
+        // is no general expectation that the input raw string was safely
+        // constructed and there could be injection attacks within it.
+        if (path.endsWith('.html') || path.endsWith('.htm')) {
+            throw new Error(`Cannot generate a \`*.html\` or \`*.htm\` file (${
+                path}) from a raw string (this would be unsafe!). HTML content should be rendered to \`SafeHtml\` first, and then written to a file in \`PrerenderResource.of()\`.`);
+        }
+
+        return new PrerenderResource({
+            urlPath: UrlPath.of(path),
+            contents: isTypedArray(contents) ? contents.buffer : contents,
+        });
     }
-
-    // Should never happen if TypeScript types are respected, but JavaScript
-    // users or unsound input types may hit this case.
-    throw new Error(
-        `Input is not a \`SafeHtml\`, \`ArrayBuffer\`, or \`TypedArray\`:\n${
-            contents}`,
-    );
 }
 
 /**
