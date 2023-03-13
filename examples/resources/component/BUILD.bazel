@@ -3,11 +3,12 @@ load("//:index.bzl", "prerender_component", "web_resources")
 
 prerender_component(
     name = "component",
-    srcs = ["component.mts"],
+    srcs = ["component.tsx"],
     tsconfig = "//:tsconfig",
     source_map = True,
     resources = [":resources"],
     visibility = ["//examples/resources:__subpackages__"],
+    lib_deps = ["//:node_modules/preact"],
     deps = ["//examples/resources/transitive"],
 )
 

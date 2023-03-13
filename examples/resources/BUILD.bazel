@@ -1,4 +1,4 @@
-load("//tools/typescript:defs.bzl", "ts_project")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load(
     "//:index.bzl",
     "prerender_pages",
@@ -6,15 +6,26 @@ load(
     "web_resources_devserver",
 )
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+copy_to_bin(
+    name = "package",
+    srcs = ["package.json"],
+)
 
 prerender_pages(
     name = "site",
-    src = "site.mts",
+    src = "site.tsx",
     tsconfig = "//:tsconfig",
     source_map = True,
+    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
+    data = [":package"],
     bundle_js = False, # Optimization: No client-side JavaScript on this site.
     resources = [":resources"],
-    lib_deps = ["//:node_modules/rules_prerender"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     deps = [
         "//examples/resources/component",
         "//examples/resources/transitive",
