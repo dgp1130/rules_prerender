@@ -1,10 +1,9 @@
-import { renderTsChild } from '../ts_child/ts_child.mjs';
+import { h } from 'preact';
+import { TsChild } from '../ts_child/ts_child.js';
 
-export function renderJsParent() {
-    return `
-<div class="js-parent">
-    <span>JS parent</span>
-    ${renderTsChild()}
-</div>
-    `.trim();
+export function JsParent() {
+    return h('div', { className: 'js-parent' }, [
+        h('span', {}, [ 'JS parent' ]),
+        TsChild(),
+    ]);
 }

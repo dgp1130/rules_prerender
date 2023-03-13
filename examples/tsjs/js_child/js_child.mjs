@@ -1,7 +1,7 @@
-export function renderJsChild() {
-    return `
-<div class="js-child">
-    <span>JS child</span>
-</div>
-    `.trim();
+import { h } from 'preact';
+
+export function JsChild() {
+    return h('div', { className: 'js-child' }, [
+        h('span', {}, [ 'JS child' ]),
+    ]);
 }

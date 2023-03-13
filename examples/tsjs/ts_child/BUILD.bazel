@@ -2,8 +2,9 @@ load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "ts_child",
-    srcs = ["ts_child.mts"],
+    srcs = ["ts_child.tsx"],
     tsconfig = "//:tsconfig",
     source_map = True,
     visibility = ["//examples/tsjs:__subpackages__"],
+    lib_deps = ["//:node_modules/preact"],
 )

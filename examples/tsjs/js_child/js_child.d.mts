@@ -1,1 +1,3 @@
-export function renderJsChild(): string;
+import { VNode } from 'preact';
+
+export function JsChild(): VNode;

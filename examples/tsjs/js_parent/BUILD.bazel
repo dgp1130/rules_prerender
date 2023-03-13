@@ -7,5 +7,6 @@ prerender_component(
         "js_parent.d.mts",
     ],
     visibility = ["//examples/tsjs:__subpackages__"],
+    lib_deps = ["//:node_modules/preact"],
     deps = ["//examples/tsjs/ts_child"],
 )
