@@ -1,4 +1,4 @@
-import { PrerenderResource, inlineStyle, includeScript, renderToHtml } from '@rules_prerender/preact';
+import { PrerenderResource, Template, inlineStyle, includeScript, renderToHtml } from '@rules_prerender/preact';
 import { Component } from './component/component.js';
 
 export default function*(): Generator<PrerenderResource, void, void> {
@@ -6,17 +6,21 @@ export default function*(): Generator<PrerenderResource, void, void> {
         <html>
             <head>
                 <title>Testonly</title>
-
-                {inlineStyle('./site_styles.css', import.meta)}
+                <meta charSet='utf8' />
             </head>
             <body>
                 <h2>Testonly</h2>
 
-                <div class='site'>
-                    <span class='hello'>Hello from a testonly page!</span>
-                    <img src='/images/site.png' />
+                <div>
+                    <Template shadowroot='open'>
+                        <span>Hello from a testonly page!</span>
+                        <img src='/images/site.png' />
+                        <slot></slot>
+
+                        {includeScript('./site_script.mjs', import.meta)}
+                        {inlineStyle('./site_styles.css', import.meta)}
+                    </Template>
                     <Component />
-                    {includeScript('./site_script.mjs', import.meta)}
                 </div>
             </body>
         </html>
