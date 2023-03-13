@@ -1,19 +1,20 @@
-load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "css_library", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "footer",
-    srcs = ["footer.mts"],
+    srcs = ["footer.tsx"],
     tsconfig = "//:tsconfig",
     source_map = True,
-    data = ["//:node_modules/rules_prerender"],
-    lib_deps = [
-        "//examples/site/common:links",
-        "//:node_modules/rules_prerender",
-    ],
     styles = [":styles"],
     visibility = ["//examples/site:__subpackages__"],
+    lib_deps = [
+        "//examples/site/common:links",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
+    deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
 )
 
 css_library(
@@ -24,13 +25,14 @@ css_library(
 
 ts_project(
     name = "footer_test_lib",
-    srcs = ["footer_test.mts"],
+    srcs = ["footer_test.tsx"],
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":footer_prerender_for_test",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
+        "//:node_modules/preact-render-to-string",
     ],
 )
 

@@ -2,14 +2,17 @@ load("//:index.bzl", "prerender_pages")
 
 prerender_pages(
     name = "counter",
-    src = "counter.mts",
+    src = "counter.tsx",
     tsconfig = "//:tsconfig",
     source_map = True,
+    visibility = ["//examples/site:__pkg__"],
+    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
+    data = ["//examples/site:package"],
     lib_deps = [
         "//examples/site/common:links",
-        "//:node_modules/rules_prerender",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
     ],
-    visibility = ["//examples/site:__pkg__"],
     deps = [
         "//examples/site/components/base",
         "//examples/site/components/counter",

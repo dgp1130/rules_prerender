@@ -22,6 +22,7 @@ importers:
       markdown-it: ^12.0.4
       node-html-parser: ^6.1.5
       preact: ^10.13.1
+      preact-render-to-string: ^5.2.6
       rollup: ^2.35.1
       tree-kill: ^1.2.2
       typescript: 4.9.5
@@ -49,6 +50,7 @@ importers:
       http-status-codes: 2.1.4
       husky: 7.0.2
       preact: 10.13.1
+      preact-render-to-string: 5.2.6_preact@10.13.1
       tree-kill: 1.2.2
       typescript: 4.9.5
       webdriverio: 7.20.9_typescript@4.9.5
@@ -2043,6 +2045,15 @@ packages:
       pretty-format: 3.8.0
     dev: false
 
+  /preact-render-to-string/5.2.6_preact@10.13.1:
+    resolution: {integrity: sha512-JyhErpYOvBV1hEPwIxc/fHWXPfnEGdRKxc8gFdAZ7XV4tlzyzG847XAyEZqoDnynP88akM4eaHcSOzNcLWFguw==}
+    peerDependencies:
+      preact: '>=10'
+    dependencies:
+      preact: 10.13.1
+      pretty-format: 3.8.0
+    dev: true
+
   /preact/10.13.1:
     resolution: {integrity: sha512-KyoXVDU5OqTpG9LXlB3+y639JAGzl8JSBXLn1J9HTSB3gbKcuInga7bZnXLlxmK94ntTs1EFeZp0lrja2AuBYQ==}
     dev: true
@@ -2054,7 +2065,6 @@ packages:
 
   /pretty-format/3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
-    dev: false
 
   /printj/1.1.2:
     resolution: {integrity: sha512-zA2SmoLaxZyArQTOPj5LXecR+RagfPSU5Kw1qP+jkWeNlrq+eJZyY2oS68SU1Z/7/myXM4lo9716laOFAVStCQ==}

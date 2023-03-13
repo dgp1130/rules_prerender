@@ -1,10 +1,10 @@
+import { PrerenderResource, Template, renderToHtml } from '@rules_prerender/preact';
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import mdLib from 'markdown-it';
-import { PrerenderResource } from 'rules_prerender';
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
 import { srcLink } from '../common/links.mjs';
-import { baseLayout } from '../components/base/base.mjs';
+import { baseLayout } from '../components/base/base.js';
 
 interface PostMeta {
     fileName: string;
@@ -46,25 +46,26 @@ export default async function*():
 }
 
 /** Generate and return a resource with the list of posts at the given path. */
-async function generatePostList(path: string, posts: PostMeta[]):
-        Promise<PrerenderResource> {
-    return PrerenderResource.of(path, await baseLayout('Blog', () => `
-<article>
-    <template shadowroot="open">
-        ${polyfillDeclarativeShadowDom()}
+function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
+    return PrerenderResource.of(path, renderToHtml(baseLayout('Blog', 
+        <article>
+            <Template shadowroot='open'>
+                {polyfillDeclarativeShadowDom()}
 
-        <p>Check out some blog posts! Each of these pages is authored as simple
-        markdown. They are each generated into a full HTML page, leveraging
-        shared components and infrastructure.</p>
+                <p>
+                    Check out some blog posts! Each of these pages is authored
+                    as simple markdown. They are each generated into a full HTML
+                    page, leveraging shared components and infrastructure.
+                </p>
 
-        <ul>
-            ${posts.map(({ title, urlPath: path }) => `
-                <li><a href="${path}">${title}</a></li>
-            `).join('')}
-        </ul>
-    </template>
-</article>
-    `.trim()));
+                <ul>
+                    {posts.map(({ title, urlPath: path }) => 
+                        <li><a href={path}>{title}</a></li>
+                    )}
+                </ul>
+            </Template>
+        </article>
+    )));
 }
 
 /** Generate and return a resource with the content of the post in HTML. */
@@ -75,15 +76,17 @@ async function generatePost({ urlPath, title, fileName }: PostMeta):
     });
     const link = srcLink(`/examples/site/blog/posts/${fileName}`);
 
-    return PrerenderResource.of(urlPath, await baseLayout(title, () => `
-<article>
-    <template shadowroot="open">
-        ${polyfillDeclarativeShadowDom()}
+    return PrerenderResource.of(urlPath, renderToHtml(baseLayout(title, 
+        <article>
+            <Template shadowroot='open'>
+                {polyfillDeclarativeShadowDom()}
 
-        <p>This post generated from <a href="${link}">${fileName}</a>.</p>
+                <p>This post generated from <a href={link.toString()}>{fileName}</a>.</p>
 
-        ${mdLib().render(markdown)}
-    </template>
-</article>
-    `));
+                <div dangerouslySetInnerHTML={{
+                    __html: mdLib().render(markdown)
+                }}></div>
+            </Template>
+        </article>
+    )));
 }

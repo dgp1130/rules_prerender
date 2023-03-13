@@ -1,10 +1,11 @@
 import { parse } from 'node-html-parser';
-import { renderFooter } from './footer.mjs';
+import { render } from 'preact-render-to-string';
+import { Footer } from './footer.js';
 
 describe('footer', () => {
-    describe('renderFooter()', () => {
+    describe('Footer()', () => {
         it('renders a footer', () => {
-            const fragment = parse(renderFooter());
+            const fragment = parse(render(<Footer />));
 
             const footerText = fragment.textContent
                 .trim()

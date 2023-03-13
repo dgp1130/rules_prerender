@@ -1,10 +1,14 @@
 import { parse } from 'node-html-parser';
-import { renderCounter } from './counter_prerender.mjs';
+import { render } from 'preact-render-to-string';
+import { Counter } from './counter_prerender.js';
 
 describe('counter', () => {
-    describe('renderCounter()', () => {
+    describe('Counter', () => {
         it('renders a counter', () => {
-            const fragment = parse(renderCounter(5));
+            const fragment = parse(render(
+                <Counter initialValue={5} />,
+                { pretty: true },
+            ));
 
             // Should render custom element.
             const counter = fragment.querySelector('site-counter');

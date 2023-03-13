@@ -1,14 +1,16 @@
-load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_pages(
     name = "blog",
-    src = "blog.mts",
+    src = "blog.tsx",
     tsconfig = "//:tsconfig",
     source_map = True,
     data = glob(["posts/*.md"]) + [
-        "//:node_modules/markdown-it",
+        # Need `"type": "module"` to load `*.js` files output by `*.tsx`
+        # compilation.
+        "//examples/site:package",
     ],
     visibility = ["//examples/site:__pkg__"],
     lib_deps = [

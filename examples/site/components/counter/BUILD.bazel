@@ -9,12 +9,14 @@ load("//tools/jasmine:defs.bzl", "jasmine_node_test", "jasmine_web_test_suite")
 
 prerender_component(
     name = "counter",
-    srcs = ["counter_prerender.mts"],
+    srcs = ["counter_prerender.tsx"],
     tsconfig = "//:tsconfig",
     source_map = True,
-    data = ["//:node_modules/rules_prerender"],
-    lib_deps = ["//:node_modules/rules_prerender"],
     scripts = [":scripts"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     visibility = ["//examples/site:__subpackages__"],
 )
 
@@ -26,13 +28,13 @@ ts_project(
 
 ts_project(
     name = "counter_prerender_test_lib",
-    srcs = ["counter_prerender_test.mts"],
+    srcs = ["counter_prerender_test.tsx"],
     testonly = True,
-    data = ["//:node_modules/node-html-parser"],
     deps = [
         ":counter_prerender_for_test",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
+        "//:node_modules/preact-render-to-string",
     ],
 )
 
@@ -43,10 +45,12 @@ jasmine_node_test(
 
 prerender_pages(
     name = "counter_test_cases",
-    src = "counter_test_cases.mts",
+    src = "counter_test_cases.tsx",
     tsconfig = "//:tsconfig",
     source_map = True,
     testonly = True,
+    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
+    data = ["//examples/site:package"],
     lib_deps = ["//:node_modules/rules_prerender"],
     deps = [":counter"],
 )

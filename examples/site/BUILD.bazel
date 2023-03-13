@@ -1,4 +1,11 @@
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//:index.bzl", "web_resources", "web_resources_devserver")
+
+copy_to_bin(
+    name = "package",
+    srcs = ["package.json"],
+    visibility = [":__subpackages__"],
+)
 
 web_resources(
     name = "site",

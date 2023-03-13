@@ -1,5 +1,5 @@
 import { parse } from 'node-html-parser';
-import renderBlog from './blog.mjs';
+import renderBlog from './blog.js';
 
 describe('Blog', () => {
     it('generates a list of posts', async () => {
@@ -35,6 +35,9 @@ describe('Blog', () => {
 
         const article = page.querySelector('article')!;
         expect(article.text).toContain('This is a blog post about Foo!');
+
+        // Markdown should be rendered to unescaped HTML.
+        expect(article.querySelector('h1')!.textContent).toBe('Foo');
     });
 
     it('generates the `Bar` post', async () => {
@@ -51,6 +54,9 @@ describe('Blog', () => {
         const article = page.querySelector('article')!;
         expect(article.text)
             .toContain('This is another blog post generated from markdown.');
+
+        // Markdown should be rendered to unescaped HTML.
+        expect(article.querySelector('h1')!.textContent).toBe('Bar');
     });
 
     it('generates the `Baz` post', async () => {
@@ -67,6 +73,9 @@ describe('Blog', () => {
         const article = page.querySelector('article')!;
         expect(article.text).toContain(
             'Here is one more blog post about nothing in particular');
+
+        // Markdown should be rendered to unescaped HTML.
+        expect(article.querySelector('h1')!.textContent).toBe('Baz');
     });
 });
 

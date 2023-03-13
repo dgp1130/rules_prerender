@@ -2,16 +2,19 @@ load("//:index.bzl", "css_library", "prerender_pages", "web_resources")
 
 prerender_pages(
     name = "about",
-    src = "about.mts",
+    src = "about.tsx",
     tsconfig = "//:tsconfig",
     source_map = True,
-    lib_deps = [
-        "//examples/site/common:links",
-        "//:node_modules/rules_prerender",
-    ],
+    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
+    data = ["//examples/site:package"],
     styles = [":styles"],
     resources = [":resources"],
     visibility = ["//examples/site:__pkg__"],
+    lib_deps = [
+        "//examples/site/common:links",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     deps = [
         "//examples/site/components/base",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom",

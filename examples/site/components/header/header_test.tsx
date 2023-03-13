@@ -1,10 +1,11 @@
+import { render } from 'preact-render-to-string';
 import { parse } from 'node-html-parser';
-import { renderHeader } from './header.mjs';
+import { Header } from './header.js';
 
 describe('header', () => {
-    describe('renderHeader()', () => {
+    describe('Header()', () => {
         it('renders the header', () => {
-            const fragment = parse(renderHeader());
+            const fragment = parse(render(<Header />));
 
             // Renders a title element.
             expect(fragment.querySelector('h1')).toBeDefined();
