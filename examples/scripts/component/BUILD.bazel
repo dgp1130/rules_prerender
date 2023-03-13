@@ -3,10 +3,13 @@ load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "component",
-    srcs = ["component.mts"],
+    srcs = ["component.tsx"],
     tsconfig = "//:tsconfig",
     source_map = True,
-    lib_deps = ["//:node_modules/rules_prerender"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     scripts = [":component_script"],
     visibility = ["//examples/scripts:__subpackages__"],
     deps = ["//examples/scripts/transitive"],
