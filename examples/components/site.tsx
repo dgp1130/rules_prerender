@@ -1,18 +1,18 @@
-import { PrerenderResource } from 'rules_prerender';
-import { render as renderComponent } from './component.mjs';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
+import { Component } from './component.js';
 
 /** Renders a page using components. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', `
-        <!DOCTYPE html>
+    yield PrerenderResource.of('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Components</title>
+                <meta charSet='utf8' />
             </head>
             <body>
                 <h2>Components</h2>
-                ${renderComponent()}
+                <Component />
             </body>
         </html>
-    `);
+    ));
 }
