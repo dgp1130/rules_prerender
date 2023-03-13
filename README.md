@@ -16,10 +16,12 @@ project.
 Then add a workspace dependency on `@rules_prerender`. See the
 [releases](https://github.com/dgp1130/rules_prerender/releases/) page for the
 latest release and copy the snippet into your `WORKSPACE` file. Then install the
-`rules_prerender` NPM package.
+`rules_prerender` NPM package. We'll also want `@rules_prerender/preact` and
+[`preact`](https://www.npmjs.com/package/preact) itself to use JSX as a
+templating system.
 
 ```bash
-pnpm install rules_prerender --save-dev
+pnpm install rules_prerender @rules_prerender/preact preact --save-dev
 ```
 
 ### TypeScript
@@ -77,9 +79,12 @@ load("@rules_prerender//:index.bzl", "prerender_component", "web_resources")
 prerender_component(
     name = "my_component",
     # The library which will prerender the HTML at build time in a Node process.
-    srcs = ["my_component_prerender.ts"],
+    srcs = ["my_component_prerender.tsx"],
     # Other `ts_project()` or `js_library()` targets used by `my_component_prerender.ts`.
-    lib_deps = ["//:node_modules/rules_prerender"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     # Client-side JavaScript to be executed in the browser.
     scripts = [":scripts"],
     # Styles for the component.
@@ -96,7 +101,7 @@ prerender_component(
 # Client-side scripts to be executed in the browser.
 ts_project(
     name = "scripts",
-    srcs = ["my_component.ts"],
+    srcs = ["my_component.mts"],
     declaration = True,
     deps = ["//some/other/package:ts_proj"],
 )
@@ -118,59 +123,57 @@ web_resources(
 )
 ```
 
-```typescript
-// my_component/my_component_prerender.ts
+```tsx
+// my_component/my_component_prerender.tsx
 
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom';
-import { includeScript, inlineStyle } from 'rules_prerender';
-import { renderOtherComponent } from '../my_other_component/my_other_component_prerender';
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
+import { VNode } from 'preact';
+import { OtherComponent } from '../my_other_component/my_other_component_prerender.js';
 
 /**
  * Render partial HTML. In this case we're just using a string literal, but you
  * could reasonably use lit-html, React, or any other templating library.
  */
-export function renderMyComponent(name: string): string {
-    return `
-<div>
-    <!-- Use declarative shadow DOM to isolate styles. If you're not familiar with
-    declarative shadow DOM, you don't have to use it. But if you don't you'll need
-    to manually namespace your styles or else styles in different components could
-    conflict with each other! -->
-    <template shadowroot="open">
-        <!-- Polyfill declarative shadow DOM for any browsers which don't support it. -->
-        ${polyfillDeclarativeShadowDom()}
+export function MyComponent({ name }: { name: string }): VNode {
+    return <div>
+        {/* Use declarative shadow DOM to isolate styles. If you're not familiar
+            with declarative shadow DOM, you don't have to use it. But if you
+            don't you'll need to manually namespace your styles or else styles
+            in different components could conflict with each other! */}
+        <Template shadowroot="open">
+            {/* Polyfill declarative shadow DOM for any browsers which don't
+                support it. */}
+            {polyfillDeclarativeShadowDom()}
 
-        <!-- Render some HTML. -->
-        <h2 class="my-component-header">Hello, ${name}</h2>!
-        <button id="show">Show</button>
+            {/* Render some HTML. */}
+            <h2 class="my-component-header">Hello, {name}</h2>!
+            <button id="show">Show</button>
 
-        <!-- Use related web resources. -->
-        <img src="/images/foo.png" />
+            {/* Use related web resources. */}
+            <img src="/images/foo.png" />
 
-        <!-- Compose other components from the light DOM. -->
-        <slot></slot>
+            {/* Compose other components from the light DOM. */}
+            <slot></slot>
 
-        <!-- Inject the associated client-side JavaScript. -->
-        ${includeScript('./my_component.mjs', import.meta)}
+            {/* Inject the associated client-side JavaScript. */}
+            {includeScript('./my_component.mjs', import.meta)}
 
-        <!-- Inline the associated CSS styles, scoped to this shadow root. -->
-        ${inlineStyle('./my_component.css', import.meta)}
-    </template>
-    
-    <!-- Other components are placed in light DOM and visible at the \`<slot />\`. -->
-    ${renderOtherComponent({
-        id: 'other',
-        name: name.reverse(),
-    })}
-</div>
-    `.trim();
+            {/* Inline the associated styles, scoped to this shadow root. */}
+            {inlineStyle('./my_component.css', import.meta)}
+        </Template>
+        
+        {/* Other components should be placed in light DOM and visible at the
+            `<slot />`. */}
+        <OtherComponent id="other" name={name.reverse()} />
+    </div>;
 }
 ```
 
 ```typescript
-// my_component/my_component.ts
+// my_component/my_component.mts
 
-import { showDialog } from '../some/other/package/show_dialog';
+import { showDialog } from '../some/other/package/show_dialog.mjs';
 
 // Register an event handler to show the other component. Could just as easily
 // use a framework like Angular, LitElement, React, or just define an
@@ -203,27 +206,27 @@ The second part of the rule set leverages such components to prerender an entire
 web page.
 
 ```typescript
-// my_page/my_page_prerender.ts
+// my_page/my_page_prerender.tsx
 
-import { PrerenderResource } from 'rules_prerender';
-import { renderMyComponent } from '../my_component/my_component_prerender';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
+import { MyComponent } from '../my_component/my_component_prerender.js';
 
 // Renders HTML pages for the site at build-time.
 // If you aren't familiar with generators and the `yield` looks scary, you could
 // also write this as simply returning an `Array<PrerenderResource>`.
 export default function* render(): Generator<PrerenderResource, void, void> {
     // Generate an HTML page at `/my_page/index.html` with this content:
-    yield PrerenderResource.of('/my_page/index.html', `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>My Page</title>
-    </head>
-    <body>
-        ${renderMyComponent('World')}
-    </body>
-</html>
-    `.trim());
+    yield PrerenderResource.fromHtml('/my_page/index.html', renderToHtml(
+        <html>
+            <head>
+                <title>My Page</title>
+                <meta charSet="utf8" />
+            </head>
+            <body>
+                <MyComponent name="World" />
+            </body>
+        </html>
+    ));
 }
 ```
 
@@ -245,7 +248,11 @@ load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver
 prerender_pages(
     name = "prerendered_page",
     # Script to invoke the default export of to generate the page.
-    src = "my_page_prerender.ts",
+    src = "my_page_prerender.tsx",
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     # Components used during prerendering.
     deps = ["//my_component"],
 )
@@ -307,10 +314,11 @@ more files. Take this example where we render HTML files for a bunch of markdown
 posts in a blog.
 
 ```typescript
-// my_blog/posts_prerender.ts
+// my_blog/posts_prerender.tsx
 
 import * as fs from 'fs';
-import { PrerenderResource } from 'rules_prerender';
+import * as path from 'path';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 import * as md from 'markdown-it';
 
 export default async function* render():
@@ -323,10 +331,22 @@ export default async function* render():
         // Read the post markdown, convert it to HTML, and then emit the file to
         // `rules_prerender` which will write it at
         // `/post/${post_file_name_with_html_extension}`.
-        const postMarkdown = await fs.readFile(post, { encoding: 'utf8' });
+        const postMarkdown =
+            await fs.readFile(path.join(postsDir, post), 'utf8');
         const postHtml = md.render(postMarkdown);
-        const htmlName = post.split('.').slice(0, -1).join('.') + '.html';
-        yield PrerenderResource.of(`/posts/${htmlName}`, postHtml);
+        const postBaseName = post.split('.').slice(0, -1).join('.');
+        const htmlName = `${postBaseName}.html`;
+        yield PrerenderResource.fromHtml(`/posts/${htmlName}`, renderToHtml(
+            <html>
+                <head>
+                    <title>Post {postBaseName}</title>
+                    <meta charSet="utf8" />
+                </head>
+                <body>
+                    <article dangerouslySetInnerHTML={{ __html: postHtml }} />
+                </body>
+            </html>
+        ));
     }
 }
 ```
@@ -343,7 +363,7 @@ load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver
 prerender_pages(
     name = "prerendered_posts",
     # Script to invoke the default export of to generate the page.
-    src = "posts_prerender.ts",
+    src = "posts_prerender.tsx",
     # Include all the markdown files at runtime in runfiles.
     data = glob(["posts/*.md"]),
     # Plain TypeScript dependencies used by `posts_prerender.ts`.
