@@ -1,19 +1,19 @@
 import { bar, foo } from './dep.mjs';
-import { PrerenderResource, unsafeTreatStringAsSafeHtml } from 'rules_prerender';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 
 /** Renders the page. */
 export default function*(): Generator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', unsafeTreatStringAsSafeHtml(`
-        <!DOCTYPE html>
+    yield PrerenderResource.of('/index.html', renderToHtml(
         <html>
             <head>
                 <title>Minimal</title>
+                <meta charSet='utf8' />
             </head>
             <body>
                 <h2 id="hello">Hello, World!</h2>
-                <span id="foo">${foo}</span>
-                <span id="bar">${bar}</span>
+                <span id="foo">{foo}</span>
+                <span id="bar">{bar}</span>
             </body>
         </html>
-    `.trim()));
+    ));
 }
