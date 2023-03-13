@@ -1,4 +1,4 @@
-import { VNode, createElement, ComponentChildren } from 'preact';
+import { JSX, VNode, createElement } from 'preact';
 import { render } from 'preact-render-to-string';
 import * as rulesPrerender from 'rules_prerender';
 
@@ -49,10 +49,13 @@ export function inlineStyle(importPath: string, meta: ImportMeta): VNode {
     return createElement('rules_prerender:annotation', {}, [ annotation ]);
 }
 
+interface TemplateProps extends JSX.HTMLAttributes<HTMLTemplateElement> {
+    shadowroot?: ShadowRootMode;
+}
+
 /** A component representing the native HTML `<template />` tag. */
-export function Template({ children, ...attrs }: {
-    children?: ComponentChildren,
-    [attr: string]: unknown,
-} = {}): VNode {
-    return createElement('template', { children, ...attrs });
+export function Template({ children, ...attrs }: TemplateProps = {}): VNode {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore JSX types are weird AF.
+    return createElement('template', attrs, children);
 }

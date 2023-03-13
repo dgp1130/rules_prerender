@@ -69,7 +69,6 @@ describe('preact', () => {
     describe('Template', () => {
         it('renders a `<template />` element', () => {
             const html = render(Template({
-                shadowroot: 'open',
                 children: [
                     createElement('div', {}, [
                         'Hello, World!',
@@ -77,8 +76,31 @@ describe('preact', () => {
                 ],
             }));
 
-            expect(html).toContain('<template shadowroot="open">');
+            expect(html).toContain('<template>');
             expect(html).toContain('<div>Hello, World!</div>');
+        });
+
+        it('accepts `shadowroot`', () => {
+            const html = render(Template({ shadowroot: 'open' }));
+
+            expect(html).toContain('<template shadowroot="open">');
+        });
+
+        it('allows other HTML attributes', () => {
+            const html = render(Template({ id: 'my-template' }));
+
+            expect(html).toContain('<template id="my-template">');
+        });
+
+        it('restricts `shadowroot` type', () => {
+            // @ts-expect-error Wrong shadow root module.
+            expect(() => Template({ shadowroot: 'not-a-shadowroot-mode' }))
+                .not.toThrow();
+        });
+
+        it('disallows unknown attributes', () => {
+            // @ts-expect-error Unknown attribute.
+            expect(() => Template({ notAnAttribute: 'test' })).not.toThrow();
         });
     });
 });
