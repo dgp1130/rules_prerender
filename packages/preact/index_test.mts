@@ -14,8 +14,7 @@ describe('preact', () => {
                 ]),
             ]));
 
-            expect(html.getHtmlAsString())
-                .toContain(`<h2>Hello, World!</h2>`.trim());
+            expect(html.getHtmlAsString()).toContain(`<h2>Hello, World!</h2>`);
         });
 
         it('renders the given `VNode` in HTML5', () => {
@@ -24,9 +23,42 @@ describe('preact', () => {
                 .toBe('<!DOCTYPE html>');
         });
 
+        it('renders the given component', () => {
+            const Component = createElement(() => {
+                return createElement('html', {}, [
+                    createElement('body', {}, [
+                        createElement('h2', {}, [
+                            'Hello, World!',
+                        ]),
+                    ]),
+                ]);
+            }, {});
+
+            const html = renderToHtml(Component);
+            expect(html.getHtmlAsString()).toContain(`<h2>Hello, World!</h2>`);
+        });
+
         it('throws an error when given a `VNode` other than an `<html />` element', () => {
             expect(() => renderToHtml(createElement('body', {}))).toThrowError(
                 /Expected a single `VNode` of the `<html \/>` tag/);
+        });
+
+        it('throws an error when given a component which does not start with an `<html />` element', () => {
+            const Component = createElement(() => {
+                return createElement('body', {});
+            }, {});
+
+            expect(() => renderToHtml(Component)).toThrowError(
+                /Expected the root component to start with an `<html \/>` tag/);
+        });
+
+        it('does *not* throw an error when given a component which renders an `<html />` tag with an attribute', () => {
+            const Component = createElement(() => {
+                return createElement('html', { lang: 'en' });
+            }, {});
+
+            const html = renderToHtml(Component);
+            expect(html.getHtmlAsString()).toContain('<html lang="en">');
         });
     });
 

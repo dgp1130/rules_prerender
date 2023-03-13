@@ -18,11 +18,18 @@ export function renderToHtml(node: VNode | VNode[]): rulesPrerender.SafeHtml {
     if (Array.isArray(node)) {
         throw new Error(`Expected a single \`VNode\` of the \`<html />\` tag, but got an array of \`VNodes\`.`);
     }
-    if (node.type !== 'html') {
+    if (typeof node.type === 'string' && node.type !== 'html') {
         throw new Error(`Expected a single \`VNode\` of the \`<html />\` tag, but got a \`<${node.type}>\` tag instead.`);
     }
 
     const html = render(node, {}, { pretty: true });
+
+    // If the user renders a component, we can't know what element it will
+    // actually be until after rendering.
+    if (!html.startsWith('<html')) {
+        throw new Error(`Expected the root component to start with an \`<html />\` tag, but instead it started with: ${html.slice(0, '<html'.length)}...`);
+    }
+
     return rulesPrerender.unsafeTreatStringAsSafeHtml(
         `<!DOCTYPE html>\n${html}`);
 }
