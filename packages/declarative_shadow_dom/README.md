@@ -72,6 +72,9 @@ export function renderMyComponent(): string {
     <template shadowroot="open">
         <span>Shadow DOM content goes inside the template.</span>
 
+        <!-- Inject the polyfill into the client bundle. -->
+        ${polyfillDeclarativeShadowDom()}
+
         <!-- Inline styles inside the template. -->
         ${inlineStyle('./my_style.css', import.meta)}
     </template>
@@ -96,3 +99,36 @@ Currently the only functionality this component exposes is
 any component which uses declarative shadow DOM. Like all client-side scripts
 in `@rules_prerender`, this polyfill will be de-duplicated if multiple
 components include it.
+
+### Preact
+
+For Preact use cases, import from
+`@rules_prerender/declarative_shadow_dom/preact.mjs`. It also provides a
+`polyfillDeclarativeShadowDom()` function which returns a `VDom`.
+
+```tsx
+// my_component/my_component.tsx
+
+// Make sure to import from `/preact.mjs`!
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { inlineStyle } from 'rules_prerender';
+
+export function MyComponent(): string {
+    return (
+        {/* Always include a host element, don't make the template the first node. */}
+        <div>
+            <template shadowroot="open">
+                <span>Shadow DOM content goes inside the template.</span>
+
+                {/* Inject the polyfill into the client bundle. */}
+                {polyfillDeclarativeShadowDom()}
+
+                {/* Inline styles inside the template. */}
+                {inlineStyle('./my_style.css', import.meta)}
+            </template>
+
+            <span>Light DOM content goes outside the template.</span>
+        </div>
+    );
+}
+```
