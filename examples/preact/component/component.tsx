@@ -1,3 +1,4 @@
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
 import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
 import { ComponentChildren, VNode } from 'preact';
 
@@ -19,6 +20,7 @@ export function Component({ text, children }: {
             <div id="replace">This text to be replaced by page JavaScript.</div>
             <slot></slot>
 
+            {polyfillDeclarativeShadowDom()}
             {includeScript('./script.mjs', import.meta)}
             {inlineStyle('./style.css', import.meta)}
         </Template>

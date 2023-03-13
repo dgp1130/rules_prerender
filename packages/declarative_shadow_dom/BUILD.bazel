@@ -37,11 +37,18 @@ npm_publish(
 
 prerender_component(
     name = "declarative_shadow_dom",
-    srcs = ["declarative_shadow_dom.mts"],
+    srcs = [
+        "declarative_shadow_dom.mts",
+        "preact.mts",
+    ],
     tsconfig = "//:tsconfig",
     source_map = True,
     scripts = [":declarative_shadow_dom_polyfill"],
-    lib_deps = ["//:node_modules/rules_prerender"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+        "//:node_modules/rules_prerender",
+    ],
     visibility = [
         "//:__pkg__",
         "//packages/rules_prerender:__pkg__",
