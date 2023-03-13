@@ -10,13 +10,14 @@ describe('preact', () => {
         await browser.url('/');
 
         expect(await browser.getTitle()).toBe('Preact');
+        const component = await browser.$('#component');
 
         // Test JavaScript execution.
-        expect(await browser.$('#replace').getText())
+        expect(await component.shadow$('#replace').getText())
             .toBe('Hello from JavaScript!');
 
         // Test CSS applied within declarative shadow DOM.
-        const hello = await browser.$('#component').shadow$('h2');
+        const hello = await component.shadow$('h2');
         expect(await hello.getText()).toBe('Hello, World!');
         expect(await getColor(browser, hello)).toBe('rgb(255, 0, 0)'); // Red.
 
