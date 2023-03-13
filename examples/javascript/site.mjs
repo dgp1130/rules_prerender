@@ -1,19 +1,19 @@
-import { PrerenderResource } from 'rules_prerender';
-import { renderComponent } from './component/component.mjs';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
+import { h } from 'preact';
+import { Component } from './component/component.mjs';
 
 /* Renders the page. */
 export default function* () {
-    yield PrerenderResource.of('/index.html', `
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf8">
-        <title>JavaScript</title>
-    </head>
-    <body>
-        <h2>JavaScript</h2>
-        ${renderComponent()}
-    </body>
-</html>
-    `.trim());
+    yield PrerenderResource.of('/index.html', renderToHtml(
+        h('html', {}, [
+            h('head', {}, [
+                h('meta', { charSet: 'utf8' }),
+                h('title', {}, [ 'JavaScript ']),
+            ]),
+            h('body', {}, [
+                h('h2', {}, [ 'JavaScript' ]),
+                Component(),
+            ]),
+        ]),
+    ));
 }

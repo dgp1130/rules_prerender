@@ -6,7 +6,8 @@ prerender_component(
     srcs = ["component.mjs"],
     lib_deps = [
         ":prerender_lib",
-        "//:node_modules/rules_prerender",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
     ],
     scripts = [
         ":component_script",
