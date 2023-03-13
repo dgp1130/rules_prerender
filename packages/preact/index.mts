@@ -22,7 +22,7 @@ export function renderToHtml(node: VNode | VNode[]): rulesPrerender.SafeHtml {
         throw new Error(`Expected a single \`VNode\` of the \`<html />\` tag, but got a \`<${node.type}>\` tag instead.`);
     }
 
-    const html = render(node, {}, { pretty: true });
+    const html = render(node, {});
 
     // If the user renders a component, we can't know what element it will
     // actually be until after rendering.
