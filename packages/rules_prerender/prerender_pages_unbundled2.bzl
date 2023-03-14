@@ -1,6 +1,7 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
 load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "js_output", "is_js_file")
 load("//packages/rules_prerender/css:css_group.bzl", "merge_import_maps")
@@ -40,11 +41,13 @@ def prerender_pages_unbundled(
     component_metadata = "%s_metadata" % component
     component_prerender = "%s_prerender" % component
 
-    transitive_styles = "%s_transitive_styles" % name
+    # Re-export transitive styles.
+    transitive_styles = "%s_styles" % name
     _collect_transitive_styles(
         name = transitive_styles,
         metadata = component_metadata,
         testonly = testonly,
+        visibility = visibility,
     )
 
     # Execute the runner to generate annotated resources.
@@ -58,53 +61,44 @@ def prerender_pages_unbundled(
         testonly = testonly,
     )
 
-    # # Extract annotations and generate metadata from them.
-    # metadata = "%s_metadata.json" % name
-    # _multi_extract_annotations(
-    #     name = name,
-    #     annotated_dir = ":%s" % annotated,
-    #     output_metadata = ":%s" % metadata,
-    #     testonly = testonly,
-    #     visibility = visibility,
-    # )
+    # Extract annotations and generate metadata from them.
+    metadata = "%s_metadata.json" % name
+    _multi_extract_annotations(
+        name = name,
+        annotated_dir = ":%s" % annotated,
+        output_metadata = ":%s" % metadata,
+        testonly = testonly,
+        visibility = visibility,
+    )
 
-    # # Generate the entry point importing all included scripts.
-    # client_scripts = "%s_scripts" % name
-    # script_entry_points(
-    #     name = "%s_entries" % client_scripts,
-    #     metadata = metadata,
-    #     testonly = testonly,
-    #     # Export this file so Rollup can have a direct, label reference to the
-    #     # entry point, since including the file in a `depset()` with other files
-    #     # is not good enough.
-    #     visibility = visibility,
-    # )
+    # Generate the entry point importing all included scripts.
+    transitive_scripts = "%s_scripts" % name
+    script_entry_points(
+        name = "%s_entries" % transitive_scripts,
+        metadata = metadata,
+        testonly = testonly,
+        # Export this file so Rollup can have a direct, label reference to the
+        # entry point, since including the file in a `depset()` with other files
+        # is not good enough.
+        visibility = visibility,
+    )
 
-    # # Reexport all included scripts at `%{name}_scripts`.
-    # native.alias(
-    #     name = client_scripts,
-    #     actual = ":%s" % component_scripts,
-    #     testonly = testonly,
-    #     visibility = visibility,
-    # )
+    # Reexport all included scripts at `%{name}_scripts`.
+    _collect_transitive_scripts(
+        name = transitive_scripts,
+        metadata = component_metadata,
+        testonly = testonly,
+        visibility = visibility,
+    )
 
-    # # Reexport all inlined styles at `%{name}_styles`.
-    # client_styles = "%s_styles" % name
-    # native.alias(
-    #     name = client_styles,
-    #     actual = ":%s" % component_styles,
-    #     testonly = testonly,
-    #     visibility = visibility,
-    # )
-
-    # # Reexport all transitive resources at `%{name}_resources`.
-    # output_resources = "%s_resources" % name
-    # web_resources(
-    #     name = output_resources,
-    #     deps = [component_resources],
-    #     testonly = testonly,
-    #     visibility = visibility,
-    # )
+    # Reexport all transitive resources at `%{name}_resources`.
+    output_resources = "%s_resources" % name
+    _collect_transitive_resources(
+        name = output_resources,
+        metadata = component_metadata,
+        testonly = testonly,
+        visibility = visibility,
+    )
 
 _CollectedPrerenderMetadataInfo = provider(fields = {
     "transitive_metadata": "TODO",
@@ -162,6 +156,88 @@ def _collect_transitive_styles_impl(ctx):
 
 _collect_transitive_styles = rule(
     implementation = _collect_transitive_styles_impl,
+    attrs = {
+        "metadata": attr.label(
+            mandatory = True,
+            providers = [PrerenderMetadataInfo],
+            aspects = [_collect_transitive_metadata_aspect],
+        ),
+    },
+)
+
+def _collect_transitive_scripts_impl(ctx):
+    transitive_metadata = ctx.attr.metadata[_CollectedPrerenderMetadataInfo].transitive_metadata.to_list()
+    transitive_scripts = [metadata.scripts
+                         for metadata in transitive_metadata
+                         if metadata.scripts]
+
+    merged_js_info = js_info(
+        declarations = depset([],
+            transitive = [info.declarations
+                          for info in transitive_scripts],
+        ),
+        npm_linked_package_files = depset([],
+            transitive = [info.npm_linked_package_files
+                          for info in transitive_scripts],
+        ),
+        npm_linked_packages = depset([],
+            transitive = [info.npm_linked_packages
+                          for info in transitive_scripts],
+        ),
+        npm_package_store_deps = depset([],
+            transitive = [info.npm_package_store_deps
+                          for info in transitive_scripts],
+        ),
+        sources = depset([],
+            transitive = [info.sources
+                          for info in transitive_scripts],
+        ),
+        transitive_declarations = depset([],
+            transitive = [info.transitive_declarations
+                          for info in transitive_scripts],
+        ),
+        transitive_npm_linked_package_files = depset([],
+            transitive = [info.transitive_npm_linked_package_files
+                          for info in transitive_scripts],
+        ),
+        transitive_npm_linked_packages = depset([],
+            transitive = [info.transitive_npm_linked_packages
+                          for info in transitive_scripts],
+        ),
+        transitive_sources = depset([],
+            transitive = [info.transitive_sources
+                          for info in transitive_scripts],
+        ),
+    )
+
+    return merged_js_info
+
+_collect_transitive_scripts = rule(
+    implementation = _collect_transitive_scripts_impl,
+    attrs = {
+        "metadata": attr.label(
+            mandatory = True,
+            providers = [PrerenderMetadataInfo],
+            aspects = [_collect_transitive_metadata_aspect],
+        ),
+    },
+)
+
+def _collect_transitive_resources_impl(ctx):
+    transitive_metadata = ctx.attr.metadata[_CollectedPrerenderMetadataInfo].transitive_metadata.to_list()
+    transitive_resources = [metadata.resources.transitive_resources
+                         for metadata in transitive_metadata
+                         if metadata.resources]
+
+    return WebResourceInfo(
+        transitive_entries = depset(
+            direct = [],
+            transitive = transitive_resources,
+        ),
+    )
+
+_collect_transitive_resources = rule(
+    implementation = _collect_transitive_resources_impl,
     attrs = {
         "metadata": attr.label(
             mandatory = True,
