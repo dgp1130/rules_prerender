@@ -1,0 +1,31 @@
+load("//packages/rules_prerender:prerender_component2.bzl", "prerender_component")
+load("//:index.bzl", "css_library")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+prerender_component(
+    name = "component",
+    prerender = ":prerender",
+    scripts = ":scripts",
+    styles = ":styles",
+    visibility = ["//examples/rewrite:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["component.prerender.tsx"],
+    deps = [
+        "//examples/rewrite/transitive:transitive_prerender",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
+)
+
+ts_project(
+    name = "scripts",
+    srcs = ["component.client.mts"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["component.css"],
+)
