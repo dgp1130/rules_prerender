@@ -1,6 +1,6 @@
 """Defines `css_group()` to group multiple `css_library()` targets like `filegroup()`."""
 
-load(":css_providers.bzl", "CssImportMapInfo")
+load(":css_providers.bzl", "CssImportMapInfo", "CssInfo")
 
 visibility(["//packages/rules_prerender/..."])
 
@@ -9,6 +9,15 @@ def _css_group_impl(ctx):
         DefaultInfo(
             files = depset([], transitive = [dep[DefaultInfo].files
                                              for dep in ctx.attr.deps]),
+        ),
+        CssInfo(
+            direct_sources = depset([]),
+            transitive_sources = depset(
+                direct = [],
+                transitive = [dep[CssInfo].transitive_sources
+                              for dep in ctx.attr.deps
+                              if CssInfo in dep],
+            ),
         ),
         CssImportMapInfo(
             import_map = merge_import_maps([dep[CssImportMapInfo]
@@ -20,6 +29,7 @@ def _css_group_impl(ctx):
 css_group = rule(
     implementation = _css_group_impl,
     attrs = {
+        # TODO: `providers = [CssInfo, CssImportMapInfo]`?
         "deps": attr.label_list(mandatory = True),
     },
     doc = "Like a `filegroup()`, but for `css_library()` targets.",

@@ -45,7 +45,7 @@ def prerender_component(
         name = metadata,
         prerender = prerender,
         scripts = scripts,
-        styles = styles,
+        styles = ":%s" % styles_reexport if styles else None,
         styles_import_map = ":%s" % styles_reexport if styles else None,
         resources = resources,
         testonly = testonly,
@@ -80,9 +80,10 @@ def prerender_component(
         )
 
     # CSS styles.
+    styles_target = "%s_styles" % name
     if styles:
         alias_with_metadata(
-            name = name,
+            name = styles_target,
             metadata = metadata,
             actual = ":%s" % styles_reexport,
             testonly = testonly,
@@ -173,15 +174,8 @@ _js_reexport = rule(
 )
 
 def _inline_css_reexport(name, styles, testonly = None, visibility = None):
-    binaries = "%s_bin" % name
     css_binaries(
-        name = binaries,
-        testonly = testonly,
-        deps = [styles],
-    )
-
-    css_group(
         name = name,
         testonly = testonly,
-        deps = [":%s" % binaries],
+        deps = [styles],
     )

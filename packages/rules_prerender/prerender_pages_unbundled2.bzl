@@ -142,6 +142,10 @@ def _collect_transitive_styles_impl(ctx):
                               if metadata.styles_import_map]
 
     return [
+        DefaultInfo(files = depset(
+            direct = [],
+            transitive = transitive_styles,
+        )),
         CssInfo(
             direct_sources = [],
             transitive_sources = depset(
