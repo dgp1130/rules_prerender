@@ -1,6 +1,7 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//tools/typescript:defs.bzl", "ts_project")
-load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
+load(":prerender_metadata.bzl", "alias_with_metadata", "prerender_metadata")
+load(":web_resources.bzl", "WebResourceInfo")
 
 visibility(["//"])
 
@@ -36,23 +37,29 @@ def link_prerender_component(name, package, visibility = None, testonly = None):
         visibility: See https://bazel.build/reference/be/common-definitions
         testonly: See https://bazel.build/reference/be/common-definitions
     """
-    native.alias(
+    metadata = "%s_metadata" % name
+    prerender_metadata(
+        name = metadata,
+        prerender = package,
+        scripts = package,
+        styles = None,
+        resources = None,
+        visibility = visibility,
+        testonly = testonly,
+    )
+
+    alias_with_metadata(
         name = "%s_prerender" % name,
         actual = package,
+        metadata = metadata,
         visibility = visibility,
         testonly = testonly,
     )
 
-    native.alias(
-        name = "%s_prerender_for_test" % name,
-        actual = package,
-        visibility = visibility,
-        testonly = testonly,
-    )
-
-    native.alias(
+    alias_with_metadata(
         name = "%s_scripts" % name,
         actual = package,
+        metadata = metadata,
         visibility = visibility,
         testonly = testonly,
     )

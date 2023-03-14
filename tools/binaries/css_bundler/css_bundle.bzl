@@ -35,6 +35,10 @@ def _css_bundle_impl(ctx):
 
     return [
         DefaultInfo(files = depset(outputs)),
+        CssInfo(
+            direct_sources = depset(outputs),
+            transitive_sources = depset(outputs),
+        ),
         CssImportMapInfo(import_map = _make_import_map(ctx, sources, outputs)),
     ]
 
