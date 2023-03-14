@@ -71,6 +71,13 @@ def prerender_component(
             visibility = visibility,
             testonly = testonly,
         )
+    else:
+        js_library(
+            name = scripts_target,
+            srcs = [],
+            visibility = visibility,
+            testonly = testonly,
+        )
 
     # CSS styles.
     if styles:
