@@ -229,7 +229,7 @@ _collect_transitive_scripts = rule(
 
 def _collect_transitive_resources_impl(ctx):
     transitive_metadata = ctx.attr.metadata[_CollectedPrerenderMetadataInfo].transitive_metadata.to_list()
-    transitive_resources = [metadata.resources.transitive_resources
+    transitive_resources = [metadata.resources.transitive_entries
                          for metadata in transitive_metadata
                          if metadata.resources]
 

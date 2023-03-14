@@ -6,6 +6,7 @@ import { VNode } from 'preact';
 export function Component({ name }: { name: string }): VNode {
     return <div>
         <Template shadowroot='open'>
+            <img src="/logo.png" />
             <span>Hello to {name} from component!</span>
             <slot></slot>
 
