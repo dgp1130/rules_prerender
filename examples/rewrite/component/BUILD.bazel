@@ -2,6 +2,9 @@ load("//:index.bzl", "css_library", "web_resources")
 load("//packages/rules_prerender:prerender_component2.bzl", "prerender_component")
 load("//tools/typescript:defs.bzl", "ts_project")
 
+# TODO: `empty_genquery_test()` under `prerender_pages()` that nothing else has
+# a direct dependency on `:prerender` and `:scripts` besides
+# `:component_prerender` and `:component_scripts`?
 prerender_component(
     name = "component",
     prerender = ":prerender",
@@ -15,7 +18,6 @@ ts_project(
     name = "prerender",
     srcs = ["component.prerender.tsx"],
     deps = [
-        "//examples/rewrite/transitive:transitive_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
@@ -25,6 +27,7 @@ ts_project(
 ts_project(
     name = "scripts",
     srcs = ["component.client.mts"],
+    deps = ["//examples/rewrite/transitive:transitive_scripts"],
 )
 
 css_library(
