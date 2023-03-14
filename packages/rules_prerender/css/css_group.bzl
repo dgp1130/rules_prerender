@@ -11,7 +11,7 @@ def _css_group_impl(ctx):
                                              for dep in ctx.attr.deps]),
         ),
         CssImportMapInfo(
-            import_map = _merge_import_maps([dep[CssImportMapInfo]
+            import_map = merge_import_maps([dep[CssImportMapInfo]
                                              for dep in ctx.attr.deps
                                              if CssImportMapInfo in dep]),
         ),
@@ -25,7 +25,7 @@ css_group = rule(
     doc = "Like a `filegroup()`, but for `css_library()` targets.",
 )
 
-def _merge_import_maps(css_import_maps):
+def merge_import_maps(css_import_maps):
     """Merges a list of `CssImportMapInfo` into a single `CssImportMapInfo`.
     
     Fails the build if the same import path appears as a key in two maps.
