@@ -15,7 +15,6 @@ ts_project(
     name = "prerender",
     srcs = ["component.prerender.tsx"],
     deps = [
-        "//examples/rewrite/transitive:transitive_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
@@ -25,6 +24,7 @@ ts_project(
 ts_project(
     name = "scripts",
     srcs = ["component.client.mts"],
+    deps = ["//examples/rewrite/transitive:transitive_scripts"],
 )
 
 css_library(

@@ -104,14 +104,12 @@ _CollectedPrerenderMetadataInfo = provider(fields = {
     "transitive_metadata": "TODO",
 })
 
-_ASPECT_LABEL_ATTRS = ["prerender", "scripts", "styles", "resources", "actual"]
+_ASPECT_LABEL_ATTRS = ["prerender", "scripts", "styles", "resources", "actual", "metadata"]
 _ASPECT_LABEL_LIST_ATTRS = ["deps"]
 _ASPECT_ATTRS = _ASPECT_LABEL_ATTRS + _ASPECT_LABEL_LIST_ATTRS
 
 def _collect_transitive_metadata_aspect_impl(target, ctx):
     metadata = [target[PrerenderMetadataInfo]] if PrerenderMetadataInfo in target else []
-    if metadata:
-        print("Found metadata for: %s" % target.label)
 
     maybe_deps = [getattr(ctx.rule.attr, attr, None)
                   for attr in _ASPECT_LABEL_ATTRS] + getattr(ctx.rule.attr, "deps", [])
