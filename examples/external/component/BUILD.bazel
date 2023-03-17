@@ -8,14 +8,17 @@ load(
 
 prerender_component(
     name = "component",
-    srcs = ["component.mts"],
+    srcs = ["component.tsx"],
     scripts = [":script"],
     styles = [":style"],
     resources = [":resources"],
     source_map = True,
     tsconfig = "//:tsconfig",
     visibility = ["//:__subpackages__"],
-    lib_deps = ["//:node_modules/rules_prerender"],
+    lib_deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
     deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
 )
 

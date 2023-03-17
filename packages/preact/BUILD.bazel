@@ -34,7 +34,10 @@ ts_project(
     deps = [
         ":node_modules/preact-render-to-string",
         "//:node_modules/preact",
-        "//:node_modules/rules_prerender",
+        # As a peer dep, we can't depend on the JS implementation of
+        # `rules_prerender` because it needs to be supplied at link time.
+        # See `//:node_modules/@rules_prerender/preact` deps.
+        "//:node_modules_types/rules_prerender",
     ],
 )
 

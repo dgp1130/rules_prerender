@@ -74,6 +74,24 @@ npm_link_package(
     name = "node_modules/@rules_prerender/preact",
     src = "//packages/preact:pkg",
     visibility = ["//:__subpackages__"],
+
+    # `@rules_prerender/preact` has an NPM peer dep on `rules_prerender`. We
+    # need to supply this at link-time rather than when the `npm_package()` is
+    # built so different links can specify different `rules_prerender` packages.
+    #
+    # For example, `@rules_prerender//:node_modules/@rules_prerender/preact`
+    # needs a dependency on `@rules_prerender//:node_modules/rules_prerender`,
+    # but an external workspace linking the same `npm_package()` would need its
+    # `@external_wksp//:node_modules/@rules_prerender/preact` to depend on
+    # `@external_wksp//:node_modules/rules_prerender`.
+    #
+    # If we didn't do this and allowed `//packages/preact:pkg` to directly
+    # depend on `//:node_modules/rules_prerender`, it would duplicate the
+    # `rules_prerender` package at runtime.
+    # See: https://bazelbuild.slack.com/archives/CEZUUKQ6P/p1678741591216319
+    deps = {
+        "//:.aspect_rules_js/node_modules/rules_prerender": "rules_prerender",
+    },
 )
 
 bzl_library(

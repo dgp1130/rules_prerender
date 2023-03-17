@@ -6,9 +6,11 @@
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "paths": {
       "rules_prerender": ["../../packages/rules_prerender"],
-      "@rules_prerender/declarative_shadow_dom": ["../../packages/declarative_shadow_dom"],
+      "@rules_prerender/*": ["../../packages/*"],
     },
   }
 }
