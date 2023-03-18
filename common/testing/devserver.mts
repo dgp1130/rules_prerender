@@ -125,7 +125,7 @@ export class Server implements DevServer {
         const host = '127.0.0.1';
         const port = await findPort();
 
-        const serverPromise = execFile(binary, [ '--port', port.toString() ]);
+        const serverPromise = execFile(binary, [ `--port=${port.toString()}` ]);
         const server = serverPromise.child;
         server.stdout?.on('data', stdout);
         server.stderr?.on('data', stderr);

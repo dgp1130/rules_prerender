@@ -1,7 +1,6 @@
 """Defines `web_resources_devserver()` functionality."""
 
 load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
-load("@rules_prerender_npm//:http-server/package_json.bzl", http_server_bin = "bin")
 load("//common:label.bzl", "absolute", "file_path_of")
 
 visibility(["//"])
@@ -27,15 +26,20 @@ def web_resources_devserver(
         tags: See https://docs.bazel.build/versions/master/be/common-definitions.html.
     """
     root_dir = file_path_of(absolute(resources))
-    disable_cache = "-c-1" # Set cache (`-c`) time to `-1` to disable it.
 
     # Bake in the `resources` directory as the first argument, so the server can
     # never be run on a different directory.
     baked = "%s_baked_server" % name
     _baked_binary(
         name = baked,
-        baked_args = [root_dir, disable_cache],
-        binary = Label("//packages/rules_prerender:http_server"),
+        binary = Label("//packages/rules_prerender:devserver"),
+        baked_args = [root_dir, "--no-browser"],
+        # `live-server` tries to read a config file from the home directory and
+        # expects these environment variables to be set.
+        baked_env = {
+            "HOME": "",
+            "USERPROFILE": "",
+        },
         testonly = testonly,
     )
 
@@ -59,8 +63,9 @@ def web_resources_devserver(
 # replace them.
 def _baked_binary(
     name,
-    baked_args,
     binary,
+    baked_args = None,
+    baked_env = None,
     data = [],
     testonly = None,
     visibility = None,
@@ -71,6 +76,7 @@ def _baked_binary(
         name = "%s_wrapper" % name,
         binary = binary,
         baked_args = baked_args,
+        baked_env = baked_env,
         output = baked_binary_wrapper,
         testonly = testonly,
     )
@@ -85,6 +91,9 @@ def _baked_binary(
     )
 
 def _baked_args_wrapper_impl(ctx):
+    if not ctx.attr.baked_args and not ctx.attr.baked_env:
+        fail("Either `baked_args` or `baked_env` must be provided.")
+
     # Technically, we should be using Bash runfiles intializtion script to find
     # the binary in runfiles. https://github.com/bazelbuild/bazel/blob/668b0da527a43299f6f6ac49bb5cc37be2265c45/tools/bash/runfiles/runfiles.bash
     # However, that script doesn't work directly because `js_run_devserver()`
@@ -96,7 +105,8 @@ def _baked_args_wrapper_impl(ctx):
     # 
     # `baked_args` are hard-coded in the shell script while any argument passed
     # in at execution are appended afterwards.
-    wrapper_script = "${{RUNFILES}}/{binary} {baked_args} $@".format(
+    wrapper_script = "{env} ${{RUNFILES}}/{binary} {baked_args} $@".format(
+        env = " ".join(["%s=\"%s\"" % (name, value) for (name, value) in ctx.attr.baked_env.items()]),
         binary = "%s/%s" % (ctx.workspace_name, ctx.executable.binary.short_path),
         baked_args = " ".join(["\"%s\"" % _escape_double_quotes(arg) for arg in ctx.attr.baked_args]),
     ).strip()
@@ -106,7 +116,8 @@ def _baked_args_wrapper_impl(ctx):
 _baked_args_wrapper = rule(
     implementation = _baked_args_wrapper_impl,
     attrs = {
-        "baked_args": attr.string_list(mandatory = True),
+        "baked_args": attr.string_list(default = []),
+        "baked_env": attr.string_dict(default = {}),
         "binary": attr.label(
             mandatory = True,
             executable = True,

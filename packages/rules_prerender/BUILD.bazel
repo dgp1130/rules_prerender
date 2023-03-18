@@ -1,4 +1,4 @@
-load("@rules_prerender_npm//:http-server/package_json.bzl", http_server_bin = "bin")
+load("@rules_prerender_npm//:live-server/package_json.bzl", live_server_bin = "bin")
 load("@rules_prerender_npm//:rollup/package_json.bzl", rollup_bin = "bin")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
@@ -16,8 +16,8 @@ rollup_bin.rollup_binary(
     visibility = ["//visibility:public"],
 )
 
-http_server_bin.http_server_binary(
-    name = "http_server",
+live_server_bin.live_server_binary(
+    name = "devserver",
     visibility = ["//visibility:public"],
 )
 
