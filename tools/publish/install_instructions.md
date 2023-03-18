@@ -38,7 +38,7 @@ http_archive(
     name = "rules_prerender",
     sha256 = "$SHA",
     strip_prefix = "$PREFIX",
-    url = "https://github.com/dgp1130/rules_prerender/releases/download/$VERSION/$ARCHIVE",
+    url = "https://github.com/dgp1130/rules_prerender/releases/download/releases%2F$VERSION/$ARCHIVE",
 )
 load("@rules_prerender//:dependencies.bzl", "rules_prerender_dependencies")
 rules_prerender_dependencies()
