@@ -78,6 +78,23 @@ jobs:
       env:
         BAZEL_RULES_PRERENDER_VERSION: ${{ github.event.inputs.version }}
 
+    - name: Tar Workspace
+      run: |
+        # Use the same prefix as what GitHub generates for source archives.
+        readonly VERSION="${{ github.events.inputs.version }}"
+        readonly PREFIX="rules_prerender-${VERSION}"
+        readonly ARCHIVE="rules_prerender-bazel_workspace-${VERSION}.tar.gz"
+
+        git archive --format=tar --prefix="${PREFIX}" "HEAD" > "${ARCHIVE}"
+        readonly SHA=$(shasum -a 256 "${ARCHIVE}" | awk '{ print $1 }')
+
+        cat tools/publish/install_instructions.md |
+          sed "s,\$VERSION,${VERSION},g" |
+          sed "s,\$PREFIX,${PREFIX},g" |
+          sed "s,\$ARCHIVE,${ARCHIVE},g" |
+          sed "s,\$SHA,${SHA},g" \
+          > release_notes.txt
+
     # Tag the commit and create a release on GitHub.
     - name: Tag and Create Draft Release
       id: create_release
@@ -90,7 +107,18 @@ jobs:
         prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         draft: true
 
-    # Upload `rules_prerender` to the GitHub release.
+    # Upload `@rules_prerender` workspace to the GitHub release.
+    - name: Upload `rules_prerender` to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: workspace.tar.gz
+        asset_name: rules_prerender-bazel_workspace-${{ github.event.inputs.version }}.tar.gz
+        asset_content_type: application/gzip
+
+    # Upload `rules_prerender` NPM package to the GitHub release.
     - name: Upload `rules_prerender` to GitHub
       uses: actions/upload-release-asset@v1
       env:
