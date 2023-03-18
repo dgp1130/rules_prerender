@@ -65,6 +65,8 @@ jobs:
             dist/bin/rules_prerender_pkg/
         tar -czf rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz \
             dist/bin/packages/declarative_shadow_dom/pkg/
+        tar -czf rules_prerender-preact-${{ github.event.inputs.version }}.tar.gz \
+            dist/bin/packages/preact/pkg/
 
         # Publish the packages.
         bazel run --config ci --config release //:rules_prerender_pkg_publish
@@ -108,6 +110,17 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz
         asset_name: rules_prerender-declarative_shadow_dom-${{ github.event.inputs.version }}.tar.gz
+        asset_content_type: application/gzip
+
+    # Upload `@rules_prerender/preact` to the GitHub release.
+    - name: Upload `@rules_prerender/preact` to GitHub
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rules_prerender-preact-${{ github.event.inputs.version }}.tar.gz
+        asset_name: rules_prerender-preact-${{ github.event.inputs.version }}.tar.gz
         asset_content_type: application/gzip
 
     # Notify the user that the release is completed.
