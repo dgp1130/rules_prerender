@@ -52,7 +52,7 @@ jobs:
         readonly PREFIX="rules_prerender-${VERSION}"
         readonly ARCHIVE="rules_prerender-bazel_workspace-${VERSION}.tar.gz"
 
-        git archive --format=tar --prefix="${PREFIX}" "HEAD" > "${ARCHIVE}"
+        git archive --format=tar --prefix="${PREFIX}" "HEAD" | gzip > "${ARCHIVE}"
         readonly SHA=$(shasum -a 256 "${ARCHIVE}" | awk '{ print $1 }')
 
         cat tools/publish/install_instructions.md |
