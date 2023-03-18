@@ -52,6 +52,7 @@ def web_resources_devserver(
         data = [resources],
         testonly = testonly,
         visibility = visibility,
+        use_execroot_entry_point = False,
         tags = tags,
     )
 

@@ -18,9 +18,9 @@ register_jq_toolchains()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "3ad6684d744ebbc6592d404cc3aa81d0da634eccb3499f6fd198ae122fa28489",
-    strip_prefix = "rules_js-1.19.0",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v1.19.0/rules_js-v1.19.0.tar.gz",
+    sha256 = "00e7b97b696af63812df0ca9e9dbd18579f3edd3ab9a56f227238b8405e4051c",
+    strip_prefix = "rules_js-1.23.0",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v1.23.0/rules_js-v1.23.0.tar.gz",
 )
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 rules_js_dependencies()
