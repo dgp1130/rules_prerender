@@ -8,6 +8,19 @@ load(
     "web_resources_devserver",
 )
 
+# Needed so Gazelle doesn't try to clobber the existing `prerender_component2()` targets.
+# gazelle:js_project_naming_convention prerender
+
+# Should resolve to `:my_component_prerender` or `:my_component_scripts`.
+# gazelle:js_resolve **/*.prerender.{js,mjs} :{dirname}_prerender
+# gazelle:js_resolve **/*.client.mjs :{dirname}_scripts
+
+# Seems to require manual resolution sometimes.
+# gazelle:js_resolve rules_prerender //:node_modules/rules_prerender
+# gazelle:js_resolve @rules_prerender/declarative_shadow_dom/* //:prerender_components/@rules_prerender/declarative_shadow_dom
+# gazelle:js_resolve @rules_prerender/preact //:node_modules/@rules_prerender/preact
+
+
 npm_link_all_packages(name = "node_modules")
 
 npm_link_package(
