@@ -1,0 +1,9 @@
+{
+  "name": "rules_prerender_rewrite",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "preact": "^10.13.2"
+  }
+}

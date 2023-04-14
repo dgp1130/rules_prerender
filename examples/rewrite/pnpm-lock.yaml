@@ -1,0 +1,13 @@
+lockfileVersion: 5.4
+
+specifiers:
+  preact: ^10.13.2
+
+dependencies:
+  preact: 10.13.2
+
+packages:
+
+  /preact/10.13.2:
+    resolution: {integrity: sha512-q44QFLhOhty2Bd0Y46fnYW0gD/cbVM9dUVtNTDKPcdXSMA7jfY+Jpd6rk3GB0lcQss0z5s/6CmVP0Z/hV+g6pw==}
+    dev: false

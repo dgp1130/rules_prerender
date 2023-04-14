@@ -17,12 +17,20 @@ load(
     _prerender_component = "prerender_component",
 )
 load(
+    "//packages/rules_prerender:prerender_component2.bzl",
+    _prerender_component2 = "prerender_component",
+)
+load(
     "//packages/rules_prerender:prerender_component_publish_files.bzl",
     _prerender_component_publish_files = "prerender_component_publish_files",
 )
 load(
     "//packages/rules_prerender:prerender_pages.bzl",
     _prerender_pages = "prerender_pages",
+)
+load(
+    "//packages/rules_prerender:prerender_pages2.bzl",
+    _prerender_pages2 = "prerender_pages",
 )
 load(
     "//packages/rules_prerender:prerender_pages_unbundled.bzl",
@@ -50,9 +58,11 @@ extract_single_resource = _extract_single_resource
 inject_resources = _inject_resources
 link_prerender_component = _link_prerender_component
 prerender_component = _prerender_component
+prerender_component2 = _prerender_component2
 prerender_component_publish_files = _prerender_component_publish_files
 prerender_pages_unbundled = _prerender_pages_unbundled
 prerender_pages = _prerender_pages
+prerender_pages2 = _prerender_pages2
 prerender_resources = _prerender_resources
 web_resources = _web_resources
 web_resources_devserver = _web_resources_devserver

@@ -1,0 +1,3 @@
+import %workspace%/../../tools/bazelrc/ci.bazelrc
+import %workspace%/../../tools/bazelrc/common.bazelrc
+import %workspace%/../../tools/bazelrc/incompatible.bazelrc

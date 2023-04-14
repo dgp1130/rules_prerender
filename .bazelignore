@@ -10,3 +10,4 @@ bazel-out
 
 # Ignore external workspaces in the repository.
 examples/external/
+examples/rewrite/
