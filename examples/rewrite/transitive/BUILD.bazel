@@ -1,29 +1,31 @@
-load("@rules_prerender//:index.bzl", "web_resources", "prerender_component2")
+load("@rules_prerender//:index.bzl", "prerender_component2", "web_resources")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 prerender_component2(
     name = "transitive",
     prerender = ":prerender",
-    scripts = ":scripts",
     resources = ":resources",
+    scripts = ":scripts",
     visibility = ["//:__subpackages__"],
 )
 
 ts_project(
     name = "prerender",
-    srcs = ["transitive.prerender.tsx"],
-    tsconfig = "//:tsconfig",
+    srcs = [
+        "transitive.client.mts",
+        "transitive.prerender.tsx",
+    ],
     declaration = True,
     source_map = True,
-    deps = ["//:node_modules/preact"],
+    tsconfig = "//:tsconfig",
 )
 
 ts_project(
     name = "scripts",
     srcs = ["transitive.client.mts"],
-    tsconfig = "//:tsconfig_client",
     declaration = True,
     source_map = True,
+    tsconfig = "//:tsconfig_client",
 )
 
 web_resources(

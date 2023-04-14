@@ -20,7 +20,6 @@ load(
 # gazelle:js_resolve @rules_prerender/declarative_shadow_dom/* //:prerender_components/@rules_prerender/declarative_shadow_dom
 # gazelle:js_resolve @rules_prerender/preact //:node_modules/@rules_prerender/preact
 
-
 npm_link_all_packages(name = "node_modules")
 
 npm_link_package(
@@ -28,16 +27,19 @@ npm_link_package(
     src = "@rules_prerender//:rules_prerender_pkg",
     visibility = ["//visibility:public"],
 )
+
 npm_link_package(
     name = "node_modules/@rules_prerender/declarative_shadow_dom",
     src = "@rules_prerender//packages/declarative_shadow_dom:pkg",
     visibility = ["//visibility:public"],
 )
+
 link_prerender_component(
     name = "prerender_components/@rules_prerender/declarative_shadow_dom",
     package = ":node_modules/@rules_prerender/declarative_shadow_dom",
     visibility = ["//visibility:public"],
 )
+
 npm_link_package(
     name = "node_modules/@rules_prerender/preact",
     src = "@rules_prerender//packages/preact:pkg",
@@ -56,8 +58,8 @@ ts_config(
 ts_config(
     name = "tsconfig_client",
     src = "tsconfig.client.json",
-    deps = [":tsconfig"],
     visibility = ["//:__subpackages__"],
+    deps = [":tsconfig"],
 )
 
 prerender_pages2(
@@ -75,12 +77,11 @@ web_resources_devserver(
 ts_project(
     name = "prerender",
     srcs = ["site.prerender.tsx"],
-    tsconfig = "//:tsconfig",
     declaration = True,
     source_map = True,
+    tsconfig = "//:tsconfig",
     deps = [
-        "//component:component_prerender",
+        ":{dirname}_prerender",
         "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
     ],
 )
