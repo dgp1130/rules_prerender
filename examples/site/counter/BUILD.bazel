@@ -1,21 +1,24 @@
-load("//:index.bzl", "prerender_pages")
+load("//:index.bzl", prerender_pages = "prerender_pages2")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_pages(
     name = "counter",
-    src = "counter.tsx",
-    tsconfig = "//:tsconfig",
-    source_map = True,
+    entry_point = "./counter.js",
+    prerender = ":prerender",
     visibility = ["//examples/site:__pkg__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["counter.tsx"],
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = ["//examples/site:package"],
-    lib_deps = [
+    deps = [
         "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
+        "//examples/site/components/counter:counter_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ],
-    deps = [
-        "//examples/site/components/base",
-        "//examples/site/components/counter",
-        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )

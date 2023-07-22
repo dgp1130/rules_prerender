@@ -1,22 +1,23 @@
-load("//:index.bzl", "css_library", "prerender_component")
+load("//:index.bzl", "css_library", prerender_component = "prerender_component2")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "base",
-    srcs = ["base.tsx"],
-    tsconfig = "//:tsconfig",
-    source_map = True,
-    styles = [":styles"],
+    prerender = ":prerender",
+    styles = ":styles",
     visibility = ["//examples/site:__subpackages__"],
-    lib_deps = [
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["base.tsx"],
+    deps = [
+        "//examples/site/components/footer:footer_prerender",
+        "//examples/site/components/header:header_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ],
-    deps = [
-        "//examples/site/components/footer",
-        "//examples/site/components/header",
-    ],
+    ]
 )
 
 css_library(
@@ -30,7 +31,7 @@ ts_project(
     srcs = ["base_test.tsx"],
     testonly = True,
     deps = [
-        ":base_prerender_for_test",
+        ":prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",

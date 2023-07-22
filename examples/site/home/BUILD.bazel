@@ -1,23 +1,25 @@
-load("//:index.bzl", "prerender_pages", "web_resources_devserver")
+load("//:index.bzl", prerender_pages = "prerender_pages2", "web_resources_devserver")
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_pages(
     name = "home",
-    src = "home.tsx",
-    tsconfig = "//:tsconfig",
-    source_map = True,
+    entry_point = "./home.js",
+    prerender = ":prerender",
+    visibility = ["//examples/site:__pkg__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["home.tsx"],
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = ["//examples/site:package"],
-    lib_deps = [
+    deps = [
         "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ],
-    visibility = ["//examples/site:__pkg__"],
-    deps = [
-        "//examples/site/components/base",
-        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )
 

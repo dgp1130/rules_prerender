@@ -1,28 +1,30 @@
-load("//:index.bzl", "prerender_pages")
+load("//:index.bzl", prerender_pages = "prerender_pages2")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_pages(
     name = "blog",
-    src = "blog.tsx",
-    tsconfig = "//:tsconfig",
-    source_map = True,
+    entry_point = "./blog.js",
+    prerender = ":prerender",
+    visibility = ["//examples/site:__pkg__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["blog.tsx"],
     data = glob(["posts/*.md"]) + [
         # Need `"type": "module"` to load `*.js` files output by `*.tsx`
         # compilation.
         "//examples/site:package",
     ],
-    visibility = ["//examples/site:__pkg__"],
-    lib_deps = [
-        "//:node_modules/rules_prerender",
+    deps = [
         "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
+        "//:node_modules/rules_prerender",
         "//:node_modules/markdown-it",
         "//:node_modules/@types/markdown-it",
         "//:node_modules/@types/node",
-    ],
-    deps = [
-        "//examples/site/components/base",
-        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )
 
@@ -32,7 +34,7 @@ ts_project(
     testonly = True,
     data = ["//:node_modules/node-html-parser"],
     deps = [
-        ":blog_prerender_for_test",
+        ":prerender",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
     ],
