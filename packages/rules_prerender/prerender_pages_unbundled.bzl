@@ -154,9 +154,6 @@ def prerender_pages_unbundled(
         name = "%s_entries" % client_scripts,
         metadata = metadata,
         testonly = testonly,
-        # Export this file so Rollup can have a direct, label reference to the
-        # entry point, since including the file in a `depset()` with other files
-        # is not good enough.
         visibility = visibility,
     )
 
