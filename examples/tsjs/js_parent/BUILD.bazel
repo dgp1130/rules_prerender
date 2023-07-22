@@ -1,12 +1,17 @@
-load("//:index.bzl", "prerender_component")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("//:index.bzl", prerender_component = "prerender_component2")
 
 prerender_component(
     name = "js_parent",
-    srcs = [
-        "js_parent.mjs",
-        "js_parent.d.mts",
-    ],
+    prerender = ":prerender",
     visibility = ["//examples/tsjs:__subpackages__"],
-    lib_deps = ["//:node_modules/preact"],
-    deps = ["//examples/tsjs/ts_child"],
+)
+
+js_library(
+    name = "prerender",
+    srcs = ["js_parent.mjs", "js_parent.d.mts"],
+    deps = [
+        "//examples/tsjs/ts_child:ts_child_prerender",
+        "//:node_modules/preact",
+    ]
 )
