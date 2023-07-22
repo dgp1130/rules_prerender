@@ -1,0 +1,39 @@
+load("//:index.bzl", "css_library", prerender_component = "prerender_component2", "web_resources")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+prerender_component(
+    name = "component",
+    prerender = ":prerender",
+    scripts = ":scripts",
+    styles = ":styles",
+    resources = ":resources",
+    visibility = ["//examples/rewrite:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["component.prerender.tsx"],
+    deps = [
+        "//examples/rewrite/transitive:transitive_prerender",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+    ],
+)
+
+ts_project(
+    name = "scripts",
+    srcs = ["component.client.mts"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["component.css"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/logo.png": "image.png",
+    },
+)

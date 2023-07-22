@@ -1,0 +1,14 @@
+load("//:index.bzl", prerender_component = "prerender_component2")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+prerender_component(
+    name = "transitive",
+    prerender = ":prerender",
+    visibility = ["//examples/rewrite:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["transitive.prerender.tsx"],
+    deps = ["//:node_modules/preact"],
+)
