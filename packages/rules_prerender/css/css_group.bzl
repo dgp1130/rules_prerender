@@ -1,6 +1,6 @@
 """Defines `css_group()` to group multiple `css_library()` targets like `filegroup()`."""
 
-load(":css_providers.bzl", "CssImportMapInfo")
+load(":css_providers.bzl", "CssImportMapInfo", "CssInfo")
 
 visibility(["//packages/rules_prerender/..."])
 
@@ -10,22 +10,37 @@ def _css_group_impl(ctx):
             files = depset([], transitive = [dep[DefaultInfo].files
                                              for dep in ctx.attr.deps]),
         ),
+        CssInfo(
+            direct_sources = depset([]),
+            transitive_sources = depset(
+                direct = [],
+                transitive = [dep[CssInfo].transitive_sources
+                              for dep in ctx.attr.deps
+                              if CssInfo in dep],
+            ),
+        ),
         CssImportMapInfo(
-            import_map = _merge_import_maps([dep[CssImportMapInfo]
-                                             for dep in ctx.attr.deps
-                                             if CssImportMapInfo in dep]),
+            import_map = merge_import_maps([dep[CssImportMapInfo]
+                                            for dep in ctx.attr.deps
+                                            if CssImportMapInfo in dep]),
         ),
     ]
 
 css_group = rule(
     implementation = _css_group_impl,
     attrs = {
-        "deps": attr.label_list(mandatory = True),
+        "deps": attr.label_list(
+            mandatory = True,
+            providers = [CssInfo, CssImportMapInfo],
+        ),
     },
-    doc = "Like a `filegroup()`, but for `css_library()` targets.",
+    doc = """
+        Merges `CssInfo` and `CssImportMapInfo` providers from multiple targets.
+        Like a `filegroup()`, but for `css_library()` targets.
+    """,
 )
 
-def _merge_import_maps(css_import_maps):
+def merge_import_maps(css_import_maps):
     """Merges a list of `CssImportMapInfo` into a single `CssImportMapInfo`.
     
     Fails the build if the same import path appears as a key in two maps.

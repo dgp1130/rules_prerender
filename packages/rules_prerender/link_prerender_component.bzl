@@ -1,4 +1,5 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
+load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load("//tools/typescript:defs.bzl", "ts_project")
 load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 
@@ -57,11 +58,11 @@ def link_prerender_component(name, package, visibility = None, testonly = None):
         testonly = testonly,
     )
 
-    native.filegroup(
+    css_group(
         name = "%s_styles" % name,
-        srcs = [], # Empty.
         visibility = visibility,
         testonly = testonly,
+        deps = [], # Empty for now, styles aren't supported.
     )
 
     _empty_web_resources(
