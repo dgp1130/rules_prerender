@@ -45,6 +45,7 @@ def link_prerender_component(name, package, visibility = None, testonly = None):
         scripts = package,
         styles = None,
         resources = None,
+        component_check = None,
         visibility = visibility,
         testonly = testonly,
     )

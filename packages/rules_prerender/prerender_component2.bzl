@@ -14,6 +14,7 @@ load(
     "alias_with_metadata",
     "prerender_metadata",
 )
+load(":visibility_aspect.bzl", "VisibilityInfo", "visibility_aspect")
 load(":web_resources.bzl", "web_resources")
 
 visibility("public")
@@ -97,6 +98,11 @@ def prerender_component(
         specific re-export you want.
         *   Exception: You may `bazel build` a `prerender_component()` target or
             have a `build_test()` depend on it to verify that it is buildable.
+    4.  Any direct dependency of a `prerender_component()` target *must* be
+        defined in the same Bazel package and have private visibility.
+        *   This is enforced at build time.
+        *   Acts as a guardrail to make it less likely to run afoul of the above
+            rules.
     
     Args:
         name: The name of this rule.
@@ -118,6 +124,21 @@ def prerender_component(
         %{name}_styles: A reexport of the `styles` attribute.
         %{name}_resources: A reexport of the `resources` attribute.
     """
+    # Build all dependencies and sanity check the component. This allows
+    # `bazel build` of a `prerender_component` to validate that the component is
+    # buildable and usable.
+    _component_check(
+        name = name,
+        prerender = prerender,
+        scripts = scripts,
+        styles = styles,
+        resources = resources,
+        testonly = testonly,
+        # Explicitly private because this just validates that the component is
+        # buildable. It should never be depended upon directly.
+        visibility = ["//visibility:private"],
+    )
+
     styles_reexport = "%s_styles_reexport" % name
     if styles:
         _inline_css_reexport(
@@ -136,6 +157,9 @@ def prerender_component(
         styles = ":%s" % styles_reexport if styles else None,
         styles_import_map = ":%s" % styles_reexport if styles else None,
         resources = resources,
+        # Include `_component_check()` output to run its Starlark implementation
+        # and run its sanity checks.
+        component_check = ":%s" % name,
         testonly = testonly,
     )
 
@@ -187,6 +211,82 @@ def prerender_component(
             visibility = visibility,
             testonly = testonly,
         )
+
+def _component_check_impl(ctx):
+    # Identify all the provided slices and what kind of dependency edge they use.
+    nullable_slices = {
+        "prerender": ctx.attr.prerender,
+        "scripts": ctx.attr.scripts,
+        "styles": ctx.attr.styles,
+        "resources": ctx.attr.resources,
+    }
+    slices = {edge: slice for (edge, slice) in nullable_slices.items() if slice}
+
+    for (edge, slice) in slices.items():
+        # Check slice is in the same package.
+        if slice.label.package != ctx.label.package:
+            fail("""
+{target} depends on {slice} which is in a different Bazel package (BUILD file).
+
+Direct dependencies of `prerender_component` targets *must* be defined in the same package. This allows `prerender_component` to properly encapsulate all the aspects of a component.
+
+Possible solutions:
+1.  If {slice} is only used by {target}, move {slice} into {package}.
+2.  If {slice} is used elsewhere, make a `prerender_component` in {dep_package} to encapsulate that target. Then use that new component from {target} just like any other.
+            """.strip().format(
+                target = ctx.label,
+                slice = slice.label,
+                package = "//%s" % ctx.label.package,
+                dep_package = "//%s" % slice.label.package,
+            ))
+
+        # Check slice has private visibility.
+        visibility = slice[VisibilityInfo].visibility
+        non_private_visibility = [scope for scope in visibility
+                                  if scope != Label("//visibility:private")]
+        if non_private_visibility:
+            fail("""
+{slice} must have private visibility. Any dependencies on it should depend on {component_slice} instead.
+
+Direct dependencies of `prerender_component` targets *must* have private visibility so all incoming dependencies flow through {component_slice} instead. This allows `@rules_prerender` to collect all the different parts of a component and bundle them correctly.
+
+Solution: Update {slice} to use private visibility. This can be done by deleting the `visibility` attribute (Bazel targets are private by default).
+
+{slice} is currently visible to:
+{visibility}
+            """.strip().format(
+                slice = slice.label,
+                component_slice = "%s_%s" % (ctx.label, edge),
+                visibility = "\n".join([str(label) for label in non_private_visibility]),
+            ))
+
+    # Collect all the `DefaultInfo` outputs of the component slices and return
+    # them so `bazel build`-ing a `prerender_component` implicitly builds all
+    # its dependencies.
+    files_to_build = [ctx.attr.prerender[DefaultInfo].files]
+    if ctx.attr.scripts:
+        files_to_build.append(ctx.attr.scripts[DefaultInfo].files)
+    if ctx.attr.styles:
+        files_to_build.append(ctx.attr.styles[DefaultInfo].files)
+    if ctx.attr.resources:
+        files_to_build.append(ctx.attr.resources[DefaultInfo].files)
+    return DefaultInfo(
+        files = depset([], transitive = files_to_build),
+    )
+
+_component_check = rule(
+    implementation = _component_check_impl,
+    attrs = {
+        "prerender": attr.label(
+            mandatory = True,
+            aspects = [visibility_aspect],
+        ),
+        "scripts": attr.label(aspects = [visibility_aspect]),
+        "styles": attr.label(aspects = [visibility_aspect]),
+        "resources": attr.label(aspects = [visibility_aspect]),
+    },
+    doc = "Performs component-level sanity checks and builds all slices.",
+)
 
 def _js_reexport_impl(ctx):
     merged_js_info = js_info(

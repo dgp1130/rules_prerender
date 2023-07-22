@@ -14,6 +14,7 @@ PrerenderMetadataInfo = provider(
         "styles": "The CssInfo of the styles target.",
         "styles_import_map": "The CssImportMapInfo of the styles target.",
         "resources": "The WebResourceInfo of the resources target.",
+        "component_check": "The DefaultInfo of the component check target.",
     },
 )
 
@@ -24,6 +25,7 @@ def _prerender_metadata_impl(ctx):
         styles = _safe_get(ctx.attr.styles, CssInfo),
         styles_import_map = _safe_get(ctx.attr.styles_import_map, CssImportMapInfo),
         resources = _safe_get(ctx.attr.resources, WebResourceInfo),
+        component_check = _safe_get(ctx.attr.component_check, DefaultInfo),
     )
 
 prerender_metadata = rule(
@@ -37,6 +39,7 @@ prerender_metadata = rule(
         "styles": attr.label(providers = [CssInfo]),
         "styles_import_map": attr.label(providers = [CssImportMapInfo]),
         "resources": attr.label(providers = [WebResourceInfo]),
+        "component_check": attr.label(providers = [DefaultInfo]),
     },
     doc = """
         Collects all the various "slices" of a component together into a single
