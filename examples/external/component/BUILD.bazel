@@ -2,24 +2,30 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load(
     "@rules_prerender//:index.bzl",
     "css_library",
-    "prerender_component",
+    prerender_component = "prerender_component2",
     "web_resources",
 )
 
 prerender_component(
     name = "component",
+    prerender = ":prerender",
+    scripts = ":script",
+    styles = ":style",
+    resources = ":resources",
+    visibility = ["//:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
     srcs = ["component.tsx"],
-    scripts = [":script"],
-    styles = [":style"],
-    resources = [":resources"],
+    declaration = True,
     source_map = True,
     tsconfig = "//:tsconfig",
-    visibility = ["//:__subpackages__"],
-    lib_deps = [
+    deps = [
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ],
-    deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
+    ]
 )
 
 ts_project(
