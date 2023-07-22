@@ -1,9 +1,11 @@
-load("//:index.bzl", prerender_component = "prerender_component2")
+load("//:index.bzl", prerender_component = "prerender_component2", "web_resources")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "transitive",
     prerender = ":prerender",
+    scripts = ":scripts",
+    resources = ":resources",
     visibility = ["//examples/rewrite:__subpackages__"],
 )
 
@@ -11,4 +13,16 @@ ts_project(
     name = "prerender",
     srcs = ["transitive.prerender.tsx"],
     deps = ["//:node_modules/preact"],
+)
+
+ts_project(
+    name = "scripts",
+    srcs = ["transitive.client.mts"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/greeting.txt": "greeting.txt",
+    },
 )
