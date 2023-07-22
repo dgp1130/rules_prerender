@@ -1,17 +1,20 @@
 load("//tools/typescript:defs.bzl", "ts_project")
-load("//:index.bzl", "prerender_component")
+load("//:index.bzl", prerender_component = "prerender_component2")
 
 prerender_component(
     name = "transitive",
+    prerender = ":prerender",
+    scripts = ":transitive_script",
+    visibility = ["//examples/scripts:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
     srcs = ["transitive.tsx"],
-    tsconfig = "//:tsconfig",
-    source_map = True,
-    lib_deps = [
+    deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],
-    scripts = [":transitive_script"],
-    visibility = ["//examples/scripts:__subpackages__"],
 )
 
 ts_project(
