@@ -1,19 +1,22 @@
 load("//tools/typescript:defs.bzl", "ts_project")
-load("//:index.bzl", "css_library", "prerender_component")
+load("//:index.bzl", "css_library", prerender_component = "prerender_component2")
 
 prerender_component(
     name = "component",
-    srcs = ["component.tsx"],
-    scripts = [":script"],
-    styles = [":style"],
-    tsconfig = "//:tsconfig",
-    source_map = True,
+    prerender = ":prerender",
+    scripts = ":script",
+    styles = ":style",
     visibility = ["//examples/preact:__pkg__"],
-    lib_deps = [
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["component.tsx"],
+    deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
-    deps = ["//:prerender_components/@rules_prerender/declarative_shadow_dom"],
 )
 
 ts_project(
