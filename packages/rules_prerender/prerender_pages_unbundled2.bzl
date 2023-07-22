@@ -2,6 +2,7 @@
 
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
+load("//common:paths.bzl", "is_js_file")
 load("//packages/rules_prerender/css:css_group.bzl", "merge_import_maps")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo", "CssInfo")
 load(":prerender_component2.bzl", "prerender_component")
