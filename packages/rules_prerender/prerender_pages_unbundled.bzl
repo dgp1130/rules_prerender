@@ -5,7 +5,7 @@ load("//common:label.bzl", "absolute", "file_path_of", "rel_path")
 load("//common:paths.bzl", "js_output", "is_js_file")
 load(":prerender_component.bzl", "prerender_component")
 load(":prerender_resources.bzl", "prerender_resources_internal")
-load(":script_entry_point.bzl", "script_entry_points")
+load(":script_entry_points.bzl", "script_entry_points")
 load(":web_resources.bzl", "WebResourceInfo", "web_resources")
 
 visibility(["//"])

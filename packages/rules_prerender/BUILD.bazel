@@ -45,8 +45,8 @@ ts_project(
 )
 
 bzl_library(
-    name = "script_entry_point",
-    srcs = ["script_entry_point.bzl"],
+    name = "script_entry_points",
+    srcs = ["script_entry_points.bzl"],
 )
 
 bzl_library(
@@ -113,7 +113,7 @@ bzl_library(
     srcs = ["prerender_pages_unbundled.bzl"],
     visibility = ["//:__pkg__"],
     deps = [
-        ":script_entry_point",
+        ":script_entry_points",
         ":prerender_component",
         ":web_resources",
     ],
