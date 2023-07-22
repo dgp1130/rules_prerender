@@ -1,21 +1,25 @@
-load("//:index.bzl", "css_library", "prerender_component", "web_resources")
+load("//:index.bzl", "css_library", prerender_component = "prerender_component2", "web_resources")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "component",
-    srcs = ["component.tsx"],
-    tsconfig = "//:tsconfig",
-    source_map = True,
-    scripts = [":scripts"],
-    styles = [":styles"],
-    resources = [":resources"],
+    prerender = ":prerender",
+    scripts = ":scripts",
+    styles = ":styles",
+    resources = ":resources",
     testonly = True,
     visibility = ["//examples/testonly:__subpackages__"],
-    lib_deps = [
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["component.tsx"],
+    testonly = True,
+    deps = [
+        "//examples/testonly/transitive:transitive_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],
-    deps = ["//examples/testonly/transitive"],
 )
 
 ts_project(
