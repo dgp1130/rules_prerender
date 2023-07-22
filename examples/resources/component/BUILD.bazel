@@ -1,15 +1,21 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("//:index.bzl", "prerender_component", "web_resources")
+load("//:index.bzl", prerender_component = "prerender_component2", "web_resources")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "component",
-    srcs = ["component.tsx"],
-    tsconfig = "//:tsconfig",
-    source_map = True,
-    resources = [":resources"],
+    prerender = ":prerender",
+    resources = ":resources",
     visibility = ["//examples/resources:__subpackages__"],
-    lib_deps = ["//:node_modules/preact"],
-    deps = ["//examples/resources/transitive"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["component.tsx"],
+    deps = [
+        "//:node_modules/preact",
+        "//examples/resources/transitive:transitive_prerender",
+    ],
 )
 
 web_resources(
