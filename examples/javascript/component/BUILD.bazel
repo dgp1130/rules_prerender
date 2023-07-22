@@ -1,38 +1,27 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
-load("//:index.bzl", "prerender_component")
+load("//:index.bzl", prerender_component = "prerender_component2")
 
 prerender_component(
     name = "component",
-    srcs = ["component.mjs"],
-    lib_deps = [
-        ":prerender_lib",
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
-    ],
-    scripts = [
-        ":component_script",
-        ":component_script_unused",
-    ],
+    prerender = ":prerender",
+    scripts = ":scripts",
     visibility = ["//examples/javascript:__pkg__"],
 )
 
 js_library(
-    name = "prerender_lib",
-    srcs = ["prerender_lib.mjs"],
+    name = "prerender",
+    srcs = ["component.mjs"],
+    deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ]
 )
 
 js_library(
-    name = "component_script",
-    srcs = ["component_script.mjs"],
-    deps = [":component_script_dep"],
-)
-
-js_library(
-    name = "component_script_dep",
-    srcs = ["component_script_dep.mjs"],
-)
-
-js_library(
-    name = "component_script_unused",
-    srcs = ["component_script_unused.mjs"],
+    name = "scripts",
+    srcs = [
+        "component_script.mjs",
+        "component_script_dep.mjs",
+        "component_script_unused.mjs",
+    ],
 )

@@ -1,11 +1,9 @@
 import { includeScript } from '@rules_prerender/preact';
 import { h } from 'preact';
-import { content } from './prerender_lib.mjs';
 
 /** Renders an example component with a script. */
 export function Component() {
     return h('', {}, [
-        h('div', { id: 'component' }, [ content ]),
         h('div', { id: 'component-replace' }, [
             'This text to be overwritten by client-side JavaScript.',
         ]),
