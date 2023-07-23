@@ -1,7 +1,7 @@
 """Defines `prerender_pages()` functionality."""
 
 load(":multi_inject_resources.bzl", "multi_inject_resources")
-load(":prerender_pages_unbundled2.bzl", "prerender_pages_unbundled")
+load(":prerender_pages_unbundled.bzl", "prerender_pages_unbundled")
 load(":scripts_bundle.bzl", "scripts_bundle")
 load(":web_resources.bzl", "web_resources")
 

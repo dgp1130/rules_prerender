@@ -73,18 +73,21 @@ bzl_library(
     deps = [":web_resources"],
 )
 
-# bzl_library(
-#     name = "prerender_component",
-#     srcs = ["prerender_component.bzl"],
-#     visibility = ["//:__pkg__"],
-#     deps = [
-#         ":web_resources",
-#         "//common:label",
-#         "//common:paths",
-#         "//packages/rules_prerender/css:css_binaries",
-#         "//packages/rules_prerender/css:css_group",
-#     ],
-# )
+bzl_library(
+    name = "prerender_component",
+    srcs = ["prerender_component.bzl"],
+    visibility = ["//:__pkg__"],
+    deps = [
+        ":prerender_metadata",
+        ":visibility_aspect",
+        ":web_resources",
+        "//common:label",
+        "//common:paths",
+        "//packages/rules_prerender/css:css_binaries",
+        "//packages/rules_prerender/css:css_group",
+        "//packages/rules_prerender/css:css_library",
+    ],
+)
 
 bzl_library(
     name = "prerender_component_publish_files",
@@ -108,28 +111,42 @@ jasmine_node_test(
     deps = [":prerender_component_publish_files_test_lib"],
 )
 
-# bzl_library(
-#     name = "prerender_pages_unbundled",
-#     srcs = ["prerender_pages_unbundled.bzl"],
-#     visibility = ["//:__pkg__"],
-#     deps = [
-#         ":script_entry_points",
-#         ":prerender_component",
-#         ":web_resources",
-#     ],
-# )
+bzl_library(
+    name = "prerender_metadata",
+    srcs = ["prerender_metadata.bzl"],
+    deps = [
+        ":web_resources",
+        "//packages/rules_prerender/css:css_providers",
+    ],
+)
 
-# bzl_library(
-#     name = "prerender_pages",
-#     srcs = ["prerender_pages.bzl"],
-#     visibility = ["//:__pkg__"],
-#     deps = [
-#         ":multi_inject_resources",
-#         ":prerender_pages_unbundled",
-#         ":scripts_bundle",
-#         ":web_resources",
-#     ],
-# )
+bzl_library(
+    name = "prerender_pages_unbundled",
+    srcs = ["prerender_pages_unbundled.bzl"],
+    visibility = ["//:__pkg__"],
+    deps = [
+        ":prerender_component",
+        ":prerender_metadata",
+        ":prerender_resources",
+        ":script_entry_points",
+        ":web_resources",
+        "//common:paths",
+        "//packages/rules_prerender/css:css_group",
+        "//packages/rules_prerender/css:css_providers",
+    ],
+)
+
+bzl_library(
+    name = "prerender_pages",
+    srcs = ["prerender_pages.bzl"],
+    visibility = ["//:__pkg__"],
+    deps = [
+        ":multi_inject_resources",
+        ":prerender_pages_unbundled",
+        ":scripts_bundle",
+        ":web_resources",
+    ],
+)
 
 bzl_library(
     name = "prerender_resources",
@@ -146,6 +163,11 @@ bzl_library(
 bzl_library(
     name = "scripts_bundle",
     srcs = ["scripts_bundle.bzl"],
+)
+
+bzl_library(
+    name = "visibility_aspect",
+    srcs = ["visibility_aspect.bzl"],
 )
 
 bzl_library(

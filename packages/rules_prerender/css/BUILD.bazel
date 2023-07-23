@@ -23,7 +23,10 @@ bzl_library(
 bzl_library(
     name = "css_library",
     srcs = ["css_library.bzl"],
-    visibility = ["//:__pkg__"],
+    visibility = [
+        "//:__pkg__",
+        "//packages/rules_prerender:__pkg__",
+    ],
     deps = [":css_providers"],
 )
 
