@@ -1,0 +1,27 @@
+digraph mygraph {
+  node [shape=box];
+  
+  ":component"
+  ":component" -> ":prerender"
+  ":component" -> ":resources"
+  ":component" -> ":scripts"
+  ":component" -> ":styles"
+  
+  subgraph cluster_component_inputs {
+    label = "Component Inputs";
+    labelloc = b;
+
+    ":styles"
+    ":scripts"
+    ":resources"
+    ":prerender"
+    
+    // Enforce left-to-right ordering.
+    // https://stackoverflow.com/questions/44274518/how-can-i-control-within-level-node-order-in-graphvizs-dot
+    {
+      rank = same;
+      ":prerender" -> ":scripts" -> ":styles" -> ":resources" [ style=invis ];
+      rankdir = LR;
+    }
+  }
+}

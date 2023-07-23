@@ -1,0 +1,58 @@
+digraph mygraph {
+  node [shape=box];
+  
+  subgraph cluster_slice_aliases {
+    label = "Slice Aliases";
+
+    ":component_prerender"
+    ":component_scripts"
+    ":component_styles"
+    ":component_resources"
+    
+    // Enforce left-to-right ordering.
+    // https://stackoverflow.com/questions/44274518/how-can-i-control-within-level-node-order-in-graphvizs-dot
+    {
+      rank = same;
+      ":component_prerender" -> ":component_scripts" -> ":component_styles" -> ":component_resources" [ style=invis ];
+      rankdir = LR;
+    }
+  }
+  
+  ":component_resources" -> ":component_metadata"
+  ":component_resources" -> ":resources"
+  ":component_styles" -> ":component_metadata"
+  ":component_styles" -> ":styles"
+  ":component_prerender" -> ":component_metadata"
+  ":component_prerender" -> ":prerender"
+  ":component_scripts" -> ":component_metadata"
+  ":component_scripts" -> ":scripts"
+  ":component_metadata"
+  ":component_metadata" -> ":component"
+  ":component_metadata" -> ":prerender"
+  ":component_metadata" -> ":scripts"
+  ":component_metadata" -> ":styles"
+  ":component_metadata" -> ":resources"
+  ":component"
+  ":component" -> ":prerender"
+  ":component" -> ":resources"
+  ":component" -> ":scripts"
+  ":component" -> ":styles"
+  
+  subgraph cluster_component_inputs {
+    label = "Component Inputs";
+    labelloc = b;
+
+    ":styles"
+    ":scripts"
+    ":resources"
+    ":prerender"
+    
+    // Enforce left-to-right ordering.
+    // https://stackoverflow.com/questions/44274518/how-can-i-control-within-level-node-order-in-graphvizs-dot
+    {
+      rank = same;
+      ":prerender" -> ":scripts" -> ":styles" -> ":resources" [ style=invis ];
+      rankdir = LR;
+    }
+  }
+}

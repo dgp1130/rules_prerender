@@ -1,0 +1,21 @@
+digraph mygraph {
+  node [shape=box];
+  
+  ":foo_prerender";
+  ":foo_prerender_lib";
+  ":foo_metadata";
+  ":bar_prerender";
+  ":bar_prerender_lib";
+  ":bar_scripts_lib";
+  ":bar_metadata";
+
+  ":foo_prerender" -> ":foo_prerender_lib";
+  ":foo_prerender" -> ":foo_metadata";
+  ":foo_metadata" -> ":foo_prerender_lib";
+  ":foo_prerender_lib" -> ":bar_prerender";
+
+  ":bar_prerender" -> ":bar_prerender_lib";
+  ":bar_prerender" -> ":bar_metadata";
+  ":bar_metadata" -> ":bar_prerender_lib";
+  ":bar_metadata" -> ":bar_scripts_lib";
+}
