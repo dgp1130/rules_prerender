@@ -450,6 +450,13 @@ and has a few special rules for how it is used.
     *   Acts as a guardrail to make it less likely to run afoul of the above
         rules.
 
+A general best practice is to give every `prerender_component` target its own
+directory and Bazel package. Leave everything private visibility except for the
+`prerender_component` target itself. This will set visibility for the alias
+targets as well. Doing so makes it impossible to accidentally forget to use the
+component aliases, since doing so would be a visibility error. This pattern
+helps you naturally follow the above rules without even thinking about it.
+
 ### Generating multiple pages
 
 We can generate multiple pages just as easily as the one. We just need to yield
