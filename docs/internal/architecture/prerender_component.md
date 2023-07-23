@@ -92,7 +92,7 @@ The dependency graph for a component looks a bit awkward as a result, but is
 important to understand how everything is connected.
 
 ![A dependency graph of a component demonstrating how the generated targets
-relate to each other.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Farchitecture%2Fcomponent.dot)
+relate to each other.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Finternal%2Farchitecture%2Fcomponent.dot)
 
 This can be difficult to parse, so let's filter the graph down to some important
 attributes. First we can see that each slice alias has a direct dependency on
@@ -104,7 +104,7 @@ exposes these targets as the "public API" of `:component`.
 `:component_prerender`, `:component_scripts`, `:component_styles`, and
 `:component_resources` are labeled as "Slice Aliases". Second, `:prerender`,
 `:scripts`, `:styles`, and `:resources` are labeled as "Component Inputs". Each
-slice alias has a direct dependency on its associated component input.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Farchitecture%2Fcomponent_aliases.dot)
+slice alias has a direct dependency on its associated component input.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Finternal%2Farchitecture%2Fcomponent_aliases.dot)
 
 Second, we can focus on the `:component_metadata` target to see that it lies
 between all the slice aliases and component inputs. It effectively collects all
@@ -116,7 +116,7 @@ depend on those slices.
 ![A subset of the first dependency graph. It identifies the same "Slice Aliases"
 and "Component Inputs" as the previous graph. However between the two sets is
 the `:component_metadata` target. Every slice alias depends on
-`:component_metadata`, which itself depends on every component input.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Farchitecture%2Fcomponent_metadata.dot)
+`:component_metadata`, which itself depends on every component input.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Finternal%2Farchitecture%2Fcomponent_metadata.dot)
 
 Third, we can look at the `:component` target. Since this is just a validation
 check, it depends on all the component inputs. This means that building
@@ -126,7 +126,7 @@ actually built in a typical build, however it is useful for
 
 ![A subset of the first dependency graph. It identifies the same "Slice Aliases"
 as the previous graphs. However it also shows the `:component` target, which has
-a direct dependency on every component input.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Farchitecture%2Fcomponent_check.dot)
+a direct dependency on every component input.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Finternal%2Farchitecture%2Fcomponent_check.dot)
 
 ## Component dependencies
 
@@ -165,7 +165,7 @@ looks like this:
 ![A dependency graph showing the relationship between the generated targets for
 `:foo` and `:bar`. The graph starts at `:foo_prerender`. Because
 `:bar_prerender` has a dependency on `:bar_metadata`, the `:bar_scripts_lib`
-target is pulled into the dependency graph.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Farchitecture%2Fcomponent_composition.dot)
+target is pulled into the dependency graph.](https://g.gravizo.com/source/svg?https%3A%2F%2Fraw.githubusercontent.com%2Fdgp1130%2Frules_prerender%2Fmain%2Fdocs%2Finternal%2Farchitecture%2Fcomponent_composition.dot)
 
 Because of this structure, any dependency on `:foo_prerender` inherently has a
 path to `:bar_metadata` and all the component slices for `:bar`, including
