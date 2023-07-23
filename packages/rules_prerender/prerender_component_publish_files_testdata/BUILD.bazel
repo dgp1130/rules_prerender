@@ -1,6 +1,6 @@
 load(
     "//:index.bzl",
-    prerender_component = "prerender_component2",
+    "prerender_component",
     "prerender_component_publish_files",
 )
 load("//packages/rules_prerender:web_resources.bzl", "web_resources")

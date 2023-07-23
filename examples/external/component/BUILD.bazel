@@ -2,7 +2,7 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load(
     "@rules_prerender//:index.bzl",
     "css_library",
-    prerender_component = "prerender_component2",
+    "prerender_component",
     "web_resources",
 )
 

@@ -2,8 +2,8 @@ load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load(
     "//:index.bzl",
     "css_library",
-    prerender_component = "prerender_component2",
-    prerender_pages = "prerender_pages2",
+    "prerender_component",
+    "prerender_pages",
     "web_resources_devserver",
 )
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")

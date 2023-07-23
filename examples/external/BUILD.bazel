@@ -6,7 +6,7 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load(
     "@rules_prerender//:index.bzl",
     "link_prerender_component",
-    prerender_pages = "prerender_pages2",
+    "prerender_pages",
     "web_resources_devserver",
 )
 load("@rules_prerender_npm//:defs.bzl", "npm_link_all_packages")

@@ -1,5 +1,5 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
-load("//:index.bzl", prerender_component = "prerender_component2")
+load("//:index.bzl", "prerender_component")
 
 prerender_component(
     name = "js_child",

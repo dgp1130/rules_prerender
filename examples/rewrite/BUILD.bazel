@@ -1,4 +1,4 @@
-load("//:index.bzl", prerender_pages = "prerender_pages2", "web_resources_devserver")
+load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_pages(

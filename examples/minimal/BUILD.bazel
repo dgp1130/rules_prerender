@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//tools/typescript:defs.bzl", "ts_project")
-load("//:index.bzl", prerender_pages = "prerender_pages2", "web_resources_devserver")
+load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
 
 copy_to_bin(

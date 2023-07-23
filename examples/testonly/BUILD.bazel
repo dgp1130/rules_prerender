@@ -3,7 +3,7 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load(
     "//:index.bzl",
     "css_library",
-    prerender_pages = "prerender_pages2",
+    "prerender_pages",
     "web_resources",
     "web_resources_devserver",
 )
