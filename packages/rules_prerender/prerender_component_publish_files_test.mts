@@ -20,8 +20,8 @@ describe('prerender_component_publish_files()', () => {
             'script_dep.d.mts',
             // Temporary bad assertion. Need to update component publishing to copy
             // styles into the correct position in the NPM package.
-            'component_styles_bin_binary_0',
-            'component_resources', // from `resources` attribute.
+            'component_styles_reexport_binary_0',
+            'resources', // from `resources` attribute.
         ]);
 
         const actualFiles = new Set(await fs.readdir(root));
@@ -30,7 +30,7 @@ describe('prerender_component_publish_files()', () => {
 
         // Separately test for the resources directory.
         const expectedResources = new Set([ 'resource.txt' ]);
-        const actualResources = new Set(await fs.readdir(`${root}/component_resources`));
+        const actualResources = new Set(await fs.readdir(`${root}/resources`));
         expect(actualResources).toEqual(expectedResources);
     });
 });

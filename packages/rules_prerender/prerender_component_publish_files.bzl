@@ -8,6 +8,8 @@ visibility(["//"])
 def prerender_component_publish_files(
     name,
     dep,
+    collect_styles = True,
+    collect_resources = True,
     testonly = None,
     **kwargs,
 ):
@@ -23,6 +25,12 @@ def prerender_component_publish_files(
     Params:
         name: The name of this target.
         dep: The `prerender_component()` to publish.
+        collect_scripts: Whether or not to collect and publish client-side
+            scripts. Should only be disabled if there are no scripts to collect.
+        collect_styles: Whether or not to collect and publish CSS styles. Should
+            only be disabled if there are no styles to collect.
+        collect_resources: Whether or not to collect and publish resources.
+            Should only be disabled if there are no resources to collect.
         **kwargs: Remaining arguments to pass through to the underlying target.
     
     Outputs:
@@ -63,17 +71,25 @@ def prerender_component_publish_files(
         testonly = testonly,
     )
 
+    files = [
+        ":%s" % prerender_dts,
+        ":%s" % prerender_js,
+        ":%s" % scripts_dts,
+        ":%s" % scripts_js,
+    ]
+
+    # Collect CSS files.
+    if collect_styles:
+        files.append("%s_styles" % absolute_name)
+
+    # Collect static resources.
+    if collect_resources:
+        files.append("%s_resources" % absolute_name)
+
     # Collect all the files to be published for the component.
     native.filegroup(
         name = name,
-        srcs = [
-            ":%s" % prerender_dts,
-            ":%s" % prerender_js,
-            ":%s" % scripts_dts,
-            ":%s" % scripts_js,
-            "%s_styles" % absolute_name, # inlined `*.css` files.
-            "%s_resources" % absolute_name, # resource files.
-        ],
+        srcs = files,
         testonly = testonly,
         **kwargs
     )
