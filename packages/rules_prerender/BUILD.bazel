@@ -73,18 +73,18 @@ bzl_library(
     deps = [":web_resources"],
 )
 
-bzl_library(
-    name = "prerender_component",
-    srcs = ["prerender_component.bzl"],
-    visibility = ["//:__pkg__"],
-    deps = [
-        ":web_resources",
-        "//common:label",
-        "//common:paths",
-        "//packages/rules_prerender/css:css_binaries",
-        "//packages/rules_prerender/css:css_group",
-    ],
-)
+# bzl_library(
+#     name = "prerender_component",
+#     srcs = ["prerender_component.bzl"],
+#     visibility = ["//:__pkg__"],
+#     deps = [
+#         ":web_resources",
+#         "//common:label",
+#         "//common:paths",
+#         "//packages/rules_prerender/css:css_binaries",
+#         "//packages/rules_prerender/css:css_group",
+#     ],
+# )
 
 bzl_library(
     name = "prerender_component_publish_files",
@@ -108,28 +108,28 @@ jasmine_node_test(
     deps = [":prerender_component_publish_files_test_lib"],
 )
 
-bzl_library(
-    name = "prerender_pages_unbundled",
-    srcs = ["prerender_pages_unbundled.bzl"],
-    visibility = ["//:__pkg__"],
-    deps = [
-        ":script_entry_points",
-        ":prerender_component",
-        ":web_resources",
-    ],
-)
+# bzl_library(
+#     name = "prerender_pages_unbundled",
+#     srcs = ["prerender_pages_unbundled.bzl"],
+#     visibility = ["//:__pkg__"],
+#     deps = [
+#         ":script_entry_points",
+#         ":prerender_component",
+#         ":web_resources",
+#     ],
+# )
 
-bzl_library(
-    name = "prerender_pages",
-    srcs = ["prerender_pages.bzl"],
-    visibility = ["//:__pkg__"],
-    deps = [
-        ":multi_inject_resources",
-        ":prerender_pages_unbundled",
-        ":scripts_bundle",
-        ":web_resources",
-    ],
-)
+# bzl_library(
+#     name = "prerender_pages",
+#     srcs = ["prerender_pages.bzl"],
+#     visibility = ["//:__pkg__"],
+#     deps = [
+#         ":multi_inject_resources",
+#         ":prerender_pages_unbundled",
+#         ":scripts_bundle",
+#         ":web_resources",
+#     ],
+# )
 
 bzl_library(
     name = "prerender_resources",
