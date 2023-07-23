@@ -79,26 +79,32 @@ load("@rules_prerender//:index.bzl", "prerender_component", "web_resources")
 prerender_component(
     name = "my_component",
     # The library which will prerender the HTML at build time in a Node process.
+    prerender = ":prerender",
+    # Client-side JavaScript to be executed in the browser.
+    scripts = ":scripts",
+    # Styles for the component.
+    styles = ":styles",
+    # Other resources required by the component (images, fonts, static JSON, etc.).
+    resources = ":resources",
+)
+
+# Compile the prerendering logic (can also be a `js_library`).
+ts_project(
+    name = "prerender",
     srcs = ["my_component_prerender.tsx"],
-    # Other `ts_project()` or `js_library()` targets used by `my_component_prerender.ts`.
-    lib_deps = [
+    deps = [
+        # See "Component composition" to learn more about how to depend on
+        # another `prerender_component`.
+        "//my_other_component:my_other_component_prerender",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+
+        # Regular dependencies.
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],
-    # Client-side JavaScript to be executed in the browser.
-    scripts = [":scripts"],
-    # Styles for the component.
-    styles = [":styles"],
-    # Other resources required by the component (images, fonts, static JSON, etc.).
-    resources = [":resources"],
-    # Other `prerender_component()` rules used by `my_component_prerender.ts`.
-    deps = [
-        "//:prerender_components/@rules_prerender/declarative_shadow_dom",
-        "//my_other_component",
-    ],
 )
 
-# Client-side scripts to be executed in the browser.
+# Client-side scripts to be executed in the browser (can also be a `js_library`).
 ts_project(
     name = "scripts",
     srcs = ["my_component.mts"],
@@ -106,6 +112,7 @@ ts_project(
     deps = ["//some/other/package:ts_proj"],
 )
 
+# Any styles needed by this component to render correctly.
 css_library(
     name = "styles",
     srcs = ["my_component.css"],
@@ -131,10 +138,7 @@ import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { OtherComponent } from '../my_other_component/my_other_component_prerender.js';
 
-/**
- * Render partial HTML. In this case we're just using a string literal, but you
- * could reasonably use lit-html, React, or any other templating library.
- */
+/** Render partial HTML with Preact. */
 export function MyComponent({ name }: { name: string }): VNode {
     return <div>
         {/* Use declarative shadow DOM to isolate styles. If you're not familiar
@@ -205,7 +209,7 @@ document.getElementById('show').addEventListener('click', () => {
 The second part of the rule set leverages such components to prerender an entire
 web page.
 
-```typescript
+```tsx
 // my_page/my_page_prerender.tsx
 
 import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
@@ -233,6 +237,7 @@ export default function* render(): Generator<PrerenderResource, void, void> {
 ```python
 # my_page/BUILD.bazel
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver")
 
 # Renders the page, bundles JavaScript and CSS, injects the relevant
@@ -247,18 +252,29 @@ load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver
 #         dependencies.
 prerender_pages(
     name = "prerendered_page",
-    # Script to invoke the default export of to generate the page.
-    src = "my_page_prerender.tsx",
-    lib_deps = [
+    # Import specifier for the JavaScript output from `:prerender` which
+    # generates the page.
+    entry_point = "./my_page_prerender.js",
+    # Depend on the library containing `my_page_prerender.js`.
+    prerender = ":prerender",
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["my_page_prerender.tsx"],
+    deps = [
+        # See "Component composition" to learn more about how to depend on
+        # another `prerender_component`.
+        "//my_component:my_component_prerender",
+
+        # Other dependencies.
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],
-    # Components used during prerendering.
-    deps = ["//my_component"],
 )
 
-# Simple server to test out this page. `bazel run` / `ibazel run` this target to
-# check out the page at `/my_page/index.html`.
+# Small dev server to test out this page. `bazel run` / `ibazel run` this target
+# to check out the page at `/my_page/index.html`.
 web_resources_devserver(
     name = "devserver",
     resources = ":prerendered_page",
@@ -307,13 +323,140 @@ generate the application as a directory and upload it to a CDN for production
 deployments. They could even make a separate `bazel run //my_site:deploy` target
 which performs the upload and run it from CI for easy deployments!
 
+### Component composition
+
+The `prerender_component` target generates aliases to the targets passed in as
+inputs. Consider the following example:
+
+```python
+load("@rules_prerender//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "component",
+    prerender = ":my_prerender_lib",
+    scripts = ":my_scripts_lib",
+    styles = ":my_styles_lib",
+    resources = ":my_resources_lib",
+)
+```
+
+This will generate the following aliases:
+
+*   `:component_prerender` -> `:my_prerender_lib`
+*   `:component_scripts` -> `:my_scripts_lib`
+*   `:component_styles` -> `:my_styles_lib`
+*   `:component_resources` -> `:my_resources_lib`
+
+If you want to use any part of a component, you can use it directly rather than
+depending on `:component`. However, you _must_ depend on that part through one
+of the above aliases.
+
+For example, consider the following component:
+
+```tsx
+// my_component/prerender.mts
+
+import { VNode } from 'preact';
+
+/** Render partial HTML with Preact. */
+export function MyComponent({ name }: { name: string }): VNode {
+    return <div>Hello, {name}!</div>
+}
+```
+
+With the following `BUILD.bazel` file:
+
+```python
+# my_component/BUILD.bazel
+
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@rules_prerender//:index.bzl", "prerender_component")
+
+prerender_component(
+    name = "my_component",
+    prerender = ":prerender_lib",
+    # ...
+)
+
+ts_project(
+    name = "prerender_lib",
+    srcs = ["prerender.mts"],
+)
+```
+
+To use this, you can import `MyComponent` directly like you would any other
+function.
+
+```typescript
+// my_other_component/prerender.mts
+
+import { MyComponent } from '../my_component/prerender.js';
+
+// ...
+```
+
+However instead of depending on `//my_component:prerender_lib`, depend on
+`//my_component:my_component_prerender`.
+
+```python
+# my_other_component/BUILD.bazel
+
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@rules_prerender//:index.bzl", "prerender_component")
+
+# Does not reference `//my_component` at all.
+prerender_component(
+    name = "my_other_component",
+    prerender = ":prerender_lib",
+    # ...
+)
+
+ts_project(
+    name = "prerender_lib",
+    srcs = ["prerender.mts"],
+    # IMPORTANT: Depend on `:my_component_prerender` instead of `:prerender_lib`.
+    deps = ["//my_component:my_component_prerender"],
+)
+```
+
+While this looks like just an `alias`, it is
+[actually load bearing](/docs/architecture/prerender_component.md) and
+_required_.
+
+The same requirement to use the aliases applies to client-side JavaScript
+(`_scripts`), CSS styles (`_styles`), and generated resources (`_resources`).
+
+### `prerender_component` rules
+
+As indicated by [component composition](#component-composition), the
+`prerender_component` macro is a bit unique compared to most Bazel macros/rules
+and has a few special rules for how it is used.
+
+1.  Any direct dependency of a `prerender_component` target should _only_ be
+    used by that `prerender_component`.
+1.  Any additional desired dependencies should go through the relevant
+    `_prerender`, `_scripts`, `_styles`, `_resources` aliases generated by
+    `prerender_component`.
+    *   Exception: Unit tests may directly depend on targets, provided they do
+        _not_ use any `prerender_*` rules as part of the test.
+1.  _Never_ depend on a `prerender_component` target directly. Always depend on
+    the alias of the specific part of the component you actually want to use.
+    *   Exception: You may `bazel build` a `prerender_component` target directly
+        or have a `build_test` depend on it in order to verify that the
+        component is buildable.
+1.  Any direct dependency of a `prerender_component` target *must* be defined in
+    the same Bazel package and have private visibility.
+    *   This is enforced at build time.
+    *   Acts as a guardrail to make it less likely to run afoul of the above
+        rules.
+
 ### Generating multiple pages
 
 We can generate multiple pages just as easily as the one. We just need to yield
 more files. Take this example where we render HTML files for a bunch of markdown
 posts in a blog.
 
-```typescript
+```tsx
 // my_blog/posts_prerender.tsx
 
 import * as fs from 'fs';
@@ -356,6 +499,7 @@ We can easily execute this at build time like so:
 ```python
 # my_blog/BUILD.bazel
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver")
 
 # Renders a page for every `posts/*.md` file. Also performs all the bundling and
@@ -363,11 +507,17 @@ load("@rules_prerender//:index.bzl", "prerender_pages", "web_resources_devserver
 prerender_pages(
     name = "prerendered_posts",
     # Script to invoke the default export of to generate the page.
-    src = "posts_prerender.tsx",
+    entry_point = "./posts_prerender.js",
+    # Library which generates the entry point JavaScript.
+    prerender = ":prerender",
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["posts_prerender.tsx"],
     # Include all the markdown files at runtime in runfiles.
     data = glob(["posts/*.md"]),
-    # Plain TypeScript dependencies used by `posts_prerender.ts`.
-    lib_deps = [
+    deps = [
         "//:node_modules/@types/markdown-it",
         "//:node_modules/@types/node",
         "//:node_modules/rules_prerender",
