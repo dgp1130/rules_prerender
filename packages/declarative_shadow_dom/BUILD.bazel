@@ -1,7 +1,7 @@
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load(
     "//:index.bzl",
-    "prerender_component",
+    prerender_component = "prerender_component2",
     "prerender_component_publish_files",
 )
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
@@ -12,6 +12,8 @@ load("//tools/stamping:defs.bzl", "stamp_package")
 prerender_component_publish_files(
     name = "declarative_shadow_dom_publish_files",
     dep = ":declarative_shadow_dom",
+    collect_styles = False,
+    collect_resources = False,
 )
 
 stamp_package(name = "package")
@@ -37,21 +39,21 @@ npm_publish(
 
 prerender_component(
     name = "declarative_shadow_dom",
-    srcs = [
-        "declarative_shadow_dom.mts",
-        "preact.mts",
-    ],
-    tsconfig = "//:tsconfig",
-    source_map = True,
-    scripts = [":declarative_shadow_dom_polyfill"],
-    lib_deps = [
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
-        "//:node_modules/rules_prerender",
-    ],
+    prerender = ":prerender",
+    scripts = ":declarative_shadow_dom_polyfill",
     visibility = [
         "//:__pkg__",
         "//packages/rules_prerender:__pkg__",
+    ],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["declarative_shadow_dom.mts", "preact.mts"],
+    deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+        "//:node_modules/rules_prerender",
     ],
 )
 
@@ -60,7 +62,7 @@ ts_project(
     srcs = ["declarative_shadow_dom_test.mts"],
     testonly = True,
     deps = [
-        ":declarative_shadow_dom_prerender_for_test",
+        ":prerender",
         "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
     ],
