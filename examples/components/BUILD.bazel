@@ -17,7 +17,6 @@ prerender_pages(
     name = "site",
     entry_point = "./site.js",
     prerender = ":prerender",
-    bundle_js = False, # Optimization: No client-side JavaScript on this site.
 )
 
 ts_project(
