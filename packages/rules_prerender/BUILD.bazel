@@ -143,8 +143,8 @@ bzl_library(
     deps = [
         ":multi_inject_resources",
         ":prerender_pages_unbundled",
-        ":scripts_bundle",
         ":web_resources",
+        "//tools/binaries/js_bundler:js_bundle",
     ],
 )
 
@@ -158,11 +158,6 @@ bzl_library(
         "//packages/rules_prerender/css:css_providers",
         "//tools/binaries/renderer:build_vars",
     ],
-)
-
-bzl_library(
-    name = "scripts_bundle",
-    srcs = ["scripts_bundle.bzl"],
 )
 
 bzl_library(

@@ -7,9 +7,9 @@ load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//common:paths.bzl", "is_js_file")
 
-visibility("private")
+visibility(["//packages/rules_prerender"])
 
-def _scripts_bundle_impl(ctx):
+def _js_bundle_impl(ctx):
     # Extract the config file.
     config_sources = [src
                       for src in ctx.attr._config[JsInfo].sources.to_list()
@@ -66,7 +66,7 @@ def _scripts_bundle_impl(ctx):
     ctx.actions.run(
         mnemonic = "RollupBundle",
         progress_message = "Bundling JavaScript %{label}",
-        executable = ctx.executable._rollup,
+        executable = ctx.executable._js_bundler,
         arguments = [args],
         inputs = sources.to_list() + node_modules.to_list() + [
             ctx.file.entry_points,
@@ -77,8 +77,8 @@ def _scripts_bundle_impl(ctx):
 
     return DefaultInfo(files = depset([output]))
 
-scripts_bundle = rule(
-    implementation = _scripts_bundle_impl,
+js_bundle = rule(
+    implementation = _js_bundle_impl,
     attrs = {
         "entry_points": attr.label(
             mandatory = True,
@@ -95,8 +95,8 @@ scripts_bundle = rule(
             providers = [JsInfo],
             doc = "Dependencies used by the bundled entry points.",
         ),
-        "_rollup": attr.label(
-            default = "//packages/rules_prerender:rollup",
+        "_js_bundler": attr.label(
+            default = "//tools/binaries/js_bundler",
             executable = True,
             cfg = "exec",
         ),
