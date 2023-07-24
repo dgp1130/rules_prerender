@@ -14,7 +14,6 @@ def prerender_pages(
     scripts = None,
     styles = None,
     resources = None,
-    bundle_js = True,
     testonly = None,
     visibility = None,
     debug_target = None,
@@ -76,8 +75,6 @@ def prerender_pages(
         scripts: Passed through to `prerender_pages_unbundled()`.
         styles: Passed through to `prerender_pages_unbundled()`.
         resources: Passed through to `prerender_pages_unbundled()`.
-        bundle_js: Whether or not to bundle and inject JavaScript files.
-            Defaults to `True`.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         debug_target: The label to check
@@ -100,22 +97,21 @@ def prerender_pages(
         debug_target = debug_target or "//%s:%s" % (native.package_name(), name),
     )
 
+    # Bundle all client-side scripts in a `TreeArtifact` at `%{name}_bundle`.
     bundle = "%s_bundle" % name
-    if bundle_js:
-        # Bundle all client-side scripts in a `TreeArtifact` at `%{name}_bundle`.
-        js_bundle(
-            name = bundle,
-            entry_points = ":%s_scripts_entries" % prerender_name,
-            testonly = testonly,
-            deps = [":%s_scripts" % prerender_name],
-        )
+    js_bundle(
+        name = bundle,
+        entry_points = ":%s_scripts_entries" % prerender_name,
+        testonly = testonly,
+        deps = [":%s_scripts" % prerender_name],
+    )
 
     # Inject bundled JS and CSS into the HTML.
     injected_dir = "%s_injected" % name
     multi_inject_resources(
         name = injected_dir,
         input_dir = ":%s" % prerender_name,
-        bundles = ":%s" % bundle if bundle_js else None,
+        bundles = ":%s" % bundle,
         styles = ":%s_styles" % prerender_name,
         testonly = testonly,
     )

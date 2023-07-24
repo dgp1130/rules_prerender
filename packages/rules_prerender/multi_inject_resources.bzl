@@ -20,8 +20,7 @@ def _multi_inject_resources_impl(ctx):
     args = ctx.actions.args()
     args.add("--input-dir", ctx.file.input_dir.short_path)
     args.add("--config", config.short_path)
-    if ctx.attr.bundles:
-        args.add("--bundles", ctx.file.bundles.short_path)
+    args.add("--bundles", ctx.file.bundles.short_path)
     args.add("--output-dir", output_dir.short_path)
     ctx.actions.run(
         mnemonic = "MultiInjectResources",
@@ -49,7 +48,10 @@ multi_inject_resources = rule(
             mandatory = True,
             allow_single_file = True,
         ),
-        "bundles": attr.label(allow_single_file = True),
+        "bundles": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+        ),
         "scripts": attr.string_list(),
         "styles": attr.label(),
         "_injector": attr.label(
