@@ -1,6 +1,8 @@
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo", "CssInfo")
 
+visibility(["//packages/rules_prerender/css/..."])
+
 def _css_bundle_impl(ctx):
     # Map each direct dependency source file to an output of the same full file path
     # under this target's name. Ideally we would just keep the name the same, but then
