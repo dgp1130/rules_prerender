@@ -1,19 +1,17 @@
-load("//:index.bzl", "css_library", "prerender_component")
+load("//:index.bzl", "css_library", "prerender_component", "web_resources")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
-    name = "layout",
+    name = "footer",
     prerender = ":prerender",
     styles = ":styles",
-    visibility = ["//docs:__subpackages__"],
+    visibility = ["//docs/components/layout:__pkg__"],
 )
 
 ts_project(
     name = "prerender",
-    srcs = ["layout.tsx"],
+    srcs = ["footer.tsx"],
     deps = [
-        "//docs/components/footer:footer_prerender",
-        "//docs/components/header:header_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],
@@ -21,5 +19,6 @@ ts_project(
 
 css_library(
     name = "styles",
-    srcs = ["layout.css"],
+    srcs = ["footer.css"],
+    deps = ["//docs:theme"],
 )

@@ -1,0 +1,4 @@
+/* Title is `rules_prerender`, so it should be fixed-width as code. */
+body > header::part(title) {
+    font-family: monospace;
+}

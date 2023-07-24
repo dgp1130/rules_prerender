@@ -1,0 +1,12 @@
+:host {
+    --bazel-green: #0c713a;
+
+    --light-text: white;
+    --dark-text: black;
+
+    --light-link: rgb(0, 0, 255) /* Chrome user agent style */;
+    --dark-link: rgb(0, 0, 238);
+
+    --light-link-visited: rgb(85, 36, 139) /* Chrome user agent style */;
+    --dark-link-visited: rgb(85, 36, 139);
+}
