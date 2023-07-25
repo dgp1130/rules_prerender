@@ -31,7 +31,13 @@ browser(
         # linux arm64 machine intends to run tests with Firefox but we miss binaries for the platform.
         "//conditions:default": None,
     }),
-    metadata = "firefox.json",
+    metadata = select({
+        # Standard headless configuration.
+        "//conditions:default": "firefox.json",
+
+        # Same as default config, but not headless.
+        "//tools/browsers:use_debug_browsers_config": "firefox_debug.json",
+    }),
     deps = PLATFORM_METADATA + [
         "@io_bazel_rules_webtesting//go/wsl",
     ],
