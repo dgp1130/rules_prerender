@@ -4,7 +4,7 @@ import { Transitive } from '../transitive/transitive.js';
 
 export function Component(): VNode {
     return <div>
-        <Template shadowroot='open'>
+        <Template shadowrootmode='open'>
             <span>Hello from the component!</span>
             <img src='/images/component.png' />
             <slot></slot>

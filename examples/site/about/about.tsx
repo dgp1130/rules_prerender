@@ -9,7 +9,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
         '/about/index.html',
         renderToHtml(baseLayout('About',
             <article>
-                <Template shadowroot="open">
+                <Template shadowrootmode="open">
                     {polyfillDeclarativeShadowDom()}
 
                     <p>

@@ -10,7 +10,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
         '/counter/index.html',
         renderToHtml(baseLayout('Counter',
             <article>
-                <Template shadowroot="open">
+                <Template shadowrootmode="open">
                     {polyfillDeclarativeShadowDom()}
 
                     <p>This is a basic JavaScript counter.</p>

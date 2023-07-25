@@ -14,7 +14,7 @@ declare module 'preact' {
 /** Renders a counter with the given initial value. */
 export function Counter({ initialValue }: { initialValue: number }): VNode {
     return <site-counter initial={initialValue}>
-        <Template shadowroot="open">
+        <Template shadowrootmode="open">
             <span id="label">The current count is: {initialValue}.</span>
 
             {/* Render buttons disabled so they are inactive until

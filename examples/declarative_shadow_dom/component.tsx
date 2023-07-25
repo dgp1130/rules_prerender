@@ -9,7 +9,7 @@ export function Component({ children }: {
     return (
         <div id="component"> {/* Host element. */}
             {/* Shadow root. */}
-            <Template shadowroot="open">
+            <Template shadowrootmode="open">
                 {/* Polyfill declarative shadow DOM for browsers that don't
                 support it yet. */}
                 {polyfillDeclarativeShadowDom()}

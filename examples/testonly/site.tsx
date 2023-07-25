@@ -12,7 +12,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
                 <h2>Testonly</h2>
 
                 <div>
-                    <Template shadowroot='open'>
+                    <Template shadowrootmode='open'>
                         <span>Hello from a testonly page!</span>
                         <img src='/images/site.png' />
                         <slot></slot>

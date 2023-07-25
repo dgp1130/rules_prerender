@@ -49,7 +49,7 @@ export default async function*():
 function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
     return PrerenderResource.fromHtml(path, renderToHtml(baseLayout('Blog', 
         <article>
-            <Template shadowroot='open'>
+            <Template shadowrootmode='open'>
                 {polyfillDeclarativeShadowDom()}
 
                 <p>
@@ -78,7 +78,7 @@ async function generatePost({ urlPath, title, fileName }: PostMeta):
 
     return PrerenderResource.fromHtml(urlPath, renderToHtml(baseLayout(title, 
         <article>
-            <Template shadowroot='open'>
+            <Template shadowrootmode='open'>
                 {polyfillDeclarativeShadowDom()}
 
                 <p>This post generated from <a href={link.toString()}>{fileName}</a>.</p>

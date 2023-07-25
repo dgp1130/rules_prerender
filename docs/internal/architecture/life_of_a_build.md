@@ -177,7 +177,7 @@ duplicate its styles.
 ```html
 <!-- Render `my-component`. -->
 <my-component>
-    <template shadowroot="open">
+    <template shadowrootmode="open">
         <style>/* Styles go here. */</style>
         <div>Hello, World!</div>
     </template>
@@ -185,7 +185,7 @@ duplicate its styles.
 
 <!-- Render `my-component` again. -->
 <my-component>
-    <template shadowroot="open">
+    <template shadowrootmode="open">
         <style>/* Styles need to be duplicated here, no way to share. */</style>
         <div>Hello, World!</div>
     </template>

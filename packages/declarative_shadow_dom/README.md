@@ -69,7 +69,7 @@ export function renderMyComponent(): string {
     return `
 <!-- Always include a host element, don't make the template the first node. -->
 <div>
-    <template shadowroot="open">
+    <template shadowrootmode="open">
         <span>Shadow DOM content goes inside the template.</span>
 
         <!-- Inject the polyfill into the client bundle. -->
@@ -117,7 +117,7 @@ export function MyComponent(): string {
     return (
         {/* Always include a host element, don't make the template the first node. */}
         <div>
-            <template shadowroot="open">
+            <template shadowrootmode="open">
                 <span>Shadow DOM content goes inside the template.</span>
 
                 {/* Inject the polyfill into the client bundle. */}

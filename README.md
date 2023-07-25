@@ -145,7 +145,7 @@ export function MyComponent({ name }: { name: string }): VNode {
             with declarative shadow DOM, you don't have to use it. But if you
             don't you'll need to manually namespace your styles or else styles
             in different components could conflict with each other! */}
-        <Template shadowroot="open">
+        <Template shadowrootmode="open">
             {/* Polyfill declarative shadow DOM for any browsers which don't
                 support it. */}
             {polyfillDeclarativeShadowDom()}

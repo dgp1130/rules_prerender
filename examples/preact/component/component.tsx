@@ -15,7 +15,7 @@ export function Component({ text, children }: {
     children: ComponentChildren,
 }): VNode {
     return <my-component id='component'>
-        <Template shadowroot='open'>
+        <Template shadowrootmode='open'>
             <h2>{text}</h2>
             <div id="replace">This text to be replaced by page JavaScript.</div>
             <slot></slot>

@@ -3,7 +3,7 @@ import { VNode } from 'preact';
 
 export function Transitive(): VNode {
     return <div>
-        <Template shadowroot='open'>
+        <Template shadowrootmode='open'>
             <span>Hello from the transitive component!</span>
             <img src='/images/transitive.png' />
 

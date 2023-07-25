@@ -5,7 +5,7 @@ import { VNode } from 'preact';
 /** Renders a header component with navigation to the rest of the site. */
 export function Header(): VNode {
     return <header>
-        <Template shadowroot="open">
+        <Template shadowrootmode="open">
             <h1>My super cool site!</h1>
             <nav>
                 <ul>

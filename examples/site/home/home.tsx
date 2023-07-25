@@ -8,7 +8,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.fromHtml('/index.html', renderToHtml(baseLayout(
         'Home',
         <article>
-            <Template shadowroot='open'>
+            <Template shadowrootmode='open'>
                 {polyfillDeclarativeShadowDom()}
 
                 <p>

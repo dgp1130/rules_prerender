@@ -9,7 +9,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
             </head>
             <body>
                 <div id='shadowroot'>
-                    <Template shadowroot='open'>
+                    <Template shadowrootmode='open'>
                         <div id='hello'>Hello, World!</div>
                         {inlineStyle('./styles.css', import.meta)}
                     </Template>

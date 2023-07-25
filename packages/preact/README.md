@@ -93,7 +93,7 @@ import { VNode } from 'preact';
 
 export function Component(): VNode {
     return <div>
-        <Template shadowroot="open">
+        <Template shadowrootmode="open">
             <div>Hello, World!</div>
             <slot></slot>
         </Template>

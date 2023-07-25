@@ -112,10 +112,10 @@ describe('preact', () => {
             expect(html).toContain('<div>Hello, World!</div>');
         });
 
-        it('accepts `shadowroot`', () => {
-            const html = render(Template({ shadowroot: 'open' }));
+        it('accepts `shadowrootmode`', () => {
+            const html = render(Template({ shadowrootmode: 'open' }));
 
-            expect(html).toContain('<template shadowroot="open">');
+            expect(html).toContain('<template shadowrootmode="open">');
         });
 
         it('allows other HTML attributes', () => {
@@ -124,9 +124,9 @@ describe('preact', () => {
             expect(html).toContain('<template id="my-template">');
         });
 
-        it('restricts `shadowroot` type', () => {
+        it('restricts `shadowrootmode` type', () => {
             // @ts-expect-error Wrong shadow root module.
-            expect(() => Template({ shadowroot: 'not-a-shadowroot-mode' }))
+            expect(() => Template({ shadowrootmode: 'not-a-shadowrootmode-mode' }))
                 .not.toThrow();
         });
 

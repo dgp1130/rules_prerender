@@ -57,7 +57,7 @@ export function inlineStyle(importPath: string, meta: ImportMeta): VNode {
 }
 
 interface TemplateProps extends JSX.HTMLAttributes<HTMLTemplateElement> {
-    shadowroot?: ShadowRootMode;
+    shadowrootmode?: ShadowRootMode;
 }
 
 /** A component representing the native HTML `<template />` tag. */

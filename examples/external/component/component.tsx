@@ -12,7 +12,7 @@ declare module 'preact' {
 
 export function Component(): VNode {
     return <my-component>
-        <Template shadowroot="open">
+        <Template shadowrootmode="open">
             <img src="/logo" />
             <span>Component</span>
             <div id="replace">This text to be replaced by JavaScript.</div>

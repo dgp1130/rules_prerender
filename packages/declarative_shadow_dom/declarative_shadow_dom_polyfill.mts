@@ -6,10 +6,10 @@
  * adapted for TypeScript.
  */
 
-const templates = document.querySelectorAll('template[shadowroot]') as
+const templates = document.querySelectorAll('template[shadowrootmode]') as
         NodeListOf<HTMLTemplateElement>;
 for (const template of Array.from(templates)) {
-    const mode = template.getAttribute('shadowroot');
+    const mode = template.getAttribute('shadowrootmode');
     if (mode !== 'open' && mode !== 'closed') {
         console.error(
             `Found declarative shadow root with invalid mode: ${mode}.`);
