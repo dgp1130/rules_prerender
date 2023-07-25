@@ -30,6 +30,7 @@
         "runfiles",
         "semver",
         "shadowroot",
+        "shadowrootmode",
         "testonly",
         "transpiled",
         "tsjs",
