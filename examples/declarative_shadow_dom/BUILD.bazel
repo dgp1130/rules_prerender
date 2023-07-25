@@ -72,6 +72,6 @@ ts_project(
 
 jasmine_web_test_suite(
     name = "test",
-    browsers = ["//bazel/browsers/chromium:chromium"],
+    browsers = ["//bazel/browsers/firefox:firefox"],
     deps = [":test_lib"],
 )

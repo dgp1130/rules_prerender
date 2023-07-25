@@ -94,7 +94,7 @@ async function createSession(baseUrl?: string): Promise<WebdriverIO.Browser> {
         path,
         baseUrl,
         capabilities: {
-            browserName: 'chrome',
+            browserName: 'firefox',
         },
 
         // Whether or not we run headless is not defined here, but is actually
