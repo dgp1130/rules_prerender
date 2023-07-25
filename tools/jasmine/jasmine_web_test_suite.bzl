@@ -13,6 +13,15 @@ visibility("private")
 # When a browser target name matches with one of these tags, they are used for
 # the generated `web_test()`.
 _DEFAULT_WEB_TEST_SUITE_TAGS = {
+    # Locally versioned browsers.
+    "chromium": [
+        "native",
+    ],
+    "firefox": [
+        "native",
+    ],
+
+    # `@io_bazel_rules_webtesting` browsers.
     "chrome-external": [
         "external",
     ],
