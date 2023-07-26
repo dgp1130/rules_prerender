@@ -25,6 +25,10 @@ test:debug --test_arg=--node_options=--inspect-brk
 # doesn't work).
 test:debug --test_env=DISPLAY
 
+# Use debug browsers to run in non-headless (headful?) mode so we can directly
+# inspect the browser in WebDriver tests.
+test:debug --//tools/browsers:use_debug_browsers=True
+
 # Rules may change their build outputs if the compilation mode is set to `dbg`.
 # For example, minifiers such as Terser may make their output more human
 # readable when this is set. Rules will pass `COMPILATION_MODE` to

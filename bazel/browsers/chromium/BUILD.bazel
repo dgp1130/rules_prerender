@@ -24,7 +24,13 @@ PLATFORM_METADATA = select({
 
 browser(
     name = "chromium",
-    metadata = "chromium.json",
+    metadata = select({
+        # Standard headless configuration.
+        "//conditions:default": "chromium.json",
+
+        # Same as default config, but not headless.
+        "//tools/browsers:use_debug_browsers_config": "chromium_debug.json",
+    }),
     deps = PLATFORM_METADATA + [
         "@io_bazel_rules_webtesting//go/wsl",
     ],
