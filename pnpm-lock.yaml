@@ -17,6 +17,7 @@ importers:
       eslint: ^8.35.0
       http-status-codes: ^2.1.4
       husky: ^7.0.2
+      jasmine: ^4.3.0
       lightningcss: ^1.19.0
       live-server: ^1.2.2
       markdown-it: ^12.0.4
@@ -39,7 +40,7 @@ importers:
       yargs: 16.2.0
     devDependencies:
       '@bazel/bazelisk': 0.0.0-PLACEHOLDER
-      '@bazel/buildifier': 6.0.1
+      '@bazel/buildifier': 6.1.2
       '@bazel/ibazel': 0.16.2
       '@types/jasmine': 4.3.1
       '@types/node': 14.14.13
@@ -49,6 +50,7 @@ importers:
       eslint: 8.35.0
       http-status-codes: 2.1.4
       husky: 7.0.2
+      jasmine: 4.6.0
       preact: 10.13.1
       preact-render-to-string: 5.2.6_preact@10.13.1
       tree-kill: 1.2.2
@@ -74,8 +76,8 @@ packages:
     hasBin: true
     dev: true
 
-  /@bazel/buildifier/6.0.1:
-    resolution: {integrity: sha512-PKOx5srLU7K1x0BQhiqu78lrxwvgimx+JRe5JXgiPfyA2/iMB1aNn41BozVMmWnEF/DUKbls6DOaNk83kgraag==}
+  /@bazel/buildifier/6.1.2:
+    resolution: {integrity: sha512-psKePmRkP6acwyePOhXP67R/wdwN7BGJxHqp1j5myaO24feMsaXyyiO+oW49x8YAwOpKVSCujVzkTwX2auAc0A==}
     hasBin: true
     dev: true
 
@@ -1576,7 +1578,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -2025,6 +2027,18 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
+  /jasmine-core/4.6.0:
+    resolution: {integrity: sha512-O236+gd0ZXS8YAjFx8xKaJ94/erqUliEkJTDedyE7iHvv4ZVqi+q+8acJxu05/WJDKm512EUNn809In37nWlAQ==}
+    dev: true
+
+  /jasmine/4.6.0:
+    resolution: {integrity: sha512-iq7HQ5M8ydNUspjd9vbFW9Lu+6lQ1QLDIqjl0WysEllF5EJZy8XaUyNlhCJVwOx2YFzqTtARWbS56F/f0PzRFw==}
+    hasBin: true
+    dependencies:
+      glob: 7.1.6
+      jasmine-core: 4.6.0
+    dev: true
+
   /js-sdsl/4.3.0:
     resolution: {integrity: sha512-mifzlm2+5nZ+lEcLJMoBK0/IH/bDg8XnJfd/Wq6IP+xoCjLZsTOnV2QpxlVbX9bMnkl5PdEjNtBJ9Cj1NjifhQ==}
     dev: true
@@ -2397,12 +2411,6 @@ packages:
   /mimic-response/3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
-    dev: true
-
-  /minimatch/3.0.4:
-    resolution: {integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==}
-    dependencies:
-      brace-expansion: 1.1.11
     dev: true
 
   /minimatch/3.1.2:
@@ -2847,7 +2855,7 @@ packages:
   /readdir-glob/1.1.1:
     resolution: {integrity: sha512-91/k1EzZwDx6HbERR+zucygRFfiPl2zkIYZtv3Jjr6Mn7SkKcVct8aVO+sSRiGMc6fLf72du3d92/uY63YPdEA==}
     dependencies:
-      minimatch: 3.0.4
+      minimatch: 3.1.2
     dev: true
 
   /readdirp/2.2.1:
