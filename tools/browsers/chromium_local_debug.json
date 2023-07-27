@@ -1,7 +1,0 @@
-{
-    "capabilities": {
-        "goog:chromeOptions": {
-            "args": ["REMOVE:--headless", "--auto-open-devtools-for-tabs"]
-        }
-    }
-}
