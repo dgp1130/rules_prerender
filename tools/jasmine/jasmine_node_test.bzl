@@ -26,8 +26,7 @@ def jasmine_node_test(name, deps, data = [], size = "small", **kwargs):
     jasmine_test(
         name = name,
         config = config_file,
-        node_modules = "//:node_modules",
-        jasmine_reporters = False,
+        module = "esm",
         data = data + deps + [
             ":%s" % config_file,
         ],

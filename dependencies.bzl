@@ -8,9 +8,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_js",
-        sha256 = "e3e6c3d42491e2938f4239a3d04259a58adc83e21e352346ad4ef62f87e76125",
-        strip_prefix = "rules_js-1.30.0",
-        url = "https://github.com/aspect-build/rules_js/releases/download/v1.30.0/rules_js-v1.30.0.tar.gz",
+        sha256 = "00e7b97b696af63812df0ca9e9dbd18579f3edd3ab9a56f227238b8405e4051c",
+        strip_prefix = "rules_js-1.23.0",
+        url = "https://github.com/aspect-build/rules_js/releases/download/v1.23.0/rules_js-v1.23.0.tar.gz",
     )
 
     maybe(
@@ -24,9 +24,10 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_jasmine",
-        sha256 = "4c16ef202d1e53fd880e8ecc9e0796802201ea9c89fa32f52d5d633fff858cac",
-        strip_prefix = "rules_jasmine-1.1.1",
-        url = "https://github.com/aspect-build/rules_jasmine/releases/download/v1.1.1/rules_jasmine-v1.1.1.tar.gz",
+        sha256 = "b3b2ff30ed222db653092d8280e0b62a4d54c5e65c598df09a0a1d7aae78fc8f",
+        strip_prefix = "rules_jasmine-0.3.1",
+        url = "https://github.com/aspect-build/rules_jasmine/releases/download/v0.3.1/rules_jasmine-v0.3.1.tar.gz",
+        patches = ["@rules_prerender//tools/patches:aspect_rules_jasmine-esm.patch"],
     )
 
     maybe(
