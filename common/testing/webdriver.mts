@@ -2,6 +2,8 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../node_modules/webdriverio/async.d.ts" />
 
+import { promises as fs } from 'fs';
+import * as path from 'path';
 import { remote, ChainablePromiseElement } from 'webdriverio';
 import { env } from 'process';
 import { Effect, useForAll } from './effects.mjs';
@@ -85,17 +87,52 @@ function getWebDriverServer(): WebDriverServer {
     return { hostname, port, path };
 }
 
+/**
+ * Defines the type of the browser metadata JSON file. This is an incomplete
+ * type, it has most of the properties of the JSON config file used to set up
+ * the browser.
+ */
+interface BrowserMetadata {
+    capabilities: {
+        browserName: string;
+        // Other properties...
+    };
+}
+
+/** Returns the name of the browser used in this test binary. */
+async function getBrowserName(): Promise<string> {
+    const runfiles = env['RUNFILES'];
+    if (!runfiles) {
+        throw new Error('Cannot find runfiles.');
+    }
+
+    // `WEB_TEST_METADATA` contains a link to a modified form of the `*.json`
+    // config file used to set up the browser.
+    const metadataFile = env['WEB_TEST_METADATA'];
+    if (!metadataFile) {
+        throw new Error('No browser metadata file in environment. Is this test'
+            + ' being run from a `web_test()` or `web_test_suite()` target?');
+    }
+
+    // Read metadata from file.
+    const metadataContent =
+        await fs.readFile(path.join(runfiles, metadataFile), 'utf-8');
+    const metadata = JSON.parse(metadataContent) as BrowserMetadata;
+
+    // Extract browser name from the metadata.
+    return metadata.capabilities.browserName;
+}
+
 async function createSession(baseUrl?: string): Promise<WebdriverIO.Browser> {
     const { hostname, port, path } = getWebDriverServer();
+    const browserName = await getBrowserName();
 
     return await remote({
         hostname,
         port,
         path,
         baseUrl,
-        capabilities: {
-            browserName: 'chrome',
-        },
+        capabilities: { browserName },
 
         // Whether or not we run headless is not defined here, but is actually
         // defined by the test browser being used at the Blaze layer.
