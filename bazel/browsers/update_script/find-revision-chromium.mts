@@ -39,10 +39,12 @@ import { Platform } from './platform.mjs';
  * function looks for a closest revision that is available for all platforms. If
  * none has been specified, we look for a revision that is as close as possible
  * to the revision in the stable release channel.
+ * 
+ * Returns an exit code based on whether or not it was successful.
  */
 export async function findLatestRevisionForAllPlatforms(
     explicitStartRevision?: number,
-): Promise<void> {
+): Promise<number> {
     const availableRevision =
         explicitStartRevision === undefined
             ? await findClosestStableRevisionForAllPlatforms()
@@ -52,7 +54,7 @@ export async function findLatestRevisionForAllPlatforms(
     if (availableRevision === undefined) {
         console.error('Could not find a revision for which builds are available'
             + ' for all platforms.');
-        process.exit(1);
+        return 1;
     }
 
     const browser = new Chromium(availableRevision);
@@ -92,6 +94,8 @@ export async function findLatestRevisionForAllPlatforms(
         );
         console.info();
     }
+
+    return 0;
 }
 
 /**

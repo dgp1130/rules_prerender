@@ -11,19 +11,13 @@ import { main } from '../../../common/binary.mjs';
 import { findLatestRevisionForAllPlatforms } from './find-revision-chromium.mjs';
 
 main(async (args) => {
-    await yargs(args)
+    const { startRevision } = yargs(args)
         .strict()
-        .help()
-        .scriptName('<cmd>')
-        .demandCommand()
-        .command(
-            'find-latest-chromium-revision [start-revision]',
-            'Finds the latest stable revision for Chromium with artifacts'
-                + ' available for all platforms.',
-            (args) => args.positional('startRevision', {type: 'number'}),
-            (args) => findLatestRevisionForAllPlatforms(args.startRevision),
-        )
-        .parseAsync();
+        .scriptName('update_script')
+        .usage('Finds the latest stable revision for Chromium with artifacts'
+            + ' available for all platforms.')
+        .option('start-revision', { type: 'number' })
+        .parseSync();
 
-    return 0;
+    return findLatestRevisionForAllPlatforms(startRevision);
 });
