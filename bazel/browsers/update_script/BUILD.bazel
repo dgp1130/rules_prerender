@@ -1,4 +1,5 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
@@ -7,14 +8,60 @@ js_binary(
     entry_point = "index.mjs",
 )
 
+build_test(
+    name = "update_script_test",
+    targets = [":update_script"],
+)
+
 ts_project(
     name = "update_script_lib",
-    srcs = glob(["*.mts"]),
+    srcs = ["index.mts"],
     deps = [
+        ":find_revision_chromium",
         "//common:binary",
-        "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
-        "//:node_modules/node-fetch",
         "//:node_modules/yargs",
     ],
+)
+
+ts_project(
+    name = "browser",
+    srcs = ["browser.mts"],
+    deps = [
+        ":browser_artifact",
+        ":platform",
+    ],
+)
+
+ts_project(
+    name = "browser_artifact",
+    srcs = ["browser_artifact.mts"],
+    deps = ["//:node_modules/@types/node"],
+)
+
+ts_project(
+    name = "chromium",
+    srcs = ["chromium.mts"],
+    deps = [
+        ":browser",
+        ":browser_artifact",
+        ":platform",
+    ],
+)
+
+ts_project(
+    name = "find_revision_chromium",
+    srcs = ["find_revision_chromium.mts"],
+    deps = [
+        ":browser_artifact",
+        ":chromium",
+        ":platform",
+        "//:node_modules/@types/node",
+        "//:node_modules/node-fetch",
+    ],
+)
+
+ts_project(
+    name = "platform",
+    srcs = ["platform.mts"],
 )

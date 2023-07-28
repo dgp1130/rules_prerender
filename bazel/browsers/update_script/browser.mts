@@ -6,7 +6,7 @@
  * in the LICENSE file at https://angular.io/license
  */
 
-import { BrowserArtifact, ArtifactType } from './browser-artifact.mjs';
+import { BrowserArtifact, ArtifactType } from './browser_artifact.mjs';
 import { Platform } from './platform.mjs';
 
 /** Interface describing a browser. */

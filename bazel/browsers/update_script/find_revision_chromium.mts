@@ -29,7 +29,7 @@
 
 import { createHash } from 'crypto';
 import fetch from 'node-fetch';
-import { ArtifactType } from './browser-artifact.mjs';
+import { ArtifactType } from './browser_artifact.mjs';
 import { Chromium } from './chromium.mjs';
 import { Platform } from './platform.mjs';
 

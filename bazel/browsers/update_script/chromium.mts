@@ -7,7 +7,7 @@
  */
 
 import { Browser } from './browser.mjs';
-import { ArtifactType, BrowserArtifact } from './browser-artifact.mjs';
+import { ArtifactType, BrowserArtifact } from './browser_artifact.mjs';
 import { Platform } from './platform.mjs';
 
 const cloudStorageArchiveUrl =
@@ -65,11 +65,7 @@ export class Chromium implements Browser<number> {
     }
 
     getArtifact(platform: Platform, type: ArtifactType): BrowserArtifact {
-        return new BrowserArtifact(
-            this,
-            type,
-            this.getDownloadUrl(platform, type),
-        );
+        return new BrowserArtifact(type, this.getDownloadUrl(platform, type));
     }
 
     getDownloadUrl(platform: Platform, type: ArtifactType): string {

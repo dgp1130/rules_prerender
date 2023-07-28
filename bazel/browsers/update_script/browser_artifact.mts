@@ -6,7 +6,6 @@
  * in the LICENSE file at https://angular.io/license
  */
 
-import { Browser } from './browser.mjs';
 import * as path from 'path';
 
 /** Type describing possible artifact types for browser downloads. */
@@ -24,9 +23,6 @@ const KNOWN_EXTENSIONS = new Set(['zip', 'tar.gz', 'tar.bz2', 'dmg']);
 /** Class describing an artifact for a browser.  */
 export class BrowserArtifact {
     constructor(
-        /** Instance of the browser this artifact exists for. */
-        public browser: Browser<unknown>,
-
         /** Type of the artifact. */
         public type: ArtifactType,
 
