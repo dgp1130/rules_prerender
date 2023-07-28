@@ -9,7 +9,6 @@ load("//bazel/browsers/chromium:chromium.bzl", "define_chromium_repositories")
 load("//bazel/browsers/firefox:firefox.bzl", "define_firefox_repositories")
 
 def browser_repositories():
-    """Load pinned rules_webtesting browser versions."""
-
+    """Load pinned `@io_bazel_rules_webtesting` browser versions."""
     define_chromium_repositories()
     define_firefox_repositories()
