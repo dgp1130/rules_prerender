@@ -11,12 +11,9 @@ ts_project(
     name = "update_script_lib",
     srcs = glob(["*.mts"]),
     deps = [
-        "//:node_modules/@google-cloud/storage",
         "//:node_modules/@types/node",
-        "//:node_modules/@types/tmp",
         "//:node_modules/@types/yargs",
         "//:node_modules/node-fetch",
-        "//:node_modules/tmp",
         "//:node_modules/yargs",
     ],
 )
