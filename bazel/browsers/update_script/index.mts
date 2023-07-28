@@ -11,7 +11,7 @@ import yargs from 'yargs';
 import {Chromium} from './chromium.mjs';
 import {findLatestRevisionForAllPlatforms} from './find-revision-chromium.mjs';
 import {Firefox} from './firefox.mjs';
-import {uploadBrowserArtifactsToMirror} from './upload-mirror.js';
+import {uploadBrowserArtifactsToMirror} from './upload-mirror.mjs';
 
 async function main() {
   await yargs(process.argv.slice(2))

@@ -1,36 +1,22 @@
-load("//tools:defaults.bzl", "esbuild", "ts_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("//tools/typescript:defs.bzl", "ts_project")
 
-package(default_visibility = ["//visibility:private"])
+js_binary(
+    name = "update_script",
+    data = [":update_script_lib"],
+    entry_point = "index.mjs",
+)
 
-ts_library(
+ts_project(
     name = "update_script_lib",
-    testonly = True,
-    srcs = glob(["*.ts"]),
+    srcs = glob(["*.mts"]),
     deps = [
-        "//ng-dev/utils",
-        "@npm//@google-cloud/storage",
-        "@npm//@types/node",
-        "@npm//@types/tmp",
-        "@npm//@types/yargs",
-        "@npm//node-fetch",
-        "@npm//tmp",
-        "@npm//yargs",
+        "//:node_modules/@google-cloud/storage",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/tmp",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/node-fetch",
+        "//:node_modules/tmp",
+        "//:node_modules/yargs",
     ],
-)
-
-esbuild(
-    name = "cli_script",
-    testonly = True,
-    entry_point = ":index.ts",
-    format = "iife",
-    deps = [":update_script_lib"],
-)
-
-nodejs_binary(
-    name = "update-script",
-    testonly = True,
-    data = [":cli_script"],
-    entry_point = "cli_script.js",
-    templated_args = ["--nobazel_run_linker"],
 )
