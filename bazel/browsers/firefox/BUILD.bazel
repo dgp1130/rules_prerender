@@ -1,3 +1,4 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@io_bazel_rules_webtesting//web:web.bzl", "browser")
 load("//bazel/browsers:browser_toolchain_alias.bzl", "browser_toolchain_alias")
 
@@ -45,4 +46,11 @@ browser(
 browser_toolchain_alias(
     name = "toolchain_alias",
     deps = PLATFORM_METADATA,
+)
+
+bzl_library(
+    name = "firefox_bzl",
+    srcs = ["firefox.bzl"],
+    visibility = ["//bazel/browsers:__pkg__"],
+    deps = ["//bazel/browsers:browser_archive_repo"],
 )

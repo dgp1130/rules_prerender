@@ -1,4 +1,4 @@
-load("//bazel/browsers:browser_configure.bzl", "NamedFilesInfo")
+load(":browser_configure.bzl", "NamedFilesInfo")
 
 def _browser_toolchain_alias_impl(ctx):
     template_variables = {}
