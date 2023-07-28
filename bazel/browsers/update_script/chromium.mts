@@ -81,13 +81,11 @@ export class Chromium implements Browser<number> {
         platform: Platform,
         type: ArtifactType,
     ): string {
-        const archiveMap = type === 'driver-bin'
-            ? PlatformDriverArchiveMap
-            : PlatformBrowserArchiveMap;
+        const archiveMap = getArchiveMap(type);
 
         return cloudStorageArchiveUrl
             .replace('{platform}', PlatformSnapshotNameMap[platform])
-            .replace('{revision}', `${revision}`)
+            .replace('{revision}', revision.toString())
             .replace('{file}', archiveMap[platform]);
     }
 
@@ -95,4 +93,19 @@ export class Chromium implements Browser<number> {
         return cloudStorageHeadRevisionUrl
             .replace('{platform}', PlatformSnapshotNameMap[platform]);
     }
+}
+
+type ArchiveMap =
+    | typeof PlatformDriverArchiveMap
+    | typeof PlatformBrowserArchiveMap;
+function getArchiveMap(artifactType: ArtifactType): ArchiveMap {
+    switch (artifactType) {
+        case ArtifactType.DriverBin: return PlatformDriverArchiveMap;
+        case ArtifactType.BrowserBin: return PlatformBrowserArchiveMap;
+        default: return assertNever(artifactType);
+    }
+}
+
+function assertNever(value: never): never {
+    throw new Error(`Unexpected call to \`assertNever\` with value: ${value}`);
 }

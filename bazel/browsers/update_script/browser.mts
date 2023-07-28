@@ -11,8 +11,8 @@ import { Platform } from './platform.mjs';
 
 /** Interface describing a browser. */
 export interface Browser<T> {
-  name: string;
-  revision: T;
-  supports(platform: Platform): boolean;
-  getArtifact(platform: Platform, type: ArtifactType): BrowserArtifact;
+    name: string;
+    revision: T;
+    supports(platform: Platform): boolean;
+    getArtifact(platform: Platform, type: ArtifactType): BrowserArtifact;
 }

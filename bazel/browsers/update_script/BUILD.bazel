@@ -11,6 +11,7 @@ ts_project(
     name = "update_script_lib",
     srcs = glob(["*.mts"]),
     deps = [
+        "//common:binary",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
         "//:node_modules/node-fetch",

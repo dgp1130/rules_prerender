@@ -7,10 +7,11 @@
  */
 
 import yargs from 'yargs';
+import { main } from '../../../common/binary.mjs';
 import { findLatestRevisionForAllPlatforms } from './find-revision-chromium.mjs';
 
-async function main() {
-    await yargs(process.argv.slice(2))
+main(async (args) => {
+    await yargs(args)
         .strict()
         .help()
         .scriptName('<cmd>')
@@ -23,9 +24,6 @@ async function main() {
             (args) => findLatestRevisionForAllPlatforms(args.startRevision),
         )
         .parseAsync();
-}
 
-main().catch((e) => {
-    console.log(e);
-    process.exitCode = 1;
+    return 0;
 });

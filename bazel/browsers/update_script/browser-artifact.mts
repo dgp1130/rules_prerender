@@ -10,7 +10,10 @@ import { Browser } from './browser.mjs';
 import * as path from 'path';
 
 /** Type describing possible artifact types for browser downloads. */
-export type ArtifactType = 'driver-bin' | 'browser-bin';
+export enum ArtifactType {
+    DriverBin = 'driver-bin',
+    BrowserBin = 'browser-bin',
+}
 
 /**
  * Set of known artifact extensions, including chained extensions for gzip
@@ -45,7 +48,7 @@ export class BrowserArtifact {
  * example with `.tar.gz`, we will need to keep track of known extensions
  * and start looking with the first dot/period we discover.
  */
-export function detectArtifactExtension(filePath: string) {
+export function detectArtifactExtension(filePath: string): string {
     let tmpPath = filePath;
     let extension = '';
     let currentPart = '';

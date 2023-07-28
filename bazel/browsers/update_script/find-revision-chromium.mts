@@ -41,7 +41,7 @@ import { Platform } from './platform.mjs';
  * to the revision in the stable release channel.
  */
 export async function findLatestRevisionForAllPlatforms(
-    explicitStartRevision: number | undefined,
+    explicitStartRevision?: number,
 ): Promise<void> {
     const availableRevision =
         explicitStartRevision === undefined
@@ -49,7 +49,7 @@ export async function findLatestRevisionForAllPlatforms(
             : await findClosestAscendingRevisionForAllPlatforms(
                 explicitStartRevision);
 
-    if (availableRevision === null) {
+    if (availableRevision === undefined) {
         console.error('Could not find a revision for which builds are available'
             + ' for all platforms.');
         process.exit(1);
@@ -75,18 +75,20 @@ export async function findLatestRevisionForAllPlatforms(
 
         console.info(
             `${platformName}: `.padEnd(10),
-            browser.getDownloadUrl(platform, 'browser-bin'),
+            browser.getDownloadUrl(platform, ArtifactType.BrowserBin),
         );
         console.info(
             ' '.repeat(15),
             await getSha256ChecksumForPlatform(
-                browser, platform, 'browser-bin'),
+                browser, platform, ArtifactType.BrowserBin),
         );
         console.info(
-            ' '.repeat(10), browser.getDownloadUrl(platform, 'driver-bin'));
+            ' '.repeat(10),
+            browser.getDownloadUrl(platform, ArtifactType.DriverBin));
         console.info(
             ' '.repeat(15),
-            await getSha256ChecksumForPlatform(browser, platform, 'driver-bin'),
+            await getSha256ChecksumForPlatform(
+                browser, platform, ArtifactType.DriverBin),
         );
         console.info();
     }
@@ -97,7 +99,8 @@ export async function findLatestRevisionForAllPlatforms(
  * currently in the stable release channel, and for which snapshot builds exist
  * for all platforms.
  */
-async function findClosestStableRevisionForAllPlatforms(): Promise<number | null> {
+async function findClosestStableRevisionForAllPlatforms():
+        Promise<number | undefined> {
     const stableBaseRevision = await getStableChromiumRevision();
 
     // Note: We look for revisions with snapshot builds for every platform by
@@ -118,7 +121,7 @@ async function findClosestStableRevisionForAllPlatforms(): Promise<number | null
  */
 async function findClosestAscendingRevisionForAllPlatforms(
     startRevision: number,
-): Promise<number | null> {
+): Promise<number | undefined> {
     return lookForRevisionWithBuildsForAllPlatforms(
         startRevision, await getHeadChromiumRevision());
 }
@@ -132,7 +135,7 @@ async function findClosestAscendingRevisionForAllPlatforms(
 async function lookForRevisionWithBuildsForAllPlatforms(
     startRevision: number,
     toRevision: number,
-): Promise<number | null> {
+): Promise<number | undefined> {
     console.log('Looking for revision build.');
     const increment = toRevision >= startRevision ? 1 : -1;
 
@@ -150,7 +153,7 @@ async function lookForRevisionWithBuildsForAllPlatforms(
         }
     }
     console.log(' ✘ No revision found.');
-    return null;
+    return undefined;
 }
 
 /** Checks if the specified revision is available for the given platform. */
@@ -160,7 +163,7 @@ async function isRevisionAvailableForPlatform(
 ): Promise<boolean> {
     // Look for the `driver` archive as this is smaller and faster to check.
     const response = await fetch(Chromium.getDownloadArtifactUrl(
-        revision, platform, 'driver-bin'));
+        revision, platform, ArtifactType.DriverBin));
     return response.ok && response.status === 200;
 }
 
