@@ -1,8 +1,6 @@
 load("@io_bazel_rules_webtesting//web:web.bzl", "browser")
 load("//bazel/browsers:browser_toolchain_alias.bzl", "browser_toolchain_alias")
 
-package(default_visibility = ["//visibility:public"])
-
 PLATFORM_METADATA = select({
     "//bazel/constraints:linux_x64": [
         "@org_chromium_chromedriver_linux_x64//:metadata",
@@ -31,6 +29,7 @@ browser(
         # Same as default config, but not headless.
         "//tools/browsers:use_debug_browsers_config": "chromium_debug.json",
     }),
+    visibility = ["//visibility:public"],
     deps = PLATFORM_METADATA + [
         "@io_bazel_rules_webtesting//go/wsl",
     ],
