@@ -9,12 +9,9 @@ import { annotationsEqual } from '../../../common/models/prerender_annotation.mj
 import { unique } from '../../../common/collections.mjs';
 import { PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
 
-main(async () => {
-    const {
-        'input-dir': inputDir,
-        'output-dir': outputDir,
-        'output-metadata': outputMetadata,
-    } = yargs(process.argv.slice(2))
+main(async (args) => {
+    const { inputDir, outputDir, outputMetadata } = yargs(args)
+        .strict()
         .usage(mdSpacing(`
             Extracts annotations from the all HTML files in the given directory.
             Outputs the input HTML files with the annotations removed to the
@@ -49,7 +46,7 @@ main(async () => {
                 extracted annotations in the \`PrerenderMetadata\` format.
             `),
         })
-        .argv;
+        .parseSync();
 
     const outputWrites = [] as Array<Promise<void>>;
     const metadata: PrerenderMetadata = { includedScripts: { } };

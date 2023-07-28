@@ -28,13 +28,14 @@ export function createRenderer(
         InternalInlineStyleNotFoundError,
     } = rulesPrerender;
 
-    return async (args: string[]) => {
+    return async (args) => {
         // Parse binary options and arguments.
         const {
-            'output-dir': outputDir,
-            'inline-style-import': inlineStyleImports = [],
-            'inline-style-path': inlineStylePaths = [],
+            outputDir,
+            inlineStyleImport: inlineStyleImports = [],
+            inlineStylePath: inlineStylePaths = [],
         } = yargs(args)
+            .strict()
             .usage(mdSpacing(`
                 Invokes the given entry point which returns \`PrerenderResources\`
                 and writes each resource to the relevant location under
@@ -71,7 +72,7 @@ export function createRenderer(
                     of the \`--inline-style-import\` at the same index.
                 `),
             })
-            .argv;
+            .parseSync();
 
         // Pass through `--inline-style-import` and `--inline-style-path` flags as the
         // inline style map to be looked up by `inlineStyle()` calls.

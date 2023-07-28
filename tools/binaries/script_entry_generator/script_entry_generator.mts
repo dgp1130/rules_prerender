@@ -6,13 +6,10 @@ import { mdSpacing } from '../../../common/formatters.mjs';
 import { PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
 import { generateEntryPoint } from './generator.mjs';
 
-main(async () => {
+main(async (args) => {
     // Parse options and flags.
-    const {
-        metadata: metadataFile,
-        'output-dir': outputDir,
-        root
-    } = yargs(process.argv.slice(2))
+    const { metadata: metadataFile, outputDir, root } = yargs(args)
+        .strict()
         .usage(mdSpacing(`
             Generates an entry point for all the scripts in the given metadata
             file. The entry point is a TypeScript source file which
@@ -44,7 +41,7 @@ main(async () => {
                 for testing purposes.
             `),
         })
-        .argv;
+        .parseSync();
 
     // Read metadata JSON file.
     const metadataText = await fs.readFile(metadataFile, { encoding: 'utf8' });

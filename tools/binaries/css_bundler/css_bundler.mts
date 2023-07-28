@@ -4,11 +4,9 @@ import yargs from 'yargs';
 import { main } from '../../../common/binary.mjs';
 import { mdSpacing } from '../../../common/formatters.mjs';
 
-main(async () => {
-    const {
-        'entry-point': entryPoints = [],
-        'output': outputs = [],
-    } = yargs(process.argv.slice(2))
+main(async (args) => {
+    const { entryPoint: entryPoints = [], output: outputs = [] } = yargs(args)
+        .strict()
         .usage(mdSpacing(`
             Bundles the given CSS files by resolving and inlining \`@import\`
             statements.
@@ -23,7 +21,7 @@ main(async () => {
             type: 'string',
             array: true,
             description: 'List of output location to write bundled CSS files to.',
-        }).argv;
+        }).parseSync();
 
     if (entryPoints.length !== outputs.length) {
         console.error(`Received different number of \`--entry-point\` (${

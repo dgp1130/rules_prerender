@@ -7,11 +7,12 @@ import { loadPackage } from './package_loader.mjs';
 
 main(async (args) => {
     const {
-        'url-path': urlPaths,
-        'file-ref': fileRefs,
-        'merge-dir': mergeDirs,
-        'dest-dir': destDir,
-    } = yargs(process.argv.slice(2))
+        urlPath: urlPaths = [],
+        fileRef: fileRefs = [],
+        mergeDir: mergeDirs = [],
+        destDir,
+    } = yargs(args)
+        .strict()
         .usage(mdSpacing(`
             Packages all the given resources (file references) by moving them to
             their associated URL path relative to the destination directory.
@@ -40,8 +41,8 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
 \`\`\`
         `.trim())
         .option('url-path', {
-            type: 'array',
-            default: [] as string[],
+            type: 'string',
+            array: true,
             description: mdSpacing(`
                 A list of URL paths to combine with file references. Each path
                 is the location its corresponding file reference is copied to
@@ -50,8 +51,8 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
             `),
         })
         .option('file-ref', {
-            type: 'array',
-            default: [] as string[],
+            type: 'string',
+            array: true,
             description: mdSpacing(`
                 A list of file references (paths to Bazel files) to combine with
                 URL paths. Each file reference holds the contents which are
@@ -60,8 +61,8 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
             `),
         })
         .option('merge-dir', {
-            type: 'array',
-            default: [] as string[],
+            type: 'string',
+            array: true,
             description: mdSpacing(`
                 Directories to merge into the final output directory. Exits with
                 code 1 if there is a conflict from multiple directories using
@@ -75,7 +76,7 @@ cp bazel-bin/pkg/baz.txt bazel-bin/output/some/dir/baz.txt
                 Destination directory to write outputs to.
             `),
         })
-        .parse(args);
+        .parseSync();
 
     if (urlPaths.length !== fileRefs.length) {
         console.error(mdSpacing(`

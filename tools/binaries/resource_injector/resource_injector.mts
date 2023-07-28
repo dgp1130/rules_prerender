@@ -6,14 +6,15 @@ import { mdSpacing } from '../../../common/formatters.mjs';
 import { InjectorConfig } from './config.mjs';
 import { inject } from './injector.mjs';
 
-main(async () => {
+main(async (args) => {
     // Define command line flags.
     const {
-        'input-dir': inputDir,
+        inputDir,
         config: configFile,
         bundles,
-        'output-dir': outputDir,
-    } = yargs(process.argv.slice(2))
+        outputDir,
+    } = yargs(args)
+        .strict()
         .usage(mdSpacing(`
             Injects web resources specified by the config file into all the HTML
             files within the input directory and writes them to the same
@@ -56,7 +57,7 @@ main(async () => {
                 Path to the output directory to write the output files to.
             `),
         })
-        .argv;
+        .parseSync();
 
     // Start reading the config file, but don't block on it just yet.
     const configPromise = (async () => {
