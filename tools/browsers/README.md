@@ -1,5 +1,8 @@
 # Browser configuration and versioning for testing of Angular
 
+NOTE: Most of this directory was forked from
+https://github.com/angular/dev-infra/tree/1ad20ef9dd457de967252283c1a968b0d702d0ae/bazel/browsers/.
+
 Within the Angular organization, we use Chrome and Firefox to perform most of the local testing, and rely on Sauce Labs and BrowserStack to do cross-browser testing on our CI.
 
 The version of Chrome used in tests within this monorepo is configured and controlled via Bazel and `puppeteer`.
