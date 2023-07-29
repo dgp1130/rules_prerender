@@ -24,12 +24,6 @@ config_setting(
     ],
 )
 
-alias(
-    name = "chromium-local",
-    actual = "//tools/browsers/chromium",
-    visibility = ["//visibility:public"],
-)
-
 bzl_library(
     name = "browser_archive_repo",
     srcs = ["browser_archive_repo.bzl"],
