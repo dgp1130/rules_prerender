@@ -1,0 +1,6 @@
+{
+	"webTestFiles" : [
+    {"namedFiles" : {"a" : "A"}},
+    {"archiveFile" : "A", "namedFiles" : {"a" : "A"}}
+  ]
+}

@@ -1,0 +1,156 @@
+# Copyright 2016 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+#
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+package(
+    default_testonly = True,
+    default_visibility = ["//web:__subpackages__"],
+)
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(
+    glob([
+        "*.sh",
+        "*.sh.template",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "browser",
+    srcs = ["browser.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+        ":runfiles",
+    ],
+)
+
+bzl_library(
+    name = "constants",
+    srcs = ["constants.bzl"],
+)
+
+bzl_library(
+    name = "custom_browser",
+    srcs = ["custom_browser.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+        ":runfiles",
+        "@bazel_skylib//lib:dicts",
+    ],
+)
+
+bzl_library(
+    name = "files",
+    srcs = ["files.bzl"],
+)
+
+bzl_library(
+    name = "metadata",
+    srcs = ["metadata.bzl"],
+    deps = [":files"],
+)
+
+bzl_library(
+    name = "platform_archive",
+    srcs = ["platform_archive.bzl"],
+)
+
+bzl_library(
+    name = "platform_metadata",
+    srcs = ["platform_metadata.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+    ],
+)
+
+bzl_library(
+    name = "provider",
+    srcs = ["provider.bzl"],
+)
+
+bzl_library(
+    name = "runfiles",
+    srcs = ["runfiles.bzl"],
+)
+
+bzl_library(
+    name = "web_test",
+    srcs = ["web_test.bzl"],
+    deps = [
+        ":files",
+        ":metadata",
+        ":provider",
+        ":runfiles",
+        ":windows_utils",
+    ],
+)
+
+bzl_library(
+    name = "web_test_config",
+    srcs = ["web_test_config.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+    ],
+)
+
+bzl_library(
+    name = "web_test_files",
+    srcs = ["web_test_files.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+    ],
+)
+
+bzl_library(
+    name = "web_test_named_executable",
+    srcs = ["web_test_named_executable.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+        ":runfiles",
+    ],
+)
+
+bzl_library(
+    name = "web_test_named_file",
+    srcs = ["web_test_named_file.bzl"],
+    deps = [
+        ":metadata",
+        ":provider",
+    ],
+)
+
+bzl_library(
+    name = "wrap_web_test_suite",
+    srcs = ["wrap_web_test_suite.bzl"],
+    deps = [
+        ":constants",
+        "//web",
+    ],
+)
+
+bzl_library(
+    name = "windows_utils",
+    srcs = ["windows_utils.bzl"],
+)

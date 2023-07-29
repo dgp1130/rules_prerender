@@ -1,0 +1,9 @@
+bazel-*
+*~
+*.sublime-*
+*.pyc
+.vs/*
+user.bazelrc
+
+.idea/
+dist/

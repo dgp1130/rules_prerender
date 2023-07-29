@@ -1,0 +1,51 @@
+# Copyright 2018 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+#
+load("//web:web.bzl", "web_test_named_executable")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+licenses(["notice"])  # Apache 2.0
+
+web_test_named_executable(
+    name = "wsl",
+    testonly = True,
+    alt_name = "WEBDRIVER_SERVER_LIGHT",
+    executable = "//go/wsl/main",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "go_default_library",
+    srcs = ["wsl.go"],
+    importpath = "github.com/bazelbuild/rules_webtesting/go/wsl",
+    visibility = [":__subpackages__"],
+    deps = [
+        "//go/httphelper:go_default_library",
+        "//go/wsl/hub:go_default_library",
+        "//go/wsl/upload:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["wsl_test.go"],
+    data = ["//testdata"],
+    embed = [":go_default_library"],
+    deps = [
+        "//go/bazel:go_default_library",
+        "//go/portpicker:go_default_library",
+    ],
+)

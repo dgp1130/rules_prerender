@@ -1,0 +1,113 @@
+# Copyright 2016 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+#
+load(":web.bzl", "web_test_config")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+package(
+    default_testonly = True,
+    default_visibility = ["//visibility:public"],
+)
+
+licenses(["notice"])  # Apache 2.0
+
+web_test_config(
+    name = "default_config",
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "go",
+    srcs = ["go.bzl"],
+    deps = [
+        "//web/internal:wrap_web_test_suite",
+        # should depend on @io_bazel_rules_go//go:def.bzl
+    ],
+)
+
+bzl_library(
+    name = "go_repositories",
+    srcs = ["go_repositories.bzl"],
+    deps = [
+        ":repositories",
+        # should depend on @bazel_gazelle//:deps.bzl
+    ],
+)
+
+bzl_library(
+    name = "java",
+    srcs = ["java.bzl"],
+    deps = ["//web/internal:wrap_web_test_suite"],
+)
+
+bzl_library(
+    name = "java_repositories",
+    srcs = ["java_repositories.bzl"],
+    deps = [
+        ":repositories",
+        # should depend on "@bazel_tools//tools/build_defs/repo:lib",
+    ],
+)
+
+bzl_library(
+    name = "py",
+    srcs = ["py.bzl"],
+    deps = ["//web/internal:wrap_web_test_suite"],
+)
+
+bzl_library(
+    name = "py_repositories",
+    srcs = ["py_repositories.bzl"],
+    deps = [
+        ":repositories",
+        # should depend on "@bazel_tools//tools/build_defs/repo:lib",
+    ],
+)
+
+bzl_library(
+    name = "repositories",
+    srcs = ["repositories.bzl"],
+    deps = [
+        # should depend on "@bazel_tools//tools/build_defs/repo:lib",
+    ],
+)
+
+bzl_library(
+    name = "scala",
+    srcs = ["scala.bzl"],
+    deps = [
+        "//web/internal:wrap_web_test_suite",
+        # should depend on @io_bazel_rules_scala//scala:scala.bzl
+    ],
+)
+
+bzl_library(
+    name = "web",
+    srcs = ["web.bzl"],
+    deps = [
+        "//web/internal:browser",
+        "//web/internal:constants",
+        "//web/internal:platform_metadata",
+        "//web/internal:platform_archive",
+        "//web/internal:custom_browser",
+        "//web/internal:web_test",
+        "//web/internal:web_test_config",
+        "//web/internal:web_test_files",
+        "//web/internal:web_test_named_executable",
+        "//web/internal:web_test_named_file",
+        "@bazel_skylib//lib:types",
+    ],
+)

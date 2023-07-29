@@ -10,3 +10,6 @@ bazel-out
 
 # Ignore external workspaces in the repository.
 examples/external/
+
+# Ignore third party workspaces vendored in the repo.
+third_party/rules_webtesting/
