@@ -29,6 +29,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    # Configure the environment and install required dependencies.
+    - name: Setup
+      run: |
+        # Install required Firefox dependencies.
+        sudo apt-get install libegl-dev mesa-utils mesa-utils-extra
+        eglinfo # DEBUG
+
     - name: Cache
       uses: actions/cache@v3
       with:
