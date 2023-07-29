@@ -80,12 +80,6 @@ http_archive(
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 gazelle_dependencies()
 
-load(
-    "@io_bazel_rules_webtesting//web/versioned:browsers-0.3.3.bzl",
-    webtesting_browser_repositories = "browser_repositories",
-)
-webtesting_browser_repositories(sauce = True)
-
 load("@io_bazel_rules_webtesting//web:go_repositories.bzl", "go_repositories", "go_internal_repositories")
 go_repositories()
 go_internal_repositories()
