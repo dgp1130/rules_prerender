@@ -1,3 +1,4 @@
+import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
 import { Template, includeScript } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 
@@ -15,6 +16,8 @@ declare module 'preact' {
 export function Counter({ initialValue }: { initialValue: number }): VNode {
     return <site-counter initial={initialValue}>
         <Template shadowrootmode="open">
+            {polyfillDeclarativeShadowDom()}
+
             <span id="label">The current count is: {initialValue}.</span>
 
             {/* Render buttons disabled so they are inactive until
