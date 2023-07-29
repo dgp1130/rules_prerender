@@ -50,7 +50,7 @@ _DEFAULT_WEB_TEST_SUITE_TAGS = {
 
 def jasmine_web_test_suite(
     name,
-    browsers,
+    browsers = ["//tools/browsers/chromium:chromium"],
     browser_overrides = None,
     config = None,
     flaky = None,
@@ -80,8 +80,8 @@ def jasmine_web_test_suite(
             
             ```
             {
-                "//tools/browsers:chromium-local": {"shard_count": 3, "flaky": 1},
-                "//tools/browsers:firefox-native": {"shard_count": 1, "timeout": 100},
+                "//tools/browsers/chromium:chromium": {"shard_count": 3, "flaky": 1},
+                "//tools/browsers/firefox:firefox": {"shard_count": 1, "timeout": 100},
             }
             ```
         config: Optional label to configure web test features.

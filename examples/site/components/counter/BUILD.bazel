@@ -84,7 +84,6 @@ ts_project(
 
 jasmine_web_test_suite(
     name = "counter_test",
-    browsers = ["//tools/browsers:chromium-local"],
     data = [":counter_test_cases_devserver"],
     deps = [":counter_test_lib"],
 )

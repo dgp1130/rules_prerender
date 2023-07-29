@@ -273,7 +273,6 @@ web_resources_devserver(
 
 jasmine_web_test_suite(
     name = "webdriver_test",
-    browsers = ["//tools/browsers:chromium-local"],
     data = [":webdriver_test_server"],
     deps = [":webdriver_test_lib"],
 )
