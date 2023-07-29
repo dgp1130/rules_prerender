@@ -5,6 +5,7 @@ https://github.com/bazelbuild/rules_webtesting/blob/6b47a3f11b7f302c2620a3552cf8
 """
 
 load("@io_bazel_rules_webtesting//web:web.bzl", "web_test_suite")
+load("//common:label.bzl", "absolute")
 load(":jasmine_node_test.bzl", "jasmine_node_test")
 
 visibility("private")
@@ -50,7 +51,7 @@ _DEFAULT_WEB_TEST_SUITE_TAGS = {
 
 def jasmine_web_test_suite(
     name,
-    browsers = ["//tools/browsers/chromium:chromium"],
+    browsers = ["//tools/browsers/chromium"],
     browser_overrides = None,
     config = None,
     flaky = None,
@@ -80,8 +81,8 @@ def jasmine_web_test_suite(
             
             ```
             {
-                "//tools/browsers/chromium:chromium": {"shard_count": 3, "flaky": 1},
-                "//tools/browsers/firefox:firefox": {"shard_count": 1, "timeout": 100},
+                "//tools/browsers/chromium": {"shard_count": 3, "flaky": 1},
+                "//tools/browsers/firefox": {"shard_count": 1, "timeout": 100},
             }
             ```
         config: Optional label to configure web test features.
@@ -127,7 +128,10 @@ def jasmine_web_test_suite(
     web_test_suite(
         name = name,
         test = ":%s" % wrapped_test_name,
-        browsers = browsers,
+        # For whatever reason, `web_test_suite` _requires_ an explicit target.
+        # `//foo` isn't good enough, we need `//foo:foo`. Since this is easy to
+        # forget, we automatically do the conversion for users.
+        browsers = [absolute(browser) for browser in browsers],
         browser_overrides = browser_overrides,
         config = config,
         data = [":%s" % wrapped_test_config],
