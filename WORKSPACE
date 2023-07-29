@@ -51,9 +51,7 @@ nodejs_register_toolchains(
 )
 
 ######################################################
-#
 # Copied `@io_bazel_rules_webtesting` workspace setup.
-#
 ######################################################
 
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
@@ -91,37 +89,6 @@ webtesting_browser_repositories(sauce = True)
 load("@io_bazel_rules_webtesting//web:go_repositories.bzl", "go_repositories", "go_internal_repositories")
 go_repositories()
 go_internal_repositories()
-
-load("@io_bazel_rules_webtesting//web:java_repositories.bzl", "java_repositories")
-java_repositories()
-
-load("@io_bazel_rules_webtesting//web:py_repositories.bzl", "py_repositories")
-py_repositories()
-
-http_archive(
-    name = "io_bazel_rules_scala",
-    sha256 = "ccf19e8f966022eaaca64da559c6140b23409829cb315f2eff5dc3e757fb6ad8",
-    strip_prefix = "rules_scala-e4560ac332e9da731c1e50a76af2579c55836a5c",
-    urls = [
-        "https://github.com/bazelbuild/rules_scala/archive/e4560ac332e9da731c1e50a76af2579c55836a5c.zip",
-    ],
-)
-load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
-scala_config()
-
-load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
-scala_repositories()
-
-load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
-rules_proto_dependencies()
-rules_proto_toolchains()
-
-load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
-scala_register_toolchains()
-
-load("@io_bazel_rules_scala//testing:scalatest.bzl", "scalatest_repositories", "scalatest_toolchain")
-scalatest_repositories()
-scalatest_toolchain()
 
 # Load browser binaries.
 load("//tools/browsers:browser_repositories.bzl", "browser_repositories")
