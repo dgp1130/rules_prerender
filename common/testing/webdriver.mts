@@ -43,8 +43,10 @@ export const webDriverTestTimeout = 60_000; // 60 seconds.
  * });
  * ```
  */
-export function useWebDriver(serverUnderTest?: Effect<TestServer>):
-        Effect<WebdriverIO.Browser> {
+export function useWebDriver(
+    serverUnderTest?: Effect<TestServer>,
+    timeout: number = webDriverTestTimeout,
+): Effect<WebdriverIO.Browser> {
     return useForAll(async () => {
         const baseUrl = !serverUnderTest
             ? undefined
@@ -53,7 +55,7 @@ export function useWebDriver(serverUnderTest?: Effect<TestServer>):
         const browser = await createSession(baseUrl);
 
         return [ browser, undefined /* afterAll() */ ] as const;
-    });
+    }, timeout);
 }
 
 interface WebDriverServer {

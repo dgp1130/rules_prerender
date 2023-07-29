@@ -90,17 +90,21 @@ class EffectImpl<T> {
  * @param init A function which returns or resolves to an array of two values.
  *     The first is the value to be proxied and returned. The second is a
  *     cleanup function (or `undefined`) to be called in {@link afterEach}.
+ * @param timeout A timeout in milliseconds to apply to the init and cleanup
+ *     functions.
  * @return A proxy which wraps the the first element of the {@param init}
  *     function. This object is only valid when used inside an {@link it} and
  *     will fail the test if used when not ready.
  */
 export function useForEach<T extends Defined>(
     init: () => MaybePromise<UseResult<T>>,
+    timeout?: number,
 ): Effect<T> {
     return useValue({
         init,
         beforeFn: beforeEach,
         afterFn: afterEach,
+        timeout,
     });
 }
 
@@ -113,26 +117,31 @@ export function useForEach<T extends Defined>(
  * @param init A function which returns or resolves to an array of two values.
  *     The first is the value to be proxied and returned. The second is a
  *     cleanup function (or `undefined`) to be called in {@link afterAll}.
+ * @param timeout A timeout in milliseconds to apply to the init and cleanup
+ *     functions.
  * @return A proxy which wraps the the first element of the {@param init}
  *     function. This object is only valid when used inside an {@link it} and
  *     will fail the test if used when not ready.
  */
 export function useForAll<T extends Defined>(
     init: () => MaybePromise<UseResult<T>>,
+    timeout?: number,
 ): Effect<T> {
     return useValue({
         init,
         beforeFn: beforeAll,
         afterFn: afterAll,
+        timeout,
     });
 }
 
 type MaybePromise<T> = T | Promise<T>;
 type UseResult<T> = readonly [ value: T, cleanup: (() => MaybePromise<void>) | undefined ];
-function useValue<T extends Defined>({ init, beforeFn, afterFn }: {
+function useValue<T extends Defined>({ init, beforeFn, afterFn, timeout }: {
     init: () => MaybePromise<UseResult<T>>,
-    beforeFn: (cb: () => MaybePromise<void>) => void,
-    afterFn: (cb: () => MaybePromise<void>) => void,
+    beforeFn: (cb: () => MaybePromise<void>, timeout?: number) => void,
+    afterFn: (cb: () => MaybePromise<void>, timeout?: number) => void,
+    timeout?: number,
 }): Effect<T> {
     let value: T | undefined;
     let cleanup: (() => void | Promise<void>) | undefined;
@@ -140,13 +149,13 @@ function useValue<T extends Defined>({ init, beforeFn, afterFn }: {
     // Initialize the object in `beforeEach()` or `beforeAll()`.
     beforeFn(async () => {
         [ value, cleanup ] = await init();
-    });
+    }, timeout);
 
     // Clean up the object in `afterEach()` or `afterAll()`.
     afterFn(async () => {
         await cleanup?.();
         value = undefined;
-    });
+    }, timeout);
 
     // Return a proxy of the initialized value.
     return EffectImpl.of(() => {
