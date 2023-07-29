@@ -61,14 +61,9 @@ bzl_library(
     deps = [
         "//web/internal:browser",
         "//web/internal:constants",
-        "//web/internal:platform_metadata",
-        "//web/internal:platform_archive",
-        "//web/internal:custom_browser",
         "//web/internal:web_test",
         "//web/internal:web_test_config",
-        "//web/internal:web_test_files",
         "//web/internal:web_test_named_executable",
-        "//web/internal:web_test_named_file",
         "@bazel_skylib//lib:types",
     ],
 )

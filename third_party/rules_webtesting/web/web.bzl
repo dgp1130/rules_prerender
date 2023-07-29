@@ -19,10 +19,6 @@ load(
 )
 load("//web/internal:constants.bzl", "DEFAULT_TEST_SUITE_TAGS", "DEFAULT_WEB_TEST_SUITE_TAGS")
 load(
-    "//web/internal:custom_browser.bzl",
-    _custom_browser = "custom_browser",
-)
-load(
     "//web/internal:web_test.bzl",
     _web_test = "web_test",
 )
@@ -31,25 +27,10 @@ load(
     _web_test_config = "web_test_config",
 )
 load(
-    "//web/internal:web_test_files.bzl",
-    _web_test_files = "web_test_files",
-)
-load(
     "//web/internal:web_test_named_executable.bzl",
     _web_test_named_executable = "web_test_named_executable",
 )
-load(
-    "//web/internal:web_test_named_file.bzl",
-    _web_test_named_file = "web_test_named_file",
-)
 load("@bazel_skylib//lib:types.bzl", "types")
-
-load("//web/internal:platform_archive.bzl", _platform_archive = "platform_archive")
-load("//web/internal:platform_metadata.bzl", _platform_metadata = "platform_metadata")
-
-# Expose the following rules publicly.
-platform_archive = _platform_archive
-platform_metadata = _platform_metadata
 
 def web_test_suite(
         name,
@@ -122,10 +103,6 @@ def browser(testonly = True, **kwargs):
     """Wrapper around browser to correctly set defaults."""
     _browser(testonly = testonly, **kwargs)
 
-def custom_browser(testonly = True, **kwargs):
-    """Wrapper around custom_browser to correctly set defaults."""
-    _custom_browser(testonly = testonly, **kwargs)
-
 def web_test(browser, config = None, launcher = None, size = None, **kwargs):
     """Wrapper around web_test to correctly set defaults."""
     config = config or str(Label("//web:default_config"))
@@ -148,11 +125,3 @@ def web_test_config(testonly = True, **kwargs):
 def web_test_named_executable(testonly = True, **kwargs):
     """Wrapper around web_test_named_executable to correctly set defaults."""
     _web_test_named_executable(testonly = testonly, **kwargs)
-
-def web_test_named_file(testonly = True, **kwargs):
-    """Wrapper around web_test_named_file to correctly set defaults."""
-    _web_test_named_file(testonly = testonly, **kwargs)
-
-def web_test_files(testonly = True, **kwargs):
-    """Wrapper around web_test_files to correctly set defaults."""
-    _web_test_files(testonly = testonly, **kwargs)
