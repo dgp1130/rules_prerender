@@ -3,6 +3,7 @@
 # flag, making the browser more easily inspectable.
 # See: https://github.com/bazelbuild/rules_webtesting/issues/324
 
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 
 # Whether to use the debug versions of browsers or the "normal" version if not.
@@ -15,7 +16,7 @@ config_setting(
     name = "use_debug_browsers_config",
     flag_values = {":use_debug_browsers": "True"},
     visibility = [
-        "//bazel/browsers:__subpackages__",
+        "//tools/browsers:__subpackages__",
         
         # Should not be necessary, but is to avoid a bugged visibility error.
         # https://github.com/bazelbuild/bazel/issues/19126
@@ -25,6 +26,35 @@ config_setting(
 
 alias(
     name = "chromium-local",
-    actual = "//bazel/browsers/chromium",
+    actual = "//tools/browsers/chromium",
     visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "browser_archive_repo",
+    srcs = ["browser_archive_repo.bzl"],
+    visibility = [
+        "//tools/browsers/chromium:__pkg__",
+        "//tools/browsers/firefox:__pkg__",
+    ],
+)
+
+bzl_library(
+    name = "browser_configure",
+    srcs = ["browser_configure.bzl"],
+)
+
+bzl_library(
+    name = "browser_repositories",
+    srcs = ["browser_repositories.bzl"],
+    deps = [
+        "//tools/browsers/chromium:chromium_bzl",
+        "//tools/browsers/firefox:firefox_bzl",
+    ],
+)
+
+bzl_library(
+    name = "browser_toolchain_alias",
+    srcs = ["browser_toolchain_alias.bzl"],
+    deps = [":browser_configure"],
 )

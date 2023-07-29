@@ -1,6 +1,6 @@
 """Defines repositories for the Chromium browser."""
 
-load("//bazel/browsers:browser_archive_repo.bzl", "browser_archive")
+load("//tools/browsers:browser_archive_repo.bzl", "browser_archive")
 
 def define_chromium_repositories():
     # To update to a newer version of Chromium see instructions in

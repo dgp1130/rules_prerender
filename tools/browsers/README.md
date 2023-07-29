@@ -7,7 +7,7 @@ We manually keep the configuration of these two tools in sync to create a consis
 
 ## Bazel
 
-Bazel `karma_web_test_suite` and `protractor_web_test_suite` targets will use Chromium or Firefox provisioned by `//bazel/browsers`.
+Bazel `karma_web_test_suite` and `protractor_web_test_suite` targets will use Chromium or Firefox provisioned by `//tools/browsers`.
 The version of Chrome and Firefox are specified in the `chromium.bzl` and `firefox.bzl` files in `/bazel/browsers`.
 
 The process of updating the Chrome or Firefox version is not straightforward, but below are dedicated sections for each browser.

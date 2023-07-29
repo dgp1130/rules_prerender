@@ -1,6 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@io_bazel_rules_webtesting//web:web.bzl", "browser")
-load("//bazel/browsers:browser_toolchain_alias.bzl", "browser_toolchain_alias")
+load("//tools/browsers:browser_toolchain_alias.bzl", "browser_toolchain_alias")
 
 PLATFORM_METADATA = select({
     "//tools/constraints:linux_x64": [
@@ -51,6 +51,6 @@ browser_toolchain_alias(
 bzl_library(
     name = "firefox_bzl",
     srcs = ["firefox.bzl"],
-    visibility = ["//bazel/browsers:__pkg__"],
-    deps = ["//bazel/browsers:browser_archive_repo"],
+    visibility = ["//tools/browsers:__pkg__"],
+    deps = ["//tools/browsers:browser_archive_repo"],
 )

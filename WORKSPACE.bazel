@@ -57,5 +57,5 @@ load(
 web_test_repositories()
 
 # Load browser binaries.
-load("//bazel/browsers:browser_repositories.bzl", "browser_repositories")
+load("//tools/browsers:browser_repositories.bzl", "browser_repositories")
 browser_repositories()

@@ -1,6 +1,6 @@
 """Defines repositories for the Firefox browser."""
 
-load("//bazel/browsers:browser_archive_repo.bzl", "browser_archive")
+load("//tools/browsers:browser_archive_repo.bzl", "browser_archive")
 
 def define_firefox_repositories():
     browser_archive(
