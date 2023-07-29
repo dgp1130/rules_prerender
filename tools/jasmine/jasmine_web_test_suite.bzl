@@ -17,9 +17,14 @@ _DEFAULT_WEB_TEST_SUITE_TAGS = {
     "firefox": ["native"],
 }
 
+_DEFAULT_BROWSERS = [
+    "//tools/browsers/chromium",
+    "//tools/browsers/firefox",
+]
+
 def jasmine_web_test_suite(
     name,
-    browsers = ["//tools/browsers/chromium"],
+    browsers = _DEFAULT_BROWSERS,
     browser_overrides = None,
     config = None,
     flaky = None,
