@@ -10,43 +10,11 @@ load(":jasmine_node_test.bzl", "jasmine_node_test")
 
 visibility("private")
 
-# Copied from https://github.com/bazelbuild/rules_webtesting/blob/6b47a3f11b7f302c2620a3552cf8eea8855e8c9e/web/internal/constants.bzl#L20-L45.
 # When a browser target name matches with one of these tags, they are used for
 # the generated `web_test()`.
 _DEFAULT_WEB_TEST_SUITE_TAGS = {
-    # Locally versioned browsers.
-    "chromium": [
-        "native",
-    ],
-    "firefox": [
-        "native",
-    ],
-
-    # `@io_bazel_rules_webtesting` browsers.
-    "chrome-external": [
-        "external",
-    ],
-    "chromium-local": [
-        "native",
-    ],
-    "chromium-local-1024x768": [
-        "native",
-    ],
-    "chrome-win10": [
-        "exclusive",
-        "sauce",
-    ],
-    "chrome-win10-connect": [
-        "exclusive",
-        "noci",
-        "sauce",
-    ],
-    "firefox-external": [
-        "external",
-    ],
-    "firefox-local": [
-        "native",
-    ],
+    "chromium": ["native"],
+    "firefox": ["native"],
 }
 
 def jasmine_web_test_suite(
