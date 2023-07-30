@@ -14,7 +14,7 @@ visibility("private")
 # the generated `web_test()`.
 _DEFAULT_WEB_TEST_SUITE_TAGS = {
     "chromium": ["native"],
-    "firefox": ["native"],
+    "firefox": ["native", "noci"],
 }
 
 _DEFAULT_BROWSERS = [
