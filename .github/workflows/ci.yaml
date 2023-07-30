@@ -24,7 +24,7 @@ jobs:
   test:
     # Includes `bazelisk`.
     # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#:~:text=Bazel%204.2.1-,Bazelisk,-1.10.1
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v3
