@@ -51,3 +51,5 @@ coverage --instrument_test_targets
 
 # `@rules_prerender` specific options.
 build --flag_alias=debug_prerender=@rules_prerender//tools/flags:debug_prerender
+
+test --test_env MOZ_DISABLE_RDD_SANDBOX=1
