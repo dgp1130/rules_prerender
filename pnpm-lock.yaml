@@ -70,8 +70,8 @@ importers:
         specifier: 4.3.0
         version: 4.3.0
       lit-html:
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^2.7.5
+        version: 2.7.5
       node-fetch:
         specifier: ^3.2.5
         version: 3.3.2
@@ -103,11 +103,11 @@ importers:
   packages/lit_engine:
     dependencies:
       '@lit-labs/ssr':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.1.5
+        version: 3.1.5
       lit-html:
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^2.7.5
+        version: 2.7.5
       rules_prerender:
         specifier: ^0.0.0-PLACEHOLDER
         version: 0.0.0-releasetest(@bazel/typescript@5.8.1)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.2)(karma-jasmine@5.1.0)(karma-junit-reporter@2.0.1)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.4.0)(karma@6.4.2)(typescript@4.9.5)
@@ -285,8 +285,8 @@ packages:
     resolution: {integrity: sha512-kXOeFbfCm4fFf2A3WwVEeQj55tMZa8c8/f9AKHMobQMkzNUfUj+antR3fRPaZJawsa1aZiP/Da3ndpZrwEe4rQ==}
     dev: false
 
-  /@lit-labs/ssr@3.0.1:
-    resolution: {integrity: sha512-6SknH6jujOKa2wd0zEqkcEIoJrzrpQ8l4dac38kHXFHtPpT25UiRKdOYsmydleUjmhIg33Vx7W9lGjjYUNuzXw==}
+  /@lit-labs/ssr@3.1.5:
+    resolution: {integrity: sha512-OvjM3CZGPRjZTIAgWvLCXS3sFj574rXfAzhtzQjgHYNxTuRy+LMfKpgeu8xF7PywdcOniVaLZuGKF4WS7YI7hA==}
     engines: {node: '>=13.9.0'}
     dependencies:
       '@lit-labs/ssr-client': 1.1.2
@@ -297,7 +297,7 @@ packages:
       enhanced-resolve: 5.15.0
       lit: 2.7.6
       lit-element: 3.3.2
-      lit-html: 2.6.1
+      lit-html: 2.7.5
       node-fetch: 3.3.2
       parse5: 7.1.2
     dev: false
@@ -430,7 +430,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.3
-      '@types/node': 18.6.3
+      '@types/node': 14.14.13
       '@types/responselike': 1.0.0
     dev: true
 
@@ -467,7 +467,7 @@ packages:
   /@types/keyv@3.1.3:
     resolution: {integrity: sha512-FXCJgyyN3ivVgRoml4h94G/p3kY+u/B86La+QptcqJaWtBWtmc6TtkNfS40n9bIvyLteHh7zXOtgbobORKPbDg==}
     dependencies:
-      '@types/node': 18.6.3
+      '@types/node': 14.14.13
     dev: true
 
   /@types/linkify-it@3.0.0:
@@ -518,7 +518,7 @@ packages:
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 18.6.3
+      '@types/node': 14.14.13
     dev: true
 
   /@types/semver@7.3.13:
@@ -550,7 +550,7 @@ packages:
     resolution: {integrity: sha512-A1b8SU4D10uoPjwb0lnHmmu8wZhR9d+9o2PKBQT2jU5YPTKsxac6M2qGAdY7VcL+dHHhARVUDmeg0rOrcd9EjA==}
     requiresBuild: true
     dependencies:
-      '@types/node': 18.6.3
+      '@types/node': 14.14.13
     dev: true
     optional: true
 
@@ -2897,16 +2897,10 @@ packages:
       lit-html: 2.7.5
     dev: false
 
-  /lit-html@2.6.1:
-    resolution: {integrity: sha512-Z3iw+E+3KKFn9t2YKNjsXNEu/LRLI98mtH/C6lnFg7kvaqPIzPn124Yd4eT/43lyqrejpc5Wb6BHq3fdv4S8Rw==}
-    dependencies:
-      '@types/trusted-types': 2.0.3
-
   /lit-html@2.7.5:
     resolution: {integrity: sha512-YqUzpisJodwKIlbMFCtyrp58oLloKGnnPLMJ1t23cbfIJjg/H9pvLWK4XS69YeubK5HUs1UE4ys9w5dP1zg6IA==}
     dependencies:
       '@types/trusted-types': 2.0.3
-    dev: false
 
   /lit@2.7.6:
     resolution: {integrity: sha512-1amFHA7t4VaaDe+vdQejSVBklwtH9svGoG6/dZi9JhxtJBBlqY5D1RV7iLUYY0trCqQc4NfhYYZilZiVHt7Hxg==}
