@@ -46,9 +46,3 @@ bzl_library(
         "//tools/browsers/firefox:firefox_bzl",
     ],
 )
-
-bzl_library(
-    name = "browser_toolchain_alias",
-    srcs = ["browser_toolchain_alias.bzl"],
-    deps = [":browser_configure"],
-)
