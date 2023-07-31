@@ -10,7 +10,7 @@ copy_to_bin(
 
 prerender_pages(
     name = "site",
-    entry_point = "./site.js",
+    entry_point = "./site.mjs",
     prerender = ":prerender",
     scripts = ":script",
 )

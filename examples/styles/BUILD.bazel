@@ -15,16 +15,14 @@ copy_to_bin(
 
 prerender_pages(
     name = "site",
-    entry_point = "./site.js",
+    entry_point = "./site.mjs",
     prerender = ":prerender",
     styles = ":styles",
 )
 
 ts_project(
     name = "prerender",
-    srcs = ["site.tsx"],
-    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
-    data = [":package"],
+    srcs = ["site.mts"],
     deps = [
         "//:node_modules/@rules_prerender/lit_engine",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",

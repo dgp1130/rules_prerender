@@ -2,7 +2,7 @@ import { PrerenderResource, html, inlineStyle, renderToHtml } from '@rules_prere
 
 /** Generates a page with an inline style in a declarative shadow root. */
 export default async function* (): AsyncGenerator<PrerenderResource, void, void> {
-    yield PrerenderResource.of('/index.html', await renderToHtml(html`
+    yield PrerenderResource.fromHtml('/index.html', await renderToHtml(html`
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,7 +10,7 @@ export default async function* (): AsyncGenerator<PrerenderResource, void, void>
     </head>
     <body>
         <div id="shadowroot">
-            <template shadowroot="open">
+            <template shadowrootmode="open">
                 <div id="hello">Hello, World!</div>
                 ${inlineStyle('./styles.css', import.meta)}
             </template>

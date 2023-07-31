@@ -17,8 +17,6 @@ prerender_pages(
 ts_project(
     name = "prerender",
     srcs = ["site.tsx"],
-    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
-    data = [":package"],
     deps = [
         ":dep",
         "//:node_modules/@rules_prerender/lit_engine",

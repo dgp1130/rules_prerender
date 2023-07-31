@@ -35,4 +35,4 @@ async function collectResult(result: RenderResult): Promise<string> {
             : await collectResult(await chunk);
     }
     return value;
-};
+}
