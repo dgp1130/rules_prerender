@@ -7,16 +7,16 @@ PLATFORM_METADATA = select({
         "@org_mozilla_firefox_linux_x64//:metadata",
         "@org_mozilla_geckodriver_linux_x64//:metadata",
     ],
-    "//tools/constraints:macos_x64": [
-        # Firefox has a launcher that conditionally starts x64/arm64
-        "@org_mozilla_firefox_macos//:metadata",
-        "@org_mozilla_geckodriver_macos_x64//:metadata",
-    ],
-    "//tools/constraints:macos_arm64": [
-        # Firefox has a launcher that conditionally starts x64/arm64
-        "@org_mozilla_firefox_macos//:metadata",
-        "@org_mozilla_geckodriver_macos_arm64//:metadata",
-    ],
+    # "//tools/constraints:macos_x64": [
+    #     # Firefox has a launcher that conditionally starts x64/arm64
+    #     "@org_mozilla_firefox_macos//:metadata",
+    #     "@org_mozilla_geckodriver_macos_x64//:metadata",
+    # ],
+    # "//tools/constraints:macos_arm64": [
+    #     # Firefox has a launcher that conditionally starts x64/arm64
+    #     "@org_mozilla_firefox_macos//:metadata",
+    #     "@org_mozilla_geckodriver_macos_arm64//:metadata",
+    # ],
     "//conditions:default": [],
 })
 
