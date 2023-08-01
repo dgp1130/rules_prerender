@@ -33,7 +33,7 @@ test:debug --//tools/browsers:use_debug_browsers=True
 # For example, minifiers such as Terser may make their output more human
 # readable when this is set. Rules will pass `COMPILATION_MODE` to
 # `js_binary()` executables via the actions.run env attribute.
-build:debug --compilation_mode=dbg
+common:debug --compilation_mode=dbg
 
 # `rules_nodejs` rules will output verbose logs, mostly about resolving JS
 # files. This is only enabled with `--config debug-resolve`.

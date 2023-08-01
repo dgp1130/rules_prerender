@@ -1,10 +1,8 @@
 # Common `.bazelrc` configuration for all workspaces in the repository.
 
-# Cache action outputs on disk so they persist across output_base and bazel shutdown (eg. changing branches)
-build --disk_cache=~/.cache/bazel-disk-cache
-run --disk_cache=~/.cache/bazel-disk-cache
-test --disk_cache=~/.cache/bazel-disk-cache
-query --disk_cache=~/.cache/bazel-disk-cache
+# Cache action outputs on disk so they persist across output_base and bazel
+# shutdown (eg. changing branches)
+common --disk_cache=~/.cache/bazel-disk-cache
 
 # Bazel will create symlinks from the workspace directory to output artifacts.
 # Build results will be placed in a directory called "dist/bin"
@@ -12,23 +10,17 @@ query --disk_cache=~/.cache/bazel-disk-cache
 # Be aware that this will still create a bazel-out symlink in
 # your project directory, which you must exclude from version control and your
 # editor's search path.
-build --symlink_prefix=dist/
+common --symlink_prefix=dist/
 # To disable the symlinks altogether (including bazel-out) you can use
-# build --symlink_prefix=/
+# common --symlink_prefix=/
 # however this makes it harder to find outputs.
 
 # Specifies desired output mode for running tests.
-# Valid values are
-#   'summary' to output only test status summary
-#   'errors' to also print test logs for failed tests
-#   'all' to print logs for all tests
-#   'streamed' to output logs for all tests in real time
-#     (this will force tests to be executed locally one at a time regardless of --test_strategy value).
 test --test_output=errors
 
 # Turn off legacy external runfiles
 # This prevents accidentally depending on this feature, which Bazel will remove.
-build --nolegacy_external_runfiles
+common --nolegacy_external_runfiles
 
 # Turn on --incompatible_strict_action_env which was on by default
 # in Bazel 0.21.0 but turned off again in 0.22.0. Follow
@@ -36,17 +28,14 @@ build --nolegacy_external_runfiles
 # This flag is needed to so that the bazel cache is not invalidated
 # when running bazel via `yarn bazel`.
 # See https://github.com/angular/angular/issues/27514.
-build --incompatible_strict_action_env
-run --incompatible_strict_action_env
+common --incompatible_strict_action_env
 
 # Enable `_validation` actions to confirm targets build correctly even when
 # certain data is not used by the build.
-build --experimental_run_validations
-run --experimental_run_validations
-test --experimental_run_validations
+common --experimental_run_validations
 
-# When running `bazel coverage` --instrument_test_targets needs to be set in order to 
-# collect coverage information from test targets
+# When running `bazel coverage` --instrument_test_targets needs to be set in
+# order to collect coverage information from test targets
 coverage --instrument_test_targets
 
 # `@rules_prerender` specific options.
