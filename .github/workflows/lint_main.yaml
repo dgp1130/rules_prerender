@@ -25,7 +25,7 @@ jobs:
         key: bazel
 
     - name: Install
-      run: bazel run @pnpm//:pnpm -- install --dir $PWD --frozen-lockfile
+      run: bazel run @pnpm -- install --dir $PWD --frozen-lockfile
 
     # Lint the entire repository. This does not take changes into account and
     # will show existing lint failures as well as new ones, but that's ok for a

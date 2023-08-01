@@ -34,7 +34,7 @@ def npm_publish(name, package, npmrc, testonly = None, visibility = None):
     native.sh_binary(
         name = name,
         srcs = [Label("//tools/publish:npm_publish.sh")],
-        data = [package_bin, npmrc, "@pnpm//:pnpm"],
+        data = [package_bin, npmrc, "@pnpm"],
         args = [
             "rules_prerender/%s" % _normalize(file_path_of(absolute(package))),
             "rules_prerender/%s" % _normalize(file_path_of(absolute(npmrc))),

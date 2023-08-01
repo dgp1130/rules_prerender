@@ -166,7 +166,7 @@ export function MyComponent({ name }: { name: string }): VNode {
             {/* Inline the associated styles, scoped to this shadow root. */}
             {inlineStyle('./my_component.css', import.meta)}
         </Template>
-        
+
         {/* Other components should be placed in light DOM and visible at the
             `<slot />`. */}
         <OtherComponent id="other" name={name.reverse()} />
@@ -600,11 +600,11 @@ resource with tools that expect a single file as input, rather than a directory.
 To get started, simply download / fork the repository and run:
 
 ```shell
-bazel run @pnpm//:pnpm -- install --dir $PWD --frozen-lockfile
+bazel run @pnpm -- install --dir $PWD --frozen-lockfile
 bazel test //...
 ```
 
-Prefer using `bazel run @pnpm//:pnpm -- ...` and
+Prefer using `bazel run @pnpm -- ...` and
 `bazel run @nodejs_host//:node -- ...` over using `pnpm` and `node` directly so
 they are strongly versioned with the repository. Alternatively, you can install
 [`nvm`](https://github.com/nvm-sh/nvm) and run `nvm use` to switch the `node`

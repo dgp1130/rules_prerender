@@ -20,14 +20,14 @@ def _mock_root_package_name():
 
 def _absolute_given_relative_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     lbl = absolute(
         ":foo",
         repository_name = _mock_self_repository_name,
         package_name = _mock_package_name,
     )
     asserts.equals(env, "@//path/to/some/pkg:foo", str(lbl))
-    
+
     return unittest.end(env)
 
 _absolute_given_relative_target_test = unittest.make(
@@ -35,14 +35,14 @@ _absolute_given_relative_target_test = unittest.make(
 
 def _absolute_given_absolute_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     lbl = absolute(
         "//path/to/some/other/pkg:foo",
         repository_name = _mock_self_repository_name,
         package_name = _mock_package_name,
     )
     asserts.equals(env, "@//path/to/some/other/pkg:foo", str(lbl))
-    
+
     return unittest.end(env)
 
 _absolute_given_absolute_target_test = unittest.make(
@@ -50,14 +50,14 @@ _absolute_given_absolute_target_test = unittest.make(
 
 def _absolute_given_external_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     lbl = absolute(
         "@wksp//path/to/some/other/pkg:foo",
         repository_name = _mock_self_repository_name,
         package_name = _mock_package_name,
     )
     asserts.equals(env, "@wksp//path/to/some/other/pkg:foo", str(lbl))
-    
+
     return unittest.end(env)
 
 _absolute_given_external_target_test = unittest.make(
@@ -65,14 +65,14 @@ _absolute_given_external_target_test = unittest.make(
 
 def _absolute_given_relative_path_in_external_workspace_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     lbl = absolute(
         ":foo",
         repository_name = _mock_external_repository_name,
         package_name = _mock_package_name,
     )
     asserts.equals(env, "@wksp//path/to/some/pkg:foo", str(lbl))
-    
+
     return unittest.end(env)
 
 _absolute_given_relative_path_in_external_workspace_test = unittest.make(
@@ -80,28 +80,43 @@ _absolute_given_relative_path_in_external_workspace_test = unittest.make(
 
 def _absolute_given_absolute_path_in_external_workspace_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     lbl = absolute(
         "//path/to/some/other/pkg:foo",
         repository_name = _mock_external_repository_name,
         package_name = _mock_package_name,
     )
     asserts.equals(env, "@wksp//path/to/some/other/pkg:foo", str(lbl))
-    
+
     return unittest.end(env)
 
 _absolute_given_absolute_path_in_external_workspace_test = unittest.make(
     _absolute_given_absolute_path_in_external_workspace_impl)
 
+def _absolute_given_external_shorthand_impl(ctx):
+    env = unittest.begin(ctx)
+
+    lbl = absolute(
+        "@foo",
+        repository_name = _mock_self_repository_name,
+        package_name = _mock_package_name,
+    )
+    asserts.equals(env, "@foo//:foo", str(lbl))
+
+    return unittest.end(env)
+
+_absolute_given_external_shorthand_test = unittest.make(
+    _absolute_given_external_shorthand_impl)
+
 def _file_path_of_given_absolute_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     path = file_path_of("//path/to/some/other/pkg:foo")
     asserts.equals(env, "./path/to/some/other/pkg/foo", str(path))
-    
+
     at_path = file_path_of("@//path/to/some/other/pkg:foo")
     asserts.equals(env, "./path/to/some/other/pkg/foo", str(at_path))
-    
+
     return unittest.end(env)
 
 _file_path_of_given_absolute_target_test = unittest.make(
@@ -109,10 +124,10 @@ _file_path_of_given_absolute_target_test = unittest.make(
 
 def _file_path_of_given_external_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     path = file_path_of("@wksp//path/to/some/other/pkg:foo")
     asserts.equals(env, "../wksp/path/to/some/other/pkg/foo", str(path))
-    
+
     return unittest.end(env)
 
 _file_path_of_given_external_target_test = unittest.make(
@@ -120,13 +135,13 @@ _file_path_of_given_external_target_test = unittest.make(
 
 def _file_path_of_given_root_package_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     path = file_path_of("//:foo")
     asserts.equals(env, "./foo", str(path))
-    
+
     at_path = file_path_of("@//:foo")
     asserts.equals(env, "./foo", str(at_path))
-    
+
     return unittest.end(env)
 
 _file_path_of_given_root_package_target_test = unittest.make(
@@ -134,10 +149,10 @@ _file_path_of_given_root_package_target_test = unittest.make(
 
 def _file_path_of_given_external_root_package_target_impl(ctx):
     env = unittest.begin(ctx)
-    
+
     path = file_path_of("@wksp//:foo")
     asserts.equals(env, "../wksp/foo", str(path))
-    
+
     return unittest.end(env)
 
 _file_path_of_given_external_root_package_target_test = unittest.make(
@@ -177,6 +192,7 @@ def label_test_suite(name):
             _absolute_given_absolute_path_in_external_workspace_test,
             size = "small",
         ),
+        partial.make(_absolute_given_external_shorthand_test, size = "small"),
         partial.make(_file_path_of_given_absolute_target_test, size = "small"),
         partial.make(_file_path_of_given_external_target_test, size = "small"),
         partial.make(

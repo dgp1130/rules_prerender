@@ -23,7 +23,7 @@ jobs:
         key: bazel
 
     - name: Install
-      run: bazel run @pnpm//:pnpm -- install --dir $PWD --frozen-lockfile
+      run: bazel run @pnpm -- install --dir $PWD --frozen-lockfile
 
     # Lint each commit in the given PR.
     - name: Lint PR
@@ -33,7 +33,7 @@ jobs:
           git log "${{ github.base_ref }}..${{ github.head_ref }}" --pretty=format:"%H" --reverse |
           cut -f 1
         )
-        
+
         # Lint each commit.
         if ! echo -n "${PR_COMMITS}" |
           xargs -d " " -L 1 -I {} bash -c "COMMIT=\"{}\" bazel run @nodejs_host//:npm -- run -s -- lint-commit"
