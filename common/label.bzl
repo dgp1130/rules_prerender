@@ -26,14 +26,14 @@ def absolute(
             deps = ["%s_sibling" % absolute(dep) for dep in deps],
         )
     ```
-    
+
     Args:
         target: A label string which may be relative or absolute.
         repository_name: Function which returns the repository name. Used for
             tests only, should not be set in production code.
         package_name: Function which returns the package name. Used for tests
             only, should not be set in production code.
-    
+
     Returns: The absolute path to the provided target. If the target is
         relative, then it is interpretted as relative to the current package as
         determined by `native.repository_name()` and `native.package_name()`.
@@ -57,7 +57,7 @@ def file_path_of(lbl):
     Example:
         `//path/to/internal/pkg:target` => `./path/to/internal/pkg/target`
         `@wksp//path/to/external/pkg:target` => `../wksp/path/to/external/pkg/target`
-    
+
     Note the leading `../` for external packages, meaning they will resolve
     correctly from the `execroot/__main__/` directory most actions use as the
     current working directory by default.
@@ -75,7 +75,7 @@ def file_path_of(lbl):
 
 def rel_path(file_path, package_name = native.package_name):
     """Converts a workspace-relative absolute path to a relative path.
-    
+
     Args:
         file_path: Absolute file path from workspace root.
         package_name: Function which returns the package name. Used for tests
