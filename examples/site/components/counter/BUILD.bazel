@@ -28,6 +28,7 @@ ts_project(
     name = "scripts",
     srcs = ["counter_script.mts"],
     tsconfig = "//:tsconfig_client",
+    deps = ["//:node_modules/hydroactive"],
 )
 
 ts_project(

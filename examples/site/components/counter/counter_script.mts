@@ -1,64 +1,32 @@
 /**
- * Custom element for `<site-counter />`. Implements the functionality for a
- * prerendered counter. Must be rendered with three child elements:
- * 1. `#label` - The current state of the counter is rendered here.
- * 2. `button#decrement` - Decrements the counter when clicked.
- * 3. `button#increment` - Increments the counter when clicked.
- * 
- * Can provide an `initial` attribute with an integer which will act as the
- * initial value. Defaults to `0` if not given.
+ * @fileoverview A counter custom element which is prerendered at build time
+ * with an initial value and then updated by the user client-side. This
+ * component could be implemented in any custom element. This particular
+ * approach uses [HydroActive](https://github.com/dgp1130/HydroActive/) to
+ * implement the component in the most performant fashion without duplicating
+ * rendering logic across the client and the server.
  */
-export class Counter extends HTMLElement {
-    public override shadowRoot!: ShadowRoot; // Assume shadow root is defined.
-    private value!: number;
-    private removeListeners!: () => void;
 
-    // Hydrate the component on startup.
-    public connectedCallback(): void {
-        // Get the initial value.
-        const initial = this.getAttribute('initial');
-        this.value = initial ? parseInt(initial) : 0;
+import { component } from 'hydroactive';
 
-        // Find the increment and decrement buttons in the prerendered DOM.
-        const decrementBtn = this.shadowRoot.querySelector('#decrement');
-        if (!decrementBtn) throw new Error('No `#decrement` element!');
-        const incrementBtn = this.shadowRoot.querySelector('#increment');
-        if (!incrementBtn) throw new Error('No `#increment` element!');
+/**
+ * Custom element for `<site-counter />`. Implements the functionality for a
+ * counter with a prerendered initial value.
+ */
+export const Counter = component('site-counter', ($) => {
+    // Two-way binding of the count in the DOM.
+    const [ count, setCount ] = $.live('#count', Number);
 
-        // Attach event listeners.
-        const onDecrement = this.onDecrement.bind(this);
-        decrementBtn.addEventListener('click', onDecrement);
-        const onIncrement = this.onIncrement.bind(this);
-        incrementBtn.addEventListener('click', onIncrement);
-        this.removeListeners = () => {
-            decrementBtn.removeEventListener('click', onDecrement);
-            incrementBtn.removeEventListener('click', onIncrement);
-        };
+    // Listen for decrement button clicks.
+    const dec = $.query('button#decrement');
+    $.listen(dec, 'click', () => { setCount(count() - 1); });
+    dec.disabled = false;
 
-        // Enable the button
-        decrementBtn.removeAttribute('disabled');
-        incrementBtn.removeAttribute('disabled');
-    }
+    // Listen for increment button clicks.
+    const inc = $.query('button#increment');
+    $.listen(inc, 'click', () => { setCount(count() + 1); });
+    inc.disabled = false;
 
-    public disconnectedCallback(): void {
-        this.removeListeners();
-    }
-
-    private render(): void {
-        const text = this.shadowRoot.querySelector('#label');
-        if (!text) throw new Error('No `#label` element to render to!');
-        text.textContent = `The current count is: ${this.value}.`;
-    }
-
-    private onDecrement(): void {
-        this.value--;
-        this.render();
-    }
-
-    private onIncrement(): void {
-        this.value++;
-        this.render();
-    }
-}
-
-customElements.define('site-counter', Counter);
+    // Bind the current count to the DOM.
+    $.bind('#count', count);
+});

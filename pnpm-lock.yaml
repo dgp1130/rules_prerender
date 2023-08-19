@@ -38,10 +38,10 @@ importers:
         version: 0.0.0-PLACEHOLDER
       '@bazel/buildifier':
         specifier: latest
-        version: 6.1.2
+        version: 6.3.2
       '@bazel/ibazel':
         specifier: latest
-        version: 0.16.2
+        version: 0.23.7
       '@types/jasmine':
         specifier: ^4.3.1
         version: 4.3.1
@@ -66,6 +66,9 @@ importers:
       husky:
         specifier: ^7.0.2
         version: 7.0.2
+      hydroactive:
+        specifier: ^0.0.4
+        version: 0.0.4
       jasmine:
         specifier: 4.3.0
         version: 4.3.0
@@ -118,8 +121,8 @@ packages:
     hasBin: true
     dev: true
 
-  /@bazel/buildifier@6.1.2:
-    resolution: {integrity: sha512-psKePmRkP6acwyePOhXP67R/wdwN7BGJxHqp1j5myaO24feMsaXyyiO+oW49x8YAwOpKVSCujVzkTwX2auAc0A==}
+  /@bazel/buildifier@6.3.2:
+    resolution: {integrity: sha512-UgHwLye6ppeWoe7LGkC7Ojv7Magmr1JiN8lBaI/DkMJWdpSJ8YK6BSGOVpwQGbPiXg91Nw39bgf9lir85W0qtg==}
     hasBin: true
     dev: true
 
@@ -150,8 +153,8 @@ packages:
       - typescript
     dev: false
 
-  /@bazel/ibazel@0.16.2:
-    resolution: {integrity: sha512-KgqAWMH0emL6f3xH6nqyTryoBMqlJ627LBIe9PT1PRRQPz2FtHib3FIHJPukp1slzF3hJYZvdiVwgPnHbaSOOA==}
+  /@bazel/ibazel@0.23.7:
+    resolution: {integrity: sha512-yXoEXfRXrrnr+3xz0nrL9N90A+SVInZzvReQqCwWxbFhRuEWawf1Nm5NCpOw+STwzH/N1Rbc+7McXIGaAVRi8g==}
     hasBin: true
     dev: true
 
@@ -2312,6 +2315,10 @@ packages:
     resolution: {integrity: sha512-8yKEWNX4z2YsofXAMT7KvA1g8p+GxtB1ffV8XtpAEGuXNAbCV5wdNKH+qTpw8SM9fh4aMPDR+yQuKfgnreyZlg==}
     engines: {node: '>=12'}
     hasBin: true
+    dev: true
+
+  /hydroactive@0.0.4:
+    resolution: {integrity: sha512-lXRtPPp/v5sJYE/9+6Bh9sZTLmJsxuAWG9F2xHQzYLSkdUfKcWIpuxaRcwPVfsk4CNJzwBbJf3jR4ZUzC4m5vg==}
     dev: true
 
   /iconv-lite@0.4.24:

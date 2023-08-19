@@ -5,20 +5,18 @@ import { VNode } from 'preact';
 declare module 'preact' {
     namespace JSX {
         interface IntrinsicElements {
-            'site-counter': JSX.HTMLAttributes<HTMLElement> & {
-                initial?: number;
-            };
+            'site-counter': JSX.HTMLAttributes<HTMLElement>;
         }
     }
 }
 
 /** Renders a counter with the given initial value. */
 export function Counter({ initialValue }: { initialValue: number }): VNode {
-    return <site-counter initial={initialValue}>
+    return <site-counter>
         <Template shadowrootmode="open">
             {polyfillDeclarativeShadowDom()}
 
-            <span id="label">The current count is: {initialValue}.</span>
+            <div id="label">The current count is: <span id="count">{initialValue}</span>.</div>
 
             {/* Render buttons disabled so they are inactive until
             JavaScript is ready to handle them. */}

@@ -15,7 +15,6 @@ describe('counter', () => {
             expect(counter).toBeDefined();
 
             // Custom element light DOM should be prerendered.
-            expect(counter!.getAttribute('initial')).toBe('5');
             expect(counter!.querySelector('#label')!.text)
                 .toBe('The current count is: 5.');
             expect(counter!.querySelector('#decrement')).toBeDefined();
