@@ -14,7 +14,11 @@ export function Header({ title }: { title?: string }): VNode {
 
             <div id="left-spacer"></div>
 
-            <h1 id="title" part="title">{title}</h1>
+            {/* Only render `<h1>` when there is a title. Rendering an empty
+            `<h1>` is bad for a11y. */}
+            {title
+                ? <h1 id="title" part="title">{title}</h1>
+                : <div id="title"></div>}
 
             <a href="https://github.com/dgp1130/rules_prerender/"
                 rel="noopener"
