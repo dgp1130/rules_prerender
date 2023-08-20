@@ -13,8 +13,10 @@ ts_project(
     name = "prerender",
     srcs = ["layout.tsx"],
     deps = [
+        "//docs:route",
         "//docs/components/footer:footer_prerender",
         "//docs/components/header:header_prerender",
+        "//docs/components/nav_pane:nav_pane_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],

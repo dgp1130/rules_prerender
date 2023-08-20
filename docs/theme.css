@@ -1,5 +1,6 @@
 :host {
     --bazel-green: #0c713a;
+    --light-gray: #e8eaed;
 
     --light-text: white;
     --dark-text: black;

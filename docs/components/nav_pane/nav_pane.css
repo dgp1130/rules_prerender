@@ -1,0 +1,101 @@
+@import '../../theme.css';
+
+:host {
+    font-size: 1.5rem;
+    background-color: var(--light-gray);
+
+    --rp-nav-pane--indentation: 1.5rem;
+}
+
+/* Root `<ul>` element. */
+nav > ul {
+    padding: 0.5rem 0;
+}
+
+/* Remove user agent styles from all `<ul>` elements. */
+ul {
+    list-style: none;
+    margin-block: 0;
+    margin-inline: 0;
+    padding-inline: 0;
+}
+
+li ul {
+    /*
+     * Hide sublists by default. Cannot use `display: none;` for two reasons:
+     * 1.  Changing to `display: block;` triggers nested animations to play
+     *     immediately, causing sublist `>` characters to rotate when revealed.
+     * 2.  `display: none;` implicitly sets `width: 0; height: 0;`. We actually
+     *     want to preserve `width: auto;` so the width of the navigation pane
+     *     is dictated by the longest text in it, even when that text is hidden.
+     */
+    height: 0;
+    overflow: hidden;
+}
+
+/* Show sublists when the `expanded` class is applied. */
+li.expanded > ul {
+    height: auto;
+}
+
+/* Apply `>` to any expandable lists. */
+li.sublist > button::after {
+    content: '>';
+    float: right;
+    font-family: monospace;
+    will-change: animation-name transform;
+
+    animation-duration: 0.25s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+/* Rotate `>` when list is expanded. */
+li.sublist.expanded > button::after {
+    animation-name: rotateExpando;
+}
+
+@keyframes rotateExpando {
+    to { transform: rotate(90deg); }
+}
+
+/* Un-rotate `>` when list is collapsed. */
+li.sublist.collapsed > button::after {
+    /* It should probably be possible to use `rotateExpando` backwards instead
+    of defining a second animation, but attempting to do so breaks both
+    animations for some unknown reason. */
+    animation-name: unrotateExpando;
+}
+
+@keyframes unrotateExpando {
+    from { transform: rotate(90deg); }
+}
+
+.list-el {
+    display: block;
+    padding: 0.25rem 0.75rem;
+}
+
+.list-el:hover {
+    background-color: lightgray;
+}
+
+/* Indent each level of the nested lists. */
+.list-el.depth-1 { padding-left: var(--rp-nav-pane--indentation); }
+.list-el.depth-2 { padding-left: calc(2 * var(--rp-nav-pane--indentation)); }
+
+/* Clear built-in button styles to align with anchor tags. */
+button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+}
+
+/* Clear built-in anchor styles to align with button tags. */
+a {
+    color: inherit;
+    text-decoration: none;
+}

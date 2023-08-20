@@ -1,0 +1,101 @@
+load(
+    "//:index.bzl",
+    "css_library",
+    "prerender_component",
+    "prerender_pages",
+    "web_resources_devserver",
+)
+load("//tools/jasmine:defs.bzl", "jasmine_node_test", "jasmine_web_test_suite")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+prerender_component(
+    name = "nav_pane",
+    prerender = ":prerender",
+    scripts = ":scripts",
+    styles = ":styles",
+    visibility = ["//docs:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["nav_pane.tsx"],
+    deps = [
+        "//docs:route",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+    ],
+)
+
+ts_project(
+    name = "prerender_test_lib",
+    srcs = ["nav_pane_test.tsx"],
+    testonly = True,
+    deps = [
+        ":prerender",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/node-html-parser",
+        "//:node_modules/preact",
+        "//:node_modules/preact-render-to-string",
+    ],
+)
+
+jasmine_node_test(
+    name = "prerender_test",
+    deps = [":prerender_test_lib"],
+)
+
+ts_project(
+    name = "scripts",
+    srcs = ["nav_pane_script.mts"],
+    tsconfig = "//:tsconfig_client",
+    deps = ["//:node_modules/hydroactive"],
+)
+
+ts_project(
+    name = "scripts_test_cases_lib",
+    srcs = ["nav_pane_script_test_cases.tsx"],
+    data = ["//docs:package"],
+    testonly = True,
+    deps = [
+        ":nav_pane_prerender",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
+)
+
+prerender_pages(
+    name = "scripts_test_cases",
+    entry_point = "./nav_pane_script_test_cases.js",
+    prerender = ":scripts_test_cases_lib",
+    testonly = True,
+)
+
+web_resources_devserver(
+    name = "scripts_test_cases_devserver",
+    resources = ":scripts_test_cases",
+    testonly = True,
+)
+
+ts_project(
+    name = "scripts_test_lib",
+    srcs = ["nav_pane_script_test.mts"],
+    testonly = True,
+    data = [":scripts_test_cases_devserver"],
+    deps = [
+        "//common/testing:devserver",
+        "//common/testing:webdriver",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_web_test_suite(
+    name = "scripts_test",
+    deps = [":scripts_test_lib"],
+)
+
+css_library(
+    name = "styles",
+    srcs = ["nav_pane.css"],
+    deps = ["//docs:theme"],
+)

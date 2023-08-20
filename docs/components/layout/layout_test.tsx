@@ -1,6 +1,7 @@
 import { render } from 'preact-render-to-string';
 import { HTMLElement, parse } from 'node-html-parser';
 import { Layout } from './layout.js';
+import { Route } from 'docs/route.mjs';
 
 describe('layout', () => {
     describe('Layout()', () => {
@@ -35,7 +36,7 @@ describe('layout', () => {
             expect(footer).not.toBeNull();
 
             // Renders main content.
-            const main = html.querySelector('body > main');
+            const main = html.querySelector('body main');
             expect(main).not.toBeNull();
             const content = main!.firstChild as HTMLElement;
             expect(content).not.toBeNull();
@@ -63,10 +64,49 @@ describe('layout', () => {
                 }>
                 </Layout>
             ));
-            expect(document).toBeDefined();
+            expect(document).not.toBeNull();
 
             const meta = document.querySelector('head > meta[content="test"]');
             expect(meta).not.toBeNull();
+        });
+
+        it('renders provided routes', () => {
+            const routes = [
+                { label: 'Home', content: '/' },
+            ] satisfies Route[];
+
+            const document = parse(render(
+                <Layout pageTitle="Title" routes={routes}>
+                </Layout>
+            ));
+            expect(document).not.toBeNull();
+
+            const navPane = document.querySelector('rp-nav-pane');
+            expect(navPane).not.toBeNull();
+
+            expect(navPane!.textContent).toContain('Home');
+        });
+
+        it('does *not* render navigation pane when there are no routes', () => {
+            const document = parse(render(
+                <Layout pageTitle="Title">
+                </Layout>
+            ));
+            expect(document).not.toBeNull();
+
+            const navPane = document.querySelector('rp-nav-pane');
+            expect(navPane).toBeNull();
+        });
+
+        it('does *not* render navigation pane when routes are empty', () => {
+            const document = parse(render(
+                <Layout pageTitle="Title" routes={[]}>
+                </Layout>
+            ));
+            expect(document).not.toBeNull();
+
+            const navPane = document.querySelector('rp-nav-pane');
+            expect(navPane).toBeNull();
         });
     });
 });

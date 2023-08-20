@@ -11,6 +11,17 @@ body {
     min-height: 100vh;
 }
 
-body > main {
+body > .layout-middle {
+    flex-grow: 1;
+
+    display: flex;
+}
+
+body > .layout-middle > rp-nav-pane {
+    max-width: 300px;
+    box-shadow: 2px 0 5px 0 gray;
+}
+
+body > .layout-middle > main {
     flex-grow: 1;
 }
