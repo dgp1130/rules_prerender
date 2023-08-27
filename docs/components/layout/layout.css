@@ -19,6 +19,7 @@ body > .layout-middle {
 
 body > .layout-middle > rp-nav-pane {
     max-width: 300px;
+    flex-shrink: 0;
     box-shadow: 2px 0 5px 0 gray;
 }
 
