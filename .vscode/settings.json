@@ -46,6 +46,15 @@
     "files.associations": {
         "BUILD.publish": "bazel"
     },
+    "[bazel]": {
+        "editor.tabSize": 4
+    },
+    "[css]": {
+        "editor.tabSize": 4
+    },
+    "[starlark]": {
+        "editor.tabSize": 4
+    },
     "[typescript]": {
         "editor.tabSize": 4
     },
