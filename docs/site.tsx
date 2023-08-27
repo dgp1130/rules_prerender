@@ -2,6 +2,7 @@ import { PrerenderResource, inlineStyle, renderToHtml } from '@rules_prerender/p
 import { Layout } from './components/layout/layout.js';
 import { UnderConstruction } from './components/under_construction/under_construction.js';
 import { Route } from './route.mjs';
+import { NotFound } from './www/not_found/not_found.js';
 
 /** Docs site routes. */
 export const routes: readonly Route[] = [
@@ -63,6 +64,10 @@ export default function*(): Generator<PrerenderResource, void, void> {
             headerTitle="Privacy Policy"
             routes={routes}
         />
+    ));
+
+    yield PrerenderResource.fromHtml('/not-found/index.html', renderToHtml(
+        <NotFound routes={routes} />
     ));
 }
 

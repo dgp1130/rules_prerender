@@ -1,0 +1,6 @@
+[[redirects]]
+
+# Serve 404 page as fall back when no other files are matched.
+from = "*"
+to = "/not-found/"
+status = 404

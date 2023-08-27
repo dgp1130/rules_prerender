@@ -3,6 +3,7 @@ load(
     "//:index.bzl",
     "css_library",
     "prerender_pages",
+    "web_resources",
     "web_resources_devserver",
 )
 load("//tools/netlify:defs.bzl", "netlify_deploy")
@@ -19,6 +20,7 @@ prerender_pages(
     entry_point = "./site.js",
     prerender = ":prerender",
     styles = ":styles",
+    resources = ":resources",
 )
 
 ts_project(
@@ -30,6 +32,7 @@ ts_project(
         ":route",
         "//docs/components/layout:layout_prerender",
         "//docs/components/under_construction:under_construction_prerender",
+        "//docs/www/not_found:not_found_prerender",
         "//:node_modules/@rules_prerender/preact",
     ],
 )
@@ -49,6 +52,13 @@ css_library(
     name = "theme",
     srcs = ["theme.css"],
     visibility = [":__subpackages__"],
+)
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/netlify.toml": "netlify.toml",
+    },
 )
 
 web_resources_devserver(
