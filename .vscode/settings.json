@@ -3,7 +3,7 @@
     "javascript.preferences.quoteStyle": "single",
     "typescript.preferences.quoteStyle": "single",
     "javascript.preferences.importModuleSpecifier": "non-relative",
-    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifier": "relative",
     "cSpell.words": [
         "bazel",
         "bazelrc",
@@ -45,5 +45,10 @@
     ],
     "files.associations": {
         "BUILD.publish": "bazel"
-    }
+    },
+    "[typescript]": {
+        "editor.tabSize": 4
+    },
+    "typescript.format.semicolons": "insert",
+    "typescript.preferences.importModuleSpecifierEnding": "js"
 }
