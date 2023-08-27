@@ -16,18 +16,34 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Cache
+    - name: Cache Bazel
       uses: actions/cache@v3
       with:
-        path: ~/.gh-actions-cache/bazel/
-        key: bazel
+        path: |
+          ~/.cache/bazel
+        key: ${{ runner.os }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'WORKSPACE', 'WORKSPACE.bazel', 'MODULE.bazel') }}
+        restore-keys: |
+          ${{ runner.os }}-bazel-
+
+    - name: Get pnpm store directory
+      id: pnpm-cache-dir
+      run: |
+        echo "PNPM_STORE_PATH=$(bazel run @pnpm --config ci --config incompatible -- store path --silent)" >> "${GITHUB_OUTPUT}"
+
+    - name: Cache pnpm
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.pnpm-cache-dir.outputs.PNPM_STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
     - name: Install
-      run: bazel run @pnpm --config ci -- install --dir $PWD --frozen-lockfile
+      run: bazel run @pnpm --config ci --config incompatible -- install --dir $PWD --frozen-lockfile
 
     # Lint the entire repository. This does not take changes into account and
     # will show existing lint failures as well as new ones, but that's ok for a
     # codebase of this size as any such failures should be fixed and/or
     # explicitly ignored.
     - name: Lint
-      run: bazel run @pnpm -- -s --dir $PWD run lint
+      run: bazel run @pnpm --config ci --config incompatible -- -s --dir $PWD run lint

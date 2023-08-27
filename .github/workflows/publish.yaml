@@ -29,11 +29,27 @@ jobs:
     # Checkout the repository.
     - uses: actions/checkout@v3
 
-    - name: Cache
+    - name: Cache Bazel
       uses: actions/cache@v3
       with:
-        path: ~/.gh-actions-cache/bazel/
-        key: bazel
+        path: |
+          ~/.cache/bazel
+        key: ${{ runner.os }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'WORKSPACE', 'WORKSPACE.bazel', 'MODULE.bazel') }}
+        restore-keys: |
+          ${{ runner.os }}-bazel-
+
+    - name: Get pnpm store directory
+      id: pnpm-cache-dir
+      run: |
+        echo "PNPM_STORE_PATH=$(bazel run @pnpm --config ci --config incompatible -- store path --silent)" >> "${GITHUB_OUTPUT}"
+
+    - name: Cache pnpm
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.pnpm-cache-dir.outputs.PNPM_STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
     - name: Install
       run: bazel run @pnpm --config ci -- install --dir $PWD --frozen-lockfile
@@ -45,7 +61,7 @@ jobs:
         # Run `bazel test //...` over all workspaces in the repository.
         find . -name WORKSPACE.bazel -printf "%h\n" |
         sort |
-        xargs -I {} bash -c "(cd {} && bazel test //... --config incompatible --config ci)"
+        xargs -I {} bash -c "(cd {} && bazel test //... --config ci --config incompatible)"
 
     - name: Tar Workspace
       run: |
