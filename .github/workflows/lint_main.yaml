@@ -19,17 +19,15 @@ jobs:
     - name: Cache
       uses: actions/cache@v3
       with:
-        path: |
-          ~/.gh-actions-cache/bazel/
-          node_modules/
+        path: ~/.gh-actions-cache/bazel/
         key: bazel
 
     - name: Install
-      run: bazel run @pnpm -- install --dir $PWD --frozen-lockfile
+      run: bazel run @pnpm --config ci -- install --dir $PWD --frozen-lockfile
 
     # Lint the entire repository. This does not take changes into account and
     # will show existing lint failures as well as new ones, but that's ok for a
     # codebase of this size as any such failures should be fixed and/or
     # explicitly ignored.
     - name: Lint
-      run: bazel run @nodejs_host//:npm -- run lint
+      run: bazel run @pnpm -- -s --dir $PWD run lint
