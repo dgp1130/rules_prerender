@@ -1,0 +1,17 @@
+load("//:index.bzl", "prerender_component")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+prerender_component(
+    name = "under_construction",
+    prerender = ":prerender",
+    visibility = ["//docs:__subpackages__"],
+)
+
+ts_project(
+    name = "prerender",
+    srcs = ["under_construction.tsx"],
+    deps = [
+        "//docs/components/layout:layout_prerender",
+        "//:node_modules/preact",
+    ],
+)

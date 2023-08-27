@@ -29,6 +29,7 @@ ts_project(
     deps = [
         ":route",
         "//docs/components/layout:layout_prerender",
+        "//docs/components/under_construction:under_construction_prerender",
         "//:node_modules/@rules_prerender/preact",
     ],
 )

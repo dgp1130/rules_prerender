@@ -16,7 +16,7 @@ export function Footer(): VNode {
                     </a>
                 </li>
                 <li>Copyright <code>rules_prerender</code> 2023</li>
-                <li><a href="#TODO" rel="noopener">Privacy Policy</a></li>
+                <li><a href="/privacy/" rel="noopener">Privacy Policy</a></li>
             </ul>
         </Template>
     </footer>;

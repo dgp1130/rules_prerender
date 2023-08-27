@@ -1,5 +1,6 @@
 import { PrerenderResource, inlineStyle, renderToHtml } from '@rules_prerender/preact';
 import { Layout } from './components/layout/layout.js';
+import { UnderConstruction } from './components/under_construction/under_construction.js';
 import { Route } from './route.mjs';
 
 /** Docs site routes. */
@@ -51,4 +52,67 @@ export default function*(): Generator<PrerenderResource, void, void> {
             <div>Hello World!</div>
         </Layout>
     ));
+
+    yield* renderTutorials();
+    yield* renderConcepts();
+    yield* renderApiReference();
+
+    yield PrerenderResource.fromHtml('/privacy/index.html', renderToHtml(
+        <UnderConstruction
+            pageTitle="Privacy Policy"
+            headerTitle="Privacy Policy"
+            routes={routes}
+        />
+    ));
+}
+
+function* renderTutorials(): Generator<PrerenderResource, void, void> {
+    yield PrerenderResource.fromHtml(
+        '/tutorials/getting-started/index.html',
+        renderToHtml(<UnderConstruction
+            pageTitle="Getting Started"
+            headerTitle="Getting Started"
+            routes={routes}
+        />),
+    );
+
+    yield PrerenderResource.fromHtml(
+        '/tutorials/rendering-markdown/index.html',
+        renderToHtml(<UnderConstruction
+            pageTitle="Rendering Markdown"
+            headerTitle="Rendering Markdown"
+            routes={routes}
+        />),
+    );
+}
+
+function* renderConcepts(): Generator<PrerenderResource, void, void> {
+    yield PrerenderResource.fromHtml(
+        '/concepts/components/index.html',
+        renderToHtml(<UnderConstruction
+            pageTitle="Components"
+            headerTitle="Components"
+            routes={routes}
+        />),
+    );
+
+    yield PrerenderResource.fromHtml(
+        '/concepts/bundling/index.html',
+        renderToHtml(<UnderConstruction
+            pageTitle="Bundling"
+            headerTitle="Bundling"
+            routes={routes}
+        />),
+    );
+}
+
+function* renderApiReference(): Generator<PrerenderResource, void, void> {
+    yield PrerenderResource.fromHtml(
+        '/reference/index.html',
+        renderToHtml(<UnderConstruction
+            pageTitle="API Reference"
+            headerTitle="API Reference"
+            routes={routes}
+        />),
+    );
 }
