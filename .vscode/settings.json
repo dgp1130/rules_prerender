@@ -2,8 +2,10 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "javascript.preferences.quoteStyle": "single",
     "typescript.preferences.quoteStyle": "single",
-    "javascript.preferences.importModuleSpecifier": "non-relative",
-    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.importModuleSpecifier": "project-relative",
+    "typescript.preferences.importModuleSpecifier": "project-relative",
+    "javascript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.preferences.importModuleSpecifierEnding": "js",
     "cSpell.words": [
         "bazel",
         "bazelrc",
@@ -58,6 +60,8 @@
     "[typescript]": {
         "editor.tabSize": 4
     },
+    "[typescriptreact]": {
+        "editor.tabSize": 4
+    },
     "typescript.format.semicolons": "insert",
-    "typescript.preferences.importModuleSpecifierEnding": "js"
 }
