@@ -57,8 +57,10 @@
         "husky": "^7.0.2",
         "hydroactive": "^0.0.4",
         "jasmine": "4.3.0",
+        "nan": "^2.17.0",
         "netlify-cli": "^16.1.0",
         "node-fetch": "^3.2.5",
+        "node-gyp": "^9.4.0",
         "preact": "^10.13.1",
         "preact-render-to-string": "^5.2.6",
         "tree-kill": "^1.2.2",
@@ -70,6 +72,12 @@
             "@honeycombio/opentelemetry-node": {
                 "dependencies": {
                     "@opentelemetry/core": "*"
+                }
+            },
+            "unix-dgram": {
+                "dependencies": {
+                    "nan": "*",
+                    "node-gyp": "*"
                 }
             }
         }

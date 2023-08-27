@@ -32,14 +32,11 @@ jobs:
     - name: Cache
       uses: actions/cache@v3
       with:
-        path: |
-          ~/.gh-actions-cache/bazel/
-          node_modules/
+        path: ~/.gh-actions-cache/bazel/
         key: bazel
 
-    # Install the package, including Bazel.
     - name: Install
-      run: bazel run @pnpm -- install --dir $PWD --frozen-lockfile
+      run: bazel run @pnpm --config ci -- install --dir $PWD --frozen-lockfile
 
     # Build and test the entire repository. Include all supported
     # `--incompatible_*` flags to avoid regressions.
@@ -55,3 +52,45 @@ jobs:
       with:
         name: bazel.profile.gz
         path: bazel.profile.gz
+
+  docs-deploy:
+    # Includes `bazelisk`.
+    # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#:~:text=Bazel%204.2.1-,Bazelisk,-1.10.1
+    runs-on: ubuntu-20.04
+
+    # Only deploy after a successful test run.
+    needs: [test]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.gh-actions-cache/bazel/
+        key: bazel
+
+    - name: Install
+      run: bazel run @pnpm --config ci -- install --dir $PWD --frozen-lockfile
+
+    - name: Deploy to preview
+      # Only publish non-`main` branch for preview.
+      if: ${{ github.ref_name != 'main' }}
+      run: |
+        bazel run //docs:deploy --config ci -- \
+          --alias ${{ github.ref_name }} \
+          -m "Automated preview deployment from GitHub actions."
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.DOCS_NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_PAT }}
+
+    - name: Deploy to Prod
+      # Only publish the `main` branch to prod.
+      if: ${{ github.ref_name == 'main' }}
+      run: |
+        bazel run //docs:deploy --config ci -- \
+          --prod \
+          -m "Automated prod deployment from GitHub actions."
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.DOCS_NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_PAT }}
