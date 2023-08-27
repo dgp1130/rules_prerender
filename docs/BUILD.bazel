@@ -19,7 +19,6 @@ prerender_pages(
     name = "site",
     entry_point = "./site.js",
     prerender = ":prerender",
-    styles = ":styles",
     resources = ":resources",
 )
 
@@ -30,8 +29,8 @@ ts_project(
     data = [":package"],
     deps = [
         ":route",
-        "//docs/components/layout:layout_prerender",
         "//docs/components/under_construction:under_construction_prerender",
+        "//docs/www:index_prerender",
         "//docs/www/not_found:not_found_prerender",
         "//:node_modules/@rules_prerender/preact",
     ],
@@ -41,11 +40,6 @@ ts_project(
     name = "route",
     srcs = ["route.mts"],
     visibility = [":__subpackages__"],
-)
-
-css_library(
-    name = "styles",
-    srcs = ["site.css"],
 )
 
 css_library(

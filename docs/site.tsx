@@ -1,7 +1,7 @@
-import { PrerenderResource, inlineStyle, renderToHtml } from '@rules_prerender/preact';
-import { Layout } from './components/layout/layout.js';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 import { UnderConstruction } from './components/under_construction/under_construction.js';
 import { Route } from './route.mjs';
+import { IndexPage } from './www/index.js';
 import { NotFound } from './www/not_found/not_found.js';
 
 /** Docs site routes. */
@@ -44,14 +44,7 @@ export const routes: readonly Route[] = [
 
 export default function*(): Generator<PrerenderResource, void, void> {
     yield PrerenderResource.fromHtml('/index.html', renderToHtml(
-        <Layout
-            pageTitle="Documentation Home"
-            headerTitle="rules_prerender"
-            headChildren={inlineStyle('./site.css', import.meta)}
-            routes={routes}
-        >
-            <div>Hello World!</div>
-        </Layout>
+        <IndexPage routes={routes} />
     ));
 
     yield* renderTutorials();
