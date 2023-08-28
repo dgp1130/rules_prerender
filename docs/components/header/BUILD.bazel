@@ -1,4 +1,4 @@
-load("//:index.bzl", "css_library", "prerender_component", "web_resources")
+load("//:index.bzl", "css_library", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
@@ -6,13 +6,13 @@ prerender_component(
     name = "header",
     prerender = ":prerender",
     styles = ":styles",
-    resources = ":resources",
     visibility = ["//docs/components/layout:__pkg__"],
 )
 
 ts_project(
     name = "prerender",
     srcs = ["header.tsx"],
+    data = ["hamburger.svg", "github_dark.svg", "github_light.svg"],
     deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
@@ -41,12 +41,4 @@ css_library(
     name = "styles",
     srcs = ["header.css"],
     deps = ["//docs:theme"],
-)
-
-web_resources(
-    name = "resources",
-    entries = {
-        "/resources/header/github-dark.svg": "github_dark.svg",
-        "/resources/header/github-light.svg": "github_light.svg",
-    },
 )

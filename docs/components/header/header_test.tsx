@@ -12,6 +12,10 @@ describe('header', () => {
             expect(title).not.toBeNull();
             expect(title!.textContent).toBe('Hello!');
 
+            // Renders the hamburger icon.
+            const hamburger = fragment.querySelector('#hamburger svg');
+            expect(hamburger).not.toBeNull();
+
             // Renders the GitHub link.
             const githubLink = fragment.querySelector('#github');
             expect(githubLink).not.toBeNull();

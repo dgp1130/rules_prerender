@@ -10,25 +10,38 @@
     --header-unpadded-height: calc(100% - 1rem /* padding */);
 }
 
-/* Matches `#github` sizing so the title is properly centered. */
-#left-spacer {
+.icon {
     height: var(--header-unpadded-height);
     padding: var(--header-padding);
     aspect-ratio: 1;
 }
 
-/* IFCHANGE: Also update `#left-spacer` sizing to match. */
+#hamburger {
+    /* Center the child SVG icon. */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#hamburger svg {
+    height: 100%;
+    aspect-ratio: 1;
+    fill: currentColor;
+}
+
 #github {
     align-self: flex-end;
-    height: var(--header-unpadded-height);
-    padding: var(--header-padding);
-    aspect-ratio: 1;
 }
-/* ENDIFCHANGE */
 
-#github img {
-    width: 100%;
+#github > * {
     height: 100%;
+}
+
+#github svg {
+    height: 100%;
+    aspect-ratio: 1;
+    fill: currentColor;
+    color: var(--light-text);
 }
 
 #title {

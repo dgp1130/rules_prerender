@@ -1,4 +1,4 @@
-import { inlineStyle, Template } from '@rules_prerender/preact';
+import { InlinedSvg, Template, inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 
 /**
@@ -12,7 +12,12 @@ export function Header({ title }: { title?: string }): VNode {
         <Template shadowrootmode="open">
             {inlineStyle('./header.css', import.meta)}
 
-            <div id="left-spacer"></div>
+            <InlinedSvg
+                id="hamburger"
+                src="./hamburger.svg"
+                importMeta={import.meta}
+                class="icon"
+            />
 
             {/* Only render `<h1>` when there is a title. Rendering an empty
             `<h1>` is bad for a11y. */}
@@ -23,8 +28,9 @@ export function Header({ title }: { title?: string }): VNode {
             <a href="https://github.com/dgp1130/rules_prerender/"
                 rel="noopener"
                 id="github"
-                target="_blank">
-                <img src="/resources/header/github-dark.svg" />
+                target="_blank"
+                class="icon">
+                <InlinedSvg src="./github_dark.svg" importMeta={import.meta} />
             </a>
         </Template>
     </header>;
