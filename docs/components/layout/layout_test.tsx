@@ -27,16 +27,19 @@ describe('layout', () => {
             expect(title).not.toBeNull();
             expect(title!.textContent).toBe('@rules_prerender - My title');
 
+            const layout = html.querySelector('body > rp-layout')!;
+            expect(layout).not.toBeNull();
+
             // Renders header.
-            const header = html.querySelector('body > header');
+            const header = layout.querySelector('rp-header');
             expect(header).not.toBeNull();
 
             // Renders footer.
-            const footer = html.querySelector('body > footer');
+            const footer = layout.querySelector('footer');
             expect(footer).not.toBeNull();
 
             // Renders main content.
-            const main = html.querySelector('body main');
+            const main = layout.querySelector('main');
             expect(main).not.toBeNull();
             const content = main!.firstChild as HTMLElement;
             expect(content).not.toBeNull();
@@ -44,7 +47,7 @@ describe('layout', () => {
             expect(content!.textContent).toBe('Hello!');
         });
 
-        it('renders title to the `<header>` element', () => {
+        it('renders title to the `<rp-header>` element', () => {
             const document = parse(render(
                 <Layout pageTitle="Page title" headerTitle="Header title">
                 </Layout>
@@ -52,7 +55,7 @@ describe('layout', () => {
             expect(document).not.toBeNull();
 
             const title =
-                document.querySelector('body > header [part="title"]');
+                document.querySelector('rp-header [part="title"]');
             expect(title).not.toBeNull();
             expect(title!.textContent).toBe('Header title');
         });

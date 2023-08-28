@@ -5,22 +5,24 @@
     display: flex;
     background-color: var(--bazel-green);
     color: var(--light-text);
+    padding: var(--header-padding);
 
     --header-padding: 0.5rem;
-    --header-unpadded-height: calc(100% - 1rem /* padding */);
+    --header-unpadded-height: calc(100% - (2 * var(--header-padding)));
 }
 
 .icon {
-    height: var(--header-unpadded-height);
-    padding: var(--header-padding);
+    height: 100%;
     aspect-ratio: 1;
 }
 
 #hamburger {
-    /* Center the child SVG icon. */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: none;
+    border: none;
+    color: var(--light-text);
+    padding-block: 0;
+    padding-inline: 0;
+    cursor: pointer;
 }
 
 #hamburger svg {

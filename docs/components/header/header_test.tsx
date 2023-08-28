@@ -5,7 +5,7 @@ import { Header } from './header.js';
 describe('header', () => {
     describe('Header()', () => {
         it('renders the header', () => {
-            const fragment = parse(render(<Header title="Hello!" />));
+            const fragment = parse(render(<Header headerTitle="Hello!" />));
 
             // Renders the title.
             const title = fragment.querySelector('#title');
@@ -24,7 +24,7 @@ describe('header', () => {
         });
 
         it('exposes `#title` as a part', () => {
-            const fragment = parse(render(<Header title="test" />));
+            const fragment = parse(render(<Header headerTitle="test" />));
 
             // Exposes `part="title"` on the title element.
             const title = fragment.querySelector('#title');

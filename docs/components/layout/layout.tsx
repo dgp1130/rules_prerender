@@ -1,4 +1,5 @@
-import { inlineStyle } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { CustomElement, includeScript, inlineStyle } from '@rules_prerender/preact';
 import { VNode, ComponentChildren } from 'preact';
 import { Footer } from '../footer/footer.js';
 import { Header } from '../header/header.js';
@@ -34,19 +35,34 @@ export function Layout({
         <head>
             <meta charSet="utf8" />
             <title>@rules_prerender - {pageTitle}</title>
-            {inlineStyle('./layout.css', import.meta)}
+            {inlineStyle('../../global.css', import.meta)}
             {headChildren}
         </head>
         <body>
-            <Header title={headerTitle} />
-            <div class="layout-middle">
-                {routes.length
-                    ? <NavPane routes={routes} />
-                    : undefined
-                }
-                <main>{children}</main>
-            </div>
-            <Footer />
+            <rp-layout>
+                <Template shadowrootmode="open">
+                    {inlineStyle('./layout.css', import.meta)}
+                    {includeScript('./layout_script.mjs', import.meta)}
+
+                    <Header headerTitle={headerTitle} defer-hydration />
+                    <div class="layout-middle">
+                        {routes.length
+                            ? <NavPane routes={routes} defer-hydration />
+                            : undefined
+                        }
+                        <main>{children}</main>
+                    </div>
+                    <Footer />
+                </Template>
+            </rp-layout>
         </body>
     </html>;
+}
+
+declare module 'preact' {
+    namespace JSX {
+        interface IntrinsicElements {
+            'rp-layout': JSX.HTMLAttributes<CustomElement>;
+        }
+    }
 }

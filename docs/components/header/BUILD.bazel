@@ -1,10 +1,11 @@
 load("//:index.bzl", "css_library", "prerender_component")
-load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/jasmine:defs.bzl", "jasmine_node_test", "jasmine_web_test_suite")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "header",
     prerender = ":prerender",
+    scripts = ":scripts",
     styles = ":styles",
     visibility = ["//docs/components/layout:__pkg__"],
 )
@@ -36,6 +37,14 @@ ts_project(
 jasmine_node_test(
     name = "prerender_test",
     deps = [":prerender_test_lib"],
+)
+
+# TODO(#36): Add tests.
+ts_project(
+    name = "scripts",
+    srcs = ["header_script.mts"],
+    tsconfig = "//:tsconfig_client",
+    deps = ["//:node_modules/hydroactive"],
 )
 
 css_library(

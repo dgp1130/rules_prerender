@@ -1,28 +1,21 @@
-/** @fileoverview Global styles for the standard layout. */
-
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
-body {
+:host {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100%;
 }
 
-body > .layout-middle {
+.layout-middle {
     flex-grow: 1;
 
     display: flex;
 }
 
-body > .layout-middle > rp-nav-pane {
+rp-nav-pane {
     max-width: 300px;
     flex-shrink: 0;
     box-shadow: 2px 0 5px 0 gray;
 }
 
-body > .layout-middle > main {
+main {
     flex-grow: 1;
 }

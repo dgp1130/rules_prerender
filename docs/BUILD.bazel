@@ -43,6 +43,12 @@ ts_project(
 )
 
 css_library(
+    name = "global",
+    srcs = ["global.css"],
+    visibility = ["//docs/components/layout:__pkg__"],
+)
+
+css_library(
     name = "theme",
     srcs = ["theme.css"],
     visibility = [":__subpackages__"],

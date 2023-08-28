@@ -5,6 +5,7 @@ load("//tools/typescript:defs.bzl", "ts_project")
 prerender_component(
     name = "layout",
     prerender = ":prerender",
+    scripts = ":scripts",
     styles = ":styles",
     visibility = ["//docs:__subpackages__"],
 )
@@ -19,6 +20,7 @@ ts_project(
         "//docs/components/nav_pane:nav_pane_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )
 
@@ -40,7 +42,26 @@ jasmine_node_test(
     deps = [":prerender_test_lib"],
 )
 
+# TODO(#36): Add tests.
+ts_project(
+    name = "scripts",
+    srcs = ["layout_script.mts"],
+    deps = [
+        "//:node_modules/hydroactive",
+        "//docs/components/header:header_scripts",
+        "//docs/components/nav_pane:nav_pane_scripts",
+    ],
+)
+
 css_library(
     name = "styles",
+    deps = [
+        ":layout_css",
+        "//docs:global",
+    ],
+)
+
+css_library(
+    name = "layout_css",
     srcs = ["layout.css"],
 )

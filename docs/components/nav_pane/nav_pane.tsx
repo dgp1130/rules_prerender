@@ -1,11 +1,14 @@
 import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { inlineStyle, includeScript } from '@rules_prerender/preact';
+import { CustomElement, inlineStyle, includeScript } from '@rules_prerender/preact';
 import { VNode } from 'preact';
+import { JSX } from 'preact/jsx-runtime';
 import { Route } from '../../route.mjs';
 
 /** Renders a navigation pane with the given routes. */
-export function NavPane({ routes }: { routes: readonly Route[] }): VNode {
-    return <rp-nav-pane>
+export function NavPane({ routes, ...attrs }: {
+    routes: readonly Route[],
+} & JSX.IntrinsicElements['rp-nav-pane']): VNode {
+    return <rp-nav-pane {...attrs}>
         <Template shadowrootmode="open">
             <nav>
                 <RouteList routes={routes} />
@@ -20,7 +23,7 @@ export function NavPane({ routes }: { routes: readonly Route[] }): VNode {
 declare module 'preact' {
     namespace JSX {
         interface IntrinsicElements {
-            'rp-nav-pane': JSX.HTMLAttributes<HTMLElement>;
+            'rp-nav-pane': JSX.HTMLAttributes<CustomElement>;
         }
     }
 }
