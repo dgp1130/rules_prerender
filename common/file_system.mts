@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import * as fs from 'fs';
 
 /**
  * A simplified file system interface, based on the NodeJs `fs` module with
@@ -16,24 +16,53 @@ export interface FileSystem {
     mkdir(dir: string, options?: { recursive?: boolean }): Promise<void>;
 
     /**
+     * Reads a file at the given path and returns it as a UTF8-encoded string.
+     */
+    readFile(path: string, options: 'utf8'): Promise<string>;
+
+    /** Reads a file at the given path and returns it as a UTF8-encoded string. */
+    readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
+
+    /**
      * Reads a file at the given path and returns it as a UTF8-encoded string or
      * a binary buffer.
      */
-    readFile(path: string, options: 'utf8'): Promise<string>;
-    readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
     readFile(path: string, options?: string | { encoding?: string }):
         Promise<string | Buffer>;
+
+    /**
+     * Reads a file at the given path and returns it as a UTF8-encoded string.
+     *
+     * @deprecated Prefer the asynchronous {@link readFile}.
+     */
+    readFileSync(path: string, options: 'utf8'): string;
+
+    /**
+     * Reads a file at the given path and returns it as a UTF8-encoded string.
+     *
+     * @deprecated Prefer the asynchronous {@link readFile}.
+     */
+    readFileSync(path: string, options: { encoding: 'utf8' }): string;
+
+    /**
+     * Reads a file at the given path and returns it as a UTF8-encoded string or
+     * a binary buffer.
+     *
+     * @deprecated Prefer the asynchronous {@link readFile}.
+     */
+    readFileSync(path: string, options?: string | { encoding?: string }):
+        string | Buffer;
 }
 
 /** A file system implemented with the Node.js `fs` APIs. */
 class DiskFs implements FileSystem {
     public async copyFile(src: string, dest: string): Promise<void> {
-        await fs.copyFile(src, dest);
+        await fs.promises.copyFile(src, dest);
     }
 
     public async mkdir(dir: string, options?: { recursive?: boolean }):
             Promise<void> {
-        await fs.mkdir(dir, options);
+        await fs.promises.mkdir(dir, options);
     }
 
     readFile(path: string, options: 'utf8'): Promise<string>;
@@ -42,10 +71,18 @@ class DiskFs implements FileSystem {
         Promise<string | Buffer>;
     public async readFile(path: string, options?: 'utf8' | { encoding?: string }):
             Promise<string | Buffer> {
-        return await fs.readFile(
+        return await fs.promises.readFile(
             path,
             options as any,
         ) as unknown as Promise<string | Buffer>;
+    }
+
+    readFileSync(path: string, options: 'utf8'): string;
+    readFileSync(path: string, options: { encoding: 'utf8' }): string;
+    readFileSync(path: string, options?: string | { encoding?: string }):
+        string | Buffer;
+    public readFileSync(path: string, options?: 'utf8' | { encoding?: string }): string | Buffer {
+        return fs.readFileSync(path, options as any);
     }
 }
 

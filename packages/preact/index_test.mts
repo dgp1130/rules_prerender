@@ -1,7 +1,8 @@
 import { createElement } from 'preact';
 import { render } from 'preact-render-to-string';
-import { renderToHtml, includeScript, inlineStyle, Template } from './index.mjs';
+import { InlinedSvg, Template, renderToHtml, includeScript, inlineStyle } from './index.mjs';
 import { serialize } from '../../common/models/prerender_annotation.mjs';
+import { FileSystemFake } from '../../common/file_system_fake.mjs';
 
 describe('preact', () => {
     describe('renderToHtml()', () => {
@@ -133,6 +134,43 @@ describe('preact', () => {
         it('disallows unknown attributes', () => {
             // @ts-expect-error Unknown attribute.
             expect(() => Template({ notAnAttribute: 'test' })).not.toThrow();
+        });
+    });
+
+    describe('InlinedSvg()', () => {
+        const actualRunfiles = process.env['RUNFILES'];
+        afterEach(() => {
+            process.env['RUNFILES'] = actualRunfiles;
+        });
+
+        it('inlines an `<svg>` element', () => {
+            process.env['RUNFILES'] = 'MOCK_RUNFILES_PATH';
+            const fs = FileSystemFake.of({
+                'MOCK_RUNFILES_PATH/my_wksp/path/to/pkg/image.svg': '<svg></svg>',
+            });
+
+            const html = render(InlinedSvg({
+                src: './image.svg',
+                importMeta: {
+                    url: 'file:///bazel/.../execroot/my_wksp/bazel-out/k8-opt/bin/path/to/pkg/prerender.mjs',
+                },
+                fs,
+            }));
+
+            expect(html).toContain('<svg></svg>');
+        });
+
+        it('throws an error when `$RUNFILES` is not set', () => {
+            delete process.env['RUNFILES'];
+            const fs = FileSystemFake.of({});
+
+            expect(() => render(InlinedSvg({
+                src: './image.svg',
+                importMeta: {
+                    url: 'file:///bazel/.../execroot/my_wksp/bazel-out/k8-opt/bin/path/to/pkg/prerender.mjs',
+                },
+                fs,
+            }))).toThrowError(/`\${RUNFILES}` not set/);
         });
     });
 });

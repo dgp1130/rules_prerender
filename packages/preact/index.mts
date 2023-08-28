@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { JSX, VNode, createElement } from 'preact';
 import { render } from 'preact-render-to-string';
 import * as rulesPrerender from 'rules_prerender';
@@ -9,7 +10,7 @@ export { PrerenderResource } from 'rules_prerender';
  * The type is `VNode | VNode[]` to make the typings easier to work with, but it
  * actually only supports a single {@link VNode} input of an `<html />` tag. The
  * returned HTML is prefixed with `<!DOCTYPE html>`.
- * 
+ *
  * @param node The {@link VNode} of an `<html />` element to render.
  * @returns A {@link rulesPrerender.SafeHtml} object with input node, prefixed
  *     by `<!DOCTYPE html>`.
@@ -65,4 +66,73 @@ export function Template({ children, ...attrs }: TemplateProps = {}): VNode {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore JSX types are weird AF.
     return createElement('template', attrs, children);
+}
+
+/**
+ * Reads the linked SVG file from runfiles and returns it as a {@link VNode}.
+ * Note that the root node is _not_ a `<svg>`, as it must be wrapped by Preact.
+ *
+ * The linked file must be a `data` dependency of the prerender target to be
+ * accessible to this function.
+ *
+ * @param src Relative path from the calling file to the SVG file to inline.
+ * @param importMeta Must always be a literal `import.meta` at the call site.
+ * @param attrs Remaining attributes to apply to the returned element.
+ * @param fs Internal-only param, do not use.
+ * @returns A {@link VNode} containing the inlined SVG. Note that the root of
+ *     the returned element is _not_ an `<svg>` element itself. The returned
+ *     element _contains_ an `<svg>` element.
+ */
+export function InlinedSvg({
+    src,
+    importMeta,
+    fs = rulesPrerender.internalDiskFs,
+    ...attrs
+}: {
+    src: string,
+    importMeta: ImportMeta,
+    fs?: rulesPrerender.InternalFileSystem,
+} & JSX.HTMLAttributes<HTMLElement>): VNode {
+    const runfiles = process.env['RUNFILES'];
+    if (!runfiles) throw new Error('`${RUNFILES}` not set.');
+
+    // Get the execroot relative path of the file performing the import.
+    // Ex: rules_prerender/bazel-out/k8-fastbuild/bin/path/to/file.mjs
+    const importerExecrootRelativePath =
+        rulesPrerender.internalExecrootRelative(
+            new URL(importMeta.url).pathname);
+
+    // Parse the execroot relative path to collect the workspace and relative
+    // path.
+    const { wksp, relativePath } =
+        rulesPrerender.internalSplitExecrootRelativePath(
+            importerExecrootRelativePath);
+
+    // Get the relative path to the _directory_ of the file performing the
+    // import.
+    // Ex: rules_prerender/path/to
+    const importerDirWkspRelativePath =
+        relativePath.split(path.sep).slice(0, -1).join(path.sep);
+
+    // Get the relative path to the imported file.
+    // Ex: path/to/some/image.svg
+    const importedWkspRelativePath =
+        path.normalize(path.join(importerDirWkspRelativePath, src));
+
+    // Get the runfiles path to the imported file.
+    // Ex: ${RUNFILES}/rules_prerender/path/to/some/image.svg
+    const importedRunfilesPath =
+        path.join(runfiles, wksp, importedWkspRelativePath);
+
+    // Read the SVG file. We do this synchronously to avoid async coloring. We
+    // should consider returning an annotation here and processing it as part of
+    // the build process like `includeScript` and `inlineStyle`.
+    const svg = fs.readFileSync(importedRunfilesPath, 'utf8');
+
+    // Convert the SVG text into a Preact VNode. This unfortunately requires a
+    // wrapper element.
+    return createElement('div', {
+        ...attrs,
+        dangerouslySetInnerHTML: { __html: svg },
+    });
 }

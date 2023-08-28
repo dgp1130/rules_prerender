@@ -36,12 +36,27 @@ export class FileSystemFake implements FileSystem {
     readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
     readFile(path: string, options?: string | { encoding?: string }):
         Promise<string | Buffer>;
-    public async readFile(inputPath: string, _options?: string | { encoding?: string }): Promise<string | Buffer> {
+    public async readFile(
+        inputPath: string,
+        options?: string | { encoding?: string },
+    ): Promise<string | Buffer> {
+        return this.readFileSync(inputPath, options);
+    }
+
+    readFileSync(path: string, options: 'utf8'): string;
+    readFileSync(path: string, options: { encoding: 'utf8' }): string;
+    readFileSync(path: string, options?: string | { encoding?: string }):
+        string | Buffer;
+    public readFileSync(
+        inputPath: string,
+        _options?: string | { encoding?: string },
+    ): string | Buffer {
         const filePath = path.normalize(inputPath);
         const content = this.fs.get(filePath);
         if (!content) {
-            const availableFiles = Array.from(this.fs.entries()).join('\n');
-            throw new Error(`File path not found. "${inputPath}" normalized to "${
+            const availableFiles = Array.from(this.fs.keys()).join('\n');
+            throw new Error(`File path not found. "${
+                inputPath}" normalized to "${
                 filePath}". Available files are:\n${availableFiles}`);
         }
 

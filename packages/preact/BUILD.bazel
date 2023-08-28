@@ -33,6 +33,7 @@ ts_project(
     srcs = ["index.mts"],
     deps = [
         ":node_modules/preact-render-to-string",
+        "//:node_modules/@types/node",
         "//:node_modules/preact",
         # As a peer dep, we can't depend on the JS implementation of
         # `rules_prerender` because it needs to be supplied at link time.
@@ -44,9 +45,11 @@ ts_project(
 ts_project(
     name = "preact_test_lib",
     srcs = ["index_test.mts"],
+    testonly = True,
     deps = [
         ":preact",
         ":node_modules/preact-render-to-string",
+        "//common:file_system_fake",
         "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
     ],
