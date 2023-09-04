@@ -5,10 +5,14 @@
     "main": "./declarative_shadow_dom.mjs",
     "peerDependencies": {
         "@rules_prerender/preact": "^0.0.0-PLACEHOLDER",
+        "preact": "^10.13.1",
         "rules_prerender": "^0.0.0-PLACEHOLDER"
     },
     "peerDependenciesMeta": {
         "@rules_prerender/preact": {
+            "optional": true
+        },
+        "preact": {
             "optional": true
         }
     }

@@ -58,6 +58,23 @@ ts_project(
 )
 
 ts_project(
+    name = "preact_test_lib",
+    srcs = ["preact_test.mts"],
+    deps = [
+        ":prerender",
+        "//common/models:prerender_annotation",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/preact-render-to-string",
+        "//:node_modules/node-html-parser",
+    ],
+)
+
+jasmine_node_test(
+    name = "preact_test",
+    deps = [":preact_test_lib"],
+)
+
+ts_project(
     name = "declarative_shadow_dom_test_lib",
     srcs = ["declarative_shadow_dom_test.mts"],
     testonly = True,
