@@ -1,10 +1,27 @@
 import { createElement } from 'preact';
 import { render } from 'preact-render-to-string';
-import { InlinedSvg, Template, renderToHtml, includeScript, inlineStyle } from './index.mjs';
+import { CustomElement, InlinedSvg, Template, renderToHtml, includeScript, inlineStyle } from './index.mjs';
 import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { FileSystemFake } from '../../common/file_system_fake.mjs';
 
 describe('preact', () => {
+    describe('CustomElement', () => {
+        it('provides the `defer-hydration` attribute type', () => {
+            // Type-only test, needs only to compile.
+            () => {
+                const el = undefined as unknown as CustomElement;
+
+                el['defer-hydration'] = true;
+
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                el['defer-hydration'] = 'test';
+            };
+
+            expect().nothing();
+        });
+    });
+
     describe('renderToHtml()', () => {
         it('renders the given `VNode`', () => {
             const html = renderToHtml(createElement('html', {}, [

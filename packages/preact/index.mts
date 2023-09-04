@@ -6,6 +6,25 @@ import * as rulesPrerender from 'rules_prerender';
 export { PrerenderResource } from 'rules_prerender';
 
 /**
+ * Representing a generic custom element adhering to web components community
+ * protocols.
+ *
+ * Note that not all custom elements will implement all of the designated
+ * protocols.
+ *
+ * @see https://github.com/webcomponents-cg/community-protocols
+ */
+export interface CustomElement extends HTMLElement {
+    /**
+     * Whether or not to defer hydrating the component until this attribute is
+     * removed.
+     *
+     * @see https://github.com/webcomponents-cg/community-protocols/pull/15
+     */
+    'defer-hydration'?: boolean;
+}
+
+/**
  * Renders the given {@link VNode} to a {@link rulesPrerender.SafeHtml} value.
  * The type is `VNode | VNode[]` to make the typings easier to work with, but it
  * actually only supports a single {@link VNode} input of an `<html />` tag. The
