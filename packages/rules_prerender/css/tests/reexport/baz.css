@@ -1,0 +1,3 @@
+@import './dep.css';
+
+.baz { color: var(--color); }

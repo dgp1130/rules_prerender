@@ -1,0 +1,5 @@
+load(":reexport_test.bzl", "reexport_test_suite")
+
+package(default_testonly = True)
+
+reexport_test_suite(name = "tests")
