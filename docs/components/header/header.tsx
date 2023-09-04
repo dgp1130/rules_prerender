@@ -1,4 +1,5 @@
-import { InlinedSvg, Template, inlineStyle } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { InlinedSvg, inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 
 /**

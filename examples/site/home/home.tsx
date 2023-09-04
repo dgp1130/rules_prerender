@@ -1,5 +1,5 @@
-import { PrerenderResource, Template, renderToHtml } from '@rules_prerender/preact';
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 import { baseLayout } from '../components/base/base.js';
 import { repo, srcLink } from '../common/links.mjs';
 
@@ -9,8 +9,6 @@ export default function*(): Generator<PrerenderResource, void, void> {
         'Home',
         <article>
             <Template shadowrootmode='open'>
-                {polyfillDeclarativeShadowDom()}
-
                 <p>
                     This is the home page of a really cool site built
                     with <a href={repo.toString()} rel="noopener" target="_blank"><code>rules_prerender</code></a>.

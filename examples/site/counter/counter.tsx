@@ -1,5 +1,5 @@
-import { PrerenderResource, Template, renderToHtml } from '@rules_prerender/preact';
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 import { srcLink } from '../common/links.mjs';
 import { baseLayout } from '../components/base/base.js';
 import { Counter } from '../components/counter/counter_prerender.js';
@@ -11,8 +11,6 @@ export default function*(): Generator<PrerenderResource, void, void> {
         renderToHtml(baseLayout('Counter',
             <article>
                 <Template shadowrootmode="open">
-                    {polyfillDeclarativeShadowDom()}
-
                     <p>This is a basic JavaScript counter.</p>
 
                     <section><Counter initialValue={10} /></section>

@@ -1,4 +1,5 @@
-import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { includeScript, inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 
 export function Transitive(): VNode {

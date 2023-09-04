@@ -1,5 +1,5 @@
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { Template, inlineStyle } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 
 /** Renders a header component with navigation to the rest of the site. */
@@ -16,7 +16,6 @@ export function Header(): VNode {
                 </ul>
             </nav>
 
-            {polyfillDeclarativeShadowDom()}
             {inlineStyle('./header.css', import.meta)}
         </Template>
     </header>;

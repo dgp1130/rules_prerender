@@ -1,6 +1,6 @@
 import { VNode } from 'preact';
-import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { includeScript, inlineStyle } from '@rules_prerender/preact';
 
 declare module 'preact' {
     namespace JSX {
@@ -17,7 +17,6 @@ export function Component(): VNode {
             <span>Component</span>
             <div id="replace">This text to be replaced by JavaScript.</div>
 
-            {polyfillDeclarativeShadowDom()}
             {includeScript('./script.mjs', import.meta)}
             {inlineStyle('./style.css', import.meta)}
         </Template>

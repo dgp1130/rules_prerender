@@ -1,4 +1,5 @@
-import { PrerenderResource, Template, inlineStyle, includeScript, renderToHtml } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { PrerenderResource, inlineStyle, includeScript, renderToHtml } from '@rules_prerender/preact';
 import { Component } from './component/component.js';
 
 export default function*(): Generator<PrerenderResource, void, void> {

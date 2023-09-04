@@ -1,4 +1,5 @@
-import { Template, inlineStyle } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 
 /** Renders the page footer section. */

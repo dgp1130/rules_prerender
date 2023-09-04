@@ -15,6 +15,7 @@ ts_project(
     deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )
 

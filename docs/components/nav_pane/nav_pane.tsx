@@ -1,5 +1,5 @@
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { Template, inlineStyle, includeScript } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { inlineStyle, includeScript } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Route } from '../../route.mjs';
 
@@ -11,7 +11,6 @@ export function NavPane({ routes }: { routes: readonly Route[] }): VNode {
                 <RouteList routes={routes} />
             </nav>
 
-            {polyfillDeclarativeShadowDom()}
             {includeScript('./nav_pane_script.mjs', import.meta)}
             {inlineStyle('./nav_pane.css', import.meta)}
         </Template>

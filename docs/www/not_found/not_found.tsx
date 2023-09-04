@@ -1,4 +1,5 @@
-import { Template, inlineStyle } from '@rules_prerender/preact';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Layout } from '../../components/layout/layout.js';
 import { Route } from '../../route.mjs';

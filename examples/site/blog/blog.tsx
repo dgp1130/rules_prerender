@@ -1,5 +1,5 @@
-import { PrerenderResource, Template, renderToHtml } from '@rules_prerender/preact';
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import mdLib from 'markdown-it';
@@ -47,11 +47,9 @@ export default async function*():
 
 /** Generate and return a resource with the list of posts at the given path. */
 function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
-    return PrerenderResource.fromHtml(path, renderToHtml(baseLayout('Blog', 
+    return PrerenderResource.fromHtml(path, renderToHtml(baseLayout('Blog',
         <article>
             <Template shadowrootmode='open'>
-                {polyfillDeclarativeShadowDom()}
-
                 <p>
                     Check out some blog posts! Each of these pages is authored
                     as simple markdown. They are each generated into a full HTML
@@ -59,7 +57,7 @@ function generatePostList(path: string, posts: PostMeta[]): PrerenderResource {
                 </p>
 
                 <ul>
-                    {posts.map(({ title, urlPath: path }) => 
+                    {posts.map(({ title, urlPath: path }) =>
                         <li><a href={path}>{title}</a></li>
                     )}
                 </ul>
@@ -76,11 +74,9 @@ async function generatePost({ urlPath, title, fileName }: PostMeta):
     });
     const link = srcLink(`/examples/site/blog/posts/${fileName}`);
 
-    return PrerenderResource.fromHtml(urlPath, renderToHtml(baseLayout(title, 
+    return PrerenderResource.fromHtml(urlPath, renderToHtml(baseLayout(title,
         <article>
             <Template shadowrootmode='open'>
-                {polyfillDeclarativeShadowDom()}
-
                 <p>This post generated from <a href={link.toString()}>{fileName}</a>.</p>
 
                 <div dangerouslySetInnerHTML={{
