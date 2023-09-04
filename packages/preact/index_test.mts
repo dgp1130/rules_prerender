@@ -1,6 +1,6 @@
 import { createElement } from 'preact';
 import { render } from 'preact-render-to-string';
-import { CustomElement, InlinedSvg, Template, renderToHtml, includeScript, inlineStyle } from './index.mjs';
+import { CustomElement, InlinedSvg, renderToHtml, includeScript, inlineStyle } from './index.mjs';
 import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { FileSystemFake } from '../../common/file_system_fake.mjs';
 
@@ -113,44 +113,6 @@ describe('preact', () => {
     }).replaceAll('"', '&quot;')
 }</rules_prerender:annotation>
             `.trim());
-        });
-    });
-
-    describe('Template', () => {
-        it('renders a `<template />` element', () => {
-            const html = render(Template({
-                children: [
-                    createElement('div', {}, [
-                        'Hello, World!',
-                    ]),
-                ],
-            }));
-
-            expect(html).toContain('<template>');
-            expect(html).toContain('<div>Hello, World!</div>');
-        });
-
-        it('accepts `shadowrootmode`', () => {
-            const html = render(Template({ shadowrootmode: 'open' }));
-
-            expect(html).toContain('<template shadowrootmode="open">');
-        });
-
-        it('allows other HTML attributes', () => {
-            const html = render(Template({ id: 'my-template' }));
-
-            expect(html).toContain('<template id="my-template">');
-        });
-
-        it('restricts `shadowrootmode` type', () => {
-            // @ts-expect-error Wrong shadow root module.
-            expect(() => Template({ shadowrootmode: 'not-a-shadowrootmode-mode' }))
-                .not.toThrow();
-        });
-
-        it('disallows unknown attributes', () => {
-            // @ts-expect-error Unknown attribute.
-            expect(() => Template({ notAnAttribute: 'test' })).not.toThrow();
         });
     });
 

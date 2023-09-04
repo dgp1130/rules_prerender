@@ -76,17 +76,6 @@ export function inlineStyle(importPath: string, meta: ImportMeta): VNode {
     return createElement('rules_prerender:annotation', {}, [ annotation ]);
 }
 
-interface TemplateProps extends JSX.HTMLAttributes<HTMLTemplateElement> {
-    shadowrootmode?: ShadowRootMode;
-}
-
-/** A component representing the native HTML `<template />` tag. */
-export function Template({ children, ...attrs }: TemplateProps = {}): VNode {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore JSX types are weird AF.
-    return createElement('template', attrs, children);
-}
-
 /**
  * Reads the linked SVG file from runfiles and returns it as a {@link VNode}.
  * Note that the root node is _not_ a `<svg>`, as it must be wrapped by Preact.
