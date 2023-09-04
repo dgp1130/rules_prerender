@@ -133,8 +133,8 @@ web_resources(
 ```tsx
 // my_component/my_component_prerender.tsx
 
-import { polyfillDeclarativeShadowDom } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
+import { Templates } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
+import { includeScript, inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { OtherComponent } from '../my_other_component/my_other_component_prerender.js';
 
@@ -146,10 +146,6 @@ export function MyComponent({ name }: { name: string }): VNode {
             don't you'll need to manually namespace your styles or else styles
             in different components could conflict with each other! */}
         <Template shadowrootmode="open">
-            {/* Polyfill declarative shadow DOM for any browsers which don't
-                support it. */}
-            {polyfillDeclarativeShadowDom()}
-
             {/* Render some HTML. */}
             <h2 class="my-component-header">Hello, {name}</h2>!
             <button id="show">Show</button>
@@ -167,8 +163,8 @@ export function MyComponent({ name }: { name: string }): VNode {
             {inlineStyle('./my_component.css', import.meta)}
         </Template>
 
-        {/* Other components should be placed in light DOM and visible at the
-            `<slot />`. */}
+        {/* Light DOM content goes here, local styles are *not* applied to these
+            elements. */}
         <OtherComponent id="other" name={name.reverse()} />
     </div>;
 }
