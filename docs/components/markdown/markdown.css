@@ -1,0 +1,16 @@
+:host {
+    height: 100%;
+}
+
+#md {
+    height: calc(100% - (2 * 1em));
+    padding: 1rem 0;
+}
+
+#md > :first-child {
+    margin-block-start: 0;
+}
+
+#md > :last-child {
+    margin-block-end: 0;
+}

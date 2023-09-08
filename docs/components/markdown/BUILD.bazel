@@ -1,36 +1,37 @@
 load("//:index.bzl", "css_library", "prerender_component")
-load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
-
-exports_files(["tutorials/getting_started/getting_started.md"])
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 
 prerender_component(
-    name = "index",
+    name = "markdown",
     prerender = ":prerender",
     styles = ":styles",
-    visibility = ["//docs:__pkg__"],
+    visibility = ["//docs:__subpackages__"],
 )
 
 ts_project(
     name = "prerender",
-    srcs = ["index.tsx"],
+    srcs = ["markdown.tsx"],
     deps = [
-        "//docs:route",
         "//docs/components/layout:layout_prerender",
+        "//docs/markdown:markdown_page",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["index_test.tsx"],
+    srcs = ["markdown_test.tsx"],
+    testonly = True,
     deps = [
-        ":prerender",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/node-html-parser",
+        ":markdown_prerender",
+        "//docs/markdown:markdown_page_mock",
         "//:node_modules/preact",
         "//:node_modules/preact-render-to-string",
+        "//:node_modules/rules_prerender",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -41,5 +42,5 @@ jasmine_node_test(
 
 css_library(
     name = "styles",
-    srcs = ["index.css"],
+    srcs = ["markdown.css"],
 )

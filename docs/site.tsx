@@ -1,8 +1,12 @@
 import { PrerenderResource, renderToHtml } from '@rules_prerender/preact';
+import { type VNode } from 'preact';
 import { UnderConstruction } from './components/under_construction/under_construction.js';
 import { Route } from './route.mjs';
 import { IndexPage } from './www/index.js';
 import { NotFound } from './www/not_found/not_found.js';
+import { Markdown } from './components/markdown/markdown.js';
+import { renderMarkdown } from './markdown/markdown_loader.mjs';
+import { type MarkdownPage, parsePageMetadata } from './markdown/markdown_page.mjs';
 
 /** Docs site routes. */
 export const routes: readonly Route[] = [
@@ -42,7 +46,8 @@ export const routes: readonly Route[] = [
     },
 ];
 
-export default function*(): Generator<PrerenderResource, void, void> {
+export default async function*():
+        AsyncGenerator<PrerenderResource, void, void> {
     yield PrerenderResource.fromHtml('/index.html', renderToHtml(
         <IndexPage routes={routes} />
     ));
@@ -64,14 +69,13 @@ export default function*(): Generator<PrerenderResource, void, void> {
     ));
 }
 
-function* renderTutorials(): Generator<PrerenderResource, void, void> {
+async function* renderTutorials():
+        AsyncGenerator<PrerenderResource, void, void> {
     yield PrerenderResource.fromHtml(
         '/tutorials/getting-started/index.html',
-        renderToHtml(<UnderConstruction
-            pageTitle="Getting Started"
-            headerTitle="Getting Started"
-            routes={routes}
-        />),
+        renderToHtml(await renderMarkdownPage(
+            'rules_prerender/docs/www/tutorials/getting_started/getting_started.md',
+        )),
     );
 
     yield PrerenderResource.fromHtml(
@@ -113,4 +117,17 @@ function* renderApiReference(): Generator<PrerenderResource, void, void> {
             routes={routes}
         />),
     );
+}
+
+/**
+ * Renders a markdown page with a fetch-then-render architecture. Reads the
+ * markdown content first and then renders the full page. This avoids async and
+ * `<Suspense />` challenges.
+ */
+async function renderMarkdownPage(page: string): Promise<VNode> {
+    const { frontmatter, html } = await renderMarkdown(page);
+    const metadata = parsePageMetadata(page, frontmatter);
+    const markdownPage: MarkdownPage = { metadata, html };
+
+    return <Markdown page={markdownPage} routes={routes} />;
 }

@@ -25,11 +25,17 @@ prerender_pages(
 ts_project(
     name = "prerender",
     srcs = ["site.tsx"],
-    # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
-    data = [":package"],
+    data = [
+        # Need `"type": "module"` to load `*.js` files output by `*.tsx`
+        # compilation.
+        ":package",
+        "//docs/www:tutorials/getting_started/getting_started.md",
+    ],
     deps = [
         ":route",
+        "//docs/components/markdown:markdown_prerender",
         "//docs/components/under_construction:under_construction_prerender",
+        "//docs/markdown:markdown_loader",
         "//docs/www:index_prerender",
         "//docs/www/not_found:not_found_prerender",
         "//:node_modules/@rules_prerender/preact",

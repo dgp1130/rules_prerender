@@ -1,0 +1,64 @@
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+ts_project(
+    name = "markdown_loader",
+    srcs = ["markdown_loader.mts"],
+    visibility = ["//docs:__subpackages__"],
+    deps = [
+        "//:node_modules/@types/marked",
+        "//:node_modules/@types/node",
+        "//:node_modules/gray-matter",
+        "//:node_modules/marked",
+        "//:node_modules/rules_prerender",
+    ],
+)
+
+ts_project(
+    name = "markdown_loader_test_lib",
+    srcs = ["markdown_loader_test.mts"],
+    data = ["markdown_testdata.md"],
+    testonly = True,
+    deps = [
+        ":markdown_loader",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "markdown_loader_test",
+    deps = [":markdown_loader_test_lib"],
+)
+
+ts_project(
+    name = "markdown_page",
+    srcs = ["markdown_page.mts"],
+    visibility = ["//docs:__subpackages__"],
+    deps = [
+        "//:node_modules/rules_prerender",
+        "//:node_modules/zod",
+    ],
+)
+
+ts_project(
+    name = "markdown_page_test_lib",
+    srcs = ["markdown_page_test.mts"],
+    testonly = True,
+    deps = [
+        ":markdown_page",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "markdown_page_test",
+    deps = [":markdown_page_test_lib"],
+)
+
+ts_project(
+    name = "markdown_page_mock",
+    srcs = ["markdown_page_mock.mts"],
+    visibility = ["//docs:__subpackages__"],
+    testonly = True,
+    deps = [":markdown_page"],
+)
