@@ -38,5 +38,9 @@ common --experimental_run_validations
 # order to collect coverage information from test targets
 coverage --instrument_test_targets
 
+# Use the value of `skipLibCheck` from `tsconfig.json` for all `ts_project`
+# targets.
+common --@aspect_rules_ts//ts:skipLibCheck=honor_tsconfig
+
 # `@rules_prerender` specific options.
 build --flag_alias=debug_prerender=@rules_prerender//tools/flags:debug_prerender

@@ -1,6 +1,7 @@
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
 
 def rules_prerender_repositories():
     rules_js_dependencies()
@@ -14,5 +15,7 @@ def rules_prerender_repositories():
         npmrc = Label("//:.npmrc"),
         verify_node_modules_ignored = Label("//:.bazelignore"),
     )
+
+    bazel_features_deps()
 
     rules_ts_dependencies(ts_version_from = Label("//:package.json"))

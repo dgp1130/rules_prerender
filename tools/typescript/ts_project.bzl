@@ -8,5 +8,6 @@ def ts_project(name, tsconfig = None, **kwargs):
         tsconfig = tsconfig or "//:tsconfig",
         declaration = True,
         source_map = True,
+        transpiler = "tsc",
         **kwargs
     )

@@ -15,10 +15,18 @@ def rules_prerender_dependencies():
 
     maybe(
         http_archive,
+        name = "bazel_features",
+        sha256 = "9fcb3d7cbe908772462aaa52f02b857a225910d30daa3c252f670e3af6d8036d",
+        strip_prefix = "bazel_features-1.0.0",
+        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.0.0/bazel_features-v1.0.0.tar.gz",
+    )
+
+    maybe(
+        http_archive,
         name = "aspect_rules_ts",
-        sha256 = "58b6c0ad158fc42883dafa157f1a25cddd65bcd788a772620192ac9ceefa0d78",
-        strip_prefix = "rules_ts-1.3.2",
-        url = "https://github.com/aspect-build/rules_ts/releases/download/v1.3.2/rules_ts-v1.3.2.tar.gz",
+        sha256 = "8aabb2055629a7becae2e77ae828950d3581d7fc3602fe0276e6e039b65092cb",
+        strip_prefix = "rules_ts-2.0.0",
+        url = "https://github.com/aspect-build/rules_ts/releases/download/v2.0.0/rules_ts-v2.0.0.tar.gz",
     )
 
     maybe(

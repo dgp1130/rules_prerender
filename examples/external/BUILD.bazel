@@ -69,6 +69,7 @@ ts_project(
     tsconfig = "//:tsconfig",
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = [":package"],
+    transpiler = "tsc",
     deps = [
         "//component:component_prerender",
         "//:node_modules/@rules_prerender/preact",

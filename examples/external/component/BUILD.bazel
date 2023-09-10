@@ -21,6 +21,7 @@ ts_project(
     declaration = True,
     source_map = True,
     tsconfig = "//:tsconfig",
+    transpiler = "tsc",
     deps = [
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
         "//:node_modules/@rules_prerender/preact",
@@ -34,6 +35,7 @@ ts_project(
     declaration = True,
     source_map = True,
     tsconfig = "//:tsconfig_client",
+    transpiler = "tsc",
 )
 
 css_library(
