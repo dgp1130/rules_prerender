@@ -35,8 +35,12 @@ li.sublist > button::after {
     content: '>';
     float: right;
     font-family: monospace;
+}
 
-    transition: transform 0.25s ease-in-out;
+@media (prefers-reduced-motion: no-preference) {
+    li.sublist > button::after {
+        transition: transform 0.25s ease-in-out;
+    }
 }
 
 /* Rotate `>` when list is expanded. */
