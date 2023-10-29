@@ -3,6 +3,7 @@
 :host {
     font-size: 1.5rem;
     background-color: var(--light-gray);
+    overflow-x: hidden;
 
     --rp-nav-pane--indentation: 1.5rem;
 }
@@ -72,6 +73,7 @@ li.sublist.collapsed > button::after {
 }
 
 .list-el {
+    width: 300px;
     display: block;
     padding: 0.25rem 0.75rem;
 }

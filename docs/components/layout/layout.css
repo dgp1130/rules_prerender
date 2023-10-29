@@ -5,11 +5,17 @@
     grid-template:
         "header header header" auto
         "nav main -" 1fr
-        "footer footer footer" auto
-        / auto 1fr 0;
+        "footer footer footer" auto;
+    grid-template-columns: 300px 1fr 0fr;
+    transition: grid-template-columns 0.25s ease;
     column-gap: 1rem;
+
     height: 100%;
     background-color: var(--light-gray);
+}
+
+:host(.nav-collapsed) {
+    grid-template-columns: 0px 1fr 0fr;
 }
 
 rp-header {
@@ -18,7 +24,6 @@ rp-header {
 
 rp-nav-pane {
     grid-area: nav;
-    max-width: 300px;
     box-shadow: 2px 0 5px 0 gray;
 }
 
