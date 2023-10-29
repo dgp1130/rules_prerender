@@ -22,21 +22,12 @@ ul {
 }
 
 li ul {
-    /*
-     * Hide sublists by default. Cannot use `display: none;` for two reasons:
-     * 1.  Changing to `display: block;` triggers nested animations to play
-     *     immediately, causing sublist `>` characters to rotate when revealed.
-     * 2.  `display: none;` implicitly sets `width: 0; height: 0;`. We actually
-     *     want to preserve `width: auto;` so the width of the navigation pane
-     *     is dictated by the longest text in it, even when that text is hidden.
-     */
-    height: 0;
-    overflow: hidden;
+    display: none;
 }
 
 /* Show sublists when the `expanded` class is applied. */
 li.expanded > ul {
-    height: auto;
+    display: block;
 }
 
 /* Apply `>` to any expandable lists. */
@@ -44,32 +35,13 @@ li.sublist > button::after {
     content: '>';
     float: right;
     font-family: monospace;
-    will-change: animation-name transform;
 
-    animation-duration: 0.25s;
-    animation-timing-function: ease-in-out;
-    animation-fill-mode: forwards;
+    transition: transform 0.25s ease-in-out;
 }
 
 /* Rotate `>` when list is expanded. */
 li.sublist.expanded > button::after {
-    animation-name: rotateExpando;
-}
-
-@keyframes rotateExpando {
-    to { transform: rotate(90deg); }
-}
-
-/* Un-rotate `>` when list is collapsed. */
-li.sublist.collapsed > button::after {
-    /* It should probably be possible to use `rotateExpando` backwards instead
-    of defining a second animation, but attempting to do so breaks both
-    animations for some unknown reason. */
-    animation-name: unrotateExpando;
-}
-
-@keyframes unrotateExpando {
-    from { transform: rotate(90deg); }
+    transform: rotate(90deg);
 }
 
 .list-el {

@@ -28,16 +28,4 @@ function toggleNavItem(evt: Event): void {
 
     // Toggle the sublist's visibility.
     parentListItem.classList.toggle('expanded');
-
-    // Updated the `collapsed` class to be `!expanded`. This _feels_ unnecessary
-    // but actually isn't. On page load, no items have any classes. After
-    // expanding and collapsing an item, it has the `collapsed` class. This
-    // distinguishes "an element which has been closed" from "an element which
-    // has not been interacted with". This distinction is important for
-    // animations, which should only play in the former case.
-    if (parentListItem.classList.contains('expanded')) {
-        parentListItem.classList.remove('collapsed');
-    } else {
-        parentListItem.classList.add('collapsed');
-    }
 }

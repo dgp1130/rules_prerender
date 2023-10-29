@@ -23,33 +23,33 @@ describe('NavPane', () => {
 
         const navPane = await browser.$('rp-nav-pane');
 
-        // Sublist should be hidden (height: 0) by default.
+        // Sublist should be hidden (display: 'none';) by default.
         const subList = await navPane.shadow$('li ul');
-        const initialSubListHeight = await browser.execute(
-            (el) => getComputedStyle(el).height,
+        const initialSubListDisplay = await browser.execute(
+            (el) => getComputedStyle(el).display,
             subList as unknown as HTMLElement,
         );
-        expect(initialSubListHeight).toBe('0px');
+        expect(initialSubListDisplay).toBe('none');
 
         // Click the root button, should expand children.
         const rootItemBtn = await navPane.shadow$('[data-list-toggle]');
         await rootItemBtn.click();
 
         // Check the height of the sublist again, it should be expanded now.
-        const expandedSubListHeight = await browser.execute(
-            (el) => getComputedStyle(el).height,
+        const expandedSubListDisplay = await browser.execute(
+            (el) => getComputedStyle(el).display,
             subList as unknown as HTMLElement,
         );
-        expect(expandedSubListHeight).not.toBe('0px');
+        expect(expandedSubListDisplay).not.toBe('none');
 
         // Click the root button again, should collapse children.
         await rootItemBtn.click();
 
         // Check the height of the sublist one more time, should be collapsed.
-        const collapsedSubListHeight = await browser.execute(
-            (el) => getComputedStyle(el).height,
+        const collapseSubListDisplay = await browser.execute(
+            (el) => getComputedStyle(el).display,
             subList as unknown as HTMLElement,
         );
-        expect(collapsedSubListHeight).toBe('0px');
+        expect(collapseSubListDisplay).toBe('none');
     }, webDriverTestTimeout);
 });
