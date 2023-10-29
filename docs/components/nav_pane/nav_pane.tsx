@@ -8,11 +8,9 @@ import { Route } from '../../route.mjs';
 export function NavPane({ routes, ...attrs }: {
     routes: readonly Route[],
 } & JSX.IntrinsicElements['rp-nav-pane']): VNode {
-    return <rp-nav-pane {...attrs}>
+    return <rp-nav-pane {...attrs} role="navigation">
         <Template shadowrootmode="open">
-            <nav>
-                <RouteList routes={routes} />
-            </nav>
+            <RouteList routes={routes} />
 
             {includeScript('./nav_pane_script.mjs', import.meta)}
             {inlineStyle('./nav_pane.css', import.meta)}
