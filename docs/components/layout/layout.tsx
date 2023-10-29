@@ -45,13 +45,11 @@ export function Layout({
                     {includeScript('./layout_script.mjs', import.meta)}
 
                     <Header headerTitle={headerTitle} defer-hydration />
-                    <div class="layout-middle">
-                        {routes.length
-                            ? <NavPane routes={routes} defer-hydration />
-                            : undefined
-                        }
-                        <main>{children}</main>
-                    </div>
+                    {routes.length
+                        ? <NavPane routes={routes} defer-hydration />
+                        : undefined
+                    }
+                    <main>{children}</main>
                     <Footer />
                 </Template>
             </rp-layout>

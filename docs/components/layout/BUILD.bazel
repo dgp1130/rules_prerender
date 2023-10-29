@@ -58,6 +58,7 @@ css_library(
     deps = [
         ":layout_css",
         "//docs:global",
+        "//docs:theme",
     ],
 )
 

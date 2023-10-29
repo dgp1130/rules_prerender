@@ -1,21 +1,39 @@
+@import '../../theme.css';
+
 :host {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template:
+        "header header header" auto
+        "nav main -" 1fr
+        "footer footer footer" auto
+        / auto 1fr 0;
+    column-gap: 1rem;
     height: 100%;
+    background-color: var(--light-gray);
 }
 
-.layout-middle {
-    flex-grow: 1;
-
-    display: flex;
+rp-header {
+    grid-area: header;
 }
 
 rp-nav-pane {
+    grid-area: nav;
     max-width: 300px;
-    flex-shrink: 0;
     box-shadow: 2px 0 5px 0 gray;
 }
 
 main {
-    flex-grow: 1;
+    grid-area: main;
+    padding: 0 1rem;
+    margin: 1rem auto;
+
+    width: calc(100% - 2rem /* padding */);
+    max-width: 936px /* arbitrary number from Bazel docs */;
+
+    background-color: white;
+    box-shadow: 0 0 3px 0 gray;
+}
+
+footer {
+    grid-area: footer;
 }
