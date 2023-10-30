@@ -29,6 +29,7 @@ ts_project(
         # Need `"type": "module"` to load `*.js` files output by `*.tsx`
         # compilation.
         ":package",
+        "//docs/www:tutorials/components/components.md",
         "//docs/www:tutorials/getting_started/getting_started.md",
     ],
     deps = [

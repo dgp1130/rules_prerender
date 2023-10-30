@@ -20,6 +20,7 @@
         "expando",
         "frontmatter",
         "genfiles",
+        "genrule",
         "hydroactive",
         "inlines",
         "lightningcss",
@@ -32,11 +33,13 @@
         "prerenders",
         "promisified",
         "readonly",
+        "ruleset",
         "runfile",
         "runfiles",
         "semver",
         "shadowroot",
         "shadowrootmode",
+        "subpackages",
         "testonly",
         "transpiled",
         "tsjs",
@@ -62,6 +65,9 @@
         "editor.tabSize": 4
     },
     "[typescriptreact]": {
+        "editor.tabSize": 4
+    },
+    "[markdown]": {
         "editor.tabSize": 4
     },
     "typescript.format.semicolons": "insert",

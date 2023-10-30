@@ -22,6 +22,10 @@ export const routes: readonly Route[] = [
                 content: '/tutorials/getting-started/',
             },
             {
+                label: 'Components',
+                content: '/tutorials/components/',
+            },
+            {
                 label: 'Rendering Markdown',
                 content: '/tutorials/rendering-markdown/',
             },
@@ -75,6 +79,13 @@ async function* renderTutorials():
         '/tutorials/getting-started/index.html',
         renderToHtml(await renderMarkdownPage(
             'rules_prerender/docs/www/tutorials/getting_started/getting_started.md',
+        )),
+    );
+
+    yield PrerenderResource.fromHtml(
+        '/tutorials/components/index.html',
+        renderToHtml(await renderMarkdownPage(
+            'rules_prerender/docs/www/tutorials/components/components.md',
         )),
     );
 
