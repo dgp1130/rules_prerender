@@ -251,11 +251,364 @@ JavaScript bundle.
 
 ## Adding CSS styles
 
-TODO
+Styling a component involves a few different concepts applied together.
+
+### 1. Author the CSS
+
+To style a component, start by creating a new CSS file at
+`hello_world/blog_post_card/blog_post_card.css` with some CSS content.
+
+```css
+/* hello_world/blog_post_card/blog_post_card.css */
+
+h2 {
+    font-weight: bold;
+}
+```
+
+### 2. Add declarative shadow DOM
+
+Next, we need to make two changes to the component. First, we'll add
+[declarative shadow DOM](https://developer.chrome.com/articles/declarative-shadow-dom/)
+to the root element.
+
+```diff
++ import { Template } from '@rules_prerender/preact';
+
+  // Interface...
+
+  /** Renders a card linking to the given blog post. */
+  export function BlogPostCard({ post }: { post: BlogPost }): VNode {
+      return <section>
++         <Template shadowrootmode="open">
+              <h2><a href={post.link.toString()}>{post.title}</a></h2>
+              <div>{post.summary}</div>
++         </Template>
+      </section>;
+  }
+```
+
+This will create a
+[shadow root](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)
+containing the component's content. This encapsulates the DOM and its styling.
+It prevents external styles from leaking into the component as well as hides the
+internal DOM structure from other components to prevent them from accidentally
+depending on implementation details private to the component.
+
+While shadow DOM is useful for many purposes, the main value it provides for
+this tutorial is scoping any styles inside the shadow root. This is what allows
+us to use broad selectors like `h2` without affecting _all_ `h2` elements on the
+page.
+
+NOTE: Seasoned declarative shadow DOM users might want to directly render
+`<template shadowrootmode="open">` (lower cased). While this can work, the
+[`Template`](#TODO-link-to-reference-docs) component imported from
+[`@rules_prerender/preact`](#TODO-link-to-reference-docs) will automatically
+polyfill declarative shadow DOM for browsers lacking support. Always use
+`Template` from `@rules_prerender/preact` and never render a raw
+`<template shadowrootmode="...">` tag.
+
+### 3. Inline the style tag
+
+Now that the component is using shadow DOM and styles are safely encapsulated,
+they can inlined inside the component with
+[`inlineStyle`](#TODO-link-to-reference-docs).
+
+```diff
+// hello_world/blog_post_card/blog_post_card.tsx
+
+- import { Template } from '@rules_prerender/preact';
++ import { Template, inlineStyle } from '@rules_prerender/preact';
+
+  // Interface...
+
+  /** Renders a card linking to the given blog post. */
+  export function BlogPostCard({ post }: { post: BlogPost }): VNode {
+      return <section>
+          <Template shadowrootmode="open">
++             {inlineStyle('./blog_post_card.css', import.meta)}
+
+              <h2><a href={post.link.toString()}>{post.title}</a></h2>
+              <div>{post.summary}</div>
+          </Template>
+      </section>;
+  }
+```
+
+[`inlineStyle`](#TODO-link-to-reference-docs) will load the `blog_post_card.css`
+file and render it inside an inline `<style>` tag. The path
+`./blog_post_card.css` is resolved relative to the source file
+(`blog_post_card.tsx`) in this case. Since `inlineStyle` is placed inside
+`<Template shadowrootmode="open">`, styles will inside the shadow root and
+limited to only this component.
+
+TIP: _Always_ place component styles inside a `<Template shadowrootmode="open">`
+or they will apply to the entire page!
+
+TIP: It maybe tempting to swap the `<Template>` and `<section>` elements,
+however `<Template shadowrootmode="open">` should _never_ be the root element
+returned by a component. This is because shadow DOM requires a host element
+which is the parent of the `<Template>` (`<section>` in this case). If the
+component returned `<Template shadowrootmode="open">` directly, then the shadow
+root would be applied to the parent of the `<BlogPostCard>`. `:host` styles
+would apply to the _parent_ of `<BlogPostCard>` and lead to unexpected behavior.
+
+### 4. Build the CSS
+
+The final step is to update your `BUILD.bazel` to include the newly created CSS
+and make it available to the `prerender_component` target. Use the
+[`css_library`](#TODO-link-to-reference-docs) rule provided by
+`@rules_prerender` to compile and organize your CSS.
+
+```BUILD
+# hello_world/blog_post_card/BUILD.bazel
+
+load("@rules_prerender//:index.bzl", "css_library")
+
+css_library(
+    name = "styles",
+    srcs = ["blog_post_card.css"],
+)
+```
+
+NOTE: `css_library` is a relatively minimal wrapper which allows CSS files to
+express dependencies on each other. The only unique behavior this supports is
+resolution of `@import` specifiers to other source files in dependencies which
+are bundled together at build time.
+
+TODO: Guide about CSS styling more explicitly. Explaining dependencies,
+`@import`, global CSS, whether or not to use classes, etc.
+
+Then, you can link this library to your existing `prerender_component` with the
+`styles` attribute. You will also need to add
+`//:node_modules/@rules_prerender/preact` as a dependency to the existing
+`:prerender` target so `Template` and `inlineStyle` are accessible.
+
+```diff
+  # hello_world/blog_post_card/BUILD.bazel
+
+  prerender_component(
+      name = "blog_post_card",
+      # Link to the build target used for prerendering HTML.
+      prerender = ":prerender",
++     # Link to the build target containing component CSS.
++     styles = ":styles",
+      # Make this component available anywhere in the `hello_world` site.
+      visibility = ["//hello_world:__subpackages__"],
+  )
+
+  # Compile the component's TypeScript used for prerendering.
+  ts_project(
+      name = "prerender",
+      srcs = ["blog_post_card.tsx"],
+      tsconfig = "//:tsconfig.json",
+      deps = [
++         "//:node_modules/@rules_prerender/preact",
+          "//:node_modules/preact",
+      ],
+  )
+```
+
+Test out the site again with:
+
+```shell
+bazel run //hello_world:devserver
+```
+
+TODO: Screenshot.
+
+The title of the blog post should now be bolded. You can also consider adding a
+new `<h2>` tag _outside_ the component's shadow root to confirm that it is not
+affected by the CSS.
 
 ## Adding client-side JavaScript
 
-TODO
+All the JavaScript / TypeScript code in the `:prerender` library is only ever
+available or executed at _build time_. No JavaScript is shipped to the client by
+default. However, sometimes JavaScript is necessary to progressively enhance the
+base experience. This is achieved with a mechanism very similar to CSS.
+
+NOTE: This tutorial continues to use TypeScript when authoring source files,
+however the built and compiled output is JavaScript. Since certain parts of the
+toolchain apply to the post-transpilation code, the terms "JavaScript" and
+"TypeScript" are fairly interchangeable in this section
+
+### 1. Author the client-side TypeScript
+
+To start, create a script which logs to the browser console. Use the suffix
+`_script` to differentiate this file from the existing `blog_post_card.tsx`
+file.
+
+```typescript
+// hello_world/blog_post_card/blog_post_card_script.mts
+
+console.log('Hello, World!');
+```
+
+TODO: Explain file extension discrepancy.
+
+### 2. Include the script
+
+Next, add the script to the client bundle by including it in the rendered
+output with [`includeScript`](#TODO-link-to-reference-docs).
+
+```diff
+  // hello_world/blog_post_card/blog_post_card.tsx
+
+- import { Template, inlineStyle } from '@rules_prerender/preact';
++ import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
+
+  // Interface...
+
+  /** Renders a card linking to the given blog post. */
+  export function BlogPostCard({ post }: { post: BlogPost }): VNode {
+      return <section>
+          <Template shadowrootmode="open">
+              {inlineStyle('./blog_post_card.css', import.meta)}
++             {includeScript('./blog_post_card_script.mjs', import.meta)}
+
+              <h2><a href={post.link.toString()}>{post.title}</a></h2>
+              <div>{post.summary}</div>
+          </Template>
+      </section>;
+  }
+```
+
+[`includeScript`](#TODO-link-to-reference-docs), much like
+[`inlineStyle`](#TODO-link-to-reference-docs), will load the
+`blog_post_card_script.mjs` file, bundle it together with any other JavaScript
+on the page, and inject a `<script>` tag to execute the JavaScript.
+
+Unlike [component CSS](#adding-css-styles), declarative shadow DOM is not
+required to effectively use client-side JavaScript in a component.
+
+NOTE: This tutorial uses TypeScript, so the authored source file uses a `.mts`
+extension. However `includeScript` _always_ accepts a JavaScript file extension
+(`.mjs`) instead of a TypeScript extension. This is because script bundling
+occurs after any TypeScript compilation where only JavaScript files are
+available regardless of the source language.
+
+### 3. Build the TypeScript
+
+Create a new `ts_project` target to compile client-side scripts for the
+component.
+
+```BUILD
+# hello_world/blog_post_card/BUILD.bazel
+
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "scripts",
+    srcs = ["blog_post_card_script.mts"],
+    tsconfig = "//:tsconfig.json",
+)
+```
+
+NOTE: There is an existing `ts_project` target in `:prerender`, however projects
+should _not_ share a target for prerendering and client-side JavaScript. Doing
+so presents an opportunity to accidentally execute client-side JavaScript at
+build time in Node as well as including prerendering logic in the client-side
+bundle. Also the two targets may choose to use different `tsconfig.json` files
+with distinct settings given their different use cases.
+
+Finally, add the new `:scripts` target to the existing `prerender_component`
+target via the `scripts` attribute.
+
+```diff
+  # hello_world/blog_post_card/BUILD.bazel
+
+  prerender_component(
+      name = "blog_post_card",
+      # Link to the build target used for prerendering HTML.
+      prerender = ":prerender",
+      # Link to the build target containing component CSS.
+      styles = ":styles",
++     # Link to the build target containing client-side JavaScript.
++     scripts = ":scripts",
+      # Make this component available anywhere in the `hello_world` site.
+      visibility = ["//hello_world:__subpackages__"],
+  )
+```
+
+Rebuild the application and check to browser console to see a friendly message
+displayed.
+
+### Using JavaScript effectively
+
+There are a few things to keep in mind with how client-side JavaScript works in
+`@rules_prerender`.
+
+First, even if a script is included multiple times via `includeScript`, it will
+only ever be executed once on the page. In the above example, "Hello, World!"
+will only ever log once, no matter how many `<BlogPostCard />` components are
+rendered on the page.
+
+Second, there are no restrictions on client-side JavaScript. It can be as
+minimal or complex as necessary for the problem at hand. In this example, only
+a log statement is included, however this script could add an event listener,
+define a custom element, or bootstrap an entire client-side rendered web
+framework.
+
+Third, because scripts are only loaded once, but a component may be rendered
+multiple times it can be tricky to find all the DOM which needs to be controlled
+by an associated script. One approach to doing this is to render a
+[custom element](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements).
+
+```diff
+  // hello_world/blog_post_card/blog_post_card.tsx
+
+- import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
++ import { CustomElement, Template, includeScript, inlineStyle } from '@rules_prerender/preact';
+
+  // Interface...
+
+  /** Renders a card linking to the given blog post. */
+  export function BlogPostCard({ post }: { post: BlogPost }): VNode {
+-     return <section>
++     return <my-blog-post-card>
+          <Template shadowrootmode="open">
+              {inlineStyle('./blog_post_card.css', import.meta)}
+              {includeScript('./blog_post_card_script.mjs', import.meta)}
+
+              <h2><a href={post.link.toString()}>{post.title}</a></h2>
+              <div>{post.summary}</div>
+          </Template>
++     </my-blog-post-card>;
+-     </section>;
+  }
+
++ // Declare to Preact types that `<my-blog-post-card>` is a custom element.
++ declare module 'preact' {
++     namespace JSX {
++         interface IntrinsicElements {
++             'my-blog-post-card': JSX.HTMLAttributes<CustomElement>;
++         }
++     }
++ }
+```
+
+This will render a `<my-blog-post-card>` element to the page at build time. On
+its own, this is nothing special. However, we can include a custom element
+definition in the client-side JavaScript.
+
+```typescript
+// hello_world/blog_post_card/blog_post_card_script.ts
+
+class BlogPostCard extends HTMLElement {
+    connectedCallback() {
+        console.log('Upgraded a blog post card!');
+    }
+}
+```
+
+While this script is still only executed once on the page, it will upgrade and
+create custom element instances for every `<my-blog-post-card>` on the page,
+meaning this script will log for _every instance_ of the component. This is a
+useful way of referencing all the instances of a component and progressively
+enhancing their functionality.
+
+TODO: This content is kind of involved, should it be in a different guide?
 
 ## Adding static resources
 
