@@ -17,6 +17,10 @@ direct assistance.
 
 TODO: Test example.
 
+TODO: Think through the order operations for each section. Currently we're using
+an API and then creating it. Might be easier to follow the other way around.
+Create the stylesheet, build it, then link it into the existing component.
+
 ## Prerequisites
 
 Some basic knowledge of the following is required to understand this tutorial:
@@ -612,4 +616,128 @@ TODO: This content is kind of involved, should it be in a different guide?
 
 ## Adding static resources
 
-TODO
+Web sites are not just HTML, JavaScript, and CSS. They also include images,
+videos, fonts, and all kinds of other content accessed dynamically at runtime.
+`prerender_component` supports "resources" which represent content hosted at a
+particular URL which the component may require at runtime.
+
+Resources can be thought of as static files which are served at a specific URL
+path and fetched at runtime. Resource files can be checked in to source code
+directly or generated at build time.
+
+### 1. Host an image
+
+A very common use case is hosting an image. Create a thumbnail image at
+`hello_world/blog_post_card/star.png`, then include it in the build with a
+[`web_resources`](#TODO-link-to-reference-docs) target.
+
+TODO: Add an image resource for readers to download.
+
+```BUILD
+# hello_world/BUILD.bazel
+
+load("@rules_prerender//:index.bzl", "web_resources")
+
+web_resources(
+    name = "resources",
+    entries = {
+        "/images/favorite.png": "star.png",
+    },
+)
+```
+
+This creates a `:resources` target which holds the `star.png` image at the path
+`/images/favorite.png` in the built output. The left side of `entries` is the
+absolute path the file should be hosted at, starting with a slash. The right
+side is the source file or Bazel target to use at this path. Note that in
+source, the file is named `star.png`, but the image will actually be available
+at `/images/favorite.png`.
+
+Next, link the resources into the existing `prerender_component` target.
+
+```diff
+  # hello_world/blog_post_card/BUILD.bazel
+
+  prerender_component(
+      name = "blog_post_card",
+      # Link to the build target used for prerendering HTML.
+      prerender = ":prerender",
+      # Link to the build target containing component CSS.
+      styles = ":styles",
+      # Link to the build target containing client-side JavaScript.
+      scripts = ":scripts",
++     # Link to static resources included with this component.
++     resources = ":resources",
+      # Make this component available anywhere in the `hello_world` site.
+      visibility = ["//hello_world:__subpackages__"],
+  )
+```
+
+### 2. Use the image
+
+Finally, update the component's prerendered DOM to include an
+[`<img>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) tag
+linking to the `/images/favorite.png` path the image will be served at.
+
+```diff
+  // hello_world/blog_post_card/blog_post_card.tsx
+
+  import { Template, includeScript, inlineStyle } from '@rules_prerender/preact';
+
+  /** Represents a blog post which can be displayed in a card. */
+  export interface BlogPost {
+      title: string;
+      summary: string;
+      link: URL;
+  }
+
+  /** Renders a card linking to the given blog post. */
+  export function BlogPostCard({ post }: { post: BlogPost }): VNode {
+      return <section>
+          <Template shadowrootmode="open">
+              {inlineStyle('./blog_post_card.css', import.meta)}
+              {includeScript('./blog_post_card_script.mjs', import.meta)}
+
+              <h2><a href={post.link.toString()}>{post.title}</a></h2>
+              <div>{post.summary}</div>
++             <img src="/images/favorite.png" alt="Star icon.">
+          </Template>
+      </section>;
+  }
+```
+
+Rerun the application to see the star appear.
+
+```shell
+bazel run //hello_world:devserver
+```
+
+### `web_resources` usage
+
+With `web_resources`, components can include static files at known URL paths.
+Resources are always included in the build whenever their associated component
+is used, so a component can easily rely on static files.
+
+Resources are not just limited to images, they can include any kind of file
+content such as (but not limited to):
+
+*   Images
+*   Videos
+*   Fonts
+*   Raw text
+*   JSON
+*   Binary content
+
+`<img>` tags are one way of consuming the content in the web site, but again,
+they are not required. Since these resources are served like any other web
+content they can be accessed through
+[`<video>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video),
+[`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face), or
+even [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+Resources are compatible with any mechanism which loads content over HTTP.
+
+These files can also be generated at build time. `entries` accepts any Bazel
+label as a dependency provided it outputs a single file. That label could be the
+output of a [`genrule`](https://bazel.build/reference/be/general#genrule) or a
+[custom rule](https://bazel.build/extending/rules) which generates an
+arbitrarily complex file at build time.
