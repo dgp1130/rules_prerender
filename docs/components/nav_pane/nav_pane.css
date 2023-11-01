@@ -5,7 +5,7 @@
     background-color: var(--light-gray);
     overflow-x: hidden;
 
-    --rp-nav-pane--indentation: 1.5rem;
+    --rp-nav-pane--indentation: 0.75rem;
 }
 
 /* Root `<ul>` element. */
@@ -30,6 +30,11 @@ li.expanded > ul {
     display: block;
 }
 
+/* Highlight the currently visited page. */
+li.current-page {
+    background-color: lightgrey;
+}
+
 /* Apply `>` to any expandable lists. */
 li.sublist > button::after {
     content: '>';
@@ -49,9 +54,11 @@ li.sublist.expanded > button::after {
 }
 
 .list-el {
-    width: 300px;
+    --rp-nav-pane-indentation: 0;
+    --rp-nav-pane--padding: 0.75rem;
+
     display: block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.25rem var(--rp-nav-pane--padding);
 }
 
 .list-el:hover {
@@ -59,8 +66,14 @@ li.sublist.expanded > button::after {
 }
 
 /* Indent each level of the nested lists. */
-.list-el.depth-1 { padding-left: var(--rp-nav-pane--indentation); }
-.list-el.depth-2 { padding-left: calc(2 * var(--rp-nav-pane--indentation)); }
+.list-el.depth-1 {
+    padding-left: calc(var(--rp-nav-pane--padding)
+        + var(--rp-nav-pane--indentation));
+}
+.list-el.depth-2 {
+    padding-left: calc(var(--rp-nav-pane--padding)
+        + 2 * var(--rp-nav-pane--indentation));
+}
 
 /* Clear built-in button styles to align with anchor tags. */
 button {
