@@ -1,5 +1,6 @@
 :host {
     height: 100%;
+    margin: 0 auto;
 }
 
 #md {
@@ -13,4 +14,8 @@
 
 #md > :last-child {
     margin-block-end: 0;
+}
+
+#md pre {
+    overflow-x: auto;
 }

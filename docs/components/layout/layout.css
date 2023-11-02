@@ -8,8 +8,6 @@
         "footer footer footer" auto;
     grid-template-columns: 300px 1fr 0fr;
     column-gap: 1rem;
-
-    height: 100%;
     background-color: var(--light-gray);
     overflow-y: auto;
 }
@@ -36,13 +34,23 @@ rp-nav-pane {
 main {
     grid-area: main;
     padding: 0 1rem;
-    margin: 1rem auto;
+    margin: 1rem 0;
 
     width: calc(100% - 2rem /* padding */);
     max-width: 936px /* arbitrary number from Bazel docs */;
 
     background-color: white;
     box-shadow: 0 0 3px 0 gray;
+
+    /*
+     * IMPORTANT! The `main` content doesn't scroll independently, in fact it
+     * should never have its own scrollbar. Yet, for some reason this one style
+     * is critical to getting `<code>` tags to have their own horizontal scroll
+     * bars. Exactly why is not clear.
+     *
+     * See: https://stackoverflow.com/a/77413468/3995712
+     */
+    overflow-y: auto;
 }
 
 footer {
