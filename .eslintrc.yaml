@@ -94,6 +94,14 @@ overrides:
   - "**/test.cts"
   - "**/*_test.tsx"
   - "**/test.tsx"
+  - "**/*_test_cases.ts"
+  - "**/test_cases.ts"
+  - "**/*_test_cases.mts"
+  - "**/test_cases.mts"
+  - "**/*_test_cases.cts"
+  - "**/test_cases.cts"
+  - "**/*_test_cases.tsx"
+  - "**/test_cases.tsx"
   rules:
     # Disable non-null assertions in test files.
     '@typescript-eslint/no-non-null-assertion':
