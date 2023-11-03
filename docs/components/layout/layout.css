@@ -33,14 +33,8 @@ rp-nav-pane {
 
 main {
     grid-area: main;
-    padding: 0 1rem;
-    margin: 1rem 0;
 
-    width: calc(100% - 2rem /* padding */);
-    max-width: 936px /* arbitrary number from Bazel docs */;
-
-    background-color: white;
-    box-shadow: 0 0 3px 0 gray;
+    width: 100%;
 
     /*
      * IMPORTANT! The `main` content doesn't scroll independently, in fact it

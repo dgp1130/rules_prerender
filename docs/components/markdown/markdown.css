@@ -1,11 +1,21 @@
 :host {
-    height: 100%;
-    margin: 0 auto;
+    max-width: 936px /* arbitrary number from Bazel docs */;
+    margin: 1rem auto;
 }
 
 #md {
+    --rp-markdown--box-shadow-size: 5px;
+
     height: calc(100% - (2 * 1em));
-    padding: 1rem 0;
+    background-color: white;
+    padding: 1rem;
+
+    /*
+     * Box-shadow needs a margin to protect it or else thin containers with
+     * paddings will "cover" the shadow with blank space.
+     */
+    margin: 0 var(--rp-markdown--box-shadow-size);
+    box-shadow: 0 0 var(--rp-markdown--box-shadow-size) 0 gray;
 }
 
 #md > :first-child {
