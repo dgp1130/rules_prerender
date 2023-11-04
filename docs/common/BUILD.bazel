@@ -43,3 +43,25 @@ jasmine_node_test(
     name = "imperative_iterator_test",
     deps = [":imperative_iterator_test_lib"],
 )
+
+ts_project(
+    name = "iterables",
+    srcs = ["iterables.mts"],
+    visibility = ["//docs:__subpackages__"],
+    deps = [":imperative_iterator"],
+)
+
+ts_project(
+    name = "iterables_test_lib",
+    srcs = ["iterables_test.mts"],
+    testonly = True,
+    deps = [
+        ":iterables",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "iterables_test",
+    deps = [":iterables_test_lib"],
+)
