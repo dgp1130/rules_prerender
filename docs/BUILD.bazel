@@ -45,12 +45,6 @@ ts_project(
 )
 
 ts_project(
-    name = "route",
-    srcs = ["route.mts"],
-    visibility = [":__subpackages__"],
-)
-
-ts_project(
     name = "routing",
     srcs = ["routing.mts"],
     visibility = [":__subpackages__"],
