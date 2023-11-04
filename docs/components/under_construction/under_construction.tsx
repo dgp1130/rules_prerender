@@ -2,17 +2,24 @@ import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
 import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Layout } from '../layout/layout.js';
-import { Route } from '../../route.mjs';
+import { type Route } from '../../routing.mjs';
 
 /** Renders a "under construction" placeholder page. */
-export function UnderConstruction({ pageTitle, headerTitle, routes } : {
+export function UnderConstruction({
+    pageTitle,
+    headerTitle,
+    currentRoute,
+    routes,
+}: {
     pageTitle: string,
     headerTitle?: string,
-    routes: readonly Route[],
+    currentRoute: Route,
+    routes: Route[],
 }): VNode {
     return <Layout
         pageTitle={`${pageTitle} - Under Construction`}
         headerTitle={headerTitle}
+        currentRoute={currentRoute}
         routes={routes}
     >
         <div>

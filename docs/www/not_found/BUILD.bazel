@@ -23,8 +23,10 @@ ts_project(
 ts_project(
     name = "prerender_test_lib",
     srcs = ["not_found_test.tsx"],
+    testonly = True,
     deps = [
         ":prerender",
+        "//docs:routing_mock",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
         "//:node_modules/preact",

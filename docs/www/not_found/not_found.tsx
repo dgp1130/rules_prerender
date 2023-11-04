@@ -2,11 +2,18 @@ import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
 import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Layout } from '../../components/layout/layout.js';
-import { Route } from '../../route.mjs';
+import { type Route } from '../../routing.mjs';
 
 /** Renders a 404 Not Found page. */
-export function NotFound({ routes }: { routes: readonly Route[] }): VNode {
-    return <Layout pageTitle="Not Found" routes={routes}>
+export function NotFound({ currentRoute, routes }: {
+    currentRoute: Route,
+    routes: Route[],
+}): VNode {
+    return <Layout
+        pageTitle="Not Found"
+        currentRoute={currentRoute}
+        routes={routes}
+    >
         <div>
             <Template shadowrootmode="open">
                 <h2>Not Found</h2>

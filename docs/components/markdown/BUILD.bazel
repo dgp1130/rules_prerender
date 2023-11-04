@@ -27,6 +27,7 @@ ts_project(
     testonly = True,
     deps = [
         ":markdown_prerender",
+        "//docs:routing_mock",
         "//docs/markdown:markdown_page_mock",
         "//:node_modules/preact",
         "//:node_modules/preact-render-to-string",

@@ -4,7 +4,7 @@ import { VNode, ComponentChildren } from 'preact';
 import { Footer } from '../footer/footer.js';
 import { Header } from '../header/header.js';
 import { NavPane } from '../nav_pane/nav_pane.js';
-import { Route } from '../../route.mjs';
+import { type Route } from '../../routing.mjs';
 
 /**
  * Renders the base layout for documentation. Most pages should use this.
@@ -16,6 +16,8 @@ import { Route } from '../../route.mjs';
  * @param headChildren Children to render under the `<head>` element. Callers
  *     should *not* render `<title>` or `<meta charset="utf8">`, `Layout` will
  *     do that automatically.
+ * @param currentRoute Reference to a specific route in the {@param routes}
+ *     forest which this layout is currently rendering.
  * @param routes List of routes to render in the navigation pane.
  */
 export function Layout({
@@ -23,13 +25,15 @@ export function Layout({
     headerTitle,
     children,
     headChildren,
-    routes = [],
+    currentRoute,
+    routes,
 }: {
     pageTitle: string,
     headerTitle?: string,
-    children: ComponentChildren,
+    children?: ComponentChildren,
     headChildren?: ComponentChildren,
-    routes?: readonly Route[],
+    currentRoute: Route,
+    routes: Route[],
 }): VNode {
     return <html lang="en">
         <head>
@@ -45,10 +49,11 @@ export function Layout({
                     {includeScript('./layout_script.mjs', import.meta)}
 
                     <Header headerTitle={headerTitle} defer-hydration />
-                    {routes.length
-                        ? <NavPane routes={routes} defer-hydration />
-                        : undefined
-                    }
+                    <NavPane
+                        currentRoute={currentRoute}
+                        routes={routes}
+                        defer-hydration
+                    />
                     <main>{children}</main>
                     <Footer />
                 </Template>

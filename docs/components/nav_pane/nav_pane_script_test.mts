@@ -52,4 +52,52 @@ describe('NavPane', () => {
         );
         expect(collapseSubListDisplay).toBe('none');
     }, webDriverTestTimeout);
+
+    it('starts with the current route expanded and highlighted', async () => {
+        const browser = wd.get();
+        await browser.url('/current.html');
+
+        const navPane = await browser.$('rp-nav-pane');
+
+        // Need to use `[test-id]` here because `:scope > ul` doesn't work with
+        // shadow DOM and `:scope ul` would collected nested lists.
+        const rootRoutes = await navPane.shadow$$('ul[test-id="root"] > li');
+        expect(rootRoutes.length).toBe(2);
+
+        const rootLabels = await Promise.all(rootRoutes
+            .map((route) => route.$(':scope > :is(a, button)').getText()));
+        expect(rootLabels).toEqual([ 'First', 'Second' ]);
+
+        const [ firstRootRouteList, secondRootRouteList ] = await Promise.all(
+            rootRoutes.map((route) => route.$(':scope > ul')));
+
+        // First list should be expanded because it contains the current route.
+        const firstRootRouteListDisplay = await browser.execute(
+            (el) => getComputedStyle(el).display,
+            firstRootRouteList as unknown as HTMLElement,
+        );
+        expect(firstRootRouteListDisplay).not.toBe('none');
+
+        // Second list should *not* be expanded because it does not contain the
+        // current route.
+
+        // First list should be expanded because it contains the current route.
+        const secondRootRouteListDisplay = await browser.execute(
+            (el) => getComputedStyle(el).display,
+            secondRootRouteList as unknown as HTMLElement,
+        );
+        expect(secondRootRouteListDisplay).toBe('none');
+
+        // Current page should be highlighted.
+        const selectedPages = await navPane.shadow$$('.current-page');
+
+        // Can only ever currently be on a single page.
+        expect(selectedPages.length)
+            .withContext('Multiple pages selected, only one can be the current page')
+            .toBe(1);
+
+        // The current page should be highlighted.
+        const [ selectedPage ] = selectedPages;
+        expect(await selectedPage!.getText()).toBe('Current');
+    });
 });

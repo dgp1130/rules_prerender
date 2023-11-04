@@ -14,7 +14,7 @@ ts_project(
     name = "prerender",
     srcs = ["layout.tsx"],
     deps = [
-        "//docs:route",
+        "//docs:routing",
         "//docs/components/footer:footer_prerender",
         "//docs/components/header:header_prerender",
         "//docs/components/nav_pane:nav_pane_prerender",
@@ -30,6 +30,7 @@ ts_project(
     testonly = True,
     deps = [
         ":prerender",
+        "//docs:routing_mock",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
         "//:node_modules/preact",

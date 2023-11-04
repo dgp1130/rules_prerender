@@ -34,7 +34,7 @@ ts_project(
         "//docs/www:tutorials/getting_started/getting_started.md",
     ],
     deps = [
-        ":route",
+        ":routing",
         "//docs/components/markdown:markdown_prerender",
         "//docs/components/under_construction:under_construction_prerender",
         "//docs/markdown:markdown_loader",

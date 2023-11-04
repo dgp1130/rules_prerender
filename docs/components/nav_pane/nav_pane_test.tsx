@@ -1,18 +1,22 @@
 import { render } from 'preact-render-to-string';
 import { HTMLElement, parse } from 'node-html-parser';
 import { NavPane } from './nav_pane.js';
-import { Route } from '../../route.mjs';
+import { mockRoute } from '../../routing_mock.mjs';
 
 describe('nav_pane', () => {
     describe('NavPane()', () => {
         it('renders a flat navigation hierarchy', () => {
             const routes = [
-                { label: 'Home', content: '/' },
-                { label: 'About', content: '/about/' },
-                { label: 'Contact', content: '/contact/' },
-            ] satisfies Route[];
+                mockRoute({ label: 'Home', path: '/' }),
+                mockRoute({ label: 'About', path: '/about/' }),
+                mockRoute({ label: 'Contact', path: '/contact/' }),
+            ];
+            const currentRoute = routes[0]!;
 
-            const fragment = parse(render(<NavPane routes={routes} />));
+            const fragment = parse(render(<NavPane
+                currentRoute={currentRoute}
+                routes={routes}
+            />));
 
             // Renders the custom element.
             const root = fragment.firstChild as HTMLElement;
@@ -29,16 +33,20 @@ describe('nav_pane', () => {
 
         it('renders a nested hierarchy', () => {
             const routes = [
-                {
+                mockRoute({
                     label: 'Root',
-                    content: [
-                        { label: 'First', content: '/first/' },
-                        { label: 'Second', content: '/second/' },
+                    children: [
+                        mockRoute({ label: 'First', path: '/first/' }),
+                        mockRoute({ label: 'Second', path: '/second/' }),
                     ],
-                },
-            ] satisfies Route[];
+                }),
+            ];
+            const currentRoute = routes[0]!;
 
-            const fragment = parse(render(<NavPane routes={routes} />));
+            const fragment = parse(render(<NavPane
+                currentRoute={currentRoute}
+                routes={routes}
+            />));
             expect(fragment).not.toBeNull();
 
             // Renders the root element at depth 0.
@@ -57,8 +65,10 @@ describe('nav_pane', () => {
         });
 
         it('throws an error when given no routes', () => {
-            expect(() => render(<NavPane routes={[]} />))
-                .toThrowError(/Must provide at least one route/);
+            expect(() => render(<NavPane
+                currentRoute={mockRoute()}
+                routes={[]}
+            />)).toThrowError(/Must provide at least one route/);
         });
     });
 });
