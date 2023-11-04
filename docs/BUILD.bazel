@@ -51,6 +51,43 @@ ts_project(
 )
 
 ts_project(
+    name = "routing",
+    srcs = ["routing.mts"],
+    visibility = [":__subpackages__"],
+    deps = [
+        "//docs/common:iterables",
+        "//:node_modules/@types/node",
+        "//:node_modules/rules_prerender",
+    ],
+)
+
+ts_project(
+    name = "routing_mock",
+    srcs = ["routing_mock.mts"],
+    testonly = True,
+    visibility = [":__subpackages__"],
+    deps = [":routing"],
+)
+
+ts_project(
+    name = "routing_test_lib",
+    srcs = ["routing_test.mts"],
+    testonly = True,
+    deps = [
+        ":routing",
+        ":routing_mock",
+        "//docs/common:iterables",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/rules_prerender",
+    ],
+)
+
+jasmine_node_test(
+    name = "routing_test",
+    deps = [":routing_test_lib"],
+)
+
+ts_project(
     name = "test_id",
     srcs = ["test_id.mts"],
     visibility = [":__subpackages__"],

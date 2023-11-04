@@ -33,6 +33,7 @@
         "prerenders",
         "promisified",
         "readonly",
+        "Renderable",
         "ruleset",
         "runfile",
         "runfiles",
