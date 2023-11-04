@@ -1,0 +1,23 @@
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
+
+ts_project(
+    name = "delayed",
+    srcs = ["delayed.mts"],
+    visibility = ["//docs:__subpackages__"],
+)
+
+ts_project(
+    name = "delayed_test_lib",
+    srcs = ["delayed_test.mts"],
+    testonly = True,
+    deps = [
+        ":delayed",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "delayed_test",
+    deps = [":delayed_test_lib"],
+)
