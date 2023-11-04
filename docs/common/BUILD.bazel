@@ -21,3 +21,25 @@ jasmine_node_test(
     name = "delayed_test",
     deps = [":delayed_test_lib"],
 )
+
+ts_project(
+    name = "imperative_iterator",
+    srcs = ["imperative_iterator.mts"],
+    visibility = ["//docs:__subpackages__"],
+    deps = [":delayed"],
+)
+
+ts_project(
+    name = "imperative_iterator_test_lib",
+    srcs = ["imperative_iterator_test.mts"],
+    testonly = True,
+    deps = [
+        ":imperative_iterator",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "imperative_iterator_test",
+    deps = [":imperative_iterator_test_lib"],
+)
