@@ -1,4 +1,5 @@
 import { ImperativeIterator, ImperativeIteratorFactory } from './imperative_iterator.mjs';
+import { arrayFromAsync } from './iterables.mjs';
 
 describe('imperative_iterator', () => {
     describe('ImperativeIterator', () => {
@@ -207,14 +208,3 @@ describe('imperative_iterator', () => {
         });
     });
 });
-
-async function arrayFromAsync<Item>(iterator: AsyncIterable<Item>):
-        Promise<Item[]> {
-    const results: Item[] = [];
-
-    for await (const item of iterator) {
-        results.push(item);
-    }
-
-    return results;
-}

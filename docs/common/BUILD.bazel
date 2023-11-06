@@ -35,6 +35,7 @@ ts_project(
     testonly = True,
     deps = [
         ":imperative_iterator",
+        ":iterables",
         "//:node_modules/@types/jasmine",
     ],
 )

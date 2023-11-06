@@ -45,3 +45,23 @@ export function parallel<Item>(...iterables: Array<AsyncIterable<Item>>):
 
     return iteratorFactory.iterable;
 }
+
+/**
+ * An async version of {@link Array.prototype.from}. Collects all the values
+ * from the given iterable and returns them as an array. Throws if the input
+ * iterable throws.
+ *
+ * @param iterable An {@link AsyncIterable} to collect values from.
+ * @returns A {@link Promise} resolving to an array of values emitted by the
+ *     given iterable.
+ */
+export async function arrayFromAsync<Item>(iterable: AsyncIterable<Item>):
+        Promise<Item[]> {
+    const results: Item[] = [];
+
+    for await (const item of iterable) {
+        results.push(item);
+    }
+
+    return results;
+}

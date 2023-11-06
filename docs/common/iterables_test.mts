@@ -1,4 +1,4 @@
-import { parallel } from './iterables.mjs';
+import { arrayFromAsync, parallel } from './iterables.mjs';
 
 describe('iterables', () => {
     describe('parallel', () => {
@@ -112,18 +112,32 @@ describe('iterables', () => {
             await expectAsync(arrayFromAsync(parallel())).toBeResolvedTo([]);
         });
     });
+
+    describe('arrayFromAsync', () => {
+        it('collects all the values emitted by the iterable', async () => {
+            async function* generate(): AsyncGenerator<number, void, void> {
+                yield 1;
+                yield 2;
+                await timeout(1);
+                yield 3;
+            }
+
+            const results = await arrayFromAsync(generate());
+
+            expect(results).toEqual([ 1, 2, 3 ]);
+        });
+
+        it('throws when the input iterable throws', async () => {
+            const err = new Error('Oh noes!');
+            // eslint-disable-next-line require-yield
+            async function* generate(): AsyncGenerator<number, void, void> {
+                throw err;
+            }
+
+            await expectAsync(arrayFromAsync(generate())).toBeRejectedWith(err);
+        });
+    });
 });
-
-async function arrayFromAsync<Item>(iterator: AsyncIterable<Item>):
-        Promise<Item[]> {
-    const results: Item[] = [];
-
-    for await (const item of iterator) {
-        results.push(item);
-    }
-
-    return results;
-}
 
 function timeout(ms: number): Promise<void> {
     return new Promise<void>((resolve) => {
