@@ -469,6 +469,7 @@ describe('routing', () => {
                     label: 'Render',
                     path: '',
                     render: renderSpy,
+                    hiddenChild: false,
                 }),
             ];
 
@@ -481,6 +482,7 @@ describe('routing', () => {
             }));
             expect(currentRoute).not.toEqual(jasmine.objectContaining({
                 render: jasmine.any(Function),
+                hiddenChild: false,
             }));
 
             expect(rootRoutes).toEqual([
@@ -492,8 +494,233 @@ describe('routing', () => {
             expect(rootRoutes).not.toEqual([
                 jasmine.objectContaining({
                     render: jasmine.any(Function),
+                    hiddenChild: false,
                 }),
             ]);
+        });
+
+        it('hides hidden routes from `render` function inputs', async () => {
+            const visibleSpy = jasmine.createSpy<Render>('visibleRender')
+                .and.returnValue(safe`<div>Hello, World!</div>`);
+            const hiddenSpy = jasmine.createSpy<Render>('hiddenRender')
+                .and.returnValue(safe`<div>Hello, World!</div>`);
+
+            const routes = [
+                mockRouteConfig({
+                    path: 'parent',
+                    children: [
+                        mockRouteConfig({
+                            path: 'visible/',
+                            render: visibleSpy,
+                        }),
+                        mockRouteConfig({
+                            path: 'hidden/',
+                            render: hiddenSpy,
+                            hiddenChild: true,
+                        }),
+                    ],
+                }),
+            ];
+
+            await arrayFromAsync(generateRoutePages(routes));
+
+            expect(visibleSpy).toHaveBeenCalledOnceWith(
+                jasmine.objectContaining({
+                    path: '/parent/visible/',
+                    parent: jasmine.objectContaining({
+                        path: '/parent',
+                        children: [
+                            jasmine.objectContaining({
+                                path: '/parent/visible/',
+                            }),
+                            // No `/parent/hidden/` route.
+                        ],
+                    }),
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/parent',
+                        children: [
+                            jasmine.objectContaining({
+                                path: '/parent/visible/',
+                            }),
+                            // No `/parent/hidden/` route.
+                        ],
+                    }),
+                ],
+            );
+
+            expect(hiddenSpy).toHaveBeenCalledOnceWith(
+                // Self-link to the hidden route.
+                jasmine.objectContaining({
+                    path: '/parent/hidden/',
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/parent',
+                        children: [
+                            jasmine.objectContaining({
+                                path: '/parent/visible/',
+                            }),
+                            // No `/parent/hidden/` route.
+                        ],
+                    }),
+                ],
+            );
+        });
+
+        // A separate code path is needed to remove hidden routes from the
+        // top-level route config array.
+        it('hides top-level hidden routes from `render` function inputs', async () => {
+            const visibleSpy = jasmine.createSpy<Render>('visibleRender')
+                .and.returnValue(safe`<div>Hello, World!</div>`);
+            const hiddenSpy = jasmine.createSpy<Render>('hiddenRender')
+                .and.returnValue(safe`<div>Hello, World!</div>`);
+
+            const routes = [
+                mockRouteConfig({
+                    path: 'visible/',
+                    render: visibleSpy,
+                }),
+                mockRouteConfig({
+                    path: 'hidden/',
+                    render: hiddenSpy,
+                    hiddenChild: true,
+                }),
+            ];
+
+            await arrayFromAsync(generateRoutePages(routes));
+
+            expect(visibleSpy).toHaveBeenCalledOnceWith(
+                jasmine.objectContaining({
+                    path: '/visible/',
+                    parent: undefined,
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/visible/',
+                    }),
+                    // No `/hidden/` route.
+                ],
+            );
+
+            expect(hiddenSpy).toHaveBeenCalledOnceWith(
+                // Self-link to the hidden route.
+                jasmine.objectContaining({
+                    path: '/hidden/',
+                    parent: undefined,
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/visible/',
+                        parent: undefined,
+                    }),
+                    // No `/hidden/` route.
+                ],
+            );
+        });
+
+        it('hides a subtree when `hiddenChild` is placed on a parent route', async () => {
+            const visibleChildSpy =
+                jasmine.createSpy<Render>('visibleChildRender')
+                    .and.returnValue(safe`<div>Hello, World!</div>`);
+            const hiddenChildSpy =
+                jasmine.createSpy<Render>('hiddenChildRender')
+                    .and.returnValue(safe`<div>Hello, World!</div>`);
+
+            const routes = [
+                mockRouteConfig({
+                    path: 'visible/',
+                    render: () => safe`<div>Hello, World!</div>`,
+                }),
+                mockRouteConfig({
+                    path: 'hiddenParent/',
+                    hiddenChild: true,
+                    children: [
+                        mockRouteConfig({
+                            path: 'visibleChild/',
+                            render: visibleChildSpy,
+                        }),
+                        mockRouteConfig({
+                            path: 'hiddenChild/',
+                            render: hiddenChildSpy,
+                            hiddenChild: true,
+                        }),
+                    ],
+                }),
+            ];
+
+            await arrayFromAsync(generateRoutePages(routes));
+
+            expect(visibleChildSpy).toHaveBeenCalledOnceWith(
+                jasmine.objectContaining({
+                    path: '/hiddenParent/visibleChild/',
+                    parent: jasmine.objectContaining({
+                        path: '/hiddenParent/',
+                        children: [
+                            jasmine.objectContaining({
+                                path: '/hiddenParent/visibleChild/',
+                            }),
+                            // No `/hiddenParent/hiddenChild/`.
+                        ],
+                    }),
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/visible/',
+                    }),
+                    // No `/hiddenParent/` route.
+                ],
+            );
+
+            expect(hiddenChildSpy).toHaveBeenCalledOnceWith(
+                // Self-link to the hidden route.
+                jasmine.objectContaining({
+                    path: '/hiddenParent/hiddenChild/',
+                    parent: jasmine.objectContaining({
+                        path: '/hiddenParent/',
+                        children: [
+                            jasmine.objectContaining({
+                                path: '/hiddenParent/visibleChild/',
+                            }),
+                            // No `/hiddenParent/hiddenChild/`.
+                        ],
+                    }),
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/visible/',
+                    }),
+                    // No `/hiddenParent/` route.
+                ],
+            );
+        });
+
+        it('maintains referential equality between the current route tree and the root routes forest', async () => {
+            const renderSpy = jasmine.createSpy<Render>('render')
+                .and.returnValue(safe`<div>Hello, World!</div>`);
+            const routes = [
+                mockRouteConfig({
+                    path: 'parent',
+                    children: [
+                        mockRouteConfig({
+                            path: 'child/',
+                            render: renderSpy,
+                        }),
+                    ],
+                }),
+            ];
+
+            await arrayFromAsync(generateRoutePages(routes));
+
+            const [ currentRoute, rootRoutes ] = renderSpy.calls.first().args;
+            const parentFromRootForest = rootRoutes[0]!;
+            const childFromRootForest = parentFromRootForest.children![0];
+            const parentFromCurrentTree = currentRoute.parent!;
+            const childFromCurrentTree = currentRoute;
+
+            expect(parentFromRootForest).toBe(parentFromCurrentTree);
+            expect(childFromRootForest).toBe(childFromCurrentTree);
         });
 
         it('throws an error when render function does not return `SafeHtml`', async () => {

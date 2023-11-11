@@ -73,6 +73,13 @@ export type RouteConfig = Omit<Route, 'parent'> & {
      */
     readonly render?: (currentRoute: Route, routes: Route[]) =>
         SafeHtml | Promise<SafeHtml>;
+
+    /**
+     * Whether or not the route should be hidden from the displayed DOM. The
+     * page will still be rendered and accessible at its URL but will not appear
+     * in the {@link Route} array given to the `render` function.
+     */
+    readonly hiddenChild?: boolean;
 }
 
 /**
@@ -115,15 +122,16 @@ export function bootstrap(routeConfig: readonly RouteConfig[]):
 export async function* generateRoutePages(routeConfigs: readonly RouteConfig[]):
         AsyncGenerator<PrerenderResource, void, void> {
     // Process the input configuration into a `LinkedRoute[]`.
-    const routeForest = transformConfigsToRoutes(routeConfigs);
-    const linkedRouteForest = linkRouteForests(routeConfigs, routeForest);
+    const transformedForest = transformConfigsToRoutes(routeConfigs);
+    const linkedRouteForest = linkRouteForests(routeConfigs, transformedForest);
+    const routeForest = stripHiddenChildren(linkedRouteForest);
 
     // Assert the input configuration was sane.
-    assertNoDuplicateRoutes(linkedRouteForest);
-    assertLeafRoutesRenderable(linkedRouteForest);
+    assertNoDuplicateRoutes(routeForest);
+    assertLeafRoutesRenderable(routeForest);
 
     // Generate all routes in parallel.
-    const resources = parallel(...generateRouteForest(linkedRouteForest));
+    const resources = parallel(...generateRouteForest(routeForest));
     for await (const resource of resources) yield resource;
 }
 
@@ -134,7 +142,11 @@ function generateRouteForest(
 ): Array<AsyncIterable<PrerenderResource>> {
     // Default to the first `routeForest` given as the root.
     const rootForest = inputRootForest
-        ?? routeForest.map((linkedRoute) => linkedRoute.route);
+        ?? routeForest
+            // Need to manually hide top-level hidden routes as they aren't
+            // covered by `stripHiddenChildren`.
+            .filter((linkedRoute) => !linkedRoute.config.hiddenChild)
+            .map((linkedRoute) => linkedRoute.route);
 
     return routeForest.flatMap((linkedRoute) => {
         const gens: AsyncIterable<PrerenderResource>[] = [];
@@ -206,6 +218,59 @@ function linkRouteForests(
             route.children ?? [],
         ),
     }));
+}
+
+/**
+ * Transforms the input {@link LinkedRoute} array into a new version where
+ * hidden children are removed. There are a few nuances to this function:
+ *
+ * 1.  Only the `route` subtree is affected, the `config` subtree is left alone.
+ *     This is so we can find and render hidden routes under the `config` tree
+ *     even if they aren't present in the `route` tree.
+ * 2.  Top-level hidden routes remain in the output because we need the `config`
+ *     tree for each to render them. These will need to be removed at a later
+ *     stage.
+ * 3.  Hidden children still retain valid references to their parent. These
+ *     routes are only removed from the `children` property of their parents.
+ *     This is because hidden routes still receive a reference to their own
+ *     location when rendering themselves, and it is valid to follow that path
+ *     up to the root.
+ * 4.  If a hidden route contains child routes, these routes will be
+ *     inaccessible from the root of the `route` subtree. However those routes
+ *     can be accessed when rendering the hidden parent, since they will still
+ *     be visible under the parent routes self-link unless each child is
+ *     individually hidden.
+ */
+function stripHiddenChildren(linkedRoutes: LinkedRoute[], parent?: LinkedRoute):
+        LinkedRoute[] {
+    return linkedRoutes.map((linkedRoute) => {
+        // Create a new `LinkedRoute` with an updated `route` subtree with
+        // hidden children removed and an updated `parent` link.
+        const transformedRoute = {
+            ...linkedRoute,
+            route: {
+                ...linkedRoute.route,
+                parent: parent?.route,
+            },
+        };
+
+        // Recursively remove hidden children and also update the `parent` link
+        // of each to point to the transformed route object.
+        transformedRoute.children =
+            stripHiddenChildren(linkedRoute.children, transformedRoute);
+
+        // Each route has two paths to it:
+        // 1. Through the associated `LinkedRoute`.
+        // 2. Through the parent `Route`.
+        // We already updated the `LinkedRoute` edge above, but we also need to
+        // update the `Route` edge to maintain referential equality since we
+        // have created a new `Route` object in this function.
+        transformedRoute.route.children = transformedRoute.children
+            .filter((route) => !route.config.hiddenChild)
+            .map((linkedChild) => linkedChild.route);
+
+        return transformedRoute;
+    });
 }
 
 /** Asserts no two input routes will generate a file at the same location. */
