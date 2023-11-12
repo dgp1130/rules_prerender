@@ -156,7 +156,17 @@ function generateRouteForest(
         if (render) {
             gens.push((async function* () {
                 const htmlPath = inferHtmlPath(linkedRoute.route.path);
-                const html = await render(linkedRoute.route, rootForest);
+                let html: SafeHtml;
+                try {
+                    html = await render(linkedRoute.route, rootForest);
+                } catch (err) {
+                    if (err instanceof Error) {
+                        err.message = `Error while rendering \`${
+                            linkedRoute.route.path}\`:\n${err.message}`;
+                    }
+
+                    throw err;
+                }
                 yield PrerenderResource.fromHtml(htmlPath, html);
             })());
         }

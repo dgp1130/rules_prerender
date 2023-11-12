@@ -733,6 +733,19 @@ describe('routing', () => {
             await expectAsync(arrayFromAsync(generateRoutePages(routes)))
                 .toBeRejectedWithError(/Only `SafeHtml` objects can be used/);
         });
+
+        it('wraps errors with the route being rendered', async () => {
+            const routes = [
+                mockRouteConfig({
+                    path: 'foo/bar/baz/',
+                    render: () => { throw new Error('Oh noes!'); },
+                }),
+            ];
+
+            await expectAsync(arrayFromAsync(generateRoutePages(routes)))
+                .toBeRejectedWithError(
+                    /Error while rendering `\/foo\/bar\/baz\/`/);
+        });
     });
 
     describe('bootstrap', () => {
