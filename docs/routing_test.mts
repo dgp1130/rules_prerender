@@ -696,6 +696,33 @@ describe('routing', () => {
             );
         });
 
+        it('defaults leaf route children to an empty array', async () => {
+            const renderSpy = jasmine.createSpy<Render>('render')
+                .and.returnValue(safe`<div>Hello, World!</div>`);
+            const routes = [
+                mockRouteConfig({
+                    path: 'leaf/',
+                    children: undefined,
+                    render: renderSpy,
+                }),
+            ];
+
+            await arrayFromAsync(generateRoutePages(routes));
+
+            expect(renderSpy).toHaveBeenCalledOnceWith(
+                jasmine.objectContaining({
+                    path: '/leaf/',
+                    children: [], // Normalized to empty array.
+                }),
+                [
+                    jasmine.objectContaining({
+                        path: '/leaf/',
+                        children: [], // Normalized to empty array.
+                    }),
+                ],
+            );
+        });
+
         it('maintains referential equality between the current route tree and the root routes forest', async () => {
             const renderSpy = jasmine.createSpy<Render>('render')
                 .and.returnValue(safe`<div>Hello, World!</div>`);

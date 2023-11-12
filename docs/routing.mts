@@ -17,7 +17,7 @@ export interface Route {
     readonly path: string;
 
     /** Child routes to be included under this route in navigation. */
-    readonly children?: Route[],
+    readonly children: Route[],
 
     /** The direct parent route containing this route. */
     readonly parent?: Route,
@@ -59,7 +59,7 @@ export interface Route {
  * up a resource such as `./foo.jpg` the former will resolve to
  * `/parent/foo.jpg` while the latter will use `/parent/child/foo.jpg`.
  */
-export type RouteConfig = Omit<Route, 'parent'> & {
+export type RouteConfig = Omit<Omit<Route, 'parent'>, 'children'> & {
     /** Child routes to be included under this route in navigation. */
     readonly children?: RouteConfig[];
 
@@ -205,12 +205,12 @@ function transformConfigsToRoutes(
             label: routeConfig.label,
             path: fullPath,
             parent: parent,
-            children: undefined as Route[] | undefined,
+            children: [] as Route[],
         };
 
         tree.children = routeConfig.children
             ? transformConfigsToRoutes(routeConfig.children, tree)
-            : undefined;
+            : [];
 
         return tree;
     });
