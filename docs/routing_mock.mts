@@ -7,6 +7,7 @@
  * {@link mockRoute} calls.
  */
 
+import { safe } from 'rules_prerender';
 import { type Route, type RouteConfig } from './routing.mjs';
 
 /**
@@ -25,7 +26,10 @@ export function mockRouteConfig(overrides: Partial<RouteConfig> = {}):
         RouteConfig {
     const config = {
         label: `Really cool page #${routeCount}`,
-        path: `/path/to/page/indexed/${routeCount}/`,
+        path: `path/to/page/indexed/${routeCount}/`,
+        render: overrides.render ?? overrides.children?.length
+            ? undefined
+            : () => safe`<div>Howdy!</div>`,
         ...overrides,
     };
     routeCount++;

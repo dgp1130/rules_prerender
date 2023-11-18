@@ -94,20 +94,14 @@ describe('routing', () => {
 
         it('throws an error for any non-HTML file extension', async () => {
             await expectAsync(arrayFromAsync(generateRoutePages([
-                mockRouteConfig({
-                    path: 'foo/bar/baz/file.ext',
-                    render: () => safe`<div>Hello</div>`,
-                }),
+                mockRouteConfig({ path: 'foo/bar/baz/file.ext' }),
             ]))).toBeRejectedWithError(
                 /must end in a `\/` or `\.html` extension/);
         });
 
         it('throws an error for paths with no extension', async () => {
             await expectAsync(arrayFromAsync(generateRoutePages([
-                mockRouteConfig({
-                    path: 'foo/bar/baz',
-                    render: () => safe`<div>Hello</div>`,
-                }),
+                mockRouteConfig({ path: 'foo/bar/baz' }),
             ]))).toBeRejectedWithError(
                 /must end in a `\/` or `\.html` extension/);
         });
@@ -156,7 +150,7 @@ describe('routing', () => {
                     render: undefined, // Should be ignored.
                     children: [
                         mockRouteConfig({
-                            path: '/child/',
+                            path: 'child/',
                             render: () => safe`<div>Hello, World!</div>`,
                         }),
                     ],
@@ -234,14 +228,8 @@ describe('routing', () => {
 
         it('throws an error when duplicating the same path', async () => {
             const routes = [
-                mockRouteConfig({
-                    path: '/',
-                    render: () => safe`<div>First</div>`,
-                }),
-                mockRouteConfig({
-                    path: '/',
-                    render: () => safe`<div>Second</div>`,
-                }),
+                mockRouteConfig({ path: '' }),
+                mockRouteConfig({ path: '' }),
             ];
 
             await expectAsync(arrayFromAsync(generateRoutePages(routes)))
@@ -251,14 +239,8 @@ describe('routing', () => {
 
         it('throws an error when duplicating the same path with different syntaxes', async () => {
             const routes = [
-                mockRouteConfig({
-                    path: '/',
-                    render: () => safe`<div>First</div>`,
-                }),
-                mockRouteConfig({
-                    path: 'index.html',
-                    render: () => safe`<div>Second</div>`,
-                }),
+                mockRouteConfig({ path: '' }),
+                mockRouteConfig({ path: 'index.html' }),
             ];
 
             await expectAsync(arrayFromAsync(generateRoutePages(routes)))
@@ -269,7 +251,7 @@ describe('routing', () => {
         it('throws an error when duplicating the same path with an empty child path', async () => {
             const routes = [
                 mockRouteConfig({
-                    path: '/',
+                    path: '',
                     render: () => safe`<div>First</div>`,
                     children: [
                         mockRouteConfig({
@@ -297,7 +279,6 @@ describe('routing', () => {
                         mockRouteConfig({
                             label: 'Child',
                             path: 'child/',
-                            render: () => safe`<div>Hello, World!</div>`,
                         }),
                     ],
                 }),
@@ -343,12 +324,10 @@ describe('routing', () => {
                         mockRouteConfig({
                             label: 'Child 1',
                             path: 'child/1/',
-                            render: () => safe`<div>Hello, World!</div>`,
                         }),
                         mockRouteConfig({
                             label: 'Child 2',
                             path: 'child/2/',
-                            render: () => safe`<div>Hello, World!</div>`,
                         }),
                     ],
                 }),
@@ -631,7 +610,6 @@ describe('routing', () => {
             const routes = [
                 mockRouteConfig({
                     path: 'visible/',
-                    render: () => safe`<div>Hello, World!</div>`,
                 }),
                 mockRouteConfig({
                     path: 'hiddenParent/',
@@ -748,6 +726,48 @@ describe('routing', () => {
 
             expect(parentFromRootForest).toBe(parentFromCurrentTree);
             expect(childFromRootForest).toBe(childFromCurrentTree);
+        });
+
+        it('throws an error when given a route with a leading slash', async () => {
+            // Root route.
+            await expectAsync(arrayFromAsync(generateRoutePages([
+                mockRouteConfig({
+                    label: 'My route',
+                    path: '/my-route',
+                }),
+            ]))).toBeRejectedWithError(
+                /.*"My route".*"\/my-route".*Did you mean "my-route"\?/);
+
+            // Child route.
+            await expectAsync(arrayFromAsync(generateRoutePages([
+                mockRouteConfig({
+                    path: 'parent',
+                    children: [
+                        mockRouteConfig({
+                            label: 'Child',
+                            path: '/child/',
+                        }),
+                    ],
+                }),
+            ]))).toBeRejectedWithError(
+                /.*"Child".*"\/child\/".*Did you mean "child\/"\?/);
+
+            // Index route (ban "/")
+            await expectAsync(arrayFromAsync(generateRoutePages([
+                mockRouteConfig({
+                    label: 'Home',
+                    path: '/',
+                }),
+            ]))).toBeRejectedWithError(
+                /.*"Home".*"\/".*Did you mean ""\?/);
+
+            // Index route (allow empty string)
+            await expectAsync(arrayFromAsync(generateRoutePages([
+                mockRouteConfig({
+                    label: 'Home',
+                    path: '',
+                }),
+            ]))).toBeResolved();
         });
 
         it('throws an error when render function does not return `SafeHtml`', async () => {

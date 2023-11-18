@@ -121,6 +121,8 @@ export function bootstrap(routeConfig: readonly RouteConfig[]):
  */
 export async function* generateRoutePages(routeConfigs: readonly RouteConfig[]):
         AsyncGenerator<PrerenderResource, void, void> {
+    assertNoLeadingSlashes(routeConfigs);
+
     // Process the input configuration into a `LinkedRoute[]`.
     const transformedForest = transformConfigsToRoutes(routeConfigs);
     const linkedRouteForest = linkRouteForests(routeConfigs, transformedForest);
@@ -281,6 +283,19 @@ function stripHiddenChildren(linkedRoutes: LinkedRoute[], parent?: LinkedRoute):
 
         return transformedRoute;
     });
+}
+
+/** Asserts no route config has a leading slash. */
+function assertNoLeadingSlashes(routeConfigs: readonly RouteConfig[]): void {
+    for (const routeConfig of routeConfigs) {
+        if (routeConfig.path.startsWith('/')) {
+            throw new Error(`Route "${routeConfig.label}" uses path "${
+                routeConfig.path}" which can not start with a slash. Did you mean "${
+                routeConfig.path.slice(1)}"?`);
+        }
+
+        if (routeConfig.children) assertNoLeadingSlashes(routeConfig.children);
+    }
 }
 
 /** Asserts no two input routes will generate a file at the same location. */

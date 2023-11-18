@@ -66,7 +66,10 @@ ts_project(
     srcs = ["routing_mock.mts"],
     testonly = True,
     visibility = [":__subpackages__"],
-    deps = [":routing"],
+    deps = [
+        ":routing",
+        "//:node_modules/rules_prerender",
+    ],
 )
 
 ts_project(
