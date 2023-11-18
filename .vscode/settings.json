@@ -22,6 +22,7 @@
         "genfiles",
         "genrule",
         "hydroactive",
+        "IFCHANGE",
         "inlines",
         "lightningcss",
         "npmjs",

@@ -12,20 +12,38 @@
     min-height: 100vh;
     overflow-y: auto;
 
-    --rp-layout--nav-width: 300px;
-    --rp-layout--nav-transition-duration: 0.25s;
+    /* Constants representing the nav bar width when expanded/collapsed. */
+    --rp-layout--expanded-nav-width: 300px;
+    --rp-layout--collapsed-nav-width: 0px;
 }
 
-:host(.nav-collapsed) {
-    grid-template-columns: 0px 1fr 0fr;
+/* Default the nav pane to shown/hidden based on viewport width. */
+@media (max-width: 1023px) {
+    :host {
+        --rp-layout--nav-width: var(--rp-layout--collapsed-nav-width);
+    }
+}
+@media (min-width: 1024px) {
+    :host {
+        --rp-layout--nav-width: var(--rp-layout--expanded-nav-width);
+    }
 }
 
-:host(.nav-collapsed) rp-nav-pane {
-    transform: translateX(calc(-1 * var(--rp-layout--nav-width)));
+/* Always hide the nav pane when `nav="collapsed"` is set. */
+:host([nav="collapsed"]) {
+    --rp-layout--nav-width: var(--rp-layout--collapsed-nav-width);
 }
 
+/* Always show the nav pane when `nav="expanded"` is set. */
+:host([nav="expanded"]) {
+    --rp-layout--nav-width: var(--rp-layout--expanded-nav-width);
+}
+
+/* Enable animations when showing/hiding the nav pane. */
 @media (prefers-reduced-motion: no-preference) {
     :host {
+        --rp-layout--nav-transition-duration: 0.25s;
+
         transition: grid-template-columns var(--rp-layout--nav-transition-duration) ease-in-out;
     }
 
@@ -48,7 +66,12 @@ rp-nav-pane {
      * The navigation is always forced a constant width, so as `rp-nav-pane` is
      * animated and shrunk the text does not overflow in response.
      */
-    width: var(--rp-layout--nav-width);
+    width: var(--rp-layout--expanded-nav-width);
+
+    /* Translate the nav pane left when collapsed to slide it out of view. */
+    transform: translateX(calc(
+        var(--rp-layout--nav-width) - var(--rp-layout--expanded-nav-width)
+    ));
 }
 
 main {

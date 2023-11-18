@@ -27,6 +27,7 @@ export function Layout({
     headChildren,
     currentRoute,
     routes,
+    'defer-hydration': deferHydration,
 }: {
     pageTitle: string,
     headerTitle?: string,
@@ -34,6 +35,7 @@ export function Layout({
     headChildren?: ComponentChildren,
     currentRoute: Route,
     routes: Route[],
+    'defer-hydration'?: boolean,
 }): VNode {
     return <html lang="en">
         <head>
@@ -44,7 +46,7 @@ export function Layout({
             {headChildren}
         </head>
         <body>
-            <rp-layout>
+            <rp-layout defer-hydration={deferHydration}>
                 <Template shadowrootmode="open">
                     {inlineStyle('./layout.css', import.meta)}
                     {includeScript('./layout_script.mjs', import.meta)}
