@@ -39,6 +39,7 @@ export function Layout({
         <head>
             <meta charSet="utf8" />
             <title>{pageTitle} - @rules_prerender</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
             {inlineStyle('../../global.css', import.meta)}
             {headChildren}
         </head>
