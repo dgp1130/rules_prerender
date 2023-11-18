@@ -2,6 +2,7 @@ import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
 import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Layout } from '../../components/layout/layout.js';
+import { UnderConstructionBanner } from '../../components/under_construction_banner/under_construction_banner_prerender.js';
 import { type Route } from '../../routing.mjs';
 
 /** Renders a 404 Not Found page. */
@@ -16,6 +17,8 @@ export function NotFound({ currentRoute, routes }: {
     >
         <div>
             <Template shadowrootmode="open">
+                <UnderConstructionBanner id="banner" />
+
                 <h2>Not Found</h2>
 
                 <p>

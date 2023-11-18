@@ -1,0 +1,15 @@
+:host {
+    background-color: khaki;
+    padding: 1rem;
+    font-size: 1.25rem;
+    border-radius: 15px;
+}
+
+#warning {
+    display: inline-block;
+    margin-right: 2px;
+}
+
+#warning svg {
+    vertical-align: bottom;
+}

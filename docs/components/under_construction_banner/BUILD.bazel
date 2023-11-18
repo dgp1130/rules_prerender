@@ -1,8 +1,8 @@
-load("//:index.bzl", "css_library", "prerender_component")
 load("//tools/typescript:defs.bzl", "ts_project")
+load("//:index.bzl", "css_library", "prerender_component")
 
 prerender_component(
-    name = "under_construction",
+    name = "under_construction_banner",
     prerender = ":prerender",
     styles = ":styles",
     visibility = ["//docs:__subpackages__"],
@@ -10,10 +10,9 @@ prerender_component(
 
 ts_project(
     name = "prerender",
-    srcs = ["under_construction.tsx"],
+    srcs = ["under_construction_banner_prerender.tsx"],
+    data = ["warning.svg"],
     deps = [
-        "//docs/components/layout:layout_prerender",
-        "//docs/components/under_construction_banner:under_construction_banner_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
@@ -22,5 +21,5 @@ ts_project(
 
 css_library(
     name = "styles",
-    srcs = ["under_construction.css"],
+    srcs = ["under_construction_banner.css"],
 )

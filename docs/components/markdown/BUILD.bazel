@@ -14,6 +14,7 @@ ts_project(
     srcs = ["markdown.tsx"],
     deps = [
         "//docs/components/layout:layout_prerender",
+        "//docs/components/under_construction_banner:under_construction_banner_prerender",
         "//docs/markdown:markdown_page",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",

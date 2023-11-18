@@ -20,6 +20,7 @@ ts_project(
     deps = [
         "//docs:routing",
         "//docs/components/layout:layout_prerender",
+        "//docs/components/under_construction_banner:under_construction_banner_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
     ],
@@ -46,5 +47,5 @@ jasmine_node_test(
 
 css_library(
     name = "styles",
-    srcs = ["index.css"],
+    srcs = ["index.css", "index_global.css"],
 )

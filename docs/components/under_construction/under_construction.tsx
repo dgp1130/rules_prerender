@@ -3,6 +3,7 @@ import { inlineStyle } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Layout } from '../layout/layout.js';
 import { type Route } from '../../routing.mjs';
+import { UnderConstructionBanner } from '../under_construction_banner/under_construction_banner_prerender.js';
 
 /** Renders a "under construction" placeholder page. */
 export function UnderConstruction({
@@ -24,7 +25,7 @@ export function UnderConstruction({
     >
         <div>
             <Template shadowrootmode="open">
-                <h2>This page is under construction.</h2>
+                <UnderConstructionBanner id="banner" />
 
                 <p>
                     Please check back later for this content. Alternatively, you

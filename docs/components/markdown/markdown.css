@@ -3,6 +3,10 @@
     margin: 1rem auto;
 }
 
+#banner {
+    margin-bottom: 1rem;
+}
+
 #md {
     --rp-markdown--box-shadow-size: 5px;
 
