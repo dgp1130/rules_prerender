@@ -1,5 +1,11 @@
-load("//:index.bzl", "css_library", "prerender_component")
-load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load(
+    "//:index.bzl",
+    "css_library",
+    "prerender_component",
+    "prerender_pages",
+    "web_resources_devserver",
+)
+load("//tools/jasmine:defs.bzl", "jasmine_node_test", "jasmine_web_test_suite")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
@@ -43,7 +49,6 @@ jasmine_node_test(
     deps = [":prerender_test_lib"],
 )
 
-# TODO(#36): Add tests.
 ts_project(
     name = "scripts",
     srcs = ["layout_script.mts"],
@@ -52,6 +57,49 @@ ts_project(
         "//docs/components/header:header_scripts",
         "//docs/components/nav_pane:nav_pane_scripts",
     ],
+)
+
+ts_project(
+    name = "scripts_test_cases_lib",
+    srcs = ["layout_script_test_cases.tsx"],
+    data = ["//docs:package"],
+    testonly = True,
+    deps = [
+        ":layout_prerender",
+        "//docs:routing_mock",
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+    ],
+)
+
+prerender_pages(
+    name = "scripts_test_cases",
+    entry_point = "./layout_script_test_cases.js",
+    prerender = ":scripts_test_cases_lib",
+    testonly = True,
+)
+
+web_resources_devserver(
+    name = "scripts_test_cases_devserver",
+    resources = ":scripts_test_cases",
+    testonly = True,
+)
+
+ts_project(
+    name = "scripts_test_lib",
+    srcs = ["layout_script_test.mts"],
+    testonly = True,
+    data = [":scripts_test_cases_devserver"],
+    deps = [
+        "//common/testing:devserver",
+        "//common/testing:webdriver",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_web_test_suite(
+    name = "scripts_test",
+    deps = [":scripts_test_lib"],
 )
 
 css_library(
