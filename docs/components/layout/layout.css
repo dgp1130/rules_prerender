@@ -6,20 +6,31 @@
         "header header header" auto
         "nav main -" 1fr
         "footer footer footer" auto;
-    grid-template-columns: 300px 1fr 0fr;
+    grid-template-columns: var(--rp-layout--nav-width) 1fr 0fr;
     column-gap: 1rem;
     background-color: var(--light-gray);
     min-height: 100vh;
     overflow-y: auto;
+
+    --rp-layout--nav-width: 300px;
+    --rp-layout--nav-transition-duration: 0.25s;
 }
 
 :host(.nav-collapsed) {
     grid-template-columns: 0px 1fr 0fr;
 }
 
+:host(.nav-collapsed) rp-nav-pane {
+    transform: translateX(calc(-1 * var(--rp-layout--nav-width)));
+}
+
 @media (prefers-reduced-motion: no-preference) {
     :host {
-        transition: grid-template-columns 0.25s ease;
+        transition: grid-template-columns var(--rp-layout--nav-transition-duration) ease-in-out;
+    }
+
+    rp-nav-pane {
+        transition: transform var(--rp-layout--nav-transition-duration) ease-in-out;
     }
 }
 
@@ -27,9 +38,17 @@ rp-header {
     grid-area: header;
 }
 
-rp-nav-pane {
+#nav-container {
     grid-area: nav;
     box-shadow: 2px 0 5px 0 gray;
+}
+
+rp-nav-pane {
+    /*
+     * The navigation is always forced a constant width, so as `rp-nav-pane` is
+     * animated and shrunk the text does not overflow in response.
+     */
+    width: var(--rp-layout--nav-width);
 }
 
 main {

@@ -1,6 +1,7 @@
 @import '../../theme.css';
 
 :host {
+    display: block;
     font-size: 1.5rem;
     background-color: var(--light-gray);
     overflow-x: hidden;
