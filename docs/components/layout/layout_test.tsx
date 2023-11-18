@@ -39,7 +39,7 @@ describe('layout', () => {
             // Renders title.
             const title = html.querySelector('head > title');
             expect(title).not.toBeNull();
-            expect(title!.textContent).toBe('@rules_prerender - My title');
+            expect(title!.textContent).toBe('My title - @rules_prerender');
 
             const layout = html.querySelector('body > rp-layout')!;
             expect(layout).not.toBeNull();

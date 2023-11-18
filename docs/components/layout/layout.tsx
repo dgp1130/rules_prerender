@@ -38,7 +38,7 @@ export function Layout({
     return <html lang="en">
         <head>
             <meta charSet="utf8" />
-            <title>@rules_prerender - {pageTitle}</title>
+            <title>{pageTitle} - @rules_prerender</title>
             {inlineStyle('../../global.css', import.meta)}
             {headChildren}
         </head>
