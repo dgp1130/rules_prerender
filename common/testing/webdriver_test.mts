@@ -1,11 +1,11 @@
 import { useDevserver } from './devserver.mjs';
 import { EffectTester } from './effect_tester.mjs';
-import { useWebDriver, webDriverTestTimeout } from './webdriver.mjs';
+import { hydrate, useWebDriver, webDriverTestTimeout } from './webdriver.mjs';
 
 describe('webdriver', () => {
-    describe('useWebDriver()', () => {
-        const devserver = useDevserver('common/testing/webdriver_test_server.sh');
+    const devserver = useDevserver('common/testing/webdriver_test_server.sh');
 
+    describe('useWebDriver()', () => {
         it('manages a WebDriver session without a server under test', async () => {
             const tester = EffectTester.of(() => useWebDriver());
 
@@ -37,5 +37,27 @@ describe('webdriver', () => {
             // Nothing to clean up, but shouldn't fail.
             await expectAsync(tester.cleanup()).toBeResolved();
         }, webDriverTestTimeout);
+    });
+
+    describe('hydrate', () => {
+        it('hydrates the given custom element', async () => {
+            const tester = EffectTester.of(() => useWebDriver(devserver));
+
+            await tester.initialize();
+
+            const browser = tester.get();
+            await browser.url('/webdriver_test_page.html');
+
+            const deferred = await browser.$('deferred-element');
+            await expectAsync(hydrate(browser, deferred)).toBeResolved();
+
+            const deferHydration = await browser.execute(
+                (el) => el.getAttribute('defer-hydration'),
+                deferred as unknown as Element,
+            );
+            expect(deferHydration).toBeNull();
+
+            await expectAsync(tester.cleanup()).toBeResolved();
+        });
     });
 });

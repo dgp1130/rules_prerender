@@ -22,12 +22,12 @@ export const webDriverTestTimeout = 60_000; // 60 seconds.
  * An effect which initialize WebDriverIO for the given server under test.
  * Handles initialization and cleanup of WebDriver, using the same session for
  * multiple tests.
- * 
+ *
  * The server is used to set a base URL for the WebDriverIO browser. If none is
  * given, then a base URL is not set.
- * 
+ *
  * Example usage:
- * 
+ *
  * ```typescript
  * describe('test suite', () => {
  *     // Handles initialization and cleanup automatically.
@@ -37,7 +37,7 @@ export const webDriverTestTimeout = 60_000; // 60 seconds.
  *     it('is alive', async () => {
  *         const browser = wd.get();
  *         await browser.url('/');
- * 
+ *
  *         expect(await browser.getTitle()).toBe('Hello, World!');
  *     });
  * });
@@ -137,6 +137,29 @@ async function createSession(baseUrl?: string): Promise<WebdriverIO.Browser> {
         // Whether or not we run headless is not defined here, but is actually
         // defined by the test browser being used at the Blaze layer.
     });
+}
+
+/**
+ * Hydrates the given custom element by removing the `defer-hydration`
+ * attribute.
+ */
+export async function hydrate(
+    browser: WebdriverIO.Browser,
+    elementPromise: WebdriverIO.Element
+        | ChainablePromiseElement<WebdriverIO.Element>
+        | ChainablePromiseElement<Promise<WebdriverIO.Element>>,
+): Promise<void> {
+    return await browser.execute(
+        (el) => {
+            if (!el.hasAttribute('defer-hydration')) {
+                throw new Error(
+                    'Cannot hydrate element which was not deferred.');
+            }
+
+            el.removeAttribute('defer-hydration');
+        },
+        (await elementPromise) as unknown as HTMLElement,
+    );
 }
 
 /**
