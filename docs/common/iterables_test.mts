@@ -81,9 +81,9 @@ describe('iterables', () => {
 
         it('merges empty iterables', async () => {
             const merged = parallel(
-                // eslint-disable-next-line require-yield, @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 (async function* (): AsyncGenerator<number, void, void> { })(),
-                // eslint-disable-next-line require-yield, @typescript-eslint/no-empty-function
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 (async function* (): AsyncGenerator<number, void, void> { })(),
             );
 
