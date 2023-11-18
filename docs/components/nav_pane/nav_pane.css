@@ -9,11 +9,6 @@
     --rp-nav-pane--indentation: 0.75rem;
 }
 
-/* Root `<ul>` element. */
-nav > ul {
-    padding: 0.5rem 0;
-}
-
 /* Remove user agent styles from all `<ul>` elements. */
 ul {
     list-style: none;
