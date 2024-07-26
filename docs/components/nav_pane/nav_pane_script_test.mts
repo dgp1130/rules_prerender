@@ -12,7 +12,7 @@ describe('NavPane', () => {
 
         const navPane = await browser.$('rp-nav-pane');
         const navItems = await navPane.shadow$$('.list-el');
-        const labels = await navItems.map((el) => el.getText());
+        const labels = await Promise.all(navItems.map((el) => el.getText()));
 
         expect(labels).toEqual([ 'First', 'Second', 'Third' ]);
     }, webDriverTestTimeout);
@@ -64,12 +64,12 @@ describe('NavPane', () => {
         const rootRoutes = await navPane.shadow$$('ul[test-id="root"] > li');
         expect(rootRoutes.length).toBe(2);
 
-        const rootLabels = await rootRoutes
-            .map((route) => route.$(':scope > :is(a, button)').getText());
+        const rootLabels = await Promise.all(rootRoutes
+            .map((route) => route.$(':scope > :is(a, button)').getText()));
         expect(rootLabels).toEqual([ 'First', 'Second' ]);
 
-        const [ firstRootRouteList, secondRootRouteList ] = await rootRoutes
-            .map((route) => route.$(':scope > ul'));
+        const [ firstRootRouteList, secondRootRouteList ] = await Promise.all(
+            rootRoutes.map((route) => route.$(':scope > ul')));
 
         // First list should be expanded because it contains the current route.
         const firstRootRouteListDisplay = await browser.execute(

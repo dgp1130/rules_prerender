@@ -24,9 +24,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_ts",
-        sha256 = "f69a6452b129d39d9b05f3dff8b1057185bb195b4daf0cff419988de757c6c31",
-        strip_prefix = "rules_ts-2.4.2",
-        url = "https://github.com/aspect-build/rules_ts/releases/download/v2.4.2/rules_ts-v2.4.2.tar.gz",
+        sha256 = "8aabb2055629a7becae2e77ae828950d3581d7fc3602fe0276e6e039b65092cb",
+        strip_prefix = "rules_ts-2.0.0",
+        url = "https://github.com/aspect-build/rules_ts/releases/download/v2.0.0/rules_ts-v2.0.0.tar.gz",
     )
 
     maybe(

@@ -29,8 +29,8 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `undefined` value', () => {
+            // @ts-expect-error for `undefined` value.
             () => useForEach(() => [
-                // @ts-expect-error for `undefined` value.
                 undefined /* value */,
                 undefined /* cleanup */,
             ] as const);
@@ -39,8 +39,8 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `null` value', () => {
+            // @ts-expect-error for `null` value.
             () => useForEach(() => [
-                // @ts-expect-error for `null` value.
                 null /* value */,
                 undefined /* cleanup */,
             ] as const);
@@ -77,8 +77,8 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `undefined` value', () => {
+            // @ts-expect-error for `undefined` value.
             () => useForAll(() => [
-                // @ts-expect-error for `undefined` value.
                 undefined /* value */,
                 undefined /* cleanup */,
             ] as const);
@@ -87,8 +87,8 @@ describe('effects', () => {
         });
 
         it('will not compile with a possibly `null` value', () => {
+            // @ts-expect-error for `null` value.
             () => useForAll(() => [
-                // @ts-expect-error for `null` value.
                 null /* value */,
                 undefined /* cleanup */,
             ] as const);
