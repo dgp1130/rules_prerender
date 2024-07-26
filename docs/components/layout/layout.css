@@ -4,7 +4,7 @@
     display: grid;
     grid-template:
         "header header header" auto
-        "nav main -" 1fr
+        "main main -" 1fr
         "footer footer footer" auto;
     grid-template-columns: var(--rp-layout--nav-width) 1fr 0fr;
     column-gap: 1rem;
@@ -56,12 +56,18 @@ rp-header {
     grid-area: header;
 }
 
-#nav-container {
-    grid-area: nav;
-    box-shadow: 2px 0 5px 0 gray;
-}
+dialog {
+    grid-area: main;
+    z-index: 1;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: none;
+    height: 100%;
 
-rp-nav-pane {
+    /* TODO: Hide when collapsed? */
+    box-shadow: 2px 0 5px 0 gray;
+
     /*
      * The navigation is always forced a constant width, so as `rp-nav-pane` is
      * animated and shrunk the text does not overflow in response.
@@ -72,6 +78,10 @@ rp-nav-pane {
     transform: translateX(calc(
         var(--rp-layout--nav-width) - var(--rp-layout--expanded-nav-width)
     ));
+}
+
+rp-nav-pane {
+    height: 100%;
 }
 
 main {

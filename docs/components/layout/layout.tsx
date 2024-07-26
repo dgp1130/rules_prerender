@@ -52,13 +52,13 @@ export function Layout({
                     {includeScript('./layout_script.mjs', import.meta)}
 
                     <Header headerTitle={headerTitle} defer-hydration />
-                    <div id="nav-container">
+                    <dialog>
                         <NavPane
                             currentRoute={currentRoute}
                             routes={routes}
                             defer-hydration
                         />
-                    </div>
+                    </dialog>
                     <main>{children}</main>
                     <Footer />
                 </Template>
