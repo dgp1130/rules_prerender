@@ -1,7 +1,3 @@
-// Can't import `webdriverio/async` because it isn't a module?
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../node_modules/webdriverio/async.d.ts" />
-
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import { remote, ChainablePromiseElement } from 'webdriverio';
@@ -22,12 +18,12 @@ export const webDriverTestTimeout = 60_000; // 60 seconds.
  * An effect which initialize WebDriverIO for the given server under test.
  * Handles initialization and cleanup of WebDriver, using the same session for
  * multiple tests.
- * 
+ *
  * The server is used to set a base URL for the WebDriverIO browser. If none is
  * given, then a base URL is not set.
- * 
+ *
  * Example usage:
- * 
+ *
  * ```typescript
  * describe('test suite', () => {
  *     // Handles initialization and cleanup automatically.
@@ -37,7 +33,7 @@ export const webDriverTestTimeout = 60_000; // 60 seconds.
  *     it('is alive', async () => {
  *         const browser = wd.get();
  *         await browser.url('/');
- * 
+ *
  *         expect(await browser.getTitle()).toBe('Hello, World!');
  *     });
  * });
