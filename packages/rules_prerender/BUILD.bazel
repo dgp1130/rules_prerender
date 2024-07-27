@@ -1,8 +1,6 @@
 load("@rules_prerender_npm//:live-server/package_json.bzl", live_server_bin = "bin")
 load("@rules_prerender_npm//:rollup/package_json.bzl", rollup_bin = "bin")
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("//:index.bzl", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
