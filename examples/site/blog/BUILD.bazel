@@ -18,20 +18,20 @@ ts_project(
         "//examples/site:package",
     ],
     deps = [
-        "//examples/site/common:links",
-        "//examples/site/components/base:base_prerender",
-        "//:node_modules/rules_prerender",
-        "//:node_modules/markdown-it",
         "//:node_modules/@types/markdown-it",
         "//:node_modules/@types/node",
+        "//:node_modules/markdown-it",
+        "//:node_modules/rules_prerender",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
     ],
 )
 
 ts_project(
     name = "blog_test_lib",
-    srcs = ["blog_test.mts"],
     testonly = True,
+    srcs = ["blog_test.mts"],
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":prerender",

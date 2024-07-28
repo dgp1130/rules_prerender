@@ -9,8 +9,8 @@ ts_project(
 
 ts_project(
     name = "prerender_annotation_test_lib",
-    srcs = ["prerender_annotation_test.mts"],
     testonly = True,
+    srcs = ["prerender_annotation_test.mts"],
     deps = [
         ":prerender_annotation",
         "//:node_modules/@types/jasmine",
@@ -24,8 +24,8 @@ jasmine_node_test(
 
 ts_project(
     name = "prerender_annotation_mock",
-    srcs = ["prerender_annotation_mock.mts"],
     testonly = True,
+    srcs = ["prerender_annotation_mock.mts"],
     visibility = ["//:__subpackages__"],
     deps = [":prerender_annotation"],
 )
@@ -38,8 +38,8 @@ ts_project(
 
 ts_project(
     name = "prerender_metadata_test_lib",
-    srcs = ["prerender_metadata_test.mts"],
     testonly = True,
+    srcs = ["prerender_metadata_test.mts"],
     deps = [
         ":prerender_metadata",
         "//:node_modules/@types/jasmine",
@@ -53,8 +53,8 @@ jasmine_node_test(
 
 ts_project(
     name = "prerender_metadata_mock",
-    srcs = ["prerender_metadata_mock.mts"],
     testonly = True,
+    srcs = ["prerender_metadata_mock.mts"],
     visibility = ["//:__subpackages__"],
     deps = [":prerender_metadata"],
 )
@@ -71,12 +71,12 @@ ts_project(
 
 ts_project(
     name = "prerender_resource_test_lib",
-    srcs = ["prerender_resource_test.mts"],
     testonly = True,
+    srcs = ["prerender_resource_test.mts"],
     deps = [
         ":prerender_resource",
-        "//common/safe_html",
         "//:node_modules/@types/jasmine",
+        "//common/safe_html",
     ],
 )
 
@@ -92,8 +92,8 @@ ts_project(
 
 ts_project(
     name = "url_path_test_lib",
-    srcs = ["url_path_test.mts"],
     testonly = True,
+    srcs = ["url_path_test.mts"],
     deps = [
         ":url_path",
         "//:node_modules/@types/jasmine",

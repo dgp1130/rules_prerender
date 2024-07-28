@@ -1,5 +1,5 @@
 load("//:index.bzl", "css_library", "prerender_component")
-load("//tools/jasmine:defs.bzl", "jasmine_node_test", "jasmine_web_test_suite")
+load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
@@ -13,7 +13,11 @@ prerender_component(
 ts_project(
     name = "prerender",
     srcs = ["header.tsx"],
-    data = ["hamburger.svg", "github_dark.svg", "github_light.svg"],
+    data = [
+        "github_dark.svg",
+        "github_light.svg",
+        "hamburger.svg",
+    ],
     deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
@@ -23,8 +27,8 @@ ts_project(
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["header_test.tsx"],
     testonly = True,
+    srcs = ["header_test.tsx"],
     deps = [
         ":prerender",
         "//:node_modules/@types/jasmine",

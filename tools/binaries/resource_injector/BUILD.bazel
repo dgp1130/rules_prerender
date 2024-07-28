@@ -4,9 +4,9 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "resource_injector",
+    data = [":resource_injector_lib"],
     entry_point = "resource_injector.mjs",
     visibility = ["//visibility:public"],
-    data = [":resource_injector_lib"],
 )
 
 ts_project(
@@ -16,23 +16,23 @@ ts_project(
     deps = [
         ":config",
         ":injector",
-        "//common:binary",
-        "//common:formatters",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
+        "//common:binary",
+        "//common:formatters",
     ],
 )
 
 ts_project(
     name = "resource_injector_test_lib",
-    srcs = ["resource_injector_test.mts"],
     testonly = True,
+    srcs = ["resource_injector_test.mts"],
     deps = [
         ":config",
-        "//common/testing:binary",
-        "//common/testing:temp_dir",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
     ],
 )
 
@@ -60,14 +60,14 @@ ts_project(
 
 ts_project(
     name = "injector_test_lib",
-    srcs = ["injector_test.mts"],
     testonly = True,
+    srcs = ["injector_test.mts"],
     deps = [
         ":config",
         ":injector",
+        "//:node_modules/@types/jasmine",
         "//common:file_system_fake",
         "//common/models:prerender_annotation",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

@@ -11,7 +11,7 @@ ts_project(
     name = "prerender",
     srcs = ["ts_parent.tsx"],
     deps = [
-        "//examples/tsjs/js_child:js_child_prerender",
         "//:node_modules/preact",
+        "//examples/tsjs/js_child:js_child_prerender",
     ],
 )

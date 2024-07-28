@@ -15,28 +15,28 @@ ts_project(
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = ["//examples/site:package"],
     deps = [
-        "//examples/site/common:links",
-        "//examples/site/components/base:base_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
     ],
 )
 
 web_resources_devserver(
     name = "home_devserver",
-    resources = ":home",
     testonly = True,
+    resources = ":home",
 )
 
 ts_project(
     name = "home_test_lib",
-    srcs = ["home_test.mts"],
     testonly = True,
+    srcs = ["home_test.mts"],
     deps = [
+        "//:node_modules/@types/jasmine",
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

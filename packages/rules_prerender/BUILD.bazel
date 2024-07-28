@@ -1,13 +1,16 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@rules_prerender_npm//:live-server/package_json.bzl", live_server_bin = "bin")
 load("@rules_prerender_npm//:rollup/package_json.bzl", rollup_bin = "bin")
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
 # Unused `package.json` file exists for IDE intellisense of imports in
 # `//examples/external/...`. This is necessary to have a `main` field which
 # points at `index.mts.`
-exports_files(["package.json"], visibility = ["//visibility:private"])
+exports_files(
+    ["package.json"],
+    visibility = ["//visibility:private"],
+)
 
 rollup_bin.rollup_binary(
     name = "rollup",
@@ -186,8 +189,8 @@ ts_project(
 
 ts_project(
     name = "paths_test_lib",
-    srcs = ["paths_test.mts"],
     testonly = True,
+    srcs = ["paths_test.mts"],
     deps = [
         ":paths",
         "//:node_modules/@types/jasmine",
@@ -204,19 +207,19 @@ ts_project(
     srcs = ["scripts.mts"],
     deps = [
         ":paths",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/node",
+        "//common/models:prerender_annotation",
     ],
 )
 
 ts_project(
     name = "scripts_test_lib",
-    srcs = ["scripts_test.mts"],
     testonly = True,
+    srcs = ["scripts_test.mts"],
     deps = [
         ":scripts",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
+        "//common/models:prerender_annotation",
     ],
 )
 
@@ -232,20 +235,20 @@ ts_project(
     deps = [
         ":inline_style_map",
         ":paths",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/node",
+        "//common/models:prerender_annotation",
     ],
 )
 
 ts_project(
     name = "styles_test_lib",
-    srcs = ["styles_test.mts"],
     testonly = True,
+    srcs = ["styles_test.mts"],
     deps = [
         ":inline_style_map",
         ":styles",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
+        "//common/models:prerender_annotation",
     ],
 )
 

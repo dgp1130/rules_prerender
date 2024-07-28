@@ -2,12 +2,15 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@rules_prerender_npm//:defs.bzl", "npm_link_all_packages")
+load("//:index.bzl", "link_prerender_component")
 load("//tools/publish:defs.bzl", "npm_publish")
 load("//tools/stamping:defs.bzl", "stamp_package")
 load("//tools/typescript:defs.bzl", "types_only")
-load("//:index.bzl", "link_prerender_component")
 
-exports_files([".npmrc"], visibility = ["//:__subpackages__"])
+exports_files(
+    [".npmrc"],
+    visibility = ["//:__subpackages__"],
+)
 
 ts_config(
     name = "tsconfig",
@@ -26,6 +29,7 @@ npm_link_all_packages(name = "node_modules")
 
 # Makes an internal NPM package for `rules_prerender` and links it.
 stamp_package(name = "package")
+
 npm_package(
     name = "rules_prerender_pkg",
     srcs = [
@@ -33,23 +37,26 @@ npm_package(
         ":package",
         "//packages/rules_prerender:rules_prerender_lib",
     ],
-    package = "rules_prerender",
-    visibility = ["//visibility:public"],
 
     # TODO(#59): Remove when upstream is fixed.
     # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
     include_external_repositories = ["rules_prerender"],
+    package = "rules_prerender",
+    visibility = ["//visibility:public"],
 )
+
 npm_publish(
     name = "rules_prerender_pkg_publish",
-    package = ":rules_prerender_pkg",
     npmrc = ".npmrc",
+    package = ":rules_prerender_pkg",
 )
+
 npm_link_package(
     name = "node_modules/rules_prerender",
     src = ":rules_prerender_pkg",
     visibility = ["//:__subpackages__"],
 )
+
 types_only(
     name = "node_modules_types/rules_prerender",
     dep = "//:node_modules/rules_prerender",
@@ -62,6 +69,7 @@ npm_link_package(
     # Should use `//:prerender_components/@rules_prerender/declarative_shadow_dom`.
     visibility = ["//visibility:private"],
 )
+
 link_prerender_component(
     name = "prerender_components/@rules_prerender/declarative_shadow_dom",
     package = ":node_modules/@rules_prerender/declarative_shadow_dom",

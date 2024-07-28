@@ -15,8 +15,8 @@ ts_project(
 
 ts_project(
     name = "binary_test_lib",
-    srcs = ["binary_test.mts"],
     testonly = True,
+    srcs = ["binary_test.mts"],
     deps = [
         ":binary",
         "//:node_modules/@types/jasmine",
@@ -36,8 +36,8 @@ ts_project(
 
 ts_project(
     name = "collections_test_lib",
-    srcs = ["collections_test.mts"],
     testonly = True,
+    srcs = ["collections_test.mts"],
     deps = [
         ":collections",
         "//:node_modules/@types/jasmine",
@@ -57,8 +57,8 @@ ts_project(
 
 ts_project(
     name = "formatters_test_lib",
-    srcs = ["formatters_test.mts"],
     testonly = True,
+    srcs = ["formatters_test.mts"],
     deps = [
         ":formatters",
         "//:node_modules/@types/jasmine",
@@ -79,9 +79,9 @@ ts_project(
 
 ts_project(
     name = "file_system_fake",
+    testonly = True,
     srcs = ["file_system_fake.mts"],
     visibility = ["//:__subpackages__"],
-    testonly = True,
     deps = [
         ":file_system",
         "//:node_modules/@types/node",
@@ -97,8 +97,8 @@ ts_project(
 
 ts_project(
     name = "http_test_lib",
-    srcs = ["http_test.mts"],
     testonly = True,
+    srcs = ["http_test.mts"],
     deps = [
         ":http",
         "//:node_modules/@types/jasmine",
@@ -144,21 +144,21 @@ ts_project(
     srcs = ["prerender_annotation_walker.mts"],
     visibility = ["//:__subpackages__"],
     deps = [
-        "//common/models:prerender_annotation",
         "//:node_modules/node-html-parser",
+        "//common/models:prerender_annotation",
     ],
 )
 
 ts_project(
     name = "prerender_annotation_walker_test_lib",
-    srcs = ["prerender_annotation_walker_test.mts"],
     testonly = True,
+    srcs = ["prerender_annotation_walker_test.mts"],
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":prerender_annotation_walker",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
+        "//common/models:prerender_annotation",
     ],
 )
 
@@ -175,8 +175,8 @@ ts_project(
 
 ts_project(
     name = "probably_test_lib",
-    srcs = ["probably_test.mts"],
     testonly = True,
+    srcs = ["probably_test.mts"],
     deps = [
         ":probably",
         "//:node_modules/@types/jasmine",

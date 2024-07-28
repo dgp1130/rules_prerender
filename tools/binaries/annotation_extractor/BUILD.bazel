@@ -4,9 +4,9 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "annotation_extractor",
+    data = [":annotation_extractor_lib"],
     entry_point = "annotation_extractor.mjs",
     visibility = ["//visibility:public"],
-    data = [":annotation_extractor_lib"],
 )
 
 ts_project(
@@ -16,27 +16,27 @@ ts_project(
     deps = [
         ":extractor",
         ":metadata",
-        "//common:binary",
-        "//common:formatters",
-        "//common:collections",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
+        "//common:binary",
+        "//common:collections",
+        "//common:formatters",
+        "//common/models:prerender_annotation",
     ],
 )
 
 ts_project(
     name = "annotation_extractor_test_lib",
-    srcs = ["annotation_extractor_test.mts"],
     testonly = True,
+    srcs = ["annotation_extractor_test.mts"],
     deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
         "//common/models:prerender_annotation",
         "//common/models:prerender_metadata",
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
     ],
 )
 
@@ -58,12 +58,12 @@ ts_project(
 
 ts_project(
     name = "extractor_test_lib",
-    srcs = ["extractor_test.mts"],
     testonly = True,
+    srcs = ["extractor_test.mts"],
     deps = [
         ":extractor",
-        "//common/models:prerender_annotation",
         "//:node_modules/@types/jasmine",
+        "//common/models:prerender_annotation",
     ],
 )
 
@@ -83,13 +83,13 @@ ts_project(
 
 ts_project(
     name = "metadata_test_lib",
-    srcs = ["metadata_test.mts"],
     testonly = True,
+    srcs = ["metadata_test.mts"],
     deps = [
         ":metadata",
+        "//:node_modules/@types/jasmine",
         "//common/models:prerender_annotation_mock",
         "//common/models:prerender_metadata_mock",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

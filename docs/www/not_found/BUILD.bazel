@@ -13,25 +13,25 @@ ts_project(
     name = "prerender",
     srcs = ["not_found.tsx"],
     deps = [
-        "//docs/components/layout:layout_prerender",
-        "//docs/components/under_construction_banner:under_construction_banner_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//docs/components/layout:layout_prerender",
+        "//docs/components/under_construction_banner:under_construction_banner_prerender",
     ],
 )
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["not_found_test.tsx"],
     testonly = True,
+    srcs = ["not_found_test.tsx"],
     deps = [
         ":prerender",
-        "//docs:routing_mock",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
         "//:node_modules/preact",
         "//:node_modules/preact-render-to-string",
+        "//docs:routing_mock",
     ],
 )
 

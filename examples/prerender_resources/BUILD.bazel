@@ -1,6 +1,6 @@
-load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "prerender_resources")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 ts_project(
     name = "generator",
@@ -10,14 +10,14 @@ ts_project(
 
 prerender_resources(
     name = "prerender",
-    entry_point = "./generator.mjs",
     data = [":generator"],
+    entry_point = "./generator.mjs",
 )
 
 ts_project(
     name = "generator_test",
-    srcs = ["generator_test.mts"],
     testonly = True,
+    srcs = ["generator_test.mts"],
     data = [":prerender"],
     deps = [
         "//:node_modules/@types/jasmine",

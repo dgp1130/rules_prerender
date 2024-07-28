@@ -3,42 +3,42 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "component",
+    testonly = True,
     prerender = ":prerender",
+    resources = ":resources",
     scripts = ":scripts",
     styles = ":styles",
-    resources = ":resources",
-    testonly = True,
     visibility = ["//examples/testonly:__subpackages__"],
 )
 
 ts_project(
     name = "prerender",
-    srcs = ["component.tsx"],
     testonly = True,
+    srcs = ["component.tsx"],
     deps = [
-        "//examples/testonly/transitive:transitive_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/testonly/transitive:transitive_prerender",
     ],
 )
 
 ts_project(
     name = "scripts",
-    srcs = ["component_script.mts"],
     testonly = True,
+    srcs = ["component_script.mts"],
 )
 
 css_library(
     name = "styles",
-    srcs = ["component_styles.css"],
     testonly = True,
+    srcs = ["component_styles.css"],
 )
 
 web_resources(
     name = "resources",
+    testonly = True,
     entries = {
         "/images/component.png": "image.png",
     },
-    testonly = True,
 )

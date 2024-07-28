@@ -10,8 +10,8 @@ bzl_library(
 
 js_binary(
     name = "js_bundler",
-    entry_point = "js_bundler.mjs",
     data = ["js_bundler_lib"],
+    entry_point = "js_bundler.mjs",
     visibility = ["//visibility:public"],
 )
 

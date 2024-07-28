@@ -20,7 +20,7 @@ css_library(
 
 diff_test(
     name = "test",
+    size = "small",
     file1 = ":bundle",
     file2 = "expected.css",
-    size = "small",
 )

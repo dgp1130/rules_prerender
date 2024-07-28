@@ -16,52 +16,52 @@ copy_to_bin(
 
 prerender_pages(
     name = "site",
+    testonly = True,
     entry_point = "./site.js",
     prerender = ":prerender",
+    resources = ":resources",
     scripts = ":scripts",
     styles = ":styles",
-    resources = ":resources",
-    testonly = True,
 )
 
 ts_project(
     name = "prerender",
+    testonly = True,
     srcs = ["site.tsx"],
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = [":package"],
-    testonly = True,
     deps = [
-        "//examples/testonly/component:component_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/testonly/component:component_prerender",
     ],
 )
 
 css_library(
     name = "styles",
-    srcs = ["site_styles.css"],
     testonly = True,
+    srcs = ["site_styles.css"],
 )
 
 ts_project(
     name = "scripts",
-    srcs = ["site_script.mts"],
     testonly = True,
+    srcs = ["site_script.mts"],
 )
 
 web_resources(
     name = "resources",
+    testonly = True,
     entries = {
         "/images/site.png": "image.png",
     },
-    testonly = True,
 )
 
 web_resources_devserver(
     name = "devserver",
-    resources = ":site",
     testonly = True,
+    resources = ":site",
 )
 
 build_test(

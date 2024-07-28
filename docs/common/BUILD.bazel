@@ -9,8 +9,8 @@ ts_project(
 
 ts_project(
     name = "delayed_test_lib",
-    srcs = ["delayed_test.mts"],
     testonly = True,
+    srcs = ["delayed_test.mts"],
     deps = [
         ":delayed",
         "//:node_modules/@types/jasmine",
@@ -31,8 +31,8 @@ ts_project(
 
 ts_project(
     name = "imperative_iterator_test_lib",
-    srcs = ["imperative_iterator_test.mts"],
     testonly = True,
+    srcs = ["imperative_iterator_test.mts"],
     deps = [
         ":imperative_iterator",
         ":iterables",
@@ -54,8 +54,8 @@ ts_project(
 
 ts_project(
     name = "iterables_test_lib",
-    srcs = ["iterables_test.mts"],
     testonly = True,
+    srcs = ["iterables_test.mts"],
     deps = [
         ":iterables",
         "//:node_modules/@types/jasmine",

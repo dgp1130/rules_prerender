@@ -15,15 +15,15 @@ ts_project(
 )
 
 extract_single_resource(
-    resources = ":single_resource",
     out = "single_resource.txt",
+    resources = ":single_resource",
 )
 
 diff_test(
     name = "single_resource_test",
+    size = "small",
     file1 = "single_resource.txt",
     file2 = "single_resource_expected.txt",
-    size = "small",
 )
 
 prerender_pages_unbundled(
@@ -39,13 +39,13 @@ ts_project(
 )
 
 extract_single_resource(
-    resources = ":nested_resource",
     out = "nested_resource.txt",
+    resources = ":nested_resource",
 )
 
 diff_test(
     name = "nested_resource_test",
+    size = "small",
     file1 = "nested_resource.txt",
     file2 = "nested_resource_expected.txt",
-    size = "small",
 )

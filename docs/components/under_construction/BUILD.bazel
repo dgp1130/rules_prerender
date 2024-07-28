@@ -12,11 +12,11 @@ ts_project(
     name = "prerender",
     srcs = ["under_construction.tsx"],
     deps = [
-        "//docs/components/layout:layout_prerender",
-        "//docs/components/under_construction_banner:under_construction_banner_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//docs/components/layout:layout_prerender",
+        "//docs/components/under_construction_banner:under_construction_banner_prerender",
     ],
 )
 

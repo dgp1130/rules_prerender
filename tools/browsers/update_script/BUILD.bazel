@@ -18,9 +18,9 @@ ts_project(
     srcs = ["index.mts"],
     deps = [
         ":find_revision_chromium",
-        "//common:binary",
         "//:node_modules/@types/yargs",
         "//:node_modules/yargs",
+        "//common:binary",
     ],
 )
 

@@ -22,10 +22,10 @@ ts_project(
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = [":package"],
     deps = [
-        "//examples/tsjs/js_parent:js_parent_prerender",
-        "//examples/tsjs/ts_parent:ts_parent_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//examples/tsjs/js_parent:js_parent_prerender",
+        "//examples/tsjs/ts_parent:ts_parent_prerender",
     ],
 )
 
@@ -47,8 +47,8 @@ ts_project(
 js_library(
     name = "js_child_script",
     srcs = [
-        "js_child_script.mjs",
         "js_child_script.d.mts",
+        "js_child_script.mjs",
     ],
 )
 
@@ -71,13 +71,13 @@ web_resources_devserver(
 
 ts_project(
     name = "test_lib",
+    testonly = True,
     srcs = ["test.mts"],
     data = [":devserver"],
-    testonly = True,
     deps = [
+        "//:node_modules/@types/jasmine",
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

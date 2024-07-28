@@ -9,9 +9,12 @@ prerender_component(
 
 js_library(
     name = "prerender",
-    srcs = ["js_parent.mjs", "js_parent.d.mts"],
+    srcs = [
+        "js_parent.d.mts",
+        "js_parent.mjs",
+    ],
     deps = [
-        "//examples/tsjs/ts_child:ts_child_prerender",
         "//:node_modules/preact",
-    ]
+        "//examples/tsjs/ts_child:ts_child_prerender",
+    ],
 )

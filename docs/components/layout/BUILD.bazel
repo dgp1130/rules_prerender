@@ -14,27 +14,27 @@ ts_project(
     name = "prerender",
     srcs = ["layout.tsx"],
     deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
         "//docs:routing",
         "//docs/components/footer:footer_prerender",
         "//docs/components/header:header_prerender",
         "//docs/components/nav_pane:nav_pane_prerender",
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
-        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
     ],
 )
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["layout_test.tsx"],
     testonly = True,
+    srcs = ["layout_test.tsx"],
     deps = [
         ":prerender",
-        "//docs:routing_mock",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
         "//:node_modules/preact",
         "//:node_modules/preact-render-to-string",
+        "//docs:routing_mock",
     ],
 )
 

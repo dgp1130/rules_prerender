@@ -9,9 +9,9 @@ load(
 prerender_component(
     name = "component",
     prerender = ":prerender",
+    resources = ":resources",
     scripts = ":script",
     styles = ":style",
-    resources = ":resources",
     visibility = ["//:__subpackages__"],
 )
 
@@ -20,13 +20,13 @@ ts_project(
     srcs = ["component.tsx"],
     declaration = True,
     source_map = True,
-    tsconfig = "//:tsconfig",
     transpiler = "tsc",
+    tsconfig = "//:tsconfig",
     deps = [
-        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ]
+        "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+    ],
 )
 
 ts_project(
@@ -34,8 +34,8 @@ ts_project(
     srcs = ["script.mts"],
     declaration = True,
     source_map = True,
-    tsconfig = "//:tsconfig_client",
     transpiler = "tsc",
+    tsconfig = "//:tsconfig_client",
 )
 
 css_library(

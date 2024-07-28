@@ -18,25 +18,25 @@ ts_project(
     name = "prerender",
     srcs = ["index.tsx"],
     deps = [
+        "//:node_modules/@rules_prerender/preact",
+        "//:node_modules/preact",
         "//docs:routing",
         "//docs/components/layout:layout_prerender",
         "//docs/components/under_construction_banner:under_construction_banner_prerender",
-        "//:node_modules/@rules_prerender/preact",
-        "//:node_modules/preact",
     ],
 )
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["index_test.tsx"],
     testonly = True,
+    srcs = ["index_test.tsx"],
     deps = [
         ":prerender",
-        "//docs:routing_mock",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
         "//:node_modules/preact",
         "//:node_modules/preact-render-to-string",
+        "//docs:routing_mock",
     ],
 )
 
@@ -47,5 +47,8 @@ jasmine_node_test(
 
 css_library(
     name = "styles",
-    srcs = ["index.css", "index_global.css"],
+    srcs = [
+        "index.css",
+        "index_global.css",
+    ],
 )

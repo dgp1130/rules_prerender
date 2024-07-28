@@ -1,7 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
-load(":build_vars.bzl", "RENDERER_RUNTIME_DEPS")
 
 ts_project(
     name = "renderer",
@@ -9,26 +8,26 @@ ts_project(
     visibility = ["//visibility:public"],
     deps = [
         ":entry_point",
-        "//common:binary",
-        "//common:formatters",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
         "//:node_modules_types/rules_prerender",
+        "//common:binary",
+        "//common:formatters",
     ],
 )
 
 ts_project(
     name = "renderer_test_lib",
-    srcs = ["renderer_test.mts"],
     testonly = True,
+    srcs = ["renderer_test.mts"],
     deps = [
         ":renderer",
-        "//common/models:prerender_annotation",
-        "//common/testing:binary",
-        "//common/testing:temp_dir",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/rules_prerender",
+        "//common/models:prerender_annotation",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
     ],
 )
 
@@ -41,8 +40,8 @@ ts_project(
     name = "entry_point",
     srcs = ["entry_point.mts"],
     deps = [
-        "//common:probably",
         "//:node_modules_types/rules_prerender",
+        "//common:probably",
     ],
 )
 
@@ -51,10 +50,10 @@ ts_project(
     srcs = ["entry_point_test.mts"],
     deps = [
         ":entry_point",
-        "//common:probably",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/rules_prerender",
+        "//common:probably",
     ],
 )
 

@@ -4,9 +4,9 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "resource_packager",
+    data = [":resource_packager_lib"],
     entry_point = ":resource_packager.mjs",
     visibility = ["//visibility:public"],
-    data = [":resource_packager_lib"],
 )
 
 ts_project(
@@ -17,21 +17,21 @@ ts_project(
         ":package_loader",
         ":packager",
         ":resource_map",
+        "//:node_modules/@types/yargs",
         "//common:binary",
         "//common:formatters",
-        "//:node_modules/@types/yargs",
     ],
 )
 
 ts_project(
     name = "resource_packager_test_lib",
-    srcs = ["resource_packager_test.mts"],
     testonly = True,
+    srcs = ["resource_packager_test.mts"],
     deps = [
-        "//common/testing:binary",
-        "//common/testing:temp_dir",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
     ],
 )
 
@@ -52,13 +52,13 @@ ts_project(
 
 ts_project(
     name = "package_loader_test_lib",
-    srcs = ["package_loader_test.mts"],
     testonly = True,
+    srcs = ["package_loader_test.mts"],
     deps = [
         ":package_loader",
-        "//common/testing:temp_dir",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
+        "//common/testing:temp_dir",
     ],
 )
 
@@ -78,14 +78,14 @@ ts_project(
 
 ts_project(
     name = "packager_test_lib",
-    srcs = ["packager_test.mts"],
     testonly = True,
+    srcs = ["packager_test.mts"],
     deps = [
         ":packager",
         ":resource_map",
         ":resource_map_mock",
-        "//common:file_system_fake",
         "//:node_modules/@types/jasmine",
+        "//common:file_system_fake",
     ],
 )
 
@@ -101,8 +101,8 @@ ts_project(
 
 ts_project(
     name = "resource_map_test_lib",
-    srcs = ["resource_map_test.mts"],
     testonly = True,
+    srcs = ["resource_map_test.mts"],
     deps = [
         ":resource_map",
         ":resource_map_mock",
@@ -117,8 +117,8 @@ jasmine_node_test(
 
 ts_project(
     name = "resource_map_mock",
-    srcs = ["resource_map_mock.mts"],
     testonly = True,
+    srcs = ["resource_map_mock.mts"],
     deps = [
         ":resource_map",
         "//common/testing:mocks",

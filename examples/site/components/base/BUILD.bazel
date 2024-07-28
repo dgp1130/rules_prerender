@@ -13,11 +13,11 @@ ts_project(
     name = "prerender",
     srcs = ["base.tsx"],
     deps = [
-        "//examples/site/components/footer:footer_prerender",
-        "//examples/site/components/header:header_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ]
+        "//examples/site/components/footer:footer_prerender",
+        "//examples/site/components/header:header_prerender",
+    ],
 )
 
 css_library(
@@ -28,8 +28,8 @@ css_library(
 
 ts_project(
     name = "base_test_lib",
-    srcs = ["base_test.tsx"],
     testonly = True,
+    srcs = ["base_test.tsx"],
     deps = [
         ":prerender",
         "//:node_modules/@rules_prerender/preact",

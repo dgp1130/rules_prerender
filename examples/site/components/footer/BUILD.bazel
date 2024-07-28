@@ -13,10 +13,10 @@ ts_project(
     name = "prerender",
     srcs = ["footer.tsx"],
     deps = [
-        "//examples/site/common:links",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/site/common:links",
     ],
 )
 
@@ -28,8 +28,8 @@ css_library(
 
 ts_project(
     name = "footer_test_lib",
-    srcs = ["footer_test.tsx"],
     testonly = True,
+    srcs = ["footer_test.tsx"],
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":prerender",

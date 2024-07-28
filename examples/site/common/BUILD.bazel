@@ -1,5 +1,5 @@
-load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "css_library")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 ts_project(
     name = "links",

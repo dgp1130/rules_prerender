@@ -11,7 +11,9 @@ http_archive(
         "https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.1/bazel-skylib-1.4.1.tar.gz",
     ],
 )
+
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
 bazel_skylib_workspace()
 
 # Load `@aspect_bazel_lib`.
@@ -21,26 +23,35 @@ http_archive(
     strip_prefix = "bazel-lib-1.42.3",
     url = "https://github.com/aspect-build/bazel-lib/releases/download/v1.42.3/bazel-lib-v1.42.3.tar.gz",
 )
+
 load(
     "@aspect_bazel_lib//lib:repositories.bzl",
     "aspect_bazel_lib_dependencies",
     "register_jq_toolchains",
 )
+
 aspect_bazel_lib_dependencies()
+
 register_jq_toolchains()
 
 # Load `@rules_prerender` dependencies the same way users will.
 load("//:dependencies.bzl", "rules_prerender_dependencies")
+
 rules_prerender_dependencies()
+
 load("//:repositories.bzl", "rules_prerender_repositories")
+
 rules_prerender_repositories()
+
 load("//:npm_repositories.bzl", "npm_repositories")
+
 npm_repositories()
 
 # Set the NodeJS version.
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
 nodejs_register_toolchains(
-    name = "nodejs", # Default name used by most tools.
+    name = "nodejs",  # Default name used by most tools.
     use_nvmrc = "//:.nvmrc",
 )
 
@@ -50,12 +61,15 @@ http_archive(
     sha256 = "e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a",
     urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
 )
+
 load(
     "@io_bazel_rules_webtesting//web:repositories.bzl",
     "web_test_repositories",
 )
+
 web_test_repositories()
 
 # Load browser binaries.
 load("//tools/browsers:browser_repositories.bzl", "browser_repositories")
+
 browser_repositories()

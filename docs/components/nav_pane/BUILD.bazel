@@ -20,25 +20,25 @@ ts_project(
     name = "prerender",
     srcs = ["nav_pane.tsx"],
     deps = [
-        "//docs:routing",
-        "//docs:test_id",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//docs:routing",
+        "//docs:test_id",
     ],
 )
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["nav_pane_test.tsx"],
     testonly = True,
+    srcs = ["nav_pane_test.tsx"],
     deps = [
         ":prerender",
-        "//docs:routing_mock",
         "//:node_modules/@types/jasmine",
         "//:node_modules/node-html-parser",
         "//:node_modules/preact",
         "//:node_modules/preact-render-to-string",
+        "//docs:routing_mock",
     ],
 )
 
@@ -56,40 +56,40 @@ ts_project(
 
 ts_project(
     name = "scripts_test_cases_lib",
+    testonly = True,
     srcs = ["nav_pane_script_test_cases.tsx"],
     data = ["//docs:package"],
-    testonly = True,
     deps = [
         ":nav_pane_prerender",
-        "//docs:routing_mock",
-        "//docs:test_id",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//docs:routing_mock",
+        "//docs:test_id",
     ],
 )
 
 prerender_pages(
     name = "scripts_test_cases",
+    testonly = True,
     entry_point = "./nav_pane_script_test_cases.js",
     prerender = ":scripts_test_cases_lib",
-    testonly = True,
 )
 
 web_resources_devserver(
     name = "scripts_test_cases_devserver",
-    resources = ":scripts_test_cases",
     testonly = True,
+    resources = ":scripts_test_cases",
 )
 
 ts_project(
     name = "scripts_test_lib",
-    srcs = ["nav_pane_script_test.mts"],
     testonly = True,
+    srcs = ["nav_pane_script_test.mts"],
     data = [":scripts_test_cases_devserver"],
     deps = [
+        "//:node_modules/@types/jasmine",
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

@@ -1,4 +1,4 @@
-load("//:index.bzl", "css_library", "prerender_component", "web_resources")
+load("//:index.bzl", "css_library", "prerender_component")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/typescript:defs.bzl", "ts_project")
 
@@ -21,8 +21,8 @@ ts_project(
 
 ts_project(
     name = "prerender_test_lib",
-    srcs = ["footer_test.tsx"],
     testonly = True,
+    srcs = ["footer_test.tsx"],
     deps = [
         ":prerender",
         "//:node_modules/@types/jasmine",

@@ -24,8 +24,8 @@ ts_project(
 
 ts_project(
     name = "safe_html_impl_test_lib",
-    srcs = ["safe_html_impl_test.mts"],
     testonly = True,
+    srcs = ["safe_html_impl_test.mts"],
     deps = [
         ":safe_html_impl",
         "//:node_modules/@types/jasmine",

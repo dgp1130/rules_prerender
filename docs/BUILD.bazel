@@ -35,12 +35,12 @@ ts_project(
     ],
     deps = [
         ":routing",
+        "//:node_modules/@rules_prerender/preact",
         "//docs/components/markdown:markdown_prerender",
         "//docs/components/under_construction:under_construction_prerender",
         "//docs/markdown:markdown_loader",
         "//docs/www:index_prerender",
         "//docs/www/not_found:not_found_prerender",
-        "//:node_modules/@rules_prerender/preact",
     ],
 )
 
@@ -49,16 +49,16 @@ ts_project(
     srcs = ["routing.mts"],
     visibility = [":__subpackages__"],
     deps = [
-        "//docs/common:iterables",
         "//:node_modules/@types/node",
         "//:node_modules/rules_prerender",
+        "//docs/common:iterables",
     ],
 )
 
 ts_project(
     name = "routing_mock",
-    srcs = ["routing_mock.mts"],
     testonly = True,
+    srcs = ["routing_mock.mts"],
     visibility = [":__subpackages__"],
     deps = [
         ":routing",
@@ -68,14 +68,14 @@ ts_project(
 
 ts_project(
     name = "routing_test_lib",
-    srcs = ["routing_test.mts"],
     testonly = True,
+    srcs = ["routing_test.mts"],
     deps = [
         ":routing",
         ":routing_mock",
-        "//docs/common:iterables",
         "//:node_modules/@types/jasmine",
         "//:node_modules/rules_prerender",
+        "//docs/common:iterables",
     ],
 )
 
@@ -93,8 +93,8 @@ ts_project(
 
 ts_project(
     name = "test_id_test_lib",
-    srcs = ["test_id_test.mts"],
     testonly = True,
+    srcs = ["test_id_test.mts"],
     deps = [
         ":test_id",
         "//:node_modules/@types/jasmine",

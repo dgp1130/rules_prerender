@@ -27,8 +27,8 @@ css_library(
 
 ts_project(
     name = "header_test_lib",
-    srcs = ["header_test.tsx"],
     testonly = True,
+    srcs = ["header_test.tsx"],
     data = ["//:node_modules/node-html-parser"],
     deps = [
         ":prerender",

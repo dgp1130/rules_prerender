@@ -4,16 +4,16 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 ts_project(
     name = "binary",
-    srcs = ["binary.mts"],
     testonly = True,
+    srcs = ["binary.mts"],
     visibility = ["//:__subpackages__"],
     deps = ["//:node_modules/@types/node"],
 )
 
 ts_project(
     name = "binary_test_lib",
-    srcs = ["binary_test.mts"],
     testonly = True,
+    srcs = ["binary_test.mts"],
     deps = [
         ":binary",
         ":temp_dir",
@@ -29,51 +29,51 @@ jasmine_node_test(
 
 ts_project(
     name = "devserver",
-    srcs = ["devserver.mts"],
     testonly = True,
-    visibility = ["//:__subpackages__"],
+    srcs = ["devserver.mts"],
     data = [
         "//:node_modules/http-status-codes",
         "//:node_modules/tree-kill",
     ],
+    visibility = ["//:__subpackages__"],
     deps = [
         ":effects",
         ":test_server",
-        "//common:http",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/http-status-codes",
         "//:node_modules/tree-kill",
+        "//common:http",
     ],
 )
 
 ts_project(
     name = "devserver_test_lib",
-    srcs = ["devserver_test.mts"],
     testonly = True,
+    srcs = ["devserver_test.mts"],
     data = ["//:node_modules/http-status-codes"],
     deps = [
         ":devserver",
         ":effect_tester",
-        "//common:http",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/http-status-codes",
+        "//common:http",
     ],
 )
 
 web_resources(
     name = "devserver_test_resources",
+    testonly = True,
     entries = {
         "/devserver_test_page.html": "devserver_test_page.html",
     },
-    testonly = True,
 )
 
 web_resources_devserver(
     name = "devserver_test_server",
-    resources = ":devserver_test_resources",
     testonly = True,
+    resources = ":devserver_test_resources",
 )
 
 jasmine_node_test(
@@ -84,8 +84,8 @@ jasmine_node_test(
 
 ts_project(
     name = "effects",
-    srcs = ["effects.mts"],
     testonly = True,
+    srcs = ["effects.mts"],
     deps = [
         "//:node_modules/@types/jasmine",
     ],
@@ -93,8 +93,8 @@ ts_project(
 
 ts_project(
     name = "effects_test_lib",
-    srcs = ["effects_test.mts"],
     testonly = True,
+    srcs = ["effects_test.mts"],
     deps = [
         ":effects",
         "//:node_modules/@types/jasmine",
@@ -108,19 +108,19 @@ jasmine_node_test(
 
 ts_project(
     name = "effect_fake",
-    srcs = ["effect_fake.mts"],
     testonly = True,
+    srcs = ["effect_fake.mts"],
     visibility = ["//:__subpackages__"],
     deps = [":effects"],
 )
 
 ts_project(
     name = "effect_fake_test_lib",
-    srcs = ["effect_fake_test.mts"],
     testonly = True,
+    srcs = ["effect_fake_test.mts"],
     deps = [
-        ":effects",
         ":effect_fake",
+        ":effects",
         "//:node_modules/@types/jasmine",
     ],
 )
@@ -132,8 +132,8 @@ jasmine_node_test(
 
 ts_project(
     name = "effect_tester",
-    srcs = ["effect_tester.mts"],
     testonly = True,
+    srcs = ["effect_tester.mts"],
     visibility = ["//:__subpackages__"],
     deps = [
         ":effects",
@@ -143,12 +143,12 @@ ts_project(
 
 ts_project(
     name = "effect_tester_test_lib",
-    srcs = ["effect_tester_test.mts"],
     testonly = True,
+    srcs = ["effect_tester_test.mts"],
     deps = [
-        ":effects",
         ":effect_fake",
         ":effect_tester",
+        ":effects",
         "//:node_modules/@types/jasmine",
     ],
 )
@@ -160,16 +160,16 @@ jasmine_node_test(
 
 ts_project(
     name = "mocks",
-    srcs = ["mocks.mts"],
     testonly = True,
+    srcs = ["mocks.mts"],
     visibility = ["//:__subpackages__"],
     deps = ["//:node_modules/@types/jasmine"],
 )
 
 ts_project(
     name = "mocks_test_lib",
-    srcs = ["mocks_test.mts"],
     testonly = True,
+    srcs = ["mocks_test.mts"],
     deps = [
         ":mocks",
         "//:node_modules/@types/jasmine",
@@ -183,8 +183,8 @@ jasmine_node_test(
 
 ts_project(
     name = "temp_dir",
-    srcs = ["temp_dir.mts"],
     testonly = True,
+    srcs = ["temp_dir.mts"],
     visibility = ["//:__subpackages__"],
     deps = [
         ":effects",
@@ -194,11 +194,11 @@ ts_project(
 
 ts_project(
     name = "temp_dir_test_lib",
-    srcs = ["temp_dir_test.mts"],
     testonly = True,
+    srcs = ["temp_dir_test.mts"],
     deps = [
-        ":temp_dir",
         ":effect_tester",
+        ":temp_dir",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
     ],
@@ -211,14 +211,14 @@ jasmine_node_test(
 
 ts_project(
     name = "test_server",
-    srcs = ["test_server.mts"],
     testonly = True,
+    srcs = ["test_server.mts"],
 )
 
 ts_project(
     name = "test_server_test_lib",
-    srcs = ["test_server_test.mts"],
     testonly = True,
+    srcs = ["test_server_test.mts"],
     deps = [
         ":test_server",
         "//:node_modules/@types/jasmine",
@@ -232,10 +232,10 @@ jasmine_node_test(
 
 ts_project(
     name = "webdriver",
-    srcs = ["webdriver.mts"],
     testonly = True,
-    visibility = ["//:__subpackages__"],
+    srcs = ["webdriver.mts"],
     data = ["//:node_modules/webdriverio"],
+    visibility = ["//:__subpackages__"],
     deps = [
         ":effects",
         ":test_server",
@@ -246,12 +246,12 @@ ts_project(
 
 ts_project(
     name = "webdriver_test_lib",
-    srcs = ["webdriver_test.mts"],
     testonly = True,
+    srcs = ["webdriver_test.mts"],
     deps = [
+        "effect_tester",
         ":devserver",
         ":webdriver",
-        "effect_tester",
         "//:node_modules/@types/jasmine",
         "//:node_modules/webdriverio",
     ],
@@ -259,16 +259,16 @@ ts_project(
 
 web_resources(
     name = "webdriver_test_resources",
+    testonly = True,
     entries = {
         "/webdriver_test_page.html": "webdriver_test_page.html",
     },
-    testonly = True,
 )
 
 web_resources_devserver(
     name = "webdriver_test_server",
-    resources = ":webdriver_test_resources",
     testonly = True,
+    resources = ":webdriver_test_resources",
 )
 
 jasmine_web_test_suite(

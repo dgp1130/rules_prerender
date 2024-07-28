@@ -1,5 +1,5 @@
-load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "prerender_component")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "component",
@@ -12,9 +12,9 @@ ts_project(
     name = "prerender",
     srcs = ["component.tsx"],
     deps = [
-        "//examples/scripts/transitive:transitive_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
+        "//examples/scripts/transitive:transitive_prerender",
     ],
 )
 

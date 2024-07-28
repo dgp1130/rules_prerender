@@ -33,8 +33,8 @@ ts_project(
 
 ts_project(
     name = "counter_prerender_test_lib",
-    srcs = ["counter_prerender_test.tsx"],
     testonly = True,
+    srcs = ["counter_prerender_test.tsx"],
     deps = [
         ":prerender",
         "//:node_modules/@types/jasmine",
@@ -50,17 +50,17 @@ jasmine_node_test(
 
 prerender_pages(
     name = "counter_test_cases",
+    testonly = True,
     entry_point = "./counter_test_cases.js",
     prerender = ":prerender_test_cases",
-    testonly = True,
 )
 
 ts_project(
     name = "prerender_test_cases",
+    testonly = True,
     srcs = ["counter_test_cases.tsx"],
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = ["//examples/site:package"],
-    testonly = True,
     deps = [
         ":counter_prerender",
         "//:node_modules/rules_prerender",
@@ -69,18 +69,18 @@ ts_project(
 
 web_resources_devserver(
     name = "counter_test_cases_devserver",
-    resources = ":counter_test_cases",
     testonly = True,
+    resources = ":counter_test_cases",
 )
 
 ts_project(
     name = "counter_test_lib",
-    srcs = ["counter_test.mts"],
     testonly = True,
+    srcs = ["counter_test.mts"],
     deps = [
+        "//:node_modules/@types/jasmine",
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

@@ -14,7 +14,7 @@ js_library(
     deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ]
+    ],
 )
 
 js_library(

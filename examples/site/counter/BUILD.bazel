@@ -14,11 +14,11 @@ ts_project(
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = ["//examples/site:package"],
     deps = [
-        "//examples/site/common:links",
-        "//examples/site/components/base:base_prerender",
-        "//examples/site/components/counter:counter_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
+        "//examples/site/components/counter:counter_prerender",
     ],
 )

@@ -11,8 +11,8 @@ bzl_library(
 
 js_binary(
     name = "css_bundler",
-    entry_point = "css_bundler.mjs",
     data = [":css_bundler_lib"],
+    entry_point = "css_bundler.mjs",
     visibility = ["//visibility:public"],
 )
 
@@ -21,23 +21,23 @@ ts_project(
     srcs = ["css_bundler.mts"],
     data = ["//:node_modules/yargs"],
     deps = [
-        "//common:binary",
-        "//common:formatters",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
         "//:node_modules/lightningcss",
+        "//common:binary",
+        "//common:formatters",
     ],
 )
 
 ts_project(
     name = "css_bundler_test_lib",
-    srcs = ["css_bundler_test.mts"],
     testonly = True,
+    srcs = ["css_bundler_test.mts"],
     deps = [
-        "//common/testing:binary",
-        "//common/testing:temp_dir",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
+        "//common/testing:binary",
+        "//common/testing:temp_dir",
     ],
 )
 

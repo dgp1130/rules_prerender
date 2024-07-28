@@ -3,18 +3,18 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 prerender_component(
     name = "transitive",
+    testonly = True,
     prerender = ":prerender",
+    resources = ":resources",
     scripts = ":scripts",
     styles = ":styles",
-    resources = ":resources",
-    testonly = True,
     visibility = ["//examples/testonly:__subpackages__"],
 )
 
 ts_project(
     name = "prerender",
-    srcs = ["transitive.tsx"],
     testonly = True,
+    srcs = ["transitive.tsx"],
     deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
@@ -24,20 +24,20 @@ ts_project(
 
 ts_project(
     name = "scripts",
-    srcs = ["transitive_script.mts"],
     testonly = True,
+    srcs = ["transitive_script.mts"],
 )
 
 css_library(
     name = "styles",
-    srcs = ["transitive_styles.css"],
     testonly = True,
+    srcs = ["transitive_styles.css"],
 )
 
 web_resources(
     name = "resources",
+    testonly = True,
     entries = {
         "/images/transitive.png": "image.png",
     },
-    testonly = True,
 )

@@ -1,14 +1,14 @@
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
-load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
+load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 
 package(default_testonly = True)
 
 diff_test(
     name = "bin_test",
+    size = "small",
     file1 = ":bin",
     file2 = "expected.css",
-    size = "small",
 )
 
 css_binaries(

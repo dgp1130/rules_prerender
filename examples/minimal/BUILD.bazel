@@ -1,7 +1,7 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("//tools/typescript:defs.bzl", "ts_project")
 load("//:index.bzl", "prerender_pages", "web_resources_devserver")
 load("//tools/jasmine:defs.bzl", "jasmine_web_test_suite")
+load("//tools/typescript:defs.bzl", "ts_project")
 
 copy_to_bin(
     name = "package",
@@ -23,7 +23,7 @@ ts_project(
         ":dep",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
-    ]
+    ],
 )
 
 ts_project(
@@ -44,12 +44,12 @@ web_resources_devserver(
 
 ts_project(
     name = "test_lib",
-    srcs = ["test.mts"],
     testonly = True,
+    srcs = ["test.mts"],
     deps = [
+        "//:node_modules/@types/jasmine",
         "//common/testing:devserver",
         "//common/testing:webdriver",
-        "//:node_modules/@types/jasmine",
     ],
 )
 

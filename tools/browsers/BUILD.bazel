@@ -17,7 +17,7 @@ config_setting(
     flag_values = {":use_debug_browsers": "True"},
     visibility = [
         "//tools/browsers:__subpackages__",
-        
+
         # Should not be necessary, but is to avoid a bugged visibility error.
         # https://github.com/bazelbuild/bazel/issues/19126
         "@io_bazel_rules_webtesting//:__subpackages__",

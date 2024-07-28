@@ -4,9 +4,9 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 js_binary(
     name = "script_entry_generator",
+    data = [":script_entry_generator_lib"],
     entry_point = ":script_entry_generator.mjs",
     visibility = ["//visibility:public"],
-    data = [":script_entry_generator_lib"],
 )
 
 ts_project(
@@ -15,24 +15,24 @@ ts_project(
     data = ["//:node_modules/yargs"],
     deps = [
         ":generator",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
         "//common:binary",
         "//common:formatters",
         "//common/models:prerender_metadata",
-        "//:node_modules/@types/node",
-        "//:node_modules/@types/yargs",
     ],
 )
 
 ts_project(
     name = "script_entry_generator_test_lib",
-    srcs = ["script_entry_generator_test.mts"],
     testonly = True,
+    srcs = ["script_entry_generator_test.mts"],
     deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
         "//common/models:prerender_metadata_mock",
         "//common/testing:binary",
         "//common/testing:temp_dir",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
     ],
 )
 
@@ -50,12 +50,12 @@ ts_project(
 
 ts_project(
     name = "generator_test_lib",
-    srcs = ["generator_test.mts"],
     testonly = True,
+    srcs = ["generator_test.mts"],
     deps = [
         ":generator",
-        "//common/models:prerender_metadata_mock",
         "//:node_modules/@types/jasmine",
+        "//common/models:prerender_metadata_mock",
     ],
 )
 

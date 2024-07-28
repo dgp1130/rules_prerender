@@ -5,8 +5,8 @@ prerender_pages(
     name = "about",
     entry_point = "./about.js",
     prerender = ":prerender",
-    styles = ":styles",
     resources = ":resources",
+    styles = ":styles",
     visibility = ["//examples/site:__pkg__"],
 )
 
@@ -16,11 +16,11 @@ ts_project(
     # Need `"type": "module"` to load `*.js` files output by `*.tsx` compilation.
     data = ["//examples/site:package"],
     deps = [
-        "//examples/site/common:links",
-        "//examples/site/components/base:base_prerender",
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
         "//:prerender_components/@rules_prerender/declarative_shadow_dom_prerender",
+        "//examples/site/common:links",
+        "//examples/site/components/base:base_prerender",
     ],
 )
 
