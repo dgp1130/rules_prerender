@@ -5,9 +5,8 @@
     "typings": "./packages/rules_prerender/index.d.mts",
     "type": "module",
     "engines": {
-        "node": "^18.12.1",
-        "npm": "^8.19.1",
-        "pnpm": "^8.6.0"
+        "node": "18.17.0",
+        "pnpm": "8.15.3"
     },
     "scripts": {
         "bazel": "bazel",
