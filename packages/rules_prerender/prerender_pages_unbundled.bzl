@@ -1,7 +1,6 @@
 """Defines `prerender_pages_unbundled()` functionality."""
 
-load("@aspect_rules_js//js:defs.bzl", "js_library")
-load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
+load("@aspect_rules_js//js:providers.bzl", "js_info")
 load("//common:paths.bzl", "is_js_file")
 load("//packages/rules_prerender/css:css_group.bzl", "merge_import_maps")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo", "CssInfo")
@@ -9,7 +8,7 @@ load(":prerender_component.bzl", "prerender_component")
 load(":prerender_metadata.bzl", "PrerenderMetadataInfo")
 load(":prerender_resources.bzl", "prerender_resources_internal")
 load(":script_entry_points.bzl", "script_entry_points")
-load(":web_resources.bzl", "WebResourceInfo", "web_resources")
+load(":web_resources.bzl", "WebResourceInfo")
 
 visibility("public")
 
@@ -31,7 +30,7 @@ def prerender_pages_unbundled(
 
     The file listed in `entry_point` must compile to an ESM module with a
     default export of the type:
-    
+
     ```
     () => Iterable<PrerenderResource> | Promise<Iterable<PrerenderResource>>
         | AsyncIterable<PrerenderResource>
@@ -64,7 +63,7 @@ def prerender_pages_unbundled(
             used in any page.
         %{name}_resources: A `web_resources()` target containing all the
             transitively used resources.
-    
+
     Args:
         name: The name of this rule.
         entry_point: The JavaScript file to invoke as the entry point of the
@@ -344,7 +343,7 @@ _collect_transitive_resources = rule(
 
 def _multi_extract_annotations_impl(ctx):
     """Invokes the multi annotation extractor and returns the new directory.
-    
+
     Returns a `DefaultInfo()` object containing a directory which holds all the
     input files at their same relative location. Non-HTML files are copied over
     unchanged, while HTML files have their annotations removed and extracted

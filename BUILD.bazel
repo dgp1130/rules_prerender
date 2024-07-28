@@ -1,13 +1,11 @@
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@bazel_skylib//lib:dicts.bzl", "dicts")
-load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_prerender_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools/publish:defs.bzl", "npm_publish")
 load("//tools/stamping:defs.bzl", "stamp_package")
 load("//tools/typescript:defs.bzl", "types_only")
-load("//:index.bzl", "link_prerender_component", "prerender_component")
+load("//:index.bzl", "link_prerender_component")
 
 exports_files([".npmrc"], visibility = ["//:__subpackages__"])
 

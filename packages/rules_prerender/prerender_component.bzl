@@ -2,20 +2,13 @@
 
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("//common:label.bzl", "absolute")
-load("//common:paths.bzl", "is_js_file", "is_ts_file", "is_ts_declaration_file")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
-load("//packages/rules_prerender/css:css_group.bzl", "css_group")
-load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load(
     ":prerender_metadata.bzl",
-    "PrerenderMetadataInfo",
     "alias_with_metadata",
     "prerender_metadata",
 )
 load(":visibility_aspect.bzl", "VisibilityInfo", "visibility_aspect")
-load(":web_resources.bzl", "web_resources")
 
 visibility("public")
 
@@ -43,7 +36,7 @@ def prerender_component(
     some extra metadata for the bundling process and re-exports them at
     `%{name}_prerender`, `%{name}_scripts`, `%{name}_styles`, and
     `%{name}_resources`.
-    
+
     A `prerender_component()` should _not_ be depended upon directly, instead
     you should depend on the re-exports for the specific parts of the component
     you need. The bundling process will bundle the entire component for you as
@@ -103,7 +96,7 @@ def prerender_component(
         *   This is enforced at build time.
         *   Acts as a guardrail to make it less likely to run afoul of the above
             rules.
-    
+
     Args:
         name: The name of this rule.
         prerender: Required. A `ts_project()` target which acts as a library for
@@ -115,7 +108,7 @@ def prerender_component(
             by this component at runtime.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-    
+
     Outputs:
         %{name}: A library which verifies that all the different aspects of the
                  component are buildable and runs various sanity checks.

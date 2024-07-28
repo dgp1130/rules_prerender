@@ -1,8 +1,6 @@
 """Defines functionality to generate entry points for JS and CSS."""
 
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
-load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
-load("//common:label.bzl", "absolute", "file_path_of")
 
 visibility("private")
 

@@ -1,6 +1,4 @@
-load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//packages/rules_prerender/css:css_group.bzl", "css_group")
-load("//tools/typescript:defs.bzl", "ts_project")
 load(":prerender_metadata.bzl", "alias_with_metadata", "prerender_metadata")
 load(":web_resources.bzl", "WebResourceInfo")
 
@@ -8,7 +6,7 @@ visibility(["//"])
 
 def link_prerender_component(name, package, visibility = None, testonly = None):
     """Links a `prerender_component()` from a linked NPM package.
-    
+
     This creates a `prerender_component()` target from the given package provided it defines
     the relevant metadata in the package.
 

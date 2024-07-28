@@ -1,6 +1,6 @@
 """Defines `prerender_component_publish_files()`."""
 
-load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
+load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//common:label.bzl", "absolute")
 
 visibility(["//"])
@@ -14,7 +14,7 @@ def prerender_component_publish_files(
     **kwargs,
 ):
     """Collects all the files in a `prerender_component()` for publishing.
-    
+
     This is useful when publishing a `prerender_component()` to NPM for another
     repository to consume. You probably want to author the component in
     TypeScript but ship it as JavaScript (with `.d.ts` files). This macro takes
@@ -22,17 +22,16 @@ def prerender_component_publish_files(
     published. In the NPM package, another `prerender_component()` can consume
     these files and make the component available to users like any other.
 
-    Params:
+    Args:
         name: The name of this target.
         dep: The `prerender_component()` to publish.
-        collect_scripts: Whether or not to collect and publish client-side
-            scripts. Should only be disabled if there are no scripts to collect.
         collect_styles: Whether or not to collect and publish CSS styles. Should
             only be disabled if there are no styles to collect.
         collect_resources: Whether or not to collect and publish resources.
             Should only be disabled if there are no resources to collect.
+        testonly: See https://bazel.build/reference/be/common-definitions#common-attributes
         **kwargs: Remaining arguments to pass through to the underlying target.
-    
+
     Outputs:
         %{name}: A `filegroup()` which provides a `DefaultInfo` that includes
             all the files to be published.

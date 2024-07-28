@@ -4,7 +4,7 @@ VisibilityInfo = provider(fields = {
     "visibility": "Visibility of the target.",
 })
 
-def _visibility_aspect_impl(target, ctx):
+def _visibility_aspect_impl(_target, ctx):
     return [VisibilityInfo(visibility = ctx.rule.attr.visibility)]
 
 visibility_aspect = aspect(

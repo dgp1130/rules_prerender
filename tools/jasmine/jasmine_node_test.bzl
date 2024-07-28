@@ -1,6 +1,5 @@
 """Defines `jasmine_node_test()`."""
 
-load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 load("//common:paths.bzl", "is_js_file")
 
@@ -8,10 +7,11 @@ visibility("private")
 
 def jasmine_node_test(name, deps, data = [], size = "small", **kwargs):
     """Wrapper for the `jasmine_node_test()` rule.
-    
+
     Args:
         name: Name of this target.
         data: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
+        size: Size of the test.
         deps: Targets whose `DefaultInfo` files are executed as Jasmine tests.
         **kwargs: Arguments to pass through to the real `jasmine_test()`.
     """

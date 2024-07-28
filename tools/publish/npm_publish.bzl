@@ -1,5 +1,4 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("@aspect_rules_js//npm:providers.bzl", "NpmPackageInfo")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("//common:label.bzl", "absolute", "file_path_of")
 

@@ -1,6 +1,5 @@
 """Defines `web_resources()` functionality."""
 
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_file_to_bin_action")
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@bazel_skylib//lib:collections.bzl", "collections")
 load("//common:label.bzl", "absolute")
@@ -19,7 +18,7 @@ def web_resources(
     **kwargs
 ):
     """Packages a set of resources into a single directory at specified paths.
-    
+
     Args:
         name: The name of this rule.
         entries: A dictionary of URL paths mapped to files. The resulting
@@ -45,7 +44,7 @@ def _web_resources_impl(ctx):
     `web_resources()` simply outputs a directory at `ctx.attr.name` which
     contains all the files given to `entries` at their associated file paths. It
     also merges this directory will all transitive dependencies.
-    
+
     This is implemented with two directories, one (the `entries` directory)
     which includes **only** files that were explicitly listed as `entries` and
     no dependencies. A second (the `merge` directory), merges the `entries`
