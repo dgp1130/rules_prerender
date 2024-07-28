@@ -8,9 +8,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_js",
-        sha256 = "e3e6c3d42491e2938f4239a3d04259a58adc83e21e352346ad4ef62f87e76125",
-        strip_prefix = "rules_js-1.30.0",
-        url = "https://github.com/aspect-build/rules_js/releases/download/v1.30.0/rules_js-v1.30.0.tar.gz",
+        sha256 = "41129b17c0951b663a30c55710a0842767cd162137b7cd3a200f43e32161ce7a",
+        strip_prefix = "rules_js-1.40.0",
+        url = "https://github.com/aspect-build/rules_js/releases/download/v1.40.0/rules_js-v1.40.0.tar.gz",
     )
 
     maybe(
