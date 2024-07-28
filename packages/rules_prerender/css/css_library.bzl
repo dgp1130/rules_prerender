@@ -24,9 +24,12 @@ def _css_library_impl(ctx):
         DefaultInfo(files = depset(copied)),
         CssInfo(
             direct_sources = copied,
-            transitive_sources = depset(copied,
-                transitive = [dep[CssInfo].transitive_sources
-                            for dep in ctx.attr.deps],
+            transitive_sources = depset(
+                copied,
+                transitive = [
+                    dep[CssInfo].transitive_sources
+                    for dep in ctx.attr.deps
+                ],
             ),
         ),
     ]

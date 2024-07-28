@@ -2,7 +2,7 @@
 
 load(
     "//packages/rules_prerender:extract_single_resource.bzl",
-    _extract_single_resource = "extract_single_resource"
+    _extract_single_resource = "extract_single_resource",
 )
 load(
     "//packages/rules_prerender:inject_resources.bzl",

@@ -1,4 +1,4 @@
-load("@bazel_skylib//lib:unittest.bzl", "asserts", "analysistest")
+load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo")
@@ -59,7 +59,8 @@ def _import_map_from_different_packages_test_impl(ctx):
     return analysistest.end(env)
 
 _import_map_from_different_packages_test = analysistest.make(
-    _import_map_from_different_packages_test_impl)
+    _import_map_from_different_packages_test_impl,
+)
 
 def _test_import_map_from_different_packages(name):
     css_binaries(

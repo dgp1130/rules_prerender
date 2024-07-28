@@ -13,14 +13,13 @@ load(":visibility_aspect.bzl", "VisibilityInfo", "visibility_aspect")
 visibility("public")
 
 def prerender_component(
-    name,
-    prerender,
-    scripts = None,
-    styles = None,
-    resources = None,
-    testonly = None,
-    visibility = None,
-):
+        name,
+        prerender,
+        scripts = None,
+        styles = None,
+        resources = None,
+        testonly = None,
+        visibility = None):
     """Encapsulates an HTML/JS/CSS component for use in prerendering a web page.
 
     This rule encapsulates the HTML, JavaScript, CSS, and static resources used
@@ -117,6 +116,7 @@ def prerender_component(
         %{name}_styles: A reexport of the `styles` attribute.
         %{name}_resources: A reexport of the `resources` attribute.
     """
+
     # Build all dependencies and sanity check the component. This allows
     # `bazel build` of a `prerender_component` to validate that the component is
     # buildable and usable.
@@ -235,8 +235,11 @@ Possible solutions:
 
         # Check slice has private visibility.
         visibility = slice[VisibilityInfo].visibility
-        non_private_visibility = [scope for scope in visibility
-                                  if scope != Label("//visibility:private")]
+        non_private_visibility = [
+            scope
+            for scope in visibility
+            if scope != Label("//visibility:private")
+        ]
         if non_private_visibility:
             fail("""
 {slice} must have private visibility. Any dependencies on it should depend on {component_slice} instead.
@@ -283,41 +286,68 @@ _component_check = rule(
 
 def _js_reexport_impl(ctx):
     merged_js_info = js_info(
-        declarations = depset([],
-            transitive = [src[JsInfo].declarations
-                          for src in ctx.attr.srcs],
+        declarations = depset(
+            [],
+            transitive = [
+                src[JsInfo].declarations
+                for src in ctx.attr.srcs
+            ],
         ),
-        npm_linked_package_files = depset([],
-            transitive = [src[JsInfo].npm_linked_package_files
-                          for src in ctx.attr.srcs],
+        npm_linked_package_files = depset(
+            [],
+            transitive = [
+                src[JsInfo].npm_linked_package_files
+                for src in ctx.attr.srcs
+            ],
         ),
-        npm_linked_packages = depset([],
-            transitive = [src[JsInfo].npm_linked_packages
-                          for src in ctx.attr.srcs],
+        npm_linked_packages = depset(
+            [],
+            transitive = [
+                src[JsInfo].npm_linked_packages
+                for src in ctx.attr.srcs
+            ],
         ),
-        npm_package_store_deps = depset([],
-            transitive = [src[JsInfo].npm_package_store_deps
-                          for src in ctx.attr.srcs],
+        npm_package_store_deps = depset(
+            [],
+            transitive = [
+                src[JsInfo].npm_package_store_deps
+                for src in ctx.attr.srcs
+            ],
         ),
-        sources = depset([],
-            transitive = [src[JsInfo].sources
-                          for src in ctx.attr.srcs],
+        sources = depset(
+            [],
+            transitive = [
+                src[JsInfo].sources
+                for src in ctx.attr.srcs
+            ],
         ),
-        transitive_declarations = depset([],
-            transitive = [dep[JsInfo].transitive_declarations
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
+        transitive_declarations = depset(
+            [],
+            transitive = [
+                dep[JsInfo].transitive_declarations
+                for dep in ctx.attr.srcs + ctx.attr.deps
+            ],
         ),
-        transitive_npm_linked_package_files = depset([],
-            transitive = [dep[JsInfo].transitive_npm_linked_package_files
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
+        transitive_npm_linked_package_files = depset(
+            [],
+            transitive = [
+                dep[JsInfo].transitive_npm_linked_package_files
+                for dep in ctx.attr.srcs + ctx.attr.deps
+            ],
         ),
-        transitive_npm_linked_packages = depset([],
-            transitive = [dep[JsInfo].transitive_npm_linked_packages
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
+        transitive_npm_linked_packages = depset(
+            [],
+            transitive = [
+                dep[JsInfo].transitive_npm_linked_packages
+                for dep in ctx.attr.srcs + ctx.attr.deps
+            ],
         ),
-        transitive_sources = depset([],
-            transitive = [dep[JsInfo].transitive_sources
-                          for dep in ctx.attr.srcs + ctx.attr.deps],
+        transitive_sources = depset(
+            [],
+            transitive = [
+                dep[JsInfo].transitive_sources
+                for dep in ctx.attr.srcs + ctx.attr.deps
+            ],
         ),
     )
 

@@ -7,11 +7,10 @@ load(":web_resources.bzl", "web_resources")
 visibility(["//"])
 
 def inject_resources(
-    name,
-    input,
-    scripts = [],
-    output = None,
-):
+        name,
+        input,
+        scripts = [],
+        output = None):
     """Injects web resources into the given HTML input.
 
     Args:
@@ -21,6 +20,7 @@ def inject_resources(
         output: The file to write the injected HTML output to. Defualts to
             `%{name}.html`
     """
+
     # Wrap the input file into a directory.
     input_dir = "%s_input" % name
     web_resources(

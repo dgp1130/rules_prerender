@@ -22,7 +22,7 @@ types_only = rule(
         "dep": attr.label(
             mandatory = True,
             providers = [JsInfo],
-            doc = "`ts_project()` to remove JS implementation from."
+            doc = "`ts_project()` to remove JS implementation from.",
         ),
     },
     doc = "Provides only the types of the given dependency, no implementation.",

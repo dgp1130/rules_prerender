@@ -7,22 +7,28 @@ visibility(["//packages/rules_prerender/..."])
 def _css_group_impl(ctx):
     return [
         DefaultInfo(
-            files = depset([], transitive = [dep[DefaultInfo].files
-                                             for dep in ctx.attr.deps]),
+            files = depset([], transitive = [
+                dep[DefaultInfo].files
+                for dep in ctx.attr.deps
+            ]),
         ),
         CssInfo(
             direct_sources = depset([]),
             transitive_sources = depset(
                 direct = [],
-                transitive = [dep[CssInfo].transitive_sources
-                              for dep in ctx.attr.deps
-                              if CssInfo in dep],
+                transitive = [
+                    dep[CssInfo].transitive_sources
+                    for dep in ctx.attr.deps
+                    if CssInfo in dep
+                ],
             ),
         ),
         CssImportMapInfo(
-            import_map = merge_import_maps([dep[CssImportMapInfo]
-                                            for dep in ctx.attr.deps
-                                            if CssImportMapInfo in dep]),
+            import_map = merge_import_maps([
+                dep[CssImportMapInfo]
+                for dep in ctx.attr.deps
+                if CssImportMapInfo in dep
+            ]),
         ),
     ]
 
@@ -42,7 +48,7 @@ css_group = rule(
 
 def merge_import_maps(css_import_maps):
     """Merges a list of `CssImportMapInfo` into a single `CssImportMapInfo`.
-    
+
     Fails the build if the same import path appears as a key in two maps.
     """
     import_map = dict()

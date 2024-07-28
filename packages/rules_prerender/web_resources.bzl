@@ -12,11 +12,10 @@ WebResourceInfo = provider(
 )
 
 def web_resources(
-    name,
-    entries = {},
-    deps = [],
-    **kwargs
-):
+        name,
+        entries = {},
+        deps = [],
+        **kwargs):
     """Packages a set of resources into a single directory at specified paths.
 
     Args:
@@ -30,8 +29,10 @@ def web_resources(
     _web_resources_rule(
         name = name,
         # Translate all `entries` labels to absolute syntax for consistency.
-        url_file_refs = dict([(url_path, absolute(file_ref))
-                              for (url_path, file_ref) in entries.items()]),
+        url_file_refs = dict([
+            (url_path, absolute(file_ref))
+            for (url_path, file_ref) in entries.items()
+        ]),
         # `entries` may have duplicate labels, must de-deduplicate them.
         file_lbls = collections.uniq(entries.values()),
         deps = deps,
@@ -72,11 +73,13 @@ def _web_resources_impl(ctx):
     would attempt to merge `entries` of B with `entries` of A, which should
     never have a conflict (if they did, it's a real conflict).
     """
+
     # Translate `string` -> `string` dictionary into a `string` -> `label`
     # dictionary by looking up each value in `ctx.attr.file_lbls`.
     url_file_refs = dict([(
         url_path,
-        [file_lbl
+        [
+            file_lbl
             for file_lbl in ctx.attr.file_lbls
             if str(file_lbl.label) == file_ref
         ][0],
@@ -120,10 +123,12 @@ def _web_resources_impl(ctx):
 
     # Enumerate the `entries` directory for all transitive dependencies and
     # deduplicate them.
-    transitive_resources = [dep[WebResourceInfo].transitive_entries
-                            for dep in ctx.attr.deps]
+    transitive_resources = [
+        dep[WebResourceInfo].transitive_entries
+        for dep in ctx.attr.deps
+    ]
     transitive_entries_dirs = collections.uniq(
-        [dir for depset in transitive_resources for dir in depset.to_list()]
+        [dir for depset in transitive_resources for dir in depset.to_list()],
     )
 
     # Merge all trasitive dependencies `entries` directory.

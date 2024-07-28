@@ -6,12 +6,11 @@ load("//common:label.bzl", "absolute", "file_path_of")
 visibility(["//"])
 
 def web_resources_devserver(
-    name,
-    resources,
-    testonly = None,
-    visibility = None,
-    tags = [],
-):
+        name,
+        resources,
+        testonly = None,
+        visibility = None,
+        tags = []):
     """Generates a devserver which serves the provided `web_resources()` target.
 
     IMPORTANT NOTE: This server is for **development purposes only**. It has not
@@ -63,14 +62,13 @@ def web_resources_devserver(
 # arguments provided at execution are _appended_ to baked args, and do not
 # replace them.
 def _baked_binary(
-    name,
-    binary,
-    baked_args = None,
-    baked_env = None,
-    data = [],
-    testonly = None,
-    visibility = None,
-):
+        name,
+        binary,
+        baked_args = None,
+        baked_env = None,
+        data = [],
+        testonly = None,
+        visibility = None):
     # Generate a shell-script tool which hard-codes the baked args.
     baked_binary_wrapper = "%s.sh" % name
     _baked_args_wrapper(
@@ -103,7 +101,7 @@ def _baked_args_wrapper_impl(ctx):
     # delayed entirely. As a result, the typical Bash runfiles mechanism doesn't
     # work, and instead we have to go through `${RUNFILES}` provided by
     # `js_run_devserver()`.
-    # 
+    #
     # `baked_args` are hard-coded in the shell script while any argument passed
     # in at execution are appended afterwards.
     wrapper_script = "{env} ${{RUNFILES}}/{binary} {baked_args} $@".format(

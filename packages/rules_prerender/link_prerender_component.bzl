@@ -68,7 +68,7 @@ def link_prerender_component(name, package, visibility = None, testonly = None):
         name = "%s_styles" % name,
         visibility = visibility,
         testonly = testonly,
-        deps = [], # Empty for now, styles aren't supported.
+        deps = [],  # Empty for now, styles aren't supported.
     )
 
     _empty_web_resources(
@@ -83,7 +83,8 @@ def _empty_web_resources_impl(ctx):
     ctx.actions.run_shell(
         mnemonic = "EmptyResources",
         progress_message = "Creating empty resources directory %{label}",
-        command = "", # Directory already exists, don't actually need to create it.
+        # Directory already exists, don't actually need to create it.
+        command = "",
         arguments = [dir.path],
         inputs = [],
         outputs = [dir],

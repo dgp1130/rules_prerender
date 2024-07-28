@@ -8,16 +8,15 @@ load(":web_resources.bzl", "web_resources")
 visibility("public")
 
 def prerender_pages(
-    name,
-    entry_point,
-    prerender,
-    scripts = None,
-    styles = None,
-    resources = None,
-    testonly = None,
-    visibility = None,
-    debug_target = None,
-):
+        name,
+        entry_point,
+        prerender,
+        scripts = None,
+        styles = None,
+        resources = None,
+        testonly = None,
+        visibility = None,
+        debug_target = None):
     """Renders multiple resources at build time and bundles client-side content.
 
     This provides a higher-level implementation of `prerender_pages_unbundled`,
@@ -28,7 +27,7 @@ def prerender_pages(
 
     The file listed in `entry_point` must compile to an ESM module with a
     default export of the type:
-    
+
     ```
     () => Iterable<PrerenderResource> | Promise<Iterable<PrerenderResource>>
         | AsyncIterable<PrerenderResource>
@@ -57,7 +56,7 @@ def prerender_pages(
 
     Any styles that are included with `inlineStyle()` are inlined as a
     `<style />` tag at the inserted location in the document.
-    
+
     Outputs:
         %{name}: A `web_resources()`-compatible rule which includes all the
             prerendered files, with all HTML files injected with `<script />`
@@ -66,7 +65,7 @@ def prerender_pages(
             included. CSS is inlined directly in the HTML documents in a
             `<style />` tag. Non-HTML files are included as well, but not
             modified in the bundling process.
-    
+
     Args:
         name: The name of this rule.
         entry_point: The JavaScript file to invoke as the entry point of the
@@ -83,6 +82,7 @@ def prerender_pages(
             local debugging. Defaults to this target's label. Useful for
             providing intuitive flag behavior in macros.
     """
+
     # Render the site and collect all the scripts/styles/resources together.
     prerender_name = "%s_unbundled" % name
     prerender_pages_unbundled(

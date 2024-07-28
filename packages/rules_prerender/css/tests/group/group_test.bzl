@@ -1,5 +1,5 @@
 load("@bazel_skylib//lib:new_sets.bzl", "sets")
-load("@bazel_skylib//lib:unittest.bzl", "asserts", "analysistest")
+load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
 load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")
@@ -58,7 +58,7 @@ def _test_css_group(name):
     css_library(
         name = "lib2",
         srcs = ["lib2.css"],
-        deps = [":lib1"], # `css_group()` should be fine with this dep.
+        deps = [":lib1"],  # `css_group()` should be fine with this dep.
         tags = ["manual"],
     )
 
@@ -78,14 +78,22 @@ def _css_group_fails_with_conflicting_maps_test_impl(ctx):
     env = analysistest.begin(ctx)
 
     asserts.expect_failure(env, "Found duplicate CSS import path in `_css_group()`.")
+
     # Look for conflicting import path.
-    asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/conflicting_lib.css")
+    asserts.expect_failure(
+        env,
+        "packages/rules_prerender/css/tests/group/conflicting_lib.css",
+    )
+
     # Look for conflicting file paths.
-    asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/conflicting_bin1_binary_0/packages/rules_prerender/css/tests/group/conflicting_lib.css")
-    asserts.expect_failure(env,
-        "packages/rules_prerender/css/tests/group/conflicting_bin2_binary_0/packages/rules_prerender/css/tests/group/conflicting_lib.css")
+    asserts.expect_failure(
+        env,
+        "packages/rules_prerender/css/tests/group/conflicting_bin1_binary_0/packages/rules_prerender/css/tests/group/conflicting_lib.css",
+    )
+    asserts.expect_failure(
+        env,
+        "packages/rules_prerender/css/tests/group/conflicting_bin2_binary_0/packages/rules_prerender/css/tests/group/conflicting_lib.css",
+    )
 
     return analysistest.end(env)
 

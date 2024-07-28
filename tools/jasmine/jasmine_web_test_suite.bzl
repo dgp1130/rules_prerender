@@ -23,22 +23,21 @@ _DEFAULT_BROWSERS = [
 ]
 
 def jasmine_web_test_suite(
-    name,
-    browsers = _DEFAULT_BROWSERS,
-    browser_overrides = None,
-    config = None,
-    flaky = None,
-    local = None,
-    shard_count = None,
-    size = "small",
-    tags = _DEFAULT_WEB_TEST_SUITE_TAGS,
-    wrapped_test_tags = ["manual", "noci"],
-    test_suite_tags = ["manual"],
-    debug_test_suite_tags = None,
-    timeout = None,
-    visibility = None,
-    **kwargs,
-):
+        name,
+        browsers = _DEFAULT_BROWSERS,
+        browser_overrides = None,
+        config = None,
+        flaky = None,
+        local = None,
+        shard_count = None,
+        size = "small",
+        tags = _DEFAULT_WEB_TEST_SUITE_TAGS,
+        wrapped_test_tags = ["manual", "noci"],
+        test_suite_tags = ["manual"],
+        debug_test_suite_tags = None,
+        timeout = None,
+        visibility = None,
+        **kwargs):
     """Defines a `jasmine_node_test()` with a `web_test_suite()` wrapper.
 
     This is mainly for WebDriverIO tests, since it generates and starts a
@@ -51,7 +50,7 @@ def jasmine_web_test_suite(
         browser_overrides: Optional dictionary which maps from browser targets
             to browser-specific `web_test()` attributes, such as `shard_count`,
             `flaky`, `timeout`, etc. For example:
-            
+
             ```
             {
                 "//tools/browsers/chromium": {"shard_count": 3, "flaky": 1},
@@ -93,7 +92,7 @@ def jasmine_web_test_suite(
         size = size,
         tags = wrapped_test_tags,
         timeout = timeout,
-        **kwargs,
+        **kwargs
     )
 
     # The wrapper `web_test_suite()` target which generates one test per browser

@@ -5,8 +5,8 @@ load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 load(
     ":paths.bzl",
     "is_js_file",
-    "is_ts_file",
     "is_ts_declaration_file",
+    "is_ts_file",
     "js_output",
 )
 
@@ -50,7 +50,7 @@ def _is_ts_declaration_file_impl(ctx):
     asserts.equals(env, True, is_ts_declaration_file("foo/bar/baz.d.ts"))
     asserts.equals(env, True, is_ts_declaration_file("foo/bar/baz.d.mts"))
     asserts.equals(env, True, is_ts_declaration_file("foo/bar/baz.d.cts"))
-    
+
     asserts.equals(env, False, is_ts_declaration_file("foo/bar/baz.js"))
     asserts.equals(env, False, is_ts_declaration_file("foo/bar/baz.ts"))
     asserts.equals(env, False, is_ts_declaration_file("foo/bar/baz.test"))
@@ -80,7 +80,9 @@ def _js_output_bad_ext_test_impl(ctx):
     env = analysistest.begin(ctx)
 
     asserts.expect_failure(
-        env, "Expected a `[mc]?ts|tsx` extension, but got `test`.")
+        env,
+        "Expected a `[mc]?ts|tsx` extension, but got `test`.",
+    )
 
     return analysistest.end(env)
 
@@ -98,7 +100,9 @@ def _js_output_no_ext_test_impl(ctx):
     env = analysistest.begin(ctx)
 
     asserts.expect_failure(
-        env, "No extension on file `foo/bar/baz`.")
+        env,
+        "No extension on file `foo/bar/baz`.",
+    )
 
     return analysistest.end(env)
 

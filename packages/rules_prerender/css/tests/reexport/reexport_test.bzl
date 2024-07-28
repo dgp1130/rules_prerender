@@ -1,5 +1,5 @@
 load("@bazel_skylib//lib:sets.bzl", "sets")
-load("@bazel_skylib//lib:unittest.bzl", "asserts", "analysistest")
+load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssInfo")
 
@@ -37,8 +37,10 @@ def _reexport_test_impl(ctx):
             "packages/rules_prerender/css/tests/reexport/baz.css",
             "packages/rules_prerender/css/tests/reexport/dep.css",
         ]),
-        sets.make([file.short_path
-                   for file in css_info.transitive_sources.to_list()]),
+        sets.make([
+            file.short_path
+            for file in css_info.transitive_sources.to_list()
+        ]),
     )
 
     return analysistest.end(env)

@@ -53,7 +53,7 @@ def extract_single_resource(name = None, resources = None, out = None):
 
     Throws an error if the input resources directory does not contain *exactly*
     one file. The file can be at any path.
-    
+
     Params:
         name: The name of this rule.
         resources: The resources directory which contains **exactly** one file

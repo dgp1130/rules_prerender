@@ -2,19 +2,17 @@
 
 load("//tools/binaries/css_bundler:css_bundle.bzl", "css_bundle")
 load(":css_group.bzl", "css_group")
-load(":css_providers.bzl", "CssInfo")
 
 visibility(["//packages/rules_prerender/..."])
 
 def css_binaries(
-    name,
-    deps,
-    testonly = None,
-    visibility = None,
-    tags = None,
-):
+        name,
+        deps,
+        testonly = None,
+        visibility = None,
+        tags = None):
     """Generates CSS "binaries" of direct `css_library()` dependencies.
-    
+
     Each `css_library()` in `deps` gets each of its direct sources compiled into a
     "binary", a new CSS file which bundles all the `@import` dependencies of that source.
 
@@ -30,6 +28,7 @@ def css_binaries(
         visibility: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
         tags: https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes
     """
+
     # It might look like this implementation should accept multiple `css_library()`
     # targets, but doing so would be a bad idea. This is because the library is separated
     # into "direct sources" and "transitive dependencies" which are fed into

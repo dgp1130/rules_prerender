@@ -1,8 +1,8 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load(
     "//packages/rules_prerender/css:css_providers.bzl",
-    "CssInfo",
     "CssImportMapInfo",
+    "CssInfo",
 )
 load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 
@@ -81,7 +81,8 @@ alias_with_metadata = rule(
 )
 
 def _safe_get(target, provider):
-    if target and provider in target: return target[provider]
+    if target and provider in target:
+        return target[provider]
 
     return None
 

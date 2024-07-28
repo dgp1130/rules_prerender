@@ -3,10 +3,9 @@
 visibility("public")
 
 def absolute(
-    target,
-    repository_name = native.repository_name,
-    package_name = native.package_name,
-):
+        target,
+        repository_name = native.repository_name,
+        package_name = native.package_name):
     """Returns an absolute path to the provided possibly-relative target.
 
     This is useful for generating labels for targets that are siblings of a
@@ -62,6 +61,7 @@ def file_path_of(lbl):
     correctly from the `execroot/__main__/` directory most actions use as the
     current working directory by default.
     """
+
     # Isolate the workspace name, package, and target strings.
     [wksp, absolute_path] = str(lbl).split("//")
     [pkg, target] = absolute_path.split(":")

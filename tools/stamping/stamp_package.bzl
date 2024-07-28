@@ -3,11 +3,10 @@ load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 visibility("private")
 
 def stamp_package(
-    name,
-    package = "package.json",
-    default_version = None,
-    **kwargs
-):
+        name,
+        package = "package.json",
+        default_version = None,
+        **kwargs):
     """Updates `package.json` files with the stamped version.
 
     In unstamped builds, the `package.json` file will be left alone. In stamped

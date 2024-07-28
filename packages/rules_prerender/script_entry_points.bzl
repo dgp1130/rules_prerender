@@ -32,7 +32,7 @@ script_entry_points = rule(
             doc = """
                 A metadata JSON file containing information about the scripts
                 to bundle.
-            """
+            """,
         ),
         "_script_entry_generator": attr.label(
             default = "//tools/binaries/script_entry_generator",

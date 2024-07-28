@@ -31,7 +31,8 @@ def _absolute_given_relative_target_impl(ctx):
     return unittest.end(env)
 
 _absolute_given_relative_target_test = unittest.make(
-    _absolute_given_relative_target_impl)
+    _absolute_given_relative_target_impl,
+)
 
 def _absolute_given_absolute_target_impl(ctx):
     env = unittest.begin(ctx)
@@ -46,7 +47,8 @@ def _absolute_given_absolute_target_impl(ctx):
     return unittest.end(env)
 
 _absolute_given_absolute_target_test = unittest.make(
-    _absolute_given_absolute_target_impl)
+    _absolute_given_absolute_target_impl,
+)
 
 def _absolute_given_external_target_impl(ctx):
     env = unittest.begin(ctx)
@@ -61,7 +63,8 @@ def _absolute_given_external_target_impl(ctx):
     return unittest.end(env)
 
 _absolute_given_external_target_test = unittest.make(
-    _absolute_given_external_target_impl)
+    _absolute_given_external_target_impl,
+)
 
 def _absolute_given_relative_path_in_external_workspace_impl(ctx):
     env = unittest.begin(ctx)
@@ -76,7 +79,8 @@ def _absolute_given_relative_path_in_external_workspace_impl(ctx):
     return unittest.end(env)
 
 _absolute_given_relative_path_in_external_workspace_test = unittest.make(
-    _absolute_given_relative_path_in_external_workspace_impl)
+    _absolute_given_relative_path_in_external_workspace_impl,
+)
 
 def _absolute_given_absolute_path_in_external_workspace_impl(ctx):
     env = unittest.begin(ctx)
@@ -91,7 +95,8 @@ def _absolute_given_absolute_path_in_external_workspace_impl(ctx):
     return unittest.end(env)
 
 _absolute_given_absolute_path_in_external_workspace_test = unittest.make(
-    _absolute_given_absolute_path_in_external_workspace_impl)
+    _absolute_given_absolute_path_in_external_workspace_impl,
+)
 
 def _absolute_given_external_shorthand_impl(ctx):
     env = unittest.begin(ctx)
@@ -106,7 +111,8 @@ def _absolute_given_external_shorthand_impl(ctx):
     return unittest.end(env)
 
 _absolute_given_external_shorthand_test = unittest.make(
-    _absolute_given_external_shorthand_impl)
+    _absolute_given_external_shorthand_impl,
+)
 
 def _file_path_of_given_absolute_target_impl(ctx):
     env = unittest.begin(ctx)
@@ -120,7 +126,8 @@ def _file_path_of_given_absolute_target_impl(ctx):
     return unittest.end(env)
 
 _file_path_of_given_absolute_target_test = unittest.make(
-    _file_path_of_given_absolute_target_impl)
+    _file_path_of_given_absolute_target_impl,
+)
 
 def _file_path_of_given_external_target_impl(ctx):
     env = unittest.begin(ctx)
@@ -131,7 +138,8 @@ def _file_path_of_given_external_target_impl(ctx):
     return unittest.end(env)
 
 _file_path_of_given_external_target_test = unittest.make(
-    _file_path_of_given_external_target_impl)
+    _file_path_of_given_external_target_impl,
+)
 
 def _file_path_of_given_root_package_target_impl(ctx):
     env = unittest.begin(ctx)
@@ -145,7 +153,8 @@ def _file_path_of_given_root_package_target_impl(ctx):
     return unittest.end(env)
 
 _file_path_of_given_root_package_target_test = unittest.make(
-    _file_path_of_given_root_package_target_impl)
+    _file_path_of_given_root_package_target_impl,
+)
 
 def _file_path_of_given_external_root_package_target_impl(ctx):
     env = unittest.begin(ctx)
@@ -156,7 +165,8 @@ def _file_path_of_given_external_root_package_target_impl(ctx):
     return unittest.end(env)
 
 _file_path_of_given_external_root_package_target_test = unittest.make(
-    _file_path_of_given_external_root_package_target_impl)
+    _file_path_of_given_external_root_package_target_impl,
+)
 
 def _rel_path_of_absolute_path_impl(ctx):
     env = unittest.begin(ctx)

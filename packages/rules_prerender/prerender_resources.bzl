@@ -12,14 +12,13 @@ load(":web_resources.bzl", "WebResourceInfo")
 visibility(["//"])
 
 def prerender_resources(
-    name,
-    entry_point,
-    data,
-    styles = None,
-    testonly = None,
-    visibility = None,
-    debug_target = None,
-):
+        name,
+        entry_point,
+        data,
+        styles = None,
+        testonly = None,
+        visibility = None,
+        debug_target = None):
     """Renders a directory of resources with the given entry point at build time.
 
     This invokes the default export function of the given entry point, and
@@ -88,19 +87,19 @@ def prerender_resources(
     )
 
 def prerender_resources_internal(
-    name,
-    entry_point,
-    data,
-    debug_target,
-    styles = None,
-    testonly = None,
-    visibility = None,
-):
+        name,
+        entry_point,
+        data,
+        debug_target,
+        styles = None,
+        testonly = None,
+        visibility = None):
     """Internal version of `prerender_resources()` which allows `styles` usage."""
+
     # Validate `entry_point`.
     if "/" not in entry_point or not is_js_file(entry_point):
-        fail(("`entry_point` (%s) *must* be a workspace-relative path of the"
-                + " format: \"path/to/pkg/file.js\"") % entry_point)
+        fail(("`entry_point` (%s) *must* be a workspace-relative path of the" +
+              " format: \"path/to/pkg/file.js\"") % entry_point)
 
     # Generate binary entry point.
     binary_entry = "%s_binary_entry.mjs" % name

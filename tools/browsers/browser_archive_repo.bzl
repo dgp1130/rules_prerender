@@ -13,7 +13,7 @@ def _browser_archive_impl(ctx):
         result_zip_name = "_converted_file_%s.zip" % ctx.attr.name
 
         ctx.download(urls, download_file_name, sha256)
-        
+
         ctx.execute([ctx.path(convert), download_file_name, result_zip_name])
         ctx.extract(result_zip_name)
 

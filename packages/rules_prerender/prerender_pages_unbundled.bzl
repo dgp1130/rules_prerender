@@ -13,16 +13,15 @@ load(":web_resources.bzl", "WebResourceInfo")
 visibility("public")
 
 def prerender_pages_unbundled(
-    name,
-    entry_point,
-    prerender,
-    scripts = None,
-    styles = None,
-    resources = None,
-    testonly = None,
-    visibility = None,
-    debug_target = None,
-):
+        name,
+        entry_point,
+        prerender,
+        scripts = None,
+        styles = None,
+        resources = None,
+        testonly = None,
+        visibility = None,
+        debug_target = None):
     """Renders a directory of resources at build time.
 
     This invokes the default export function of the given `entry_point` and
@@ -80,6 +79,7 @@ def prerender_pages_unbundled(
             local debugging. Defaults to this target's label. Useful for
             providing intuitive flag behavior in macros.
     """
+
     # Generate a component of the user's code.
     component = "%s_component" % name
     prerender_component(
@@ -178,18 +178,24 @@ def _collect_transitive_metadata_aspect_impl(target, ctx):
     metadata = target[PrerenderMetadataInfo] if PrerenderMetadataInfo in target else None
 
     # Find all deps with known labels on the target.
-    label_attr_deps = [getattr(ctx.rule.attr, attr)
-                       for attr in _ASPECT_LABEL_ATTRS
-                       if getattr(ctx.rule.attr, attr, None) != None]
-    label_list_attr_deps = [dep
-                            for attr in _ASPECT_LABEL_LIST_ATTRS
-                            for dep in getattr(ctx.rule.attr, attr, [])]
+    label_attr_deps = [
+        getattr(ctx.rule.attr, attr)
+        for attr in _ASPECT_LABEL_ATTRS
+        if getattr(ctx.rule.attr, attr, None) != None
+    ]
+    label_list_attr_deps = [
+        dep
+        for attr in _ASPECT_LABEL_LIST_ATTRS
+        for dep in getattr(ctx.rule.attr, attr, [])
+    ]
     deps = label_attr_deps + label_list_attr_deps
 
     # Find all transitive `_CollectedPrerenderMetadataInfo`.
-    transitive_metadata = [dep[_CollectedPrerenderMetadataInfo].transitive_metadata
-                           for dep in deps
-                           if _CollectedPrerenderMetadataInfo in dep]
+    transitive_metadata = [
+        dep[_CollectedPrerenderMetadataInfo].transitive_metadata
+        for dep in deps
+        if _CollectedPrerenderMetadataInfo in dep
+    ]
 
     # Merge the metadata provided by this target with the
     # `_CollectedPrerenderMetadataInfo` from all transitive dependencies.
@@ -211,12 +217,16 @@ _collect_transitive_metadata_aspect = aspect(
 
 def _collect_transitive_styles_impl(ctx):
     transitive_metadata = ctx.attr.metadata[_CollectedPrerenderMetadataInfo].transitive_metadata.to_list()
-    transitive_styles = [metadata.styles.transitive_sources
-                         for metadata in transitive_metadata
-                         if metadata.styles]
-    transitive_import_maps = [metadata.styles_import_map
-                              for metadata in transitive_metadata
-                              if metadata.styles_import_map]
+    transitive_styles = [
+        metadata.styles.transitive_sources
+        for metadata in transitive_metadata
+        if metadata.styles
+    ]
+    transitive_import_maps = [
+        metadata.styles_import_map
+        for metadata in transitive_metadata
+        if metadata.styles_import_map
+    ]
 
     return [
         DefaultInfo(files = depset(
@@ -253,46 +263,75 @@ _collect_transitive_styles = rule(
 
 def _collect_transitive_scripts_impl(ctx):
     transitive_metadata = ctx.attr.metadata[_CollectedPrerenderMetadataInfo].transitive_metadata.to_list()
-    transitive_scripts = [metadata.scripts
-                         for metadata in transitive_metadata
-                         if metadata.scripts]
+    transitive_scripts = [
+        metadata.scripts
+        for metadata in transitive_metadata
+        if metadata.scripts
+    ]
 
     merged_js_info = js_info(
-        declarations = depset([],
-            transitive = [info.declarations
-                          for info in transitive_scripts],
+        declarations = depset(
+            [],
+            transitive = [
+                info.declarations
+                for info in transitive_scripts
+            ],
         ),
-        npm_linked_package_files = depset([],
-            transitive = [info.npm_linked_package_files
-                          for info in transitive_scripts],
+        npm_linked_package_files = depset(
+            [],
+            transitive = [
+                info.npm_linked_package_files
+                for info in transitive_scripts
+            ],
         ),
-        npm_linked_packages = depset([],
-            transitive = [info.npm_linked_packages
-                          for info in transitive_scripts],
+        npm_linked_packages = depset(
+            [],
+            transitive = [
+                info.npm_linked_packages
+                for info in transitive_scripts
+            ],
         ),
-        npm_package_store_deps = depset([],
-            transitive = [info.npm_package_store_deps
-                          for info in transitive_scripts],
+        npm_package_store_deps = depset(
+            [],
+            transitive = [
+                info.npm_package_store_deps
+                for info in transitive_scripts
+            ],
         ),
-        sources = depset([],
-            transitive = [info.sources
-                          for info in transitive_scripts],
+        sources = depset(
+            [],
+            transitive = [
+                info.sources
+                for info in transitive_scripts
+            ],
         ),
-        transitive_declarations = depset([],
-            transitive = [info.transitive_declarations
-                          for info in transitive_scripts],
+        transitive_declarations = depset(
+            [],
+            transitive = [
+                info.transitive_declarations
+                for info in transitive_scripts
+            ],
         ),
-        transitive_npm_linked_package_files = depset([],
-            transitive = [info.transitive_npm_linked_package_files
-                          for info in transitive_scripts],
+        transitive_npm_linked_package_files = depset(
+            [],
+            transitive = [
+                info.transitive_npm_linked_package_files
+                for info in transitive_scripts
+            ],
         ),
-        transitive_npm_linked_packages = depset([],
-            transitive = [info.transitive_npm_linked_packages
-                          for info in transitive_scripts],
+        transitive_npm_linked_packages = depset(
+            [],
+            transitive = [
+                info.transitive_npm_linked_packages
+                for info in transitive_scripts
+            ],
         ),
-        transitive_sources = depset([],
-            transitive = [info.transitive_sources
-                          for info in transitive_scripts],
+        transitive_sources = depset(
+            [],
+            transitive = [
+                info.transitive_sources
+                for info in transitive_scripts
+            ],
         ),
     )
 
@@ -315,9 +354,11 @@ _collect_transitive_scripts = rule(
 
 def _collect_transitive_resources_impl(ctx):
     transitive_metadata = ctx.attr.metadata[_CollectedPrerenderMetadataInfo].transitive_metadata.to_list()
-    transitive_resources = [metadata.resources.transitive_entries
-                         for metadata in transitive_metadata
-                         if metadata.resources]
+    transitive_resources = [
+        metadata.resources.transitive_entries
+        for metadata in transitive_metadata
+        if metadata.resources
+    ]
 
     return WebResourceInfo(
         transitive_entries = depset(
@@ -386,7 +427,7 @@ _multi_extract_annotations = rule(
                 A directory of annotated HTML pages to extract from. May also
                 contain non-HTML content which will be copied through to the
                 output.
-            """
+            """,
         ),
         "output_metadata": attr.output(
             mandatory = True,

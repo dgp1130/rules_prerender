@@ -8,7 +8,7 @@ def define_chromium_repositories():
 
     browser_archive(
         name = "org_chromium_chromium_linux_x64",
-        licenses = ["notice"], # BSD 3-clause (maybe more?)
+        licenses = ["notice"],  # BSD 3-clause (maybe more?)
         sha256 = "4e89a56b61db2fe494d4072d551b24e81833608318c5ba347b5d16a19687674e",
         # 114.0.5673.0
         urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/1121551/chrome-linux.zip"],
@@ -21,7 +21,7 @@ def define_chromium_repositories():
 
     browser_archive(
         name = "org_chromium_chromium_macos_x64",
-        licenses = ["notice"], # BSD 3-clause (maybe more?)
+        licenses = ["notice"],  # BSD 3-clause (maybe more?)
         sha256 = "c03e32f338dffee3404881b4950563d26812d0246c1372ad2f4800547382bb91",
         # 114.0.5673.0
         urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac/1121551/chrome-mac.zip"],
@@ -38,7 +38,7 @@ def define_chromium_repositories():
 
     browser_archive(
         name = "org_chromium_chromium_macos_arm64",
-        licenses = ["notice"], # BSD 3-clause (maybe more?)
+        licenses = ["notice"],  # BSD 3-clause (maybe more?)
         sha256 = "4eb94b113fc995d20fafeca366b4b0cddf172ac1b2cdedc053464b764b74d1c0",
         # 114.0.5673.0
         urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac_Arm/1121551/chrome-mac.zip"],
@@ -55,7 +55,7 @@ def define_chromium_repositories():
 
     browser_archive(
         name = "org_chromium_chromium_windows",
-        licenses = ["notice"], # BSD 3-clause (maybe more?)
+        licenses = ["notice"],  # BSD 3-clause (maybe more?)
         sha256 = "fdc221bb1e898ab851c4a5bc50ca1f88a5b388acb5510df4c4606c87d8be0230",
         # 114.0.5673.0
         urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Win/1121551/chrome-win.zip"],

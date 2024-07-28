@@ -6,13 +6,12 @@ load("//common:label.bzl", "absolute")
 visibility(["//"])
 
 def prerender_component_publish_files(
-    name,
-    dep,
-    collect_styles = True,
-    collect_resources = True,
-    testonly = None,
-    **kwargs,
-):
+        name,
+        dep,
+        collect_styles = True,
+        collect_resources = True,
+        testonly = None,
+        **kwargs):
     """Collects all the files in a `prerender_component()` for publishing.
 
     This is useful when publishing a `prerender_component()` to NPM for another

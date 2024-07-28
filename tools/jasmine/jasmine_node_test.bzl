@@ -15,6 +15,7 @@ def jasmine_node_test(name, deps, data = [], size = "small", **kwargs):
         deps: Targets whose `DefaultInfo` files are executed as Jasmine tests.
         **kwargs: Arguments to pass through to the real `jasmine_test()`.
     """
+
     # Generate a config file for the test.
     config_file = "%s_config.json" % name
     _jasmine_config(
@@ -33,7 +34,7 @@ def jasmine_node_test(name, deps, data = [], size = "small", **kwargs):
         ],
         testonly = True,
         size = size,
-        **kwargs,
+        **kwargs
     )
 
 def _jasmine_config_impl(ctx):
@@ -41,8 +42,11 @@ def _jasmine_config_impl(ctx):
 
     ctx.actions.write(config, json.encode_indent({
         "spec_dir": "",
-        "spec_files": [file.short_path for file in ctx.files.deps
-                       if is_js_file(file.path)],
+        "spec_files": [
+            file.short_path
+            for file in ctx.files.deps
+            if is_js_file(file.path)
+        ],
         "failSpecWithNoExpectations": True,
     }))
 

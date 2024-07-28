@@ -66,7 +66,7 @@ css_bundle = rule(
 
 def _make_import_map(ctx, sources, outputs):
     """Generates a map of import paths to the actual file location to import.
-    
+
     When users call `inlineStyle()`, it resolves and looks up that path in this map
     and actually inlines the file specified by the map. This allows the file path in
     user code to differ from the actual path the bundled CSS file lives at.

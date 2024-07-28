@@ -19,6 +19,7 @@ def npm_publish(name, package, npmrc, testonly = None, visibility = None):
         testonly: https://bazel.build/reference/be/common-definitions#common-attributes
         visibility: https://bazel.build/reference/be/common-definitions#common-attributes
     """
+
     # For some reason we need to `copy_to_bin()` for the directory to show up in
     # `sh_binary()` runfiles? TBH, I don't understand why this is necessary.
     package_bin = "%s_package" % name

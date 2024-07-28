@@ -8,7 +8,7 @@ def is_js_file(src):
 
 def is_ts_file(src):
     """Returns whether or not the given src path is a TypeScript source file.
-    
+
     Does _not_ include declaration files like `*.d.ts`.
     """
     if is_ts_declaration_file(src):

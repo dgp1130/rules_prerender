@@ -6,8 +6,10 @@ visibility(["//"])
 
 def _multi_inject_resources_impl(ctx):
     # Generate configuration JSON from inputs.
-    script_injections = [{"type": "script", "path": script}
-                         for script in ctx.attr.scripts]
+    script_injections = [
+        {"type": "script", "path": script}
+        for script in ctx.attr.scripts
+    ]
     injections = script_injections
 
     # Write the configuration to a file.
