@@ -1,3 +1,5 @@
+"""Defines `stamp_package` rule."""
+
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 
 visibility("private")

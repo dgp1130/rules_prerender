@@ -151,9 +151,14 @@ def prerender_pages_unbundled(
         visibility = visibility,
     )
 
-_CollectedPrerenderMetadataInfo = provider(fields = {
-    "transitive_metadata": "`depset` of transitive `PrerenderMetadataInfo` providers.",
-})
+_CollectedPrerenderMetadataInfo = provider(
+    "Collects transitive `PrerenderMetadataInfo` dependencies.",
+    fields = {
+        "transitive_metadata": """
+`depset` of transitive `PrerenderMetadataInfo` providers.
+        """.strip(),
+    },
+)
 
 # Label attributes which may point at `PrerenderMetadataInfo` targets.
 _ASPECT_LABEL_ATTRS = [

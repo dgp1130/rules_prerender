@@ -1,3 +1,5 @@
+"""Defines `types_only` rule."""
+
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 
 visibility("private")

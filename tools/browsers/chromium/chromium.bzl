@@ -3,6 +3,8 @@
 load("//tools/browsers:browser_archive_repo.bzl", "browser_archive")
 
 def define_chromium_repositories():
+    """Defines archives for downloading Chromium."""
+
     # To update to a newer version of Chromium see instructions in
     # https://github.com/angular/dev-infra/blob/master/bazel/browsers/README.md.
 

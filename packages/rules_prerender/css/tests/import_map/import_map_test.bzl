@@ -1,3 +1,5 @@
+"""Tests CSS import map implementation."""
+
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")

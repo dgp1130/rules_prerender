@@ -1,6 +1,8 @@
+"""Defines an aspect for tracking visibility information."""
+
 visibility("private")
 
-VisibilityInfo = provider(fields = {
+VisibilityInfo = provider("Tracks target visibility.", fields = {
     "visibility": "Visibility of the target.",
 })
 

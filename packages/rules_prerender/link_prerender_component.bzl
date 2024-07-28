@@ -1,3 +1,5 @@
+"""Defines `link_prerender_component`."""
+
 load("//packages/rules_prerender/css:css_group.bzl", "css_group")
 load(":prerender_metadata.bzl", "alias_with_metadata", "prerender_metadata")
 load(":web_resources.bzl", "WebResourceInfo")

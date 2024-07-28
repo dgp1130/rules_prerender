@@ -3,6 +3,8 @@
 load("//tools/browsers:browser_archive_repo.bzl", "browser_archive")
 
 def define_firefox_repositories():
+    """Defines archives for downloading Firefox."""
+
     browser_archive(
         name = "org_mozilla_firefox_linux_x64",
         licenses = ["reciprocal"],  # MPL 2.0

@@ -1,3 +1,5 @@
+"""Tests `css_group` rule."""
+
 load("@bazel_skylib//lib:new_sets.bzl", "sets")
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")

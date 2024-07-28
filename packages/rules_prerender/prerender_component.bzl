@@ -1,7 +1,6 @@
 """Defines `prerender_component()` functionality."""
 
 load("@aspect_rules_js//js:defs.bzl", "js_library")
-load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("//packages/rules_prerender/css:css_binaries.bzl", "css_binaries")
 load(
     ":prerender_metadata.bzl",
@@ -284,108 +283,10 @@ _component_check = rule(
     doc = "Performs component-level sanity checks and builds all slices.",
 )
 
-def _js_reexport_impl(ctx):
-    merged_js_info = js_info(
-        declarations = depset(
-            [],
-            transitive = [
-                src[JsInfo].declarations
-                for src in ctx.attr.srcs
-            ],
-        ),
-        npm_linked_package_files = depset(
-            [],
-            transitive = [
-                src[JsInfo].npm_linked_package_files
-                for src in ctx.attr.srcs
-            ],
-        ),
-        npm_linked_packages = depset(
-            [],
-            transitive = [
-                src[JsInfo].npm_linked_packages
-                for src in ctx.attr.srcs
-            ],
-        ),
-        npm_package_store_deps = depset(
-            [],
-            transitive = [
-                src[JsInfo].npm_package_store_deps
-                for src in ctx.attr.srcs
-            ],
-        ),
-        sources = depset(
-            [],
-            transitive = [
-                src[JsInfo].sources
-                for src in ctx.attr.srcs
-            ],
-        ),
-        transitive_declarations = depset(
-            [],
-            transitive = [
-                dep[JsInfo].transitive_declarations
-                for dep in ctx.attr.srcs + ctx.attr.deps
-            ],
-        ),
-        transitive_npm_linked_package_files = depset(
-            [],
-            transitive = [
-                dep[JsInfo].transitive_npm_linked_package_files
-                for dep in ctx.attr.srcs + ctx.attr.deps
-            ],
-        ),
-        transitive_npm_linked_packages = depset(
-            [],
-            transitive = [
-                dep[JsInfo].transitive_npm_linked_packages
-                for dep in ctx.attr.srcs + ctx.attr.deps
-            ],
-        ),
-        transitive_sources = depset(
-            [],
-            transitive = [
-                dep[JsInfo].transitive_sources
-                for dep in ctx.attr.srcs + ctx.attr.deps
-            ],
-        ),
-    )
-
-    return [
-        DefaultInfo(files = merged_js_info.sources),
-        merged_js_info,
-    ]
-
-_js_reexport = rule(
-    implementation = _js_reexport_impl,
-    attrs = {
-        "srcs": attr.label_list(
-            default = [],
-            providers = [JsInfo],
-        ),
-        "deps": attr.label_list(
-            default = [],
-            providers = [JsInfo],
-        ),
-    },
-    doc = """
-        Re-exports the given `ts_project()` and `js_library()` targets. Targets
-        in `srcs` have their direct sources re-exported as the direct sources of
-        this target, while targets in `deps` are only included as transitive
-        sources.
-
-        This rule serves two purposes:
-        1.  It re-exports **both** `ts_project()` and `js_library()`.
-        2.  It merges multiple targets together, depending on all of them but
-            only re-exporting direct sources from the `srcs` attribute. Even
-            with `ts_project()` re-export it is not possible to re-export only
-            some of the given targets.
-    """,
-)
-
 def _inline_css_reexport(name, styles, testonly = None, visibility = None):
     css_binaries(
         name = name,
         testonly = testonly,
+        visibility = visibility,
         deps = [styles],
     )

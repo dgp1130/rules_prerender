@@ -1,3 +1,5 @@
+"""Defines repository dependencies for `@rules_prerender`."""
+
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")

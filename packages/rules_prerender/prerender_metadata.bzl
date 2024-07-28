@@ -1,10 +1,12 @@
+"""Defines `prerender_metadata` rule."""
+
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
+load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 load(
     "//packages/rules_prerender/css:css_providers.bzl",
     "CssImportMapInfo",
     "CssInfo",
 )
-load("//packages/rules_prerender:web_resources.bzl", "WebResourceInfo")
 
 PrerenderMetadataInfo = provider(
     "Holds all the providers for each component \"slice\".",

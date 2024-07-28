@@ -1,3 +1,5 @@
+"""Defines `css_bundle` rule."""
+
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("//packages/rules_prerender/css:css_providers.bzl", "CssImportMapInfo", "CssInfo")
 
@@ -64,7 +66,7 @@ css_bundle = rule(
     """,
 )
 
-def _make_import_map(ctx, sources, outputs):
+def _make_import_map(_ctx, sources, outputs):
     """Generates a map of import paths to the actual file location to import.
 
     When users call `inlineStyle()`, it resolves and looks up that path in this map

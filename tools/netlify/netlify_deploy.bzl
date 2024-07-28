@@ -1,3 +1,5 @@
+"""Defines `netlify_deploy` rule."""
+
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load(
     "@rules_prerender_npm//:netlify-cli/package_json.bzl",

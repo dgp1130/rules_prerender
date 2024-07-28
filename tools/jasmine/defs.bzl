@@ -1,3 +1,5 @@
+"""Entry point for Jasmine rules."""
+
 load(":jasmine_node_test.bzl", _jasmine_node_test = "jasmine_node_test")
 load(
     ":jasmine_web_test_suite.bzl",

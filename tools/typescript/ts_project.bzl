@@ -1,3 +1,5 @@
+"""Defines `ts_project` wrapper macro."""
+
 load("@aspect_rules_ts//ts:defs.bzl", _ts_project = "ts_project")
 
 visibility("private")

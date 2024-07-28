@@ -1,3 +1,5 @@
+"""Defines `js_bundle` rule."""
+
 load("@aspect_bazel_lib//lib:paths.bzl", "to_output_relative_path")
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("//common:paths.bzl", "is_js_file")
@@ -48,7 +50,6 @@ def _js_bundle_impl(ctx):
     args = ctx.actions.args()
 
     # Map each entry point to an output at the same relative file path.
-    entry_points_path = ctx.file.entry_points.path
     args.add_all(
         [ctx.file.entry_points],
         # Rollup inputs should be listed as `output_bundle_name=path/to/input.js`.

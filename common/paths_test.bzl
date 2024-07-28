@@ -71,7 +71,7 @@ def _js_output_impl(ctx):
 
 _js_output_test = unittest.make(_js_output_impl)
 
-def _js_output_bad_ext_impl(ctx):
+def _js_output_bad_ext_impl(_ctx):
     js_output("foo/bar/baz.test")
 
 _js_output_bad_ext = rule(_js_output_bad_ext_impl)
@@ -91,7 +91,7 @@ _js_output_bad_ext_test = analysistest.make(
     expect_failure = True,
 )
 
-def _js_output_no_ext_impl(ctx):
+def _js_output_no_ext_impl(_ctx):
     js_output("foo/bar/baz")
 
 _js_output_no_ext = rule(_js_output_no_ext_impl)
@@ -112,6 +112,11 @@ _js_output_no_ext_test = analysistest.make(
 )
 
 def paths_test_suite(name):
+    """Test suite for `paths.bzl`
+
+    Args:
+        name: Name of this target.
+    """
     _js_output_bad_ext(
         name = "%s_bad_ext" % name,
         tags = ["manual"],

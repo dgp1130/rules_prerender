@@ -50,6 +50,7 @@ exports_files({exports_files})
 
 browser_archive = repository_rule(
     implementation = _browser_archive_impl,
+    # buildifier: disable=attr-licenses
     attrs = {
         "urls": attr.string_list(
             mandatory = True,

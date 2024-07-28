@@ -1,3 +1,5 @@
+"""Tests reexport functionality."""
+
 load("@bazel_skylib//lib:sets.bzl", "sets")
 load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts")
 load("//packages/rules_prerender/css:css_library.bzl", "css_library")

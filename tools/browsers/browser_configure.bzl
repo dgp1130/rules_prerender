@@ -1,5 +1,7 @@
-load("@io_bazel_rules_webtesting//web/internal:metadata.bzl", "metadata")
-load("@io_bazel_rules_webtesting//web/internal:provider.bzl", "WebTestInfo")
+"""Defines `browser_configure` rule."""
+
+load("@io_bazel_rules_webtesting//web/internal:metadata.bzl", "metadata")  # buildifier: disable=bzl-visibility
+load("@io_bazel_rules_webtesting//web/internal:provider.bzl", "WebTestInfo")  # buildifier: disable=bzl-visibility
 
 NamedFilesInfo = provider(
     doc = "Provider exposing the named files of an extracted browser archive.",

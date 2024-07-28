@@ -50,6 +50,12 @@ def merge_import_maps(css_import_maps):
     """Merges a list of `CssImportMapInfo` into a single `CssImportMapInfo`.
 
     Fails the build if the same import path appears as a key in two maps.
+
+    Args:
+        css_import_maps: A list of `CssImportMapInfo` providers to merge.
+
+    Returns:
+        A single merged `CssImportMapInfo`.
     """
     import_map = dict()
     for css_import_map in css_import_maps:

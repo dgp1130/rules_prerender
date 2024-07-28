@@ -1,3 +1,5 @@
+"""Entry point for stamping rules."""
+
 load(":stamp_package.bzl", _stamp_package = "stamp_package")
 
 visibility("//...")

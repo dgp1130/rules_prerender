@@ -21,7 +21,14 @@ def is_ts_declaration_file(src):
     return src.endswith(".d.ts") or src.endswith(".d.mts") or src.endswith(".d.cts")
 
 def js_output(src):
-    """Returns the JS file which will be output by the given TypeScript file."""
+    """Returns the JS file which will be output by the given TypeScript file.
+
+    Args:
+        src: The TS source file.
+
+    Returns:
+        The JS file path which this input TS file will be compiled to.
+    """
     parts = src.split(".")
     if len(parts) == 1:
         fail("No extension on file `%s`." % src)

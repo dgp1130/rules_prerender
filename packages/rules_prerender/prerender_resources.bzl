@@ -15,10 +15,8 @@ def prerender_resources(
         name,
         entry_point,
         data,
-        styles = None,
         testonly = None,
-        visibility = None,
-        debug_target = None):
+        visibility = None):
     """Renders a directory of resources with the given entry point at build time.
 
     This invokes the default export function of the given entry point, and
@@ -64,14 +62,8 @@ def prerender_resources(
             that file into the current workspace and then use the copy as an
             entry point.
         data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-        styles: A `css_group()` of inline styles used by the entry point program.
         testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
         visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
-        debug_target: The label to check
-            `@rules_prerender//tools/flags:debug_prerender` for. If the flag is
-            set to this label, then the renderer binary with open a debugger for
-            local debugging. Defaults to this target's label. Useful for
-            providing intuitive flag behavior in macros.
     """
     prerender_resources_internal(
         name = name,
@@ -94,7 +86,27 @@ def prerender_resources_internal(
         styles = None,
         testonly = None,
         visibility = None):
-    """Internal version of `prerender_resources()` which allows `styles` usage."""
+    """Internal version of `prerender_resources()` which allows `styles` usage.
+
+    Args:
+        name: The name of this rule.
+        entry_point: The JavaScript entry point to use to execute the given
+            tool. This *must* be a workspace-relative path of the format:
+            "path/to/pkg/file.js". The JS file referenced *must* be included in
+            the `data` dependency. There is no way to reference an entry point
+            outside the current workspace. If this is desired, you must copy
+            that file into the current workspace and then use the copy as an
+            entry point.
+        styles: A `css_group()` of inline styles used by the entry point program.
+        debug_target: The label to check
+            `@rules_prerender//tools/flags:debug_prerender` for. If the flag is
+            set to this label, then the renderer binary with open a debugger for
+            local debugging. Defaults to this target's label. Useful for
+            providing intuitive flag behavior in macros.
+        data: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        testonly: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+        visibility: See https://docs.bazel.build/versions/master/be/common-definitions.html.
+    """
 
     # Validate `entry_point`.
     if "/" not in entry_point or not is_js_file(entry_point):
@@ -161,6 +173,7 @@ def _prerender_resources_impl(ctx):
     debug_arg = ctx.attr._debug_prerender[BuildSettingInfo].value
     debugging = debug_arg and Label(debug_arg) == Label(ctx.attr.debug_target)
     if debugging:
+        # buildifier: disable=print For debugging only.
         print("Debugging %s from %s" % (ctx.label, debug_arg))
         args.add("--node_options=--inspect-brk")
 
