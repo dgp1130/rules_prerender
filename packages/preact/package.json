@@ -8,6 +8,6 @@
   },
   "peerDependencies": {
     "preact": "^10.13.1",
-    "rules_prerender": "^0.0.0-PLACEHOLDER"
+    "rules_prerender": "workspace:^0.0.0-PLACEHOLDER"
   }
 }

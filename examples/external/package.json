@@ -2,5 +2,10 @@
   "name": "rules_prerender_external",
   "version": "0.0.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@rules_prerender/preact": "workspace:0.0.0-PLACEHOLDER",
+    "@rules_prerender/declarative_shadow_dom": "workspace:0.0.0-PLACEHOLDER",
+    "rules_prerender": "workspace:0.0.0-PLACEHOLDER"
+  }
 }

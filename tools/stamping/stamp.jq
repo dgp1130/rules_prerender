@@ -18,13 +18,23 @@ def replace_version:
   end
 ;
 
+# We need `workspace:` for `pnpm` to resolve local dependencies, but this should
+# be stripped for releases.
+def strip_workspace:
+  if startswith("workspace:") then
+    .[("workspace:" | length):]
+  else
+    .
+  end
+;
+
 # Takes a dependencies object and replaces the versions of all the dependencies
 # matching `$package_filter`.
 def map_deps:
   with_entries(
     .key as $key |
     .value |= if $key | test($package_filter) then
-      replace_version
+      strip_workspace | replace_version
     else
       .
     end
