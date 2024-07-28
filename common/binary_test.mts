@@ -14,14 +14,14 @@ describe('binary', () => {
     describe('main()', () => {
         it('exits with the return value of the callback', async () => {
             process.argv = [ 'node', 'foo.js', '--bar', 'baz' ];
-            spyOn(process, 'exit');
+            const exitSpy = spyOn(process, 'exit');
 
             const callback = jasmine.createSpy('callback').and.resolveTo(0);
             await main(callback);
 
             expect(callback).toHaveBeenCalledOnceWith([ '--bar', 'baz' ]);
 
-            expect(process.exit).toHaveBeenCalledOnceWith(0);
+            expect(exitSpy).toHaveBeenCalledOnceWith(0);
         });
 
         it('prints error message and exits with code 0 when an error is thrown', async () => {

@@ -42,7 +42,7 @@ type Defined = string | number | boolean | symbol | object;
  * a type-only re-export of the private implementation to avoid leaking
  * unnecessary abstraction details.
  */
-export type Effect<T> = {
+export interface Effect<T> {
     /**
      * Returns an instance of the underlying value.
      * 
@@ -50,7 +50,7 @@ export type Effect<T> = {
      *     test.
      */
     get: EffectImpl<T>['get'];
-};
+}
 
 /**
  * Holds a value of type T which is usable during test functions. The value may

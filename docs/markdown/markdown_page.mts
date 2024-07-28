@@ -34,8 +34,9 @@ export function parsePageMetadata(page: string, frontmatter: unknown): MarkdownM
     const { formErrors, fieldErrors } = result.error.flatten();
     const formErrorsMessage = formErrors.join('\n');
     const fieldErrorsMessage = Object.entries(fieldErrors)
-        .map(([ field, message ]) => `Property \`${field}\`: ${message}`)
-        .join('\n');
+        .map(([ field, errors ]) => `Property \`${field}\`:\n${
+            errors.join('\n')}`)
+        .join('\n\n');
     const errorMessage = formErrorsMessage !== ''
         ? `${formErrorsMessage}\n${fieldErrorsMessage}`
         : fieldErrorsMessage;

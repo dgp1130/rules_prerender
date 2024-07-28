@@ -184,6 +184,9 @@ export class ImperativeIterator<Item> implements AsyncIterator<Item> {
             }
 
             if (this.isErrorResult(first)) {
+                // This is just propagating the provided error value and should
+                // match the exact semantics of an iterator.
+                // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                 return Promise.reject(first.value);
             } else {
                 return Promise.resolve(first);

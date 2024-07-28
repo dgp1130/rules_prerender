@@ -111,8 +111,8 @@ describe('imperative_iterator', () => {
                 const imperativeIterator = await factory.started;
 
                 // Synchronously emit two events.
-                imperativeIterator.emit(1);
-                imperativeIterator.emit(2);
+                void imperativeIterator.emit(1);
+                void imperativeIterator.emit(2);
             })();
 
             const iterator = factory.iterable[Symbol.asyncIterator]();
@@ -148,7 +148,7 @@ describe('imperative_iterator', () => {
 
             await expectAsync(iteratorFactory.started).toBePending();
             const iterator = iteratorFactory.iterable[Symbol.asyncIterator]();
-            iterator.next();
+            void iterator.next();
             await expectAsync(iteratorFactory.started).toBeResolved();
         });
 
@@ -158,14 +158,14 @@ describe('imperative_iterator', () => {
 
             // Poll the iterator to start it.
             const iterator = factory.iterable[Symbol.asyncIterator]();
-            iterator.next();
+            void iterator.next();
 
             // Emit some events.
             const imperativeIterator = await factory.started;
-            imperativeIterator.emit(1); // Responds to existing `next` call.
-            imperativeIterator.emit(2); // Adds to queue.
+            void imperativeIterator.emit(1); // Responds to `next` call.
+            void imperativeIterator.emit(2); // Adds to queue.
             imperativeIterator.done();  // Adds to queue.
-            imperativeIterator.emit(3); // Should *not* add after `done`.
+            void imperativeIterator.emit(3); // Should *not* add after `done`.
 
             // Peek into private memory to make sure it does not leak.
             const queue = (imperativeIterator as any as {
@@ -186,18 +186,18 @@ describe('imperative_iterator', () => {
 
             // Poll the iterator to start it.
             const iterator = factory.iterable[Symbol.asyncIterator]();
-            iterator.next();
+            void iterator.next();
 
             // Emit some events.
             const imperativeIterator = await factory.started;
-            imperativeIterator.emit(1); // Responds to existing `next` call.
-            imperativeIterator.emit(2); // Adds to queue.
+            void imperativeIterator.emit(1); // Responds to `next` call.
+            void imperativeIterator.emit(2); // Adds to queue.
             imperativeIterator.error(err); // Adds to queue.
-            imperativeIterator.emit(3); // Should *not* add after `error`.
+            void imperativeIterator.emit(3); // Should *not* add after `error`.
 
             // Peek into private memory to make sure it does not leak.
             const queue = (iterator as any as {
-                queue: Array<any>,
+                queue: any[],
             }).queue;
 
             expect(queue).toEqual([

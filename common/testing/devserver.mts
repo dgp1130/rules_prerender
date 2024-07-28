@@ -15,9 +15,9 @@ const execFile = promisify(execFileCb);
  * An effect which initializes a devserver for the given binary path. Handles
  * initialization and cleanup of the server. Uses the same server for multiple
  * tests because it is expected to be generally stable.
- * 
+ *
  * Example usage:
- * 
+ *
  * ```typescript
  * describe('test suite', () => {
  *     // Handles initialization and cleanup automatically.
@@ -30,7 +30,7 @@ const execFile = promisify(execFileCb);
  *     });
  * });
  * ```
- * 
+ *
  * @param args Arguments to pass through to {@link Server.spawn}. See
  *     documentation there.
  * @return A proxied {@link Server} instance usable for tests.
@@ -42,7 +42,9 @@ export function useDevserver(...args: Parameters<typeof Server.spawn>):
 
         return [
             server,
-            async () => await server.kill(),
+            async () => {
+                await server.kill();
+            },
         ] as const;
     });
 }
@@ -67,7 +69,7 @@ export class Server implements DevServer {
     /**
      * Constructs a new DevServer representing an already running
      * `web_resources_devserver()` child process.
-     * 
+     *
      * @param host The host the devserver is running on (typically '127.0.0.1').
      * @param port The port the devserver is running on.
      * @param kill A function which kills the process running the devserver.
@@ -89,7 +91,7 @@ export class Server implements DevServer {
 
     /**
      * Spawns a new instance of a Server with the given binary path.
-     * 
+     *
      * @param binary Path to a `js_binary()` executable to invoke which will
      *     start the server. This is usually done via a `data` dependency on a
      *     `web_resources_devserver()`. The path to a
@@ -109,12 +111,15 @@ export class Server implements DevServer {
      *     server.
      */
     public static async spawn(binary: string, {
-        stdout = (data) => console.error(
-            prependLine('[devserver - stdout] ', data)),
-        stderr = (data) => console.error(
-            prependLine('[devserver - stderr] ', data)),
-        onError = (data) => console.error(
-            prependLine('[devserver - onError] ', data.message)),
+        stdout = (data) => {
+            console.error(prependLine('[devserver - stdout] ', data));
+        },
+        stderr = (data) => {
+            console.error(prependLine('[devserver - stderr] ', data));
+        },
+        onError = (data) => {
+            console.error(prependLine('[devserver - onError] ', data.message));
+        },
     }: {
         stdout?: (data: string) => void,
         stderr?: (data: string) => void,
@@ -140,7 +145,7 @@ export class Server implements DevServer {
             untilHealthy(new URL(`http://${host}:${port}/`)),
             serverPromise,
         ]);
-    
+
         return new Server({
             host,
             port,
@@ -159,7 +164,7 @@ export class Server implements DevServer {
                     if (err.signal && err.signal !== signal) {
                         fail('Devserver did not die gracefully. Died with'
                             + ` ${err.signal}, expected signal ${signal}:\n${
-                                err}\n\nSTDERR:\n${err.stderr}`);
+                                err.message}\n\nSTDERR:\n${err.stderr}`);
                     }
                 }
             },
@@ -206,7 +211,7 @@ async function untilHealthy(url: URL): Promise<void> {
 async function ping(url: URL): Promise<boolean> {
     try {
         const res = await http.get(url);
-        return res?.statusCode === StatusCodes.OK;
+        return res.statusCode === StatusCodes.OK;
     } catch (err) {
         return false;
     }

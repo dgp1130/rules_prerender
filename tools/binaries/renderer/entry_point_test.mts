@@ -102,7 +102,7 @@ describe('entry_point', () => {
 });
 
 async function asyncIterableToArray<T>(input: AsyncIterable<T>):
-        Promise<ReadonlyArray<T>> {
+        Promise<readonly T[]> {
     const array = [] as T[];
     for await (const value of input) {
         array.push(value);

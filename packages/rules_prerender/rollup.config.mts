@@ -12,6 +12,8 @@ const deleteEmptyBundles: Plugin = {
     generateBundle(_options, bundle): void {
         for (const [ key, value ] of Object.entries(bundle)) {
             if (value.type === 'chunk' && value.isEntry && value.code.trim() === '') {
+                // Should remove the property altogether from the bundle object.
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                 delete bundle[key];
             }
         }

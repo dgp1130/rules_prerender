@@ -16,33 +16,33 @@ describe('packager', () => {
                 '/hello/world.html': 'bazel-bin/path/to/pkg/test.html',
             }));
 
-            spyOn(fs, 'mkdir').and.callThrough();
-            spyOn(fs, 'copyFile').and.callThrough();
+            const mkdirSpy = spyOn(fs, 'mkdir').and.callThrough();
+            const copyFileSpy = spyOn(fs, 'copyFile').and.callThrough();
 
             await pack('dest', resources, fs);
 
-            expect(fs.mkdir).toHaveBeenCalledWith('dest/foo/bar', {
+            expect(mkdirSpy).toHaveBeenCalledWith('dest/foo/bar', {
                 recursive: true,
             });
-            expect(fs.mkdir).toHaveBeenCalledWith('dest/hello', {
+            expect(mkdirSpy).toHaveBeenCalledWith('dest/hello', {
                 recursive: true,
             });
 
-            expect(fs.copyFile).toHaveBeenCalledWith(
+            expect(copyFileSpy).toHaveBeenCalledWith(
                 'bazel-bin/path/to/pkg/baz.html', 'dest/foo/bar/baz.html');
-            expect(fs.copyFile).toHaveBeenCalledWith(
+            expect(copyFileSpy).toHaveBeenCalledWith(
                 'bazel-bin/path/to/pkg/test.html', 'dest/hello/world.html');
         });
 
         it('does nothing when given no resources', async () => {
             const fs = FileSystemFake.of({});
-            spyOn(fs, 'mkdir').and.callThrough();
-            spyOn(fs, 'copyFile').and.callThrough();
+            const mkdirSpy = spyOn(fs, 'mkdir').and.callThrough();
+            const copyFileSpy = spyOn(fs, 'copyFile').and.callThrough();
 
             await pack('dest', ResourceMap.fromEntries(Object.entries({})), fs);
 
-            expect(fs.mkdir).not.toHaveBeenCalled();
-            expect(fs.copyFile).not.toHaveBeenCalled();
+            expect(mkdirSpy).not.toHaveBeenCalled();
+            expect(copyFileSpy).not.toHaveBeenCalled();
         });
 
         // Root output directory should already exist, having been created by
@@ -52,7 +52,7 @@ describe('packager', () => {
                 'bazel-bin/path/to/pkg/foo.txt': 'foo',
             });
 
-            spyOn(fs, 'mkdir').and.callThrough();
+            const mkdirSpy = spyOn(fs, 'mkdir').and.callThrough();
             spyOn(fs, 'copyFile').and.callThrough();
 
             const map = ResourceMap.fromEntries(Object.entries({
@@ -61,22 +61,22 @@ describe('packager', () => {
 
             await pack('dest', map, fs);
 
-            expect(fs.mkdir).not.toHaveBeenCalled();
+            expect(mkdirSpy).not.toHaveBeenCalled();
         });
 
         it('fails when unable to make a directory', async () => {
             const fs = FileSystemFake.of({});
             const err = new Error('File system detached.');
             spyOn(fs, 'mkdir').and.rejectWith(err);
-            spyOn(fs, 'copyFile').and.callThrough();
+            const copyFileSpy = spyOn(fs, 'copyFile').and.callThrough();
 
             const map = ResourceMap.fromEntries(Object.entries({
                 '/foo/bar/baz.html': mockFileRef(),
             }));
 
             await expectAsync(pack('dest', map, fs)).toBeRejectedWith(err);
-            
-            expect(fs.copyFile).not.toHaveBeenCalled();
+
+            expect(copyFileSpy).not.toHaveBeenCalled();
         });
 
         it('fails when unable to copy a file', async () => {

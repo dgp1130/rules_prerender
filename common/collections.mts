@@ -1,7 +1,7 @@
 /**
  * Returns the unique `Set` of items in the given array based on the provided
  * equality comparator.
- * 
+ *
  * @param items The items to get the unique set of.
  * @param equals A function which takes two items from the input array and
  *     returns whether or not they are considered "equivalent".
@@ -10,7 +10,7 @@
  *     will be included in the output.
  */
 export function unique<T>(
-    items: Array<T>, equals: (first: T, second: T) => boolean,
+    items: T[], equals: (first: T, second: T) => boolean,
 ): Set<T> {
     // For each item in the input, include it only if every preceding item is
     // not equivalent. We don't need to check following items because the first

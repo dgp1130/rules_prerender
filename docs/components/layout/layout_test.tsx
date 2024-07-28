@@ -57,8 +57,8 @@ describe('layout', () => {
             expect(main).not.toBeNull();
             const content = main!.firstChild as HTMLElement;
             expect(content).not.toBeNull();
-            expect(content!.tagName).toBe('DIV');
-            expect(content!.textContent).toBe('Hello!');
+            expect(content.tagName).toBe('DIV');
+            expect(content.textContent).toBe('Hello!');
         });
 
         it('renders title to the `<rp-header>` element', () => {

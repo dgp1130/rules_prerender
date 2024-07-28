@@ -1,7 +1,7 @@
 /**
  * @fileoverview Bundles the given JavaScript entry points into a directory of
  * bundled output files.
- * 
+ *
  * The command line arguments for this binary are passed through to Rollup
  * without modification and use the contract. The only difference that in Rollup
  * passing no input files is an error, but in `js_bundler` it is a no-op
@@ -17,7 +17,7 @@ const execFile = promisify(execFileCb);
 const rollup =
     `${process.env['RUNFILES']}/rules_prerender/packages/rules_prerender/rollup.sh`;
 
-main(async () => {
+void main(async () => {
     // No files to bundle. This would be an error in Rollup, but we don't care
     // and just skip running Rollup altogether. Bazel creates the output
     // directory automatically, so we don't need to do anything, just exit

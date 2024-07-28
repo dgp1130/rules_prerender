@@ -79,8 +79,8 @@ describe('Blog', () => {
     });
 });
 
-async function toArray<T>(input: AsyncIterable<T>): Promise<Array<T>> {
-    const array = [] as Array<T>;
+async function toArray<T>(input: AsyncIterable<T>): Promise<T[]> {
+    const array: T[] = [];
     for await (const item of input) {
         array.push(item);
     }

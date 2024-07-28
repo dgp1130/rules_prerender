@@ -9,7 +9,7 @@ import { annotationsEqual } from '../../../common/models/prerender_annotation.mj
 import { unique } from '../../../common/collections.mjs';
 import { PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
 
-main(async (args) => {
+void main(async (args) => {
     const { inputDir, outputDir, outputMetadata } = yargs(args)
         .strict()
         .usage(mdSpacing(`
@@ -78,7 +78,7 @@ main(async (args) => {
             throw new Error(`Generated metadata for \`${relPath}\` twice.`);
         }
         metadata.includedScripts[relPath] = scriptMetadataList;
-    
+
         // Write the output HTML file to disk. Don't `await` these directly in
         // the `for-await` loop or each write will be done sequentially.
         // Instead, we start the write operation but don't block on it to start
@@ -108,7 +108,7 @@ main(async (args) => {
 
 /**
  * Yields all the relative paths to files recursively in the given directory.
- * 
+ *
  * @param dir The directory to list files within.
  * @yields The relative path of each file recursively in {@param dir}.
  */

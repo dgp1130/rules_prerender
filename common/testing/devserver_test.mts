@@ -52,27 +52,28 @@ describe('devserver', () => {
 
     describe('useDevserver()', () => {
         it('provides a `Server` effect', async () => {
+            const kill = jasmine.createSpy('kill');
             const mockServer = {
                 host: '127.0.0.1',
-                kill: jasmine.createSpy('kill'),
+                kill,
             };
-            spyOn(Server, 'spawn')
+            const spawnSpy = spyOn(Server, 'spawn')
                 .and.resolveTo(mockServer as unknown as Server);
 
             const tester = EffectTester.of(() => useDevserver('path/to/bin'));
-            expect(Server.spawn).not.toHaveBeenCalled();
+            expect(spawnSpy).not.toHaveBeenCalled();
 
             // Initialize spawns the server and does not clean it up yet.
             await tester.initialize();
-            expect(Server.spawn).toHaveBeenCalledOnceWith('path/to/bin');
-            expect(mockServer.kill).not.toHaveBeenCalled();
+            expect(spawnSpy).toHaveBeenCalledOnceWith('path/to/bin');
+            expect(kill).not.toHaveBeenCalled();
 
             // Server is now available.
             expect(tester.get().host).toBe('127.0.0.1');
 
             // Cleanup kills the server.
             await tester.cleanup();
-            expect(mockServer.kill).toHaveBeenCalledOnceWith();
+            expect(kill).toHaveBeenCalledOnceWith();
         });
     });
 });

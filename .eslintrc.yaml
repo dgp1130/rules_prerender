@@ -18,6 +18,7 @@ parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: 12
   sourceType: module
+  project: true
 
 plugins:
 - '@typescript-eslint'
@@ -57,8 +58,11 @@ overrides:
   - "**/*.cts"
   - "**/*.d.cts"
   - "**/*.tsx"
+
   extends:
-  - 'plugin:@typescript-eslint/recommended'
+  - 'plugin:@typescript-eslint/strict-type-checked'
+  - 'plugin:@typescript-eslint/stylistic-type-checked'
+
   rules:
     # TypeScript already disallows duplicated class members and sometimes allows
     # it (ex. method overrides).
@@ -68,6 +72,37 @@ overrides:
     # TypeScript already disallows undeclared variables.
     no-undef:
       - off
+
+    # Use `T[]` for simple types, `Array<T>` for complicated ones because in
+    # `(Long & Complicated | Expression)[]` it's really easy to miss the `[]`.
+    '@typescript-eslint/array-type':
+      - error
+      - default: 'array-simple'
+
+    # Restricts `${expr}` to make sure `expr` prints something meaningful (ex.
+    # not '[object Object]').
+    '@typescript-eslint/restrict-template-expressions':
+      - error
+      -
+        # Primitive values print as expected, so they are allowed.
+        allowBoolean: true
+        allowNumber: true
+
+        # The point of `any` is to not deal with this.
+        allowAny: true
+
+        # `never` only happens for debug purposes.
+        allowNever: true
+
+    '@typescript-eslint/no-unnecessary-condition':
+      - error
+      - allowConstantLoopConditions: true # `while (true) {}` is ok.
+
+    '@typescript-eslint/no-floating-promises':
+      - error
+      -
+        # `async` IIFE exists *only* to create a floating promise.
+        ignoreIIFE: true
 
     '@typescript-eslint/no-non-null-assertion':
       - error
@@ -85,6 +120,27 @@ overrides:
       - allowDeclarations: true
 
     '@typescript-eslint/no-explicit-any':
+      - off
+
+    # `noImplicitAny` is good enough, we don't need more safety here. They
+    # basically break `any` types to be effectively unusable and we can't
+    # entirely avoid them due to library and platform types.
+    '@typescript-eslint/no-unsafe-argument':
+      - off
+    '@typescript-eslint/no-unsafe-assignment':
+      - off
+    '@typescript-eslint/no-unsafe-call':
+      - off
+    '@typescript-eslint/no-unsafe-member-access':
+      - off
+    '@typescript-eslint/no-unsafe-return':
+      - off
+
+    # `async` functions are often required to match return function signatures,
+    # even if they don't actually do `async` work. I'm not too worried about
+    # accidentally leaving an `async` function which could have been synchronous
+    # and having that lead to serious negative effects.
+    '@typescript-eslint/require-await':
       - off
 
     '@typescript-eslint/no-unused-vars':
@@ -115,3 +171,14 @@ overrides:
     # Disable non-null assertions in test files.
     '@typescript-eslint/no-non-null-assertion':
     - off
+
+# Turn off rules dependent on `strictNullChecks` for examples with that option
+# disabled.
+- files:
+  - examples/tsconfig/**
+  rules:
+    '@typescript-eslint/no-unnecessary-condition':
+      - off
+
+    '@typescript-eslint/prefer-nullish-coalescing':
+      - off

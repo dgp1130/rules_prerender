@@ -18,10 +18,8 @@ export interface FileSystem {
     /**
      * Reads a file at the given path and returns it as a UTF8-encoded string.
      */
-    readFile(path: string, options: 'utf8'): Promise<string>;
-
-    /** Reads a file at the given path and returns it as a UTF8-encoded string. */
-    readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
+    readFile(path: string, options: 'utf8' | { encoding: 'utf8' }):
+        Promise<string>;
 
     /**
      * Reads a file at the given path and returns it as a UTF8-encoded string or
@@ -35,14 +33,7 @@ export interface FileSystem {
      *
      * @deprecated Prefer the asynchronous {@link readFile}.
      */
-    readFileSync(path: string, options: 'utf8'): string;
-
-    /**
-     * Reads a file at the given path and returns it as a UTF8-encoded string.
-     *
-     * @deprecated Prefer the asynchronous {@link readFile}.
-     */
-    readFileSync(path: string, options: { encoding: 'utf8' }): string;
+    readFileSync(path: string, options: 'utf8' | { encoding: 'utf8' }): string;
 
     /**
      * Reads a file at the given path and returns it as a UTF8-encoded string or
@@ -65,23 +56,25 @@ class DiskFs implements FileSystem {
         await fs.promises.mkdir(dir, options);
     }
 
-    readFile(path: string, options: 'utf8'): Promise<string>;
-    readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
+    readFile(path: string, options: 'utf8' | { encoding: 'utf8' }):
+        Promise<string>;
     readFile(path: string, options?: string | { encoding?: string }):
         Promise<string | Buffer>;
-    public async readFile(path: string, options?: 'utf8' | { encoding?: string }):
-            Promise<string | Buffer> {
+    public async readFile(
+        path: string,
+        options?: string | { encoding?: string },
+    ): Promise<string | Buffer> {
         return await fs.promises.readFile(
             path,
             options as any,
         ) as unknown as Promise<string | Buffer>;
     }
 
-    readFileSync(path: string, options: 'utf8'): string;
-    readFileSync(path: string, options: { encoding: 'utf8' }): string;
+    readFileSync(path: string, options: 'utf8' | { encoding: 'utf8' }): string;
     readFileSync(path: string, options?: string | { encoding?: string }):
         string | Buffer;
-    public readFileSync(path: string, options?: 'utf8' | { encoding?: string }): string | Buffer {
+    public readFileSync(path: string, options?: 'utf8' | { encoding?: string }):
+            string | Buffer {
         return fs.readFileSync(path, options as any);
     }
 }

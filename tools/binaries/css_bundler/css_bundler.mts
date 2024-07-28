@@ -4,7 +4,7 @@ import yargs from 'yargs';
 import { main } from '../../../common/binary.mjs';
 import { mdSpacing } from '../../../common/formatters.mjs';
 
-main(async (args) => {
+void main(async (args) => {
     const { entryPoint: entryPoints = [], output: outputs = [] } = yargs(args)
         .strict()
         .usage(mdSpacing(`

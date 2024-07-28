@@ -22,6 +22,7 @@
         "genfiles",
         "genrule",
         "hydroactive",
+        "IIFE",
         "inlines",
         "lightningcss",
         "npmjs",

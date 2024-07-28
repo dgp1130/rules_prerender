@@ -6,7 +6,7 @@ import { mdSpacing } from '../../../common/formatters.mjs';
 import { PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
 import { generateEntryPoint } from './generator.mjs';
 
-main(async (args) => {
+void main(async (args) => {
     // Parse options and flags.
     const { metadata: metadataFile, outputDir, root } = yargs(args)
         .strict()
@@ -55,7 +55,7 @@ main(async (args) => {
 
     // Generate an entry point from metadata. `await` all the `Promises` at the end
     // so they run with max parallelism.
-    const operations: Promise<void>[] = [];
+    const operations: Array<Promise<void>> = [];
     for (const [ htmlRelPath, scripts ] of Object.entries(metadata.includedScripts)) {
         // Don't generate entry points for HTML files which don't include any scripts.
         if (scripts.length === 0) continue;
@@ -67,7 +67,7 @@ main(async (args) => {
                 .length - 1;
             const fileDepth = outputDirDepth + jsRelDepth;
             const jsOutputPath = path.join(outputDir, jsRelPath);
-    
+
             const entryPoint = generateEntryPoint(scripts, fileDepth);
             await fs.mkdir(path.dirname(jsOutputPath), { recursive: true });
             await fs.writeFile(jsOutputPath, entryPoint);

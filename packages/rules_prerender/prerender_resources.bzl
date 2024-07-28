@@ -114,7 +114,7 @@ import {{ createRenderer }} from '{renderer}';
 import * as mod from '{entry_point}';
 
 const render = createRenderer(rulesPrerender, mod, '{entry_point}');
-main(render);
+void main(render);
         """.format(
             binary_helper = rel_path(file_path_of(Label("//common:binary"))) + ".mjs",
             renderer = rel_path(file_path_of(Label("//tools/binaries/renderer"))) + ".mjs",

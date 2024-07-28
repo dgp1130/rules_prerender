@@ -28,6 +28,9 @@ export function parallel<Item>(...iterables: Array<AsyncIterable<Item>>):
             const imperativeIterator = await iteratorFactory.started;
             try {
                 for await (const item of iterable) {
+                    // Want to consume all the iterables as fast as possible, so
+                    // we don't wait to be polled again.
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     imperativeIterator.emit(item);
                 }
             } catch (err) {

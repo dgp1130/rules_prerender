@@ -6,7 +6,7 @@ import { mdSpacing } from '../../../common/formatters.mjs';
 import { InjectorConfig } from './config.mjs';
 import { inject } from './injector.mjs';
 
-main(async (args) => {
+void main(async (args) => {
     // Define command line flags.
     const {
         inputDir,
@@ -21,7 +21,7 @@ main(async (args) => {
             relative paths in the output directory. Non-HTML files in the input
             directory are simply copied to the same relative path in the output
             directory without modification.
-            
+
             If \`bundle\` is specified, it will be injected into every HTML file
             output.
         `))
@@ -132,7 +132,7 @@ main(async (args) => {
  * associated paths in the output directory.
  */
 async function copyBundles(bundles: string, outputDir: string): Promise<void> {
-    const copies: Promise<void>[] = [];
+    const copies: Array<Promise<void>> = [];
     for await (const bundle of listRecursiveFiles(bundles)) {
         // Don't `await` directly, so each copy only depends on its own source
         // file, rather copying each file one at a time.
@@ -165,7 +165,7 @@ async function getBundle(htmlRelPath: string, bundlesLocation: string):
 
 /**
  * Yields all the relative paths to files recursively in the given directory.
- * 
+ *
  * @param dir The directory to list files within.
  * @yields The relative path of each file recursively in {@param dir}.
  */

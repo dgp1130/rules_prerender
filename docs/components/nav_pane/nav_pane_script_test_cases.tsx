@@ -73,7 +73,7 @@ export default function* (): Generator<PrerenderResource, void, void> {
                 ],
             }),
         ];
-        const currentRoute = routes[0]!.children![1]!;
+        const currentRoute = routes[0]!.children[1]!;
 
         yield PrerenderResource.fromHtml('/current.html', renderToHtml(
             <html>

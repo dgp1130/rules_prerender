@@ -151,7 +151,7 @@ function generateRouteForest(
             .map((linkedRoute) => linkedRoute.route);
 
     return routeForest.flatMap((linkedRoute) => {
-        const gens: AsyncIterable<PrerenderResource>[] = [];
+        const gens: Array<AsyncIterable<PrerenderResource>> = [];
 
         // Render the route.
         const { render } = linkedRoute.config;
@@ -174,7 +174,7 @@ function generateRouteForest(
         }
 
         // Render all the route's children recursively.
-        if (linkedRoute.children) {
+        if (linkedRoute.children.length > 0) {
             gens.push(...generateRouteForest(linkedRoute.children, rootForest));
         }
 
@@ -227,7 +227,7 @@ function linkRouteForests(
         route,
         children: linkRouteForests(
             config.children ?? [],
-            route.children ?? [],
+            route.children,
         ),
     }));
 }
@@ -301,7 +301,7 @@ function assertNoLeadingSlashes(routeConfigs: readonly RouteConfig[]): void {
 /** Asserts no two input routes will generate a file at the same location. */
 function assertNoDuplicateRoutes(
     linkedRoutes: readonly LinkedRoute[],
-    knownRoutes: Map<string, LinkedRoute> = new Map(),
+    knownRoutes = new Map<string, LinkedRoute>(),
 ): void {
     for (const linkedRoute of linkedRoutes) {
         if (linkedRoute.config.render) {
@@ -319,7 +319,7 @@ Second claim used \`label: "${linkedRoute.config.label}"\`.
             knownRoutes.set(htmlPath, linkedRoute);
         }
 
-        if (linkedRoute.children) {
+        if (linkedRoute.children.length > 0) {
             assertNoDuplicateRoutes(linkedRoute.children, knownRoutes);
         }
     }
@@ -336,7 +336,7 @@ function assertLeafRoutesRenderable(linkedRoutes: readonly LinkedRoute[]):
             throw new Error(`Route "${route.path}" must have either \`render\` or \`children\` defined.`);
         }
 
-        if (children) assertLeafRoutesRenderable(children);
+        if (children.length > 0) assertLeafRoutesRenderable(children);
     }
 }
 

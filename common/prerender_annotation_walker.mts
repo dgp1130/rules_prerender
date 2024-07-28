@@ -28,6 +28,7 @@ function* walkAnnotations(els: Generator<HTMLElement, void, void>):
         Generator<AnnotationEl, void, void> {
     for (const el of els) {
         // Root element has a `null` `tagName`.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (el.tagName?.toLowerCase() !== 'rules_prerender:annotation') continue;
 
         // Parse the annotation.

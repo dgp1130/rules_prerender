@@ -720,7 +720,7 @@ describe('routing', () => {
 
             const [ currentRoute, rootRoutes ] = renderSpy.calls.first().args;
             const parentFromRootForest = rootRoutes[0]!;
-            const childFromRootForest = parentFromRootForest.children![0];
+            const childFromRootForest = parentFromRootForest.children[0];
             const parentFromCurrentTree = currentRoute.parent!;
             const childFromCurrentTree = currentRoute;
 
@@ -818,6 +818,6 @@ describe('routing', () => {
 
 function timeout(ms: number): Promise<void> {
     return new Promise<void>((resolve) => {
-        setTimeout(() => void resolve(), ms);
+        setTimeout(() => { resolve(); }, ms);
     });
 }

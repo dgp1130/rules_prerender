@@ -7,13 +7,13 @@
 /**
  * Tagged template function which returns the given string literal as a
  * {@link SafeHtml} object. Interpolation are not supported and throw if used.
- * 
+ *
  * Usage:
- * 
+ *
  * ```typescript
  * const safeHtml: SafeHtml = safe`<div>Hello, World!</div>`;
  * ```
- * 
+ *
  * This is safe because tagged template literals are invoked with
  * spec-guaranteed separation between string literals and template
  * interpolations. String literals are hard-coded by the developer and cannot
@@ -79,7 +79,9 @@ class SafeHtmlImpl {
         // Clone and freeze the input HTML so the internal reference is not
         // leaked in a way which could be mutated after the fact.
         return Object.freeze(
-            new SafeHtmlImpl({ html: `${html}` })) as SafeHtmlImpl;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-template-expression
+            new SafeHtmlImpl({ html: `${html}` }),
+        ) as SafeHtmlImpl;
     }
 
     /**
@@ -90,6 +92,7 @@ class SafeHtmlImpl {
     public getHtmlAsString(): string {
         // Clones the string into a new value so the internal reference is not
         // leaked in a way which could be mutated.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-template-expression
         return `${this.#html}`;
     }
 }

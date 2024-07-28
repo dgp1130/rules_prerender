@@ -10,7 +10,7 @@ import yargs from 'yargs';
 import { main } from '../../../common/binary.mjs';
 import { findLatestRevisionForAllPlatforms } from './find_revision_chromium.mjs';
 
-main(async (args) => {
+void main(async (args) => {
     const { startRevision } = yargs(args)
         .strict()
         .scriptName('update_script')

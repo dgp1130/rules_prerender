@@ -4,16 +4,16 @@ import { Probably } from '../../../common/probably.mjs';
 /**
  * Invokes the default function export of the given CommonJS module, and validates the
  * result before returning it.
- * 
+ *
  * @param module A JavaScript CommonJS module export. This should come directly from a
  *     `require()` call like so:
- *     
+ *
  *     ```javascript
  *     invoke(require('./some/module.js'), './some/module.js');
  *     ```
- * 
+ *
  *     The default export should match the following TypeScript type:
- * 
+ *
  *     ```
  *     declare function defaultExport():
  *         | Iterable<PrerenderResource>
@@ -33,7 +33,7 @@ export async function invoke(module: unknown, entryPoint: string): Promise<
     const defaultExport = getDefaultExport(module, entryPoint);
     if (typeof defaultExport !== 'function') {
         throw new Error(`Entry point (${entryPoint}) provided a default export`
-                + ` that was not a function:\n${defaultExport}`);
+                + ` that was not a function:\n${defaultExport as any}`);
     }
 
     // Invoke the default export and assert the result.

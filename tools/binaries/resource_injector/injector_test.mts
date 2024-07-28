@@ -114,10 +114,10 @@ describe('injector', () => {
             const fs = FileSystemFake.of({
                 'foo.css': '.foo { color: red; }',
             });
-            spyOn(fs, 'readFile').and.callThrough();
+            const readFileSpy = spyOn(fs, 'readFile').and.callThrough();
 
             const injected = await inject(input, [], fs);
-            expect(fs.readFile).toHaveBeenCalledWith('foo.css', 'utf8');
+            expect(readFileSpy).toHaveBeenCalledWith('foo.css', 'utf8');
 
             expect(injected).toBe(`
 <!DOCTYPE html>

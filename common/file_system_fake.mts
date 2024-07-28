@@ -32,8 +32,8 @@ export class FileSystemFake implements FileSystem {
         // Nothing to do.
     }
 
-    readFile(path: string, options: 'utf8'): Promise<string>;
-    readFile(path: string, options: { encoding: 'utf8' }): Promise<string>;
+    readFile(path: string, options: 'utf8' | { encoding: 'utf8' }):
+        Promise<string>;
     readFile(path: string, options?: string | { encoding?: string }):
         Promise<string | Buffer>;
     public async readFile(
@@ -43,8 +43,7 @@ export class FileSystemFake implements FileSystem {
         return this.readFileSync(inputPath, options);
     }
 
-    readFileSync(path: string, options: 'utf8'): string;
-    readFileSync(path: string, options: { encoding: 'utf8' }): string;
+    readFileSync(path: string, options: 'utf8' | { encoding: 'utf8' }): string;
     readFileSync(path: string, options?: string | { encoding?: string }):
         string | Buffer;
     public readFileSync(

@@ -7,8 +7,12 @@
  */
 
 function applyDsdNodes(root: Element | ShadowRoot): void {
+    // This assertion is very necessary, otherwise it is inferred as
+    // `NodeListOf<Element>` which isn't specific enough.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const templates = root.querySelectorAll('template[shadowrootmode]') as
             NodeListOf<HTMLTemplateElement>;
+
     for (const template of Array.from(templates)) {
         const mode = template.getAttribute('shadowrootmode');
         if (mode !== 'open' && mode !== 'closed') {

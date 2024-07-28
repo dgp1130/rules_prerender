@@ -89,7 +89,7 @@ export function createRenderer(
 
         // Write each resource to its file.
         const generatedUrlPaths = new Set<string>();
-        const writes = [] as Promise<void>[];
+        const writes = [] as Array<Promise<void>>;
         try {
             for await (const resource of resources) {
                 // Assert the user yielded a `PrerenderResource`.

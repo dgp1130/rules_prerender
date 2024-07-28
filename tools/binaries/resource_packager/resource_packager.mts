@@ -5,7 +5,7 @@ import { pack } from './packager.mjs';
 import { ResourceMap } from './resource_map.mjs';
 import { loadPackage } from './package_loader.mjs';
 
-main(async (args) => {
+void main(async (args) => {
     const {
         urlPath: urlPaths = [],
         fileRef: fileRefs = [],
