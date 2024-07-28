@@ -10,7 +10,11 @@
 
 common:incompatible --incompatible_build_transitive_python_runfiles
 common:incompatible --incompatible_check_testonly_for_output_files
-common:incompatible --incompatible_config_setting_private_default_visibility
+
+# Breaks `@aspect_rules_jasmine` which depends on a private config setting from
+# `@aspect_rules_js`.
+# common:incompatible --incompatible_config_setting_private_default_visibility
+
 common:incompatible --incompatible_default_to_explicit_init_py
 common:incompatible --incompatible_disable_native_android_rules
 
