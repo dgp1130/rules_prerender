@@ -37,6 +37,7 @@ ts_project(
     srcs = ["index.mts"],
     visibility = ["//:__pkg__"],
     deps = [
+        ":duplicate_execution_check",
         ":scripts",
         ":styles",
         "//common:file_system",
@@ -44,6 +45,42 @@ ts_project(
         "//common/safe_html",
         "//common/safe_html:unsafe_html",
     ],
+)
+
+ts_project(
+    name = "duplicate_execution_check",
+    srcs = ["duplicate_execution_check.mts"],
+)
+
+# Copy the source file to verify that it still throws as exected when the source
+# is duplicated in multiple `rules_prerender` packages.
+genrule(
+    name = "duplicate_execution_check_copy_genrule",
+    testonly = True,
+    srcs = ["duplicate_execution_check.mts"],
+    outs = ["duplicate_execution_check_copy.mts"],
+    cmd = "cp $< $@",
+)
+
+ts_project(
+    name = "duplicate_execution_check_copy",
+    srcs = ["duplicate_execution_check_copy.mts"],
+)
+
+ts_project(
+    name = "duplicate_execution_check_test_lib",
+    testonly = True,
+    srcs = ["duplicate_execution_check_test.mts"],
+    deps = [
+        ":duplicate_execution_check",
+        ":duplicate_execution_check_copy",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "duplicate_execution_check_test",
+    deps = [":duplicate_execution_check_test_lib"],
 )
 
 bzl_library(
