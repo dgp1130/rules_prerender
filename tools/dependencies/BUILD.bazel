@@ -1,0 +1,13 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+bzl_library(
+    name = "defs",
+    srcs = ["defs.bzl"],
+    visibility = ["//:__subpackages__"],
+    deps = [":prune_dependencies"],
+)
+
+bzl_library(
+    name = "prune_dependencies",
+    srcs = ["prune_dependencies.bzl"],
+)

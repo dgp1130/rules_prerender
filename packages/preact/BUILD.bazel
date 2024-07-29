@@ -1,5 +1,6 @@
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@rules_prerender_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools/dependencies:defs.bzl", "prune_dependencies")
 load("//tools/jasmine:defs.bzl", "jasmine_node_test")
 load("//tools/publish:defs.bzl", "npm_publish")
 load("//tools/stamping:defs.bzl", "stamp_package")
@@ -9,8 +10,24 @@ npm_link_all_packages(name = "node_modules")
 
 stamp_package(name = "package")
 
-npm_package(
+# `rules_prerender` is intended as a "peer dep" in NPM terms, meaning we don't
+# want a hard dependency on it because this will build the
+# `@rules_prerender//node_modules/rules_prerender` package. We actually want to
+# use the version downloaded by the user and available at
+# `@user//node_modules/rules_prerender`. Therefore we "prune" (remove) the
+# dependency on `rules_prerender` to drop this so the dependency can be provided
+# at link time in the user's workspace.
+#
+# See `//:node_modules/@rules_prerender/preact` deps.
+prune_dependencies(
     name = "pkg",
+    pkg = ":pkg_internal",
+    prune = ["rules_prerender"],
+    visibility = ["//visibility:public"],
+)
+
+npm_package(
+    name = "pkg_internal",
     srcs = [
         "README.md",
         ":package",
@@ -21,7 +38,6 @@ npm_package(
     # See: https://github.com/dgp1130/rules_prerender/issues/48#issuecomment-1425257276
     include_external_repositories = ["rules_prerender"],
     package = "@rules_prerender/preact",
-    visibility = ["//visibility:public"],
 )
 
 npm_publish(
@@ -37,10 +53,7 @@ ts_project(
         ":node_modules/preact-render-to-string",
         "//:node_modules/@types/node",
         "//:node_modules/preact",
-        # As a peer dep, we can't depend on the JS implementation of
-        # `rules_prerender` because it needs to be supplied at link time.
-        # See `//:node_modules/@rules_prerender/preact` deps.
-        "//:node_modules_types/rules_prerender",
+        "//:node_modules/rules_prerender",
     ],
 )
 

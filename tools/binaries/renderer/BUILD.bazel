@@ -10,7 +10,7 @@ ts_project(
         ":entry_point",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
-        "//:node_modules_types/rules_prerender",
+        "//:node_modules/rules_prerender",
         "//common:binary",
         "//common:formatters",
     ],
@@ -40,7 +40,7 @@ ts_project(
     name = "entry_point",
     srcs = ["entry_point.mts"],
     deps = [
-        "//:node_modules_types/rules_prerender",
+        "//:node_modules/rules_prerender",
         "//common:probably",
     ],
 )
