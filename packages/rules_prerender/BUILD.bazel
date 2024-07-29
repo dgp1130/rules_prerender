@@ -64,6 +64,7 @@ genrule(
 
 ts_project(
     name = "duplicate_execution_check_copy",
+    testonly = True,
     srcs = ["duplicate_execution_check_copy.mts"],
 )
 
