@@ -59,13 +59,25 @@
         "hydroactive": "^0.0.4",
         "jasmine": "4.3.0",
         "marked": "^8.0.0",
+        "nan": "^2.17.0",
         "netlify-cli": "^16.1.0",
         "node-fetch": "^3.2.5",
+        "node-gyp": "^9.4.0",
         "preact": "^10.13.1",
         "preact-render-to-string": "^5.2.6",
         "tree-kill": "^1.2.2",
         "typescript": "5.4.5",
         "webdriverio": "^8.39.1",
         "zod": "^3.22.2"
+    },
+    "pnpm": {
+        "packageExtensions": {
+            "unix-dgram": {
+                "dependencies": {
+                    "nan": "*",
+                    "node-gyp": "*"
+                }
+            }
+        }
     }
 }
