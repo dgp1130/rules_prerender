@@ -17,7 +17,11 @@ def netlify_deploy(name, site):
     netlify_cli_bin.netlify_binary(
         name = name,
         data = [site],
-        args = ["deploy", "--dir", "$(execpath %s)" % site],
+        args = ["deploy"],
+        # We choose to `chdir` over Netlify's `--dir` option because it does not
+        # appear to use that option when resolving the `netlify.toml` file and
+        # there does not appear to be a way to pass it explicitly.
+        chdir = "$(rootpath %s)" % site,
     )
 
     build_test(
