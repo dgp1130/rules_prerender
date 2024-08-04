@@ -19,7 +19,6 @@ common --incompatible_disable_native_android_rules
 # Breaks `@io_bazel_rules_webtesting`.
 # common --incompatible_disable_starlark_host_transitions
 
-common --incompatible_disable_third_party_license_checking
 common --incompatible_disable_target_provider_fields
 
 # Breaks `@io_bazel_rules_webtesting`.

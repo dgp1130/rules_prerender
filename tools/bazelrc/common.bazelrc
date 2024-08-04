@@ -1,5 +1,17 @@
 # Common `.bazelrc` configuration for all workspaces in the repository.
 
+# Seems to break the workspace name and is not supported right now anyways.
+common --noenable_bzlmod
+
+# Allow the Bazel server to check directory sources for changes. Ensures that the Bazel server
+# notices when a directory changes, if you have a directory listed in the srcs of some target.
+# Recommended when using
+# [copy_directory](https://github.com/aspect-build/bazel-lib/blob/main/docs/copy_directory.md) and
+# [rules_js](https://github.com/aspect-build/rules_js) since npm package are source directories
+# inputs to copy_directory actions.
+# Docs: https://bazel.build/reference/command-line-reference#flag--host_jvm_args
+startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
+
 # Cache action outputs on disk so they persist across output_base and bazel
 # shutdown (eg. changing branches)
 common --disk_cache=~/.cache/bazel-disk-cache

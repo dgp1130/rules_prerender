@@ -25,7 +25,6 @@ _DEFAULT_BROWSERS = [
 def jasmine_web_test_suite(
         name,
         browsers = _DEFAULT_BROWSERS,
-        browser_overrides = None,
         config = None,
         flaky = None,
         local = None,
@@ -34,7 +33,6 @@ def jasmine_web_test_suite(
         tags = _DEFAULT_WEB_TEST_SUITE_TAGS,
         wrapped_test_tags = ["manual", "noci"],
         test_suite_tags = ["manual"],
-        debug_test_suite_tags = None,
         timeout = None,
         visibility = None,
         **kwargs):
@@ -47,16 +45,6 @@ def jasmine_web_test_suite(
         name: See https://docs.bazel.build/versions/main/be/common-definitions.html.
         browsers: A sequence of labels specifying the browsers to use. Generally
             under `//tools/browsers:*`.
-        browser_overrides: Optional dictionary which maps from browser targets
-            to browser-specific `web_test()` attributes, such as `shard_count`,
-            `flaky`, `timeout`, etc. For example:
-
-            ```
-            {
-                "//tools/browsers/chromium": {"shard_count": 3, "flaky": 1},
-                "//tools/browsers/firefox": {"shard_count": 1, "timeout": 100},
-            }
-            ```
         config: Optional label to configure web test features.
         flaky: A boolean specifying that the test is flaky. If set, the test
             will be retried up to 3 times. Defaults to `False`.
@@ -73,8 +61,6 @@ def jasmine_web_test_suite(
             wrapper. See: https://docs.bazel.build/versions/main/be/common-definitions.html
         test_suite_tags: A list of tag strings for the generated `test_suite()`.
             See: https://docs.bazel.build/versions/main/be/common-definitions.html
-        debug_test_suite_tags: A list of tag strings for the debug
-            `test_suite()`. See: https://docs.bazel.build/versions/main/be/common-definitions.html
         timeout: A string specifying the test timeout, computed from the size by
             default.
         visibility: https://docs.bazel.build/versions/main/be/common-definitions.html
@@ -104,7 +90,6 @@ def jasmine_web_test_suite(
         # `//foo` isn't good enough, we need `//foo:foo`. Since this is easy to
         # forget, we automatically do the conversion for users.
         browsers = [absolute(browser) for browser in browsers],
-        browser_overrides = browser_overrides,
         config = config,
         data = [":%s" % wrapped_test_config],
         flaky = flaky,
@@ -113,7 +98,6 @@ def jasmine_web_test_suite(
         size = size,
         tags = tags,
         test_suite_tags = test_suite_tags,
-        debug_test_suite_tags = debug_test_suite_tags,
         timeout = timeout,
         visibility = visibility,
     )
