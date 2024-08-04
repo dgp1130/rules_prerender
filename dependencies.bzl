@@ -32,9 +32,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "aspect_rules_jasmine",
-        sha256 = "4c16ef202d1e53fd880e8ecc9e0796802201ea9c89fa32f52d5d633fff858cac",
-        strip_prefix = "rules_jasmine-1.1.1",
-        url = "https://github.com/aspect-build/rules_jasmine/releases/download/v1.1.1/rules_jasmine-v1.1.1.tar.gz",
+        sha256 = "58f4981cd8972225bce38dcacdd897ae5ac8b41cf5968363d47b939f6c745802",
+        strip_prefix = "rules_jasmine-1.2.0",
+        url = "https://github.com/aspect-build/rules_jasmine/releases/download/v1.2.0/rules_jasmine-v1.2.0.tar.gz",
     )
 
     maybe(
