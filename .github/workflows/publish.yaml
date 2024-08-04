@@ -41,7 +41,7 @@ jobs:
     - name: Get pnpm store directory
       id: pnpm-cache-dir
       run: |
-        echo "PNPM_STORE_PATH=$(bazel run @pnpm --config ci --config incompatible -- store path --silent)" >> "${GITHUB_OUTPUT}"
+        echo "PNPM_STORE_PATH=$(bazel run @pnpm --config ci -- store path --silent)" >> "${GITHUB_OUTPUT}"
 
     - name: Cache pnpm
       uses: actions/cache@v3
@@ -54,14 +54,13 @@ jobs:
     - name: Install
       run: bazel run @pnpm --config ci -- install --dir $PWD --frozen-lockfile
 
-    # Build and test the entire repository. Include all supported
-    # `--incompatible_*` flags to avoid regressions.
+    # Build and test the entire repository.
     - name: Test
       run: |
         # Run `bazel test //...` over all workspaces in the repository.
         find . -name WORKSPACE.bazel -printf "%h\n" |
         sort |
-        xargs -I {} bash -c "(cd {} && bazel test //... --config ci --config incompatible)"
+        xargs -I {} bash -c "(cd {} && bazel test //... --config ci)"
 
     - name: Tar Workspace
       run: |

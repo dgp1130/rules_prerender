@@ -22,14 +22,6 @@ test --test_output=errors
 # This prevents accidentally depending on this feature, which Bazel will remove.
 common --nolegacy_external_runfiles
 
-# Turn on --incompatible_strict_action_env which was on by default
-# in Bazel 0.21.0 but turned off again in 0.22.0. Follow
-# https://github.com/bazelbuild/bazel/issues/7026 for more details.
-# This flag is needed to so that the bazel cache is not invalidated
-# when running bazel via `yarn bazel`.
-# See https://github.com/angular/angular/issues/27514.
-common --incompatible_strict_action_env
-
 # Enable `_validation` actions to confirm targets build correctly even when
 # certain data is not used by the build.
 common --experimental_run_validations

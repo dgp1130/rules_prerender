@@ -1,61 +1,65 @@
 # .bazelrc configuration which enables all currently supported
-# `--incompatible_*` flags. Use with `--config incompatible`.
+# `--incompatible_*` flags.
 
 # These represent breaking changes coming to Bazel which are not yet required.
 # Any flag which is currently supported in the repository should be added to
 # this list where it will be run on CI to prevent regressions that will be need
-# to be fixed later. We don't use these by default, because they cause analysis
-# thrashing, since they are only applied on `build` and its infeasible to figure
-# out the full set of `bazel` commands each flag supports.
+# to be fixed later.
 
-common:incompatible --incompatible_build_transitive_python_runfiles
-common:incompatible --incompatible_check_testonly_for_output_files
+common --incompatible_build_transitive_python_runfiles
+common --incompatible_check_testonly_for_output_files
 
 # Breaks `@aspect_rules_jasmine` which depends on a private config setting from
 # `@aspect_rules_js`.
-# common:incompatible --incompatible_config_setting_private_default_visibility
+# common --incompatible_config_setting_private_default_visibility
 
-common:incompatible --incompatible_default_to_explicit_init_py
-common:incompatible --incompatible_disable_native_android_rules
-
-# Breaks `@io_bazel_rules_webtesting`.
-# common:incompatible --incompatible_disable_starlark_host_transitions
-
-common:incompatible --incompatible_disable_third_party_license_checking
-common:incompatible --incompatible_disable_target_provider_fields
+common --incompatible_default_to_explicit_init_py
+common --incompatible_disable_native_android_rules
 
 # Breaks `@io_bazel_rules_webtesting`.
-# common:incompatible --incompatible_disallow_empty_glob
+# common --incompatible_disable_starlark_host_transitions
+
+common --incompatible_disable_third_party_license_checking
+common --incompatible_disable_target_provider_fields
+
+# Breaks `@io_bazel_rules_webtesting`.
+# common --incompatible_disallow_empty_glob
 
 # Breaks `@bazel_tools//tools/jdk/...`.
-# common:incompatible --incompatible_disallow_struct_provider_syntax
+# common --incompatible_disallow_struct_provider_syntax
 
-common:incompatible --incompatible_enable_android_toolchain_resolution
-common:incompatible --incompatible_enable_apple_toolchain_resolution
-common:incompatible --incompatible_enable_cc_test_feature
+common --incompatible_enable_android_toolchain_resolution
+common --incompatible_enable_apple_toolchain_resolution
+common --incompatible_enable_cc_test_feature
 
 # This flag seems to be backwards. Docs say "enables the legacy implicit
 # fallback from sandboxed to local strategy" and "will eventually default to
 # false and then become a no-op". It already defaults to false. Ignoring the
 # flag and letting it default to false seems like the best path forward.
-# common:incompatible --incompatible_legacy_local_fallback
+# common --incompatible_legacy_local_fallback
 
-common:incompatible --incompatible_no_implicit_file_export
+common --incompatible_no_implicit_file_export
 
 # Breaks Java and C++ toolchains.
-# common:incompatible --incompatible_no_rule_outputs_param
+# common --incompatible_no_rule_outputs_param
 
-common:incompatible --incompatible_remote_output_paths_relative_to_input_root
-common:incompatible --incompatible_sandbox_hermetic_tmp
+common --incompatible_remote_output_paths_relative_to_input_root
+common --incompatible_sandbox_hermetic_tmp
 
 # Breaks `@bazel_tools//tools/jdk/...`.
-# common:incompatible --incompatible_stop_exporting_language_modules
+# common --incompatible_stop_exporting_language_modules
 
-common:incompatible --incompatible_strict_action_env
+# Turn on --incompatible_strict_action_env which was on by default
+# in Bazel 0.21.0 but turned off again in 0.22.0. Follow
+# https://github.com/bazelbuild/bazel/issues/7026 for more details.
+# This flag is needed to so that the bazel cache is not invalidated
+# when running bazel via `yarn bazel`.
+# See https://github.com/angular/angular/issues/27514.
+common --incompatible_strict_action_env
 
 # Breaks `@io_bazel_rules_webtesting`.
-# common:incompatible --incompatible_struct_has_no_methods
+# common --incompatible_struct_has_no_methods
 
-common:incompatible --incompatible_top_level_aspects_require_providers
-common:incompatible --incompatible_use_cc_configure_from_rules_cc
-common:incompatible --incompatible_visibility_private_attributes_at_definition
+common --incompatible_top_level_aspects_require_providers
+common --incompatible_use_cc_configure_from_rules_cc
+common --incompatible_visibility_private_attributes_at_definition

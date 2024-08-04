@@ -1,11 +1,11 @@
 # Import common configuration.
 import %workspace%/tools/bazelrc/common.bazelrc
+import %workspace%/tools/bazelrc/incompatible.bazelrc
 
 # Import `.bazelrc` files definining specific `--config` flags.
 import %workspace%/tools/bazelrc/ci.bazelrc
 import %workspace%/tools/bazelrc/debug.bazelrc
 import %workspace%/tools/bazelrc/release.bazelrc
-import %workspace%/tools/bazelrc/incompatible.bazelrc
 
 # Load any settings specific to the current user.
 # .bazelrc.user should appear in .gitignore so that settings are not shared with team members
