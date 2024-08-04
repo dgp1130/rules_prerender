@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Cache Bazel
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/bazel
@@ -31,7 +31,7 @@ jobs:
         echo "PNPM_STORE_PATH=$(bazel run @pnpm --config ci -- store path --silent)" >> "${GITHUB_OUTPUT}"
 
     - name: Cache pnpm
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.pnpm-cache-dir.outputs.PNPM_STORE_PATH }}
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
