@@ -72,11 +72,6 @@
     },
     "pnpm": {
         "packageExtensions": {
-            "@honeycombio/opentelemetry-node": {
-                "dependencies": {
-                    "@opentelemetry/core": "*"
-                }
-            },
             "unix-dgram": {
                 "dependencies": {
                     "nan": "*",
