@@ -16,9 +16,9 @@ def rules_prerender_dependencies():
     maybe(
         http_archive,
         name = "bazel_features",
-        sha256 = "9fcb3d7cbe908772462aaa52f02b857a225910d30daa3c252f670e3af6d8036d",
-        strip_prefix = "bazel_features-1.0.0",
-        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.0.0/bazel_features-v1.0.0.tar.gz",
+        sha256 = "5ac743bf5f05d88e84962e978811f2524df09602b789c92cf7ae2111ecdeda94",
+        strip_prefix = "bazel_features-1.14.0",
+        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.14.0/bazel_features-v1.14.0.tar.gz",
     )
 
     maybe(
