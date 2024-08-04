@@ -6,6 +6,9 @@
 # this list where it will be run on CI to prevent regressions that will be need
 # to be fixed later.
 
+# Breaks `@aspect_rules_js`.
+# common --incompatible_auto_exec_groups
+
 common --incompatible_build_transitive_python_runfiles
 common --incompatible_check_testonly_for_output_files
 
@@ -15,6 +18,11 @@ common --incompatible_check_testonly_for_output_files
 
 common --incompatible_default_to_explicit_init_py
 common --incompatible_disable_native_android_rules
+
+# Breaks `@rules_prerender` `WORKSPACE` file.
+# common --incompatible_disable_native_repo_rules
+
+common --incompatible_disable_non_executable_java_binary
 
 # Breaks `@io_bazel_rules_webtesting`.
 # common --incompatible_disable_starlark_host_transitions
@@ -37,13 +45,14 @@ common --incompatible_enable_cc_test_feature
 # flag and letting it default to false seems like the best path forward.
 # common --incompatible_legacy_local_fallback
 
+common --incompatible_modify_execution_info_additive
 common --incompatible_no_implicit_file_export
 
 # Breaks Java and C++ toolchains.
 # common --incompatible_no_rule_outputs_param
 
+common --incompatible_python_disallow_native_rules
 common --incompatible_remote_output_paths_relative_to_input_root
-common --incompatible_sandbox_hermetic_tmp
 
 # Breaks `@bazel_tools//tools/jdk/...`.
 # common --incompatible_stop_exporting_language_modules
@@ -61,4 +70,4 @@ common --incompatible_strict_action_env
 
 common --incompatible_top_level_aspects_require_providers
 common --incompatible_use_cc_configure_from_rules_cc
-common --incompatible_visibility_private_attributes_at_definition
+common --incompatible_use_host_features
