@@ -19,7 +19,8 @@ common --incompatible_check_testonly_for_output_files
 common --incompatible_default_to_explicit_init_py
 common --incompatible_disable_native_android_rules
 
-# Breaks `@rules_prerender` `WORKSPACE` file.
+# Breaks with `--noenable_bzlmod`.
+# https://github.com/bazelbuild/bazel/issues/23206
 # common --incompatible_disable_native_repo_rules
 
 common --incompatible_disable_non_executable_java_binary
