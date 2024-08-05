@@ -59,7 +59,6 @@
         "marked": "^13.0.3",
         "nan": "^2.17.0",
         "netlify-cli": "^17.33.5",
-        "node-fetch": "^3.2.5",
         "node-gyp": "^9.4.0",
         "preact": "^10.13.1",
         "preact-render-to-string": "^5.2.6",

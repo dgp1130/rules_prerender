@@ -28,7 +28,6 @@
  */
 
 import { createHash } from 'crypto';
-import fetch from 'node-fetch';
 import { ArtifactType } from './browser_artifact.mjs';
 import { Chromium } from './chromium.mjs';
 import { Platform } from './platform.mjs';
@@ -39,7 +38,7 @@ import { Platform } from './platform.mjs';
  * function looks for a closest revision that is available for all platforms. If
  * none has been specified, we look for a revision that is as close as possible
  * to the revision in the stable release channel.
- * 
+ *
  * Returns an exit code based on whether or not it was successful.
  */
 export async function findLatestRevisionForAllPlatforms(
@@ -182,8 +181,7 @@ async function getStableChromiumRevision(): Promise<number> {
     const response = await fetch(
         `https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json`,
     );
-    const revisionStr = ((await response.json()) as any)
-        .channels.Stable.revision;
+    const revisionStr = (await response.json()).channels.Stable.revision;
     return Number(revisionStr);
 }
 

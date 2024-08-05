@@ -86,9 +86,6 @@ importers:
       netlify-cli:
         specifier: ^17.33.5
         version: 17.33.5(@types/node@14.14.13)
-      node-fetch:
-        specifier: ^3.2.5
-        version: 3.3.2
       node-gyp:
         specifier: ^9.4.0
         version: 9.4.0(supports-color@9.4.0)
