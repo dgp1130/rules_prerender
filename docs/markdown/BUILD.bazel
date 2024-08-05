@@ -6,7 +6,6 @@ ts_project(
     srcs = ["markdown_loader.mts"],
     visibility = ["//docs:__subpackages__"],
     deps = [
-        "//:node_modules/@types/marked",
         "//:node_modules/@types/node",
         "//:node_modules/gray-matter",
         "//:node_modules/marked",

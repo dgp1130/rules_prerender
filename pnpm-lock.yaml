@@ -50,9 +50,6 @@ importers:
       '@types/jasmine':
         specifier: ^4.3.1
         version: 4.3.1
-      '@types/marked':
-        specifier: ^5.0.1
-        version: 5.0.1
       '@types/yargs':
         specifier: ^17.0.24
         version: 17.0.24
@@ -81,8 +78,8 @@ importers:
         specifier: 4.3.0
         version: 4.3.0
       marked:
-        specifier: ^8.0.0
-        version: 8.0.0
+        specifier: ^13.0.3
+        version: 13.0.3
       nan:
         specifier: ^2.17.0
         version: 2.17.0
@@ -1832,10 +1829,6 @@ packages:
       '@types/linkify-it': 3.0.0
       '@types/mdurl': 1.0.2
     dev: false
-
-  /@types/marked@5.0.1:
-    resolution: {integrity: sha512-Y3pAUzHKh605fN6fvASsz5FDSWbZcs/65Q6xYRmnIP9ZIYz27T4IOmXfH9gWJV1dpi7f1e7z7nBGUTx/a0ptpA==}
-    dev: true
 
   /@types/mdurl@1.0.2:
     resolution: {integrity: sha512-eC4U9MlIcu2q0KQmXszyn5Akca/0jrQmwDRgpAMJai7qBWq4amIQhZyNau4VYGtCeALvW1/NtjzJJ567aZxfKA==}
@@ -6776,9 +6769,9 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
-  /marked@8.0.0:
-    resolution: {integrity: sha512-RI/D5csFVreNrFchdKFSdV38GDHJdD7OdmbNWYzGvApPb0A9pyypgfHC/FBH4ugmRE8cr7yg/TH7tu8585eMhA==}
-    engines: {node: '>= 16'}
+  /marked@13.0.3:
+    resolution: {integrity: sha512-rqRix3/TWzE9rIoFGIn8JmsVfhiuC8VIQ8IdX5TfzmeBucdY05/0UlzKaw0eVtpcN/OdVFpBk7CjKGo9iHJ/zA==}
+    engines: {node: '>= 18'}
     hasBin: true
     dev: true
 
