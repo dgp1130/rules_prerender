@@ -11,9 +11,9 @@ def define_chromium_repositories():
     browser_archive(
         name = "org_chromium_chromium_linux_x64",
         licenses = ["notice"],  # BSD 3-clause (maybe more?)
-        sha256 = "4e89a56b61db2fe494d4072d551b24e81833608318c5ba347b5d16a19687674e",
-        # 114.0.5673.0
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/1121551/chrome-linux.zip"],
+        sha256 = "5c58e0e0e08e2e56ef34609195decc4898418a232c39d095db92e133facb3333",
+        # 127.0.6533.0
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/1313161/chrome-linux.zip"],
         named_files = {"CHROMIUM": "chrome-linux/chrome"},
         # Exclude a log file that chromium writes to each run, causing remote
         # cache misses.
@@ -24,9 +24,9 @@ def define_chromium_repositories():
     browser_archive(
         name = "org_chromium_chromium_macos_x64",
         licenses = ["notice"],  # BSD 3-clause (maybe more?)
-        sha256 = "c03e32f338dffee3404881b4950563d26812d0246c1372ad2f4800547382bb91",
-        # 114.0.5673.0
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac/1121551/chrome-mac.zip"],
+        sha256 = "bb95467ac4b4097833f707e58f079926a9cece4824c700da335c38081c7a4e5b",
+        # 127.0.6533.0
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac/1313161/chrome-mac.zip"],
         named_files = {
             "CHROMIUM": "chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         },
@@ -41,9 +41,9 @@ def define_chromium_repositories():
     browser_archive(
         name = "org_chromium_chromium_macos_arm64",
         licenses = ["notice"],  # BSD 3-clause (maybe more?)
-        sha256 = "4eb94b113fc995d20fafeca366b4b0cddf172ac1b2cdedc053464b764b74d1c0",
-        # 114.0.5673.0
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac_Arm/1121551/chrome-mac.zip"],
+        sha256 = "98173187fab109a1e3431806811e95bff38e61682bbeaf8776733b5a378515ab",
+        # 127.0.6533.0
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac_Arm/1313161/chrome-mac.zip"],
         named_files = {
             "CHROMIUM": "chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         },
@@ -58,9 +58,9 @@ def define_chromium_repositories():
     browser_archive(
         name = "org_chromium_chromium_windows",
         licenses = ["notice"],  # BSD 3-clause (maybe more?)
-        sha256 = "fdc221bb1e898ab851c4a5bc50ca1f88a5b388acb5510df4c4606c87d8be0230",
-        # 114.0.5673.0
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Win/1121551/chrome-win.zip"],
+        sha256 = "e95965510d85b2593c308469ae007c839c3dd2f777a7c2fb31b90bc80bf66897",
+        # 127.0.6533.0
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Win/1313161/chrome-win.zip"],
         named_files = {"CHROMIUM": "chrome-win/chrome.exe"},
         exclude_patterns = [
             # Exclude files with spaces to prevent errors when symlinked as
@@ -78,9 +78,9 @@ def define_chromium_repositories():
         # BSD 3-clause, ICU, MPL 1.1, libpng (BSD/MIT-like),
         # Academic Free License v. 2.0, BSD 2-clause, MIT
         licenses = ["reciprocal"],
-        sha256 = "8b9823d07706db02d0f83189c7d658fff14796ccb07f3eac3b327f3f0230f6c7",
+        sha256 = "a138e7c9c52a4b1ca46e91a7079337c4ec0f7f30677a6ae3b8e112e441dd1ece",
         urls = [
-            "https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/1121551/chromedriver_linux64.zip",
+            "https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/1313161/chromedriver_linux64.zip",
         ],
         named_files = {"CHROMEDRIVER": "chromedriver_linux64/chromedriver"},
     )
@@ -90,8 +90,8 @@ def define_chromium_repositories():
         # BSD 3-clause, ICU, MPL 1.1, libpng (BSD/MIT-like),
         # Academic Free License v. 2.0, BSD 2-clause, MIT
         licenses = ["reciprocal"],
-        sha256 = "1c66bd01e53ee406f9f30d5f9ccbf4ea0f9c0f1b959c6ace9758cf0d35a6e4b3",
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac/1121551/chromedriver_mac64.zip"],
+        sha256 = "c55271c4483511dc4432b0495a025a125c6b4979e8f88aeb299963fcb83f9473",
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac/1313161/chromedriver_mac64.zip"],
         named_files = {"CHROMEDRIVER": "chromedriver_mac64/chromedriver"},
     )
 
@@ -100,8 +100,8 @@ def define_chromium_repositories():
         # BSD 3-clause, ICU, MPL 1.1, libpng (BSD/MIT-like),
         # Academic Free License v. 2.0, BSD 2-clause, MIT
         licenses = ["reciprocal"],
-        sha256 = "7eba8dd97537ca787628ae11346e5c897473c0c0871df0fc4a313bd4a48a83dc",
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac_Arm/1121551/chromedriver_mac64.zip"],
+        sha256 = "772722afb0beeaf6cda1618590d5c6c5fef7358357bcb1002ca5f8c4afc5e5ca",
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Mac_Arm/1313161/chromedriver_mac64.zip"],
         named_files = {"CHROMEDRIVER": "chromedriver_mac64/chromedriver"},
     )
 
@@ -110,7 +110,7 @@ def define_chromium_repositories():
         # BSD 3-clause, ICU, MPL 1.1, libpng (BSD/MIT-like),
         # Academic Free License v. 2.0, BSD 2-clause, MIT
         licenses = ["reciprocal"],
-        sha256 = "db94b7f35041e3a76fa9a50808f196e61c27f43762df99526c1876244a196526",
-        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Win/1121551/chromedriver_win32.zip"],
+        sha256 = "f04ac0dc046b6e4bea1bde4a6ee07090f94e3e3b6ca804952392565abf626e15",
+        urls = ["https://storage.googleapis.com/chromium-browser-snapshots/Win/1313161/chromedriver_win32.zip"],
         named_files = {"CHROMEDRIVER": "chromedriver_win32/chromedriver.exe"},
     )

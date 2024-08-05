@@ -3,23 +3,26 @@
 NOTE: Most of this directory was forked from
 https://github.com/angular/dev-infra/tree/1ad20ef9dd457de967252283c1a968b0d702d0ae/bazel/browsers/.
 
-Within the Angular organization, we use Chrome and Firefox to perform most of the local testing, and rely on Sauce Labs and BrowserStack to do cross-browser testing on our CI.
+We use Chrome and Firefox to perform most end-to-end testing.
 
-The version of Chrome used in tests within this monorepo is configured and controlled via Bazel and `puppeteer`.
-We manually keep the configuration of these two tools in sync to create a consistent testing environment across unit, e2e, and integration tests.
+The version of Chrome used in tests within this monorepo is configured and
+controlled via Bazel.
 
 ## Bazel
 
-Bazel `karma_web_test_suite` and `protractor_web_test_suite` targets will use Chromium or Firefox provisioned by `//tools/browsers`.
-The version of Chrome and Firefox are specified in the `chromium.bzl` and `firefox.bzl` files in `/bazel/browsers`.
+Bazel `jasmine_web_test_suite` targets will use Chromium or Firefox provisioned
+by `//tools/browsers`. The version of Chrome and Firefox are specified in the
+[`chromium.bzl`](./chromium/chromium.bzl) and
+[`firefox.bzl`](./firefox/firefox.bzl) files.
 
-The process of updating the Chrome or Firefox version is not straightforward, but below are dedicated sections for each browser.
+The process of updating the Chrome or Firefox version is not straightforward,
+but below are dedicated sections for each browser.
 
 ## Updating Chromium
 
-1. Run `bazel run bazel/browsers/update-script find-latest-chromium-revision`
+1.  Run `bazel run //tools/browsers/update_script`
 
-2. Inspect the console output which looks like the followed:
+2.  Inspect the console output which looks like the following:
 
 ```
 Release Info: https://storage.googleapis.com/chromium-find-releases-static/index.html#r885453
@@ -42,50 +45,21 @@ LINUX:     https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/8
 
 ```
 
-3. Click on the `Release Info` URL and update version number comments in the `chromium.bzl` file so
-   that it is easier to figure out which version of Chromium is configured.
+3.  Click on the `Release Info` URL and update version number comments in the
+    [`chromium.bzl`](./chromium/chromium.bzl) file so that it is easier to
+    figure out which version of Chromium is configured.
 
-4. Update the `chromium` and `chromedriver` repository URLs for all platforms to use the
-   new URLs printed out by the tool. Also make sure to update the SHA256 checksums. The tool prints the
-   new checksums for convenient copy & paste.
-
-5. Update the dev-infra Google Cloud Storage mirror by running the following command.
-   You need to acquire a service key for the `dev-infra-gcs-manager` service account.
-
-```bash
-GOOGLE_APPLICATION_CREDENTIALS=<path-to-gcp-service-key> \
-  bazel run bazel/browsers/update-script upload-to-mirror chromium <revision-num>
-```
-
-Update the fallback `dev-infra-mirror` URLs for your browser archives to point to the newly
-uploaded files (as printed by the script to the terminal output).
-
-## Puppeteer
-
-1. Visit https://github.com/puppeteer/puppeteer/blob/master/docs/api.md to determine which version of puppeteer corresponds to the version of Chrome desired.
-
-2. Visit https://chromedriver.chromium.org/downloads to determine which version of ChromeDriver should be used for the version of Chrome desired.
-
-   > NOTE:
-   > The version of Chrome does not necessarily correspond exactly with the version of ChromeDriver.
-   > For example, you might have to use ChromeDriver v87.0.4280.x to drive Chrome v87.0.4272.x.
-
-3. Update `scripts/puppeteer-chromedriver-versions.js` to include an entry with the new version of puppeteer as key and the new version of ChromeDriver as value (as determined in the two previous steps).
-
-4. Update all of the puppeteer versions throughout the repo:
-
-   - `package.json`
-   - `aio/package.json`
-   - `aio/tools/examples/shared/package.json`
-
-   ...and their corresponding `yarn.lock` files.
+4.  Update the `chromium` and `chromedriver` repository URLs for all platforms
+    to use the new URLs printed out by the tool. Also make sure to update the
+    SHA256 checksums. The tool prints the new checksums for convenient copy &
+    paste.
 
 ## Firefox
 
-In order to update Firefox, open the `bazel/browsers/firefox/firefox.bzl` file and update the repository URLs to the desired version.
-For example:
+In order to update Firefox, open the [`firefox.bzl`](./firefox/firefox.bzl) file
+and update the repository URLs to the desired version. For example:
 
-```bzl
+```python
 platform_http_file(
     name = "org_mozilla_firefox_amd64",
     licenses = ["reciprocal"],  # MPL 2.0
@@ -95,46 +69,40 @@ platform_http_file(
 )
 ```
 
-1. Go to the `urls` property and update the URL by replacing all `78.0` occurrences with the version you intend to use.
-   Once done, do the same change for other platforms (such as `macos`).
+1.  Go to the `urls` property and update the URL by replacing all `78.0`
+    occurrences with the version you intend to use. Once done, do the same
+    change for other platforms (such as `macos`).
 
-2. Update the `sha256` checksum of the browser archives.
-   You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
+2.  Update the `sha256` checksum of the browser archives. You can do this by
+    downloading the artifacts from the URLs you just updated, and then running
+    `shasum` on those files:
 
-   ```sh
-   curl -L <BROWSER_URL> | shasum -a 256
-   ```
+    ```sh
+    curl -L <BROWSER_URL> | shasum -a 256
+    ```
 
-3. Go to https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html and find a version that is compatible with the version of Firefox being used.
+3.  Go to
+    https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html and
+    find a version that is compatible with the version of Firefox being used.
 
-4. Update the `geckodriver` repository URLs to the desired version:
+4.  Update the `geckodriver` repository URLs to the desired version:
 
-   ```bzl
-   platform_http_file(
-       name = "org_mozilla_geckodriver_amd64",
-       licenses = ["reciprocal"],  # MPL 2.0
-       sha256 = "d59ca434d8e41ec1e30dd7707b0c95171dd6d16056fb6db9c978449ad8b93cc0",
-       # Geckodriver v0.26.0
-       urls = ["https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz"],
-   )
-   ```
+    ```python
+    platform_http_file(
+        name = "org_mozilla_geckodriver_amd64",
+        licenses = ["reciprocal"],  # MPL 2.0
+        sha256 = "d59ca434d8e41ec1e30dd7707b0c95171dd6d16056fb6db9c978449ad8b93cc0",
+        # Geckodriver v0.26.0
+        urls = ["https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz"],
+    )
+    ```
 
-   For example, replace all occurrences of `0.26.0` with the newer version.
+    For example, replace all occurrences of `0.26.0` with the newer version.
 
-5. Update the `sha256` checksum of the driver archives.
-   You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
+5.  Update the `sha256` checksum of the driver archives. You can do this by
+    downloading the artifacts from the URLs you just updated, and then running
+    `shasum` on those files:
 
-   ```sh
-   curl -L <DRIVER_URL> | shasum -a 256
-   ```
-
-6. Update the dev-infra Google Cloud Storage mirror by running the following command.
-   You need to acquire a service key for the `dev-infra-gcs-manager` service account.
-
-```bash
-GOOGLE_APPLICATION_CREDENTIALS=<path-to-gcp-service-key> \
-  bazel run bazel/browsers/update-script upload-to-mirror firefox <version> <geckodriver-version>
-```
-
-Update the fallback `dev-infra-mirror` URLs for your browser archives to point to the newly
-uploaded files (as printed by the script to the terminal output).
+    ```sh
+    curl -L <DRIVER_URL> | shasum -a 256
+    ```
