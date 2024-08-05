@@ -17,11 +17,15 @@ def netlify_deploy(name, site):
     netlify_cli_bin.netlify_binary(
         name = name,
         data = [site],
-        args = ["deploy"],
+
         # We choose to `chdir` over Netlify's `--dir` option because it does not
         # appear to use that option when resolving the `netlify.toml` file and
         # there does not appear to be a way to pass it explicitly.
         chdir = "$(rootpath %s)" % site,
+
+        # We still need `--dir .` or else Netlify seems to infer a configuration
+        # from context and Bazel is an unintuitive project structure for it.
+        args = ["deploy", "--dir", "."],
     )
 
     build_test(
