@@ -8,7 +8,12 @@ load("//tools/typescript:defs.bzl", "ts_project")
 
 npm_link_all_packages(name = "node_modules")
 
-stamp_package(name = "package")
+stamp_package(
+    name = "package",
+
+    # So internal `ts_project` targets can depend on `type: "module"`.
+    visibility = ["//:__subpackages__"],
+)
 
 # `rules_prerender` is intended as a "peer dep" in NPM terms, meaning we don't
 # want a hard dependency on it because this will build the

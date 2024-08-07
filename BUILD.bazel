@@ -27,7 +27,12 @@ ts_config(
 npm_link_all_packages(name = "node_modules")
 
 # Makes an internal NPM package for `rules_prerender` and links it.
-stamp_package(name = "package")
+stamp_package(
+    name = "package",
+
+    # So internal `ts_project` targets can depend on `type: "module"`.
+    visibility = ["//:__subpackages__"],
+)
 
 npm_package(
     name = "rules_prerender_pkg",

@@ -16,7 +16,12 @@ prerender_component_publish_files(
     dep = ":declarative_shadow_dom",
 )
 
-stamp_package(name = "package")
+stamp_package(
+    name = "package",
+
+    # So internal `ts_project` targets can depend on `type: "module"`.
+    visibility = ["//:__subpackages__"],
+)
 
 npm_package(
     name = "pkg",
