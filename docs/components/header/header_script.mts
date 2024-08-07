@@ -1,13 +1,13 @@
-import { component } from 'hydroactive';
+import { defineComponent } from 'hydroactive';
 
 /**
  * Represents the UI header with the page title and a hamburger menu.
  *
  * @event toggle-menu Triggered on hamburger menu click.
  */
-export const Header = component('rp-header', ($) => {
-    $.listen($.query('#hamburger'), 'click', () => {
-        $.host.dispatchEvent(new CustomEvent('toggle-menu'));
+export const Header = defineComponent('rp-header', (comp, host) => {
+    host.shadow.query('#hamburger').access().listen(comp, 'click', () => {
+        host.element.dispatchEvent(new CustomEvent('toggle-menu'));
     });
 });
 

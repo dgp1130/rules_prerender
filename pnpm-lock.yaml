@@ -72,8 +72,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       hydroactive:
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.1.4
+        version: 0.1.4
       jasmine:
         specifier: 4.3.0
         version: 4.3.0
@@ -5553,8 +5553,8 @@ packages:
     hasBin: true
     dev: true
 
-  /hydroactive@0.0.4:
-    resolution: {integrity: sha512-lXRtPPp/v5sJYE/9+6Bh9sZTLmJsxuAWG9F2xHQzYLSkdUfKcWIpuxaRcwPVfsk4CNJzwBbJf3jR4ZUzC4m5vg==}
+  /hydroactive@0.1.4:
+    resolution: {integrity: sha512-nhsp8woTTOhUm/IEMy2Uoov7K52tGo12/7zuOeILDnTB1Y/Mna65wghM6dF3lG2q1/gce82vxTpezsElTDxQwg==}
     dev: true
 
   /iconv-lite@0.4.24:
@@ -10090,7 +10090,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       commander: 9.5.0
-      debug: 4.3.4(supports-color@9.4.0)
+      debug: 4.3.5(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
