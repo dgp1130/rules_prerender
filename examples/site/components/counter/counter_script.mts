@@ -7,26 +7,26 @@
  * rendering logic across the client and the server.
  */
 
-import { component } from 'hydroactive';
+import { defineComponent } from 'hydroactive';
 
 /**
  * Custom element for `<site-counter />`. Implements the functionality for a
  * counter with a prerendered initial value.
  */
-export const Counter = component('site-counter', ($) => {
+export const Counter = defineComponent('site-counter', (comp, host) => {
     // Two-way binding of the count in the DOM.
-    const [ count, setCount ] = $.live('#count', Number);
+    const count = comp.live('#count', Number);
 
     // Listen for decrement button clicks.
-    const dec = $.query('button#decrement');
-    $.listen(dec, 'click', () => { setCount(count() - 1); });
-    dec.disabled = false;
+    const dec = host.query('button#decrement').access();
+    dec.listen(comp, 'click', () => { count.set(count() - 1); });
+    dec.element.disabled = false;
 
     // Listen for increment button clicks.
-    const inc = $.query('button#increment');
-    $.listen(inc, 'click', () => { setCount(count() + 1); });
-    inc.disabled = false;
+    const inc = host.query('button#increment').access();
+    inc.listen(comp, 'click', () => { count.set(count() + 1); });
+    inc.element.disabled = false;
 
     // Bind the current count to the DOM.
-    $.bind('#count', count);
+    comp.bind('#count', count);
 });

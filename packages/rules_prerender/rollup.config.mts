@@ -36,6 +36,13 @@ export default {
             return;
         }
 
+        if (warning.code === 'CIRCULAR_DEPENDENCY' &&
+            warning.importer?.includes('node_modules/')) {
+            // Ignore circular dependencies in `node_modules/`, nothing the
+            // application can do about them.
+            return;
+        }
+
         throw new Error(warning.message);
     },
 } as RollupOptions;

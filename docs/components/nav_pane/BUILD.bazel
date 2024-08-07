@@ -18,7 +18,10 @@ prerender_component(
 
 ts_project(
     name = "prerender",
-    srcs = ["nav_pane.tsx"],
+    srcs = [
+        "nav_pane.tsx",
+        "//docs:package",
+    ],
     deps = [
         "//:node_modules/@rules_prerender/preact",
         "//:node_modules/preact",
@@ -31,7 +34,10 @@ ts_project(
 ts_project(
     name = "prerender_test_lib",
     testonly = True,
-    srcs = ["nav_pane_test.tsx"],
+    srcs = [
+        "nav_pane_test.tsx",
+        "//docs:package",
+    ],
     deps = [
         ":prerender",
         "//:node_modules/@types/jasmine",
@@ -49,7 +55,10 @@ jasmine_node_test(
 
 ts_project(
     name = "scripts",
-    srcs = ["nav_pane_script.mts"],
+    srcs = [
+        "nav_pane_script.mts",
+        "//docs:package",
+    ],
     tsconfig = "//:tsconfig_client",
     deps = ["//:node_modules/hydroactive"],
 )
@@ -57,7 +66,10 @@ ts_project(
 ts_project(
     name = "scripts_test_cases_lib",
     testonly = True,
-    srcs = ["nav_pane_script_test_cases.tsx"],
+    srcs = [
+        "nav_pane_script_test_cases.tsx",
+        "//docs:package",
+    ],
     data = ["//docs:package"],
     deps = [
         ":nav_pane_prerender",
