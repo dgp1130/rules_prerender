@@ -2,5 +2,6 @@
     "name": "rules_prerender",
     "version": "0.0.0-PLACEHOLDER",
     "type": "module",
-    "main": "./index.mjs"
+    "main": "./index.mjs",
+    "types": "./index.d.mts"
 }
