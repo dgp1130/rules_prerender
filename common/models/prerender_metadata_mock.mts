@@ -3,7 +3,7 @@
  * @see /README.md#Mocking
  */
 
-import { PrerenderMetadata, ScriptMetadata } from './prerender_metadata.mjs';
+import { PrerenderMetadata, ExternalScriptMetadata } from './prerender_metadata.mjs';
 
 /** Mocks the {@link PrerenderMetadata} object with the given overrides. */
 export function mockPrerenderMetadata(
@@ -17,9 +17,9 @@ export function mockPrerenderMetadata(
     };
 }
 
-/** Mocks the {@link ScriptMetadata} object with the given overrides. */
-export function mockScriptMetadata(overrides: Partial<ScriptMetadata> = {}):
-        ScriptMetadata {
+/** Mocks the {@link ExternalScriptMetadata} object with the given overrides. */
+export function mockScriptMetadata(overrides: Partial<ExternalScriptMetadata> = {}):
+        ExternalScriptMetadata {
     return {
         path: 'path/to/mocked/script',
         ...overrides,

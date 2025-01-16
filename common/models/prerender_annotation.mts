@@ -1,7 +1,7 @@
 /**
  * Serializes an annotation and returns it, should be rendered directly into
  * prerendered HTML for the build process to use.
- * 
+ *
  * @param annotation The annotation to convert to a string.
  * @return The annotation expressed as a string where it can be easily parsed by
  *     tooling.
@@ -14,7 +14,7 @@ export function serialize(annotation: PrerenderAnnotation): string {
  * Parse an annotation from HTML text content. The input must **not** contain
  * the leading or trailing `<rules_prerender:annotation>` tag of the HTML
  * element.
- * 
+ *
  * @param content The text content to parse an annotation from.
  * @returns The parsed annotation.
  * @throws If the parsed annotation does not contain valid JSON. This is
@@ -27,7 +27,7 @@ export function deserialize(content: string): PrerenderAnnotation {
 
 /**
  * Returns whether or not two annotations are equivalent.
- * 
+ *
  * @param first The first annotation to compare.
  * @param second The second annotation to compare.
  * @returns Whether or not {@param first} and {@param second} are equivalent and
@@ -44,6 +44,10 @@ export function annotationsEqual(
             const sec = second as ScriptAnnotation;
             if (first.path !== sec.path) return false;
             return true;
+        } case 'inline-script': {
+            const sec = second as InlineScriptAnnotation;
+            if (first.code !== sec.code) return false;
+            return true;
         } case 'style': {
             const sec = second as StyleAnnotation;
             if (first.path !== sec.path) return false;
@@ -58,7 +62,10 @@ export function annotationsEqual(
  * An annotation to be used by the build process to include external resources
  * in the final generated HTML page.
  */
-export type PrerenderAnnotation = ScriptAnnotation | StyleAnnotation;
+export type PrerenderAnnotation =
+    | ScriptAnnotation
+    | InlineScriptAnnotation
+    | StyleAnnotation;
 
 /**
  * An annotation of a JavaScript resource to be included in the final generated
@@ -69,6 +76,17 @@ export interface ScriptAnnotation {
 
     /** A path to the JavaScript file to include. */
     readonly path: string;
+}
+
+// Should this be merged with `ScriptAnnotation`?
+/** TODO */
+export interface InlineScriptAnnotation {
+    readonly type: 'inline-script';
+
+    /** TODO: `SafeCode` type? */
+    readonly code: string;
+
+    // TODO: `key` to dedupe multiple identical scripts?
 }
 
 /**

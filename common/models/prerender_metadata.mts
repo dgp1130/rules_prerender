@@ -5,7 +5,24 @@ export interface PrerenderMetadata {
 }
 
 /** Metadata for a script to be included in a prerendered HTML file. */
-export interface ScriptMetadata {
+export type ScriptMetadata =
+    | InlineScriptMetadata
+    | ExternalScriptMetadata;
+
+/** TODO */
+export interface InlineScriptMetadata {
+    /** TODO */
+    readonly type: 'inline-script';
+
+    /** TODO */
+    readonly code: string;
+}
+
+/** TODO */
+export interface ExternalScriptMetadata {
+    /** TODO */
+    readonly type: 'external-script';
+
     /** The path of the script to include. */
     readonly path: string;
 }

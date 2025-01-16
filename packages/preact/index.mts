@@ -65,6 +65,14 @@ export function includeScript(path: string, meta: ImportMeta): VNode {
     return createElement('rules_prerender:annotation', {}, [ annotation ]);
 }
 
+// TODO: `SafeScript`?
+/** TODO */
+export function inlineScript(meta: ImportMeta, code: string): VNode {
+    const annotation =
+        rulesPrerender.internalInlineScriptAnnotation(code, meta);
+    return createElement('rules_prerender:annotation', {}, [ annotation ]);
+}
+
 /**
  * Returns a prerender annotation as a {@link VNode} to be included in
  * prerendered HTML. This is used by the prerender build process to inline the

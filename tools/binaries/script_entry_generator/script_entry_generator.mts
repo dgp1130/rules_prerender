@@ -3,7 +3,7 @@ import * as path from 'path';
 import yargs from 'yargs';
 import { main } from '../../../common/binary.mjs';
 import { mdSpacing } from '../../../common/formatters.mjs';
-import { PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
+import { ExternalScriptMetadata, InlineScriptMetadata, PrerenderMetadata } from '../../../common/models/prerender_metadata.mjs';
 import { generateEntryPoint } from './generator.mjs';
 
 void main(async (args) => {
@@ -60,6 +60,44 @@ void main(async (args) => {
         // Don't generate entry points for HTML files which don't include any scripts.
         if (scripts.length === 0) continue;
 
+        const inlineScripts = scripts
+            .filter((script): script is InlineScriptMetadata => script.type === 'inline-script');
+        const externalScripts = scripts
+            .filter((script): script is ExternalScriptMetadata => script.type === 'external-script');
+        if (inlineScripts.length + externalScripts.length < scripts.length) {
+            const uniqueTypes = new Set(scripts.map((script) => script.type));
+            throw new Error(`Dropped some scripts, is there a new type?\n${
+                Array.from(uniqueTypes.values()).join('\n')}`);
+        }
+
+        // Hash each inline script and map it to a synthetic output file.
+        const inlineScriptData = await Promise.all(inlineScripts.map(async (script) => {
+            const hash = await digest(script.code);
+
+            return {
+                hash,
+                path: `/__rp_inline_scripts__/${hash}.js`,
+                code: script.code,
+            };
+        }));
+
+        // Write the inline scripts to a synthetic file.
+        for (const script of inlineScriptData) {
+            operations.push((async () => {
+                // TODO: Unnecessary? These will all be the same path?
+                const outputPath = path.join(outputDir, script.path);
+                await fs.mkdir(path.dirname(outputPath), { recursive: true });
+                await fs.writeFile(outputPath, script.code);
+            })());
+        }
+
+        // Reference the synthetic files as if they were external scripts.
+        const inlineScriptsAsExternalScripts: ExternalScriptMetadata[] =
+            inlineScriptData.map((script) => ({
+                type: 'external-script',
+                path: path.join(outputDir, script.path),
+            }));
+
         operations.push((async () => {
             const jsRelPath = htmlRelPath.split('.').slice(0, -1).join('.') + '.js';
             const jsRelDepth = jsRelPath.split('/')
@@ -68,6 +106,7 @@ void main(async (args) => {
             const fileDepth = outputDirDepth + jsRelDepth;
             const jsOutputPath = path.join(outputDir, jsRelPath);
 
+            const scripts = [...externalScripts, ...inlineScriptsAsExternalScripts];
             const entryPoint = generateEntryPoint(scripts, fileDepth);
             await fs.mkdir(path.dirname(jsOutputPath), { recursive: true });
             await fs.writeFile(jsOutputPath, entryPoint);
@@ -78,3 +117,11 @@ void main(async (args) => {
 
     return 0;
 });
+
+async function digest(content: string): Promise<string> {
+    const binaryContent = new TextEncoder().encode(content);
+    const buffer = await crypto.subtle.digest('SHA-256', binaryContent);
+    return Array.from(new Uint8Array(buffer))
+        .map((byte) => byte.toString(16).padStart(2, '0'))
+        .join('');
+}

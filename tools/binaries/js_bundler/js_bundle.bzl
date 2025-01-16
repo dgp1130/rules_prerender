@@ -49,16 +49,23 @@ def _js_bundle_impl(ctx):
     output = ctx.actions.declare_directory(ctx.label.name)
     args = ctx.actions.args()
 
-    # Map each entry point to an output at the same relative file path.
-    args.add_all(
-        [ctx.file.entry_points],
-        # Rollup inputs should be listed as `output_bundle_name=path/to/input.js`.
-        map_each = lambda entry: "{output_bundle}={entry_point}".format(
+    def _map_entry_point(entry):
+        # Ignore inline scripts, they are never entry points.
+        if entry.tree_relative_path.startswith("__rp_inline_scripts__"):
+            return None
+
+        return "{output_bundle}={entry_point}".format(
             # Output location is the same relative path as the input location.
             # Rollup adds `.js` automatically, so we strip that here.
             output_bundle = entry.tree_relative_path[:-len(".js")],
             entry_point = to_output_relative_path(entry),
-        ),
+        )
+
+    # Map each entry point to an output at the same relative file path.
+    args.add_all(
+        [ctx.file.entry_points],
+        # Rollup inputs should be listed as `output_bundle_name=path/to/input.js`.
+        map_each = _map_entry_point,
         before_each = "-i",
         allow_closure = True,
     )

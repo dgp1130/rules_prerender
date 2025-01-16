@@ -1,4 +1,4 @@
-import { PrerenderMetadata, ScriptMetadata } from './prerender_metadata.mjs';
+import { PrerenderMetadata, ExternalScriptMetadata } from './prerender_metadata.mjs';
 
 describe('prerender_metadata', () => {
     describe('PrerenderMetadata', () => {
@@ -17,7 +17,7 @@ describe('prerender_metadata', () => {
         it('requires a path', () => {
             // @ts-expect-error fro missing `path`.
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const metadata: ScriptMetadata = {
+            const metadata: ExternalScriptMetadata = {
                 // No path.
             };
 

@@ -6,6 +6,7 @@ js_binary(
     name = "script_entry_generator",
     data = [":script_entry_generator_lib"],
     entry_point = ":script_entry_generator.mjs",
+    node_options = ["--experimental-global-webcrypto"],
     visibility = ["//visibility:public"],
 )
 

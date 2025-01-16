@@ -12,7 +12,13 @@ export function metadataFromPrerenderAnnotations(
         switch (type) {
             case 'script': {
                 return {
+                    type: 'external-script',
                     path: annotation.path,
+                };
+            } case 'inline-script': {
+                return {
+                    type: 'inline-script',
+                    code: annotation.code,
                 };
             } case 'style': {
                 // Annotation extractor should leave style annotations alone, they

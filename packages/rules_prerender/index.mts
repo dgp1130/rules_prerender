@@ -5,6 +5,7 @@ import { checkForDuplicateExecution } from './duplicate_execution_check.mjs';
 export {
     includeScript,
     includeScriptAnnotation as internalIncludeScriptAnnotation,
+    inlineScriptAnnotation as internalInlineScriptAnnotation,
 } from './scripts.mjs';
 export {
     inlineStyle,
