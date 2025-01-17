@@ -16,8 +16,11 @@ ts_project(
     data = ["//:node_modules/yargs"],
     deps = [
         ":generator",
+        "//:node_modules/@types/escodegen",
         "//:node_modules/@types/node",
         "//:node_modules/@types/yargs",
+        "//:node_modules/acorn",
+        "//:node_modules/escodegen",
         "//common:binary",
         "//common:formatters",
         "//common/models:prerender_metadata",

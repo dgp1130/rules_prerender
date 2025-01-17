@@ -1,3 +1,5 @@
+import * as acorn from 'acorn';
+import * as escodegen from 'escodegen';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import yargs from 'yargs';
@@ -74,10 +76,13 @@ void main(async (args) => {
         const inlineScriptData = await Promise.all(inlineScripts.map(async (script) => {
             const hash = await digest(script.code);
 
+            // Inline scripts are hosted in a subdirectory.
+            const importDepth = outputDirDepth + 1;
+
             return {
                 hash,
                 path: `/__rp_inline_scripts__/${hash}.js`,
-                code: script.code,
+                code: rebaseImports(script.code, importDepth),
             };
         }));
 
@@ -124,4 +129,27 @@ async function digest(content: string): Promise<string> {
     return Array.from(new Uint8Array(buffer))
         .map((byte) => byte.toString(16).padStart(2, '0'))
         .join('');
+}
+
+// TODO: Rewrite dynamic `import`.
+/** Rewrite workspace-relative import specifiers to be resolvable by the bundler. */
+function rebaseImports(code: string, importDepth: number): string {
+    const ast = acorn.parse(code, {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+    });
+
+    for (const stmt of ast.body) {
+        if (stmt.type === 'ImportDeclaration') {
+            const prefix = range(importDepth).map(() => '..').join('/');
+            stmt.source.value = path.normalize(`${prefix}/${stmt.source.value}`);
+        }
+    }
+
+    return escodegen.generate(ast);
+}
+
+// Like the Python `range()` function.
+function range(max: number): number[] {
+    return [...Array(max).keys()];
 }

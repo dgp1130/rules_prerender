@@ -1,4 +1,4 @@
-import { includeScript } from '@rules_prerender/preact';
+import { inlineScript } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Transitive } from '../transitive/transitive.js';
 
@@ -9,7 +9,20 @@ export function Component(): VNode {
         <div id="component-replace">
             This text to be overwritten by client-side JavaScript.
         </div>
-        {includeScript('./component_script.mjs', import.meta)}
         <Transitive />
+
+        <my-pure-component />
+        {inlineScript(import.meta, `
+import {MyPureComponent} from './examples/scripts/component/pure_component.mjs';
+MyPureComponent.define();
+        `.trim())}
     </>;
+}
+
+declare module 'preact' {
+    namespace JSX {
+        interface IntrinsicElements {
+            'my-pure-component': JSX.HTMLAttributes<HTMLElement>;
+        }
+    }
 }
