@@ -21,6 +21,9 @@ const deleteEmptyBundles: Plugin = {
 };
 
 export default {
+    // TODO: What exactly does this do?
+    preserveEntrySignatures: false,
+
     plugins: [
         // Needed to support absolute imports.
         nodeResolve({ browser: true }),

@@ -1,6 +1,6 @@
 import { createElement } from 'preact';
 import { render } from 'preact-render-to-string';
-import { CustomElement, InlinedSvg, renderToHtml, includeScript, inlineStyle } from './index.mjs';
+import { customElement, InlinedSvg, renderToHtml, includeScript, inlineStyle } from './index.mjs';
 import { serialize } from '../../common/models/prerender_annotation.mjs';
 import { FileSystemFake } from '../../common/file_system_fake.mjs';
 

@@ -20,6 +20,7 @@ export {
 export {
     execrootRelative as internalExecrootRelative,
     parseExecrootRelativePath as internalSplitExecrootRelativePath,
+    wkspRelative as internalWkspRelative,
 } from './paths.mjs';
 
 export {

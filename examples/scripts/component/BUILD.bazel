@@ -4,7 +4,7 @@ load("//tools/typescript:defs.bzl", "ts_project")
 prerender_component(
     name = "component",
     prerender = ":prerender",
-    scripts = ":pure_component",
+    scripts = ":component_script",
     visibility = ["//examples/scripts:__subpackages__"],
 )
 
@@ -20,13 +20,10 @@ ts_project(
 
 ts_project(
     name = "component_script",
-    srcs = ["component_script.mts"],
-    tsconfig = "//:tsconfig_client",
-)
-
-ts_project(
-    name = "pure_component",
-    srcs = ["pure_component.mts"],
+    srcs = [
+        "component_script.mts",
+        "pure_component.mts",
+    ],
     tsconfig = "//:tsconfig_client",
     deps = ["//:node_modules/hydroactive"],
 )

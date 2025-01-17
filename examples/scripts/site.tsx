@@ -14,7 +14,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
                     This text to be overwritten by client-side JavaScript.
                 </div>
                 {includeScript('./script.mjs', import.meta)}
-                {inlineScript(import.meta, `console.log('Hello from inline!');`)}
+                {inlineScript(`console.log('Hello from inline!');`)}
                 <Component />
             </body>
         </html>

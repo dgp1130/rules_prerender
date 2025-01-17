@@ -5,6 +5,70 @@ import * as rulesPrerender from 'rules_prerender';
 
 export { PrerenderResource } from 'rules_prerender';
 
+/** TODO */
+export type CustomElementAttrs = JSX.HTMLAttributes<HTMLElement> & (
+    | { 'defer-hydration': true, definition?: undefined }
+    | { 'defer-hydration'?: undefined, definition: Definition }
+);
+
+// TODO: Default export.
+/** TODO */
+export interface Definition {
+    wkspRelativeSpecifier: string;
+    symbol: string;
+}
+
+/** TODO */
+export function define(
+    meta: ImportMeta,
+    relativeSpecifier: string,
+    symbol: string,
+): Definition {
+    const wkspRelativePath = rulesPrerender.internalWkspRelative(
+        new URL(meta.url).pathname);
+    const resolved = path.normalize(
+        path.join(path.dirname(wkspRelativePath), relativeSpecifier),
+    );
+
+    return {
+        wkspRelativeSpecifier: resolved,
+        symbol,
+    };
+}
+
+/** TODO */
+function inlineDefineScript(definition: Definition): VNode {
+    return inlineScript(`
+import {${definition.symbol} as Comp} from '${definition.wkspRelativeSpecifier}';
+Comp.define();
+    `.trim());
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function customElement<Attrs = {}>(
+    tagName: string,
+): (attrs: Attrs & CustomElementAttrs, children: VNode[]) => VNode {
+    /** TODO */
+    return ({
+        'defer-hydration': deferHydration,
+        definition,
+        children,
+        ...attrs
+    }) => {
+        if (deferHydration) {
+            return createElement(tagName, {
+                'defer-hydration': deferHydration,
+                ...attrs,
+            } as any /* TODO */, children);
+        } else {
+            return createElement(tagName, attrs as any /* TODO */, [
+                inlineDefineScript(definition),
+                children,
+            ]);
+        }
+    };
+}
+
 /**
  * Representing a generic custom element adhering to web components community
  * protocols.
@@ -67,9 +131,9 @@ export function includeScript(path: string, meta: ImportMeta): VNode {
 
 // TODO: `SafeScript`?
 /** TODO */
-export function inlineScript(meta: ImportMeta, code: string): VNode {
+export function inlineScript(code: string): VNode {
     const annotation =
-        rulesPrerender.internalInlineScriptAnnotation(code, meta);
+        rulesPrerender.internalInlineScriptAnnotation(code);
     return createElement('rules_prerender:annotation', {}, [ annotation ]);
 }
 

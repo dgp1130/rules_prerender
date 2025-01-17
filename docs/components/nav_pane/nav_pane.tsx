@@ -1,5 +1,5 @@
 import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { CustomElement, inlineStyle, includeScript } from '@rules_prerender/preact';
+import { customElement, inlineStyle, includeScript } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { JSX } from 'preact/jsx-runtime';
 import { type Route } from '../../routing.mjs';

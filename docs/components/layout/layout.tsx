@@ -1,5 +1,5 @@
 import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { CustomElement, includeScript, inlineStyle } from '@rules_prerender/preact';
+import { customElement, includeScript, inlineStyle } from '@rules_prerender/preact';
 import { VNode, ComponentChildren } from 'preact';
 import { Footer } from '../footer/footer.js';
 import { Header } from '../header/header.js';

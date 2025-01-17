@@ -1,5 +1,5 @@
 import { Template } from '@rules_prerender/declarative_shadow_dom/preact.mjs';
-import { InlinedSvg, includeScript, inlineStyle, CustomElement } from '@rules_prerender/preact';
+import { InlinedSvg, includeScript, inlineStyle, customElement } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { JSX } from 'preact/jsx-runtime';
 

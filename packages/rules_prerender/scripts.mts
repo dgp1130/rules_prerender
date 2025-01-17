@@ -44,9 +44,8 @@ export function includeScriptAnnotation(filePath: string, meta: ImportMeta):
     });
 }
 
-// TODO: Embed `import.meta` path information to resolve `import` specifiers?
 /** TODO */
-export function inlineScriptAnnotation(code: string, _meta: ImportMeta): string {
+export function inlineScriptAnnotation(code: string): string {
     return serialize({
         type: 'inline-script',
         code,
