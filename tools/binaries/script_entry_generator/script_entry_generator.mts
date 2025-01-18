@@ -134,10 +134,15 @@ async function digest(content: string): Promise<string> {
 // TODO: Rewrite dynamic `import`.
 /** Rewrite workspace-relative import specifiers to be resolvable by the bundler. */
 function rebaseImports(code: string, importDepth: number): string {
-    const ast = acorn.parse(code, {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-    });
+    let ast: acorn.Program;
+    try {
+        ast = acorn.parse(code, {
+            ecmaVersion: 'latest',
+            sourceType: 'module',
+        });
+    } catch (err) {
+        throw new Error(`Failed to parse JavaScript:\n\n${code}`, { cause: err });
+    }
 
     for (const stmt of ast.body) {
         if (stmt.type === 'ImportDeclaration') {

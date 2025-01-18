@@ -36,10 +36,40 @@ export function define(
 }
 
 /** TODO */
-function inlineDefineScript(definition: Definition): VNode {
+function inlineDefineScript(tagName: string, definition: Definition): VNode {
     return inlineScript(`
 import {${definition.symbol} as Comp} from '${definition.wkspRelativeSpecifier}';
-Comp.define();
+
+// Validate the imported symbol is a custom element.
+let proto = Comp;
+while (proto) {
+    proto = Object.getPrototypeOf(proto);
+    if (proto === HTMLElement) {
+        break;
+    } else if (proto === null) {
+        throw new Error(\`
+Expected \\\`${definition.symbol}\\\` from \\\`${definition.wkspRelativeSpecifier}\\\`
+to be a custom element.
+        \`.trim().split('\\n').join(' '));
+    }
+}
+
+// Define the element, it may also already be defined via a top-level side-effect.
+Comp.define?.();
+
+// Validate that the right element was defined.
+const tagName = customElements.getName(Comp);
+if (!tagName) {
+    throw new Error(\`
+Expected \\\`${definition.symbol}\\\` from \\\`${definition.wkspRelativeSpecifier}\\\`
+to define \\\`${tagName}\\\`, but it did not define anything.
+    \`.trim().split('\\n').join(' '));
+} else if (tagName !== '${tagName}') {
+    throw new Error(\`
+Expected \\\`${definition.symbol}\\\` from \\\`${definition.wkspRelativeSpecifier}\\\`
+to define \\\`${tagName}\\\`, but instead it defined \\\`\${tagName}\\\`.
+    \`.trim().split('\\n').join(' '));
+}
     `.trim());
 }
 
@@ -61,7 +91,7 @@ export function customElement<Attrs = {}>(
             } as any /* TODO */, children);
         } else {
             return createElement(tagName, attrs as any /* TODO */, [
-                inlineDefineScript(definition),
+                inlineDefineScript(tagName, definition),
                 children,
             ]);
         }
