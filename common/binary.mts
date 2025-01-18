@@ -16,8 +16,7 @@ export type MainFn = (args: string[]) => Promise<number>;
  */
 export function main(impl: MainFn): Promise<void> {
     return impl(process.argv.slice(2)).catch((err: unknown) => {
-        const message = err instanceof Error ? err.stack ?? err.message : err;
-        console.error(message);
+        console.error(err);
         return 1;
     }).then((code) => {
         process.exit(code);
