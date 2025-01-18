@@ -7,8 +7,7 @@ export { PrerenderResource } from 'rules_prerender';
 
 /** TODO */
 export type CustomElementAttrs = JSX.HTMLAttributes<HTMLElement> & (
-    | { 'defer-hydration': true, definition?: undefined }
-    | { 'defer-hydration'?: undefined, definition: Definition }
+    | { 'defer-hydration'?: boolean }
 );
 
 // TODO: Default export.
@@ -47,11 +46,11 @@ Comp.define();
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function customElement<Attrs = {}>(
     tagName: string,
+    definition: Definition,
 ): (attrs: Attrs & CustomElementAttrs, children: VNode[]) => VNode {
     /** TODO */
     return ({
         'defer-hydration': deferHydration,
-        definition,
         children,
         ...attrs
     }) => {

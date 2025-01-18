@@ -2,8 +2,14 @@ import { customElement, define } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Transitive } from '../transitive/transitive.js';
 
-const MyHostComponent = customElement('my-host-component');
-const MyPureComponent = customElement('my-pure-component');
+const MyHostComponent = customElement(
+    'my-host-component',
+    define(import.meta, './component_script.mjs', 'MyHostComponent'),
+);
+const MyPureComponent = customElement(
+    'my-pure-component',
+    define(import.meta, './pure_component.mjs', 'MyPureComponent'),
+);
 
 /** Renders HTML which expects a JavaScript library to be included. */
 export function Component(): VNode {
@@ -14,13 +20,8 @@ export function Component(): VNode {
         </div>
         <Transitive />
 
-        {/* Error: Requires either `defer-hydration` or `definition`. */}
-        {/* <MyHostComponent /> */}
-
-        {/* Imports the component and calls `define`. */}
-        <MyHostComponent definition={
-            define(import.meta, './component_script.mjs', 'MyHostComponent')
-        }>
+        {/* Imports the component and calls `define` implicitly. */}
+        <MyHostComponent>
             {/* Does *not* import the component, HydroActive will enforce that
             the first interaction supplies the definition. */}
             <MyPureComponent defer-hydration />
