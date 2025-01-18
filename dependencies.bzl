@@ -5,6 +5,15 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def rules_prerender_dependencies():
     """Installs workspace-level dependencies for `rules_prerender`."""
+
+    # Override `@aspect_rules_js` and use a slightly more recent patch release of
+    # `@rules_nodejs`.
+    http_archive(
+        name = "rules_nodejs",
+        sha256 = "0c2277164b1752bb71ecfba3107f01c6a8fb02e4835a790914c71dfadcf646ba",
+        urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.5/rules_nodejs-core-5.8.5.tar.gz"],
+    )
+
     maybe(
         http_archive,
         name = "aspect_rules_js",
