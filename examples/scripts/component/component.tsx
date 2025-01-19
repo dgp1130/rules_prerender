@@ -2,10 +2,13 @@ import { customElement, define } from '@rules_prerender/preact';
 import { VNode } from 'preact';
 import { Transitive } from '../transitive/transitive.js';
 
-const MyHostComponent = customElement(
-    'my-host-component',
-    define(import.meta, './component_script.mjs', 'MyHostComponent'),
-);
+// @ts-ignore
+import { MyHostComponentDef } from './component_script.mjs' with { type: 'symbol-ref' };
+
+// Can use `symbol-ref` import.
+const MyHostComponent = customElement('my-host-component', MyHostComponentDef);
+
+// Alternatively, use `define` with `import.meta`.
 const MyPureComponent = customElement(
     'my-pure-component',
     define(import.meta, './pure_component.mjs', 'MyPureComponent'),

@@ -62,6 +62,18 @@ jasmine_node_test(
     deps = [":entry_point_test_lib"],
 )
 
+ts_project(
+    name = "symbol_ref_module_hook",
+    srcs = ["symbol_ref_module_hook.mts"],
+    # `prerender_resources` needs a direct dependency on this.
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/acorn",
+        "//:node_modules/rules_prerender",
+    ],
+)
+
 bzl_library(
     name = "build_vars",
     srcs = ["build_vars.bzl"],

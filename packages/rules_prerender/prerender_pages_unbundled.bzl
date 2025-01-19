@@ -102,6 +102,16 @@ def prerender_pages_unbundled(
         visibility = visibility,
     )
 
+    # Reexport all included scripts at `%{name}_scripts`.
+    # TODO: Should we move this into `prerender_resources_internal`?
+    transitive_scripts = "%s_scripts" % name
+    _collect_transitive_scripts(
+        name = transitive_scripts,
+        metadata = component_metadata,
+        testonly = testonly,
+        visibility = visibility,
+    )
+
     # Execute the runner to generate annotated resources.
     if not is_js_file(entry_point):
         fail("`entry_point` should be a JavaScript file.")
@@ -109,6 +119,7 @@ def prerender_pages_unbundled(
     prerender_resources_internal(
         name = annotated,
         entry_point = entry_point,
+        scripts = ":%s" % transitive_scripts,
         styles = ":%s" % transitive_styles,
         debug_target = debug_target or "//%s:%s" % (native.package_name(), name),
         data = [":%s" % component_prerender],
@@ -126,18 +137,9 @@ def prerender_pages_unbundled(
     )
 
     # Generate the entry points importing all included scripts for each page.
-    transitive_scripts = "%s_scripts" % name
     script_entry_points(
         name = "%s_entries" % transitive_scripts,
         metadata = metadata,
-        testonly = testonly,
-        visibility = visibility,
-    )
-
-    # Reexport all included scripts at `%{name}_scripts`.
-    _collect_transitive_scripts(
-        name = transitive_scripts,
-        metadata = component_metadata,
         testonly = testonly,
         visibility = visibility,
     )

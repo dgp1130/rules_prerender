@@ -1,6 +1,7 @@
 """Defines `prerender_resources()` functionality."""
 
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("//common:label.bzl", "file_path_of", "rel_path")
@@ -83,6 +84,7 @@ def prerender_resources_internal(
         entry_point,
         data,
         debug_target,
+        scripts = None,
         styles = None,
         testonly = None,
         visibility = None):
@@ -97,6 +99,7 @@ def prerender_resources_internal(
             outside the current workspace. If this is desired, you must copy
             that file into the current workspace and then use the copy as an
             entry point.
+        scripts: TODO
         styles: A `css_group()` of inline styles used by the entry point program.
         debug_target: The label to check
             `@rules_prerender//tools/flags:debug_prerender` for. If the flag is
@@ -119,14 +122,30 @@ def prerender_resources_internal(
         name = "%s_binary_entry" % name,
         out = binary_entry,
         content = ["""
-import * as rulesPrerender from 'rules_prerender';
-import {{ main }} from '{binary_helper}';
-import {{ createRenderer }} from '{renderer}';
-import * as mod from '{entry_point}';
+import {{ register }} from 'module';
+
+// TODO: Is it possible to move this to `node --import`?
+register('{symbol_ref_module_hook}', import.meta.url);
+
+// Load with dynamic imports so the module hook can be registered first.
+const [
+    rulesPrerender,
+    {{ main }},
+    {{ createRenderer }},
+    mod,
+] = await Promise.all([
+    import('rules_prerender'),
+    import('{binary_helper}'),
+    import('{renderer}'),
+    import('{entry_point}'),
+]);
 
 const render = createRenderer(rulesPrerender, mod, '{entry_point}');
 void main(render);
         """.format(
+            symbol_ref_module_hook = rel_path(file_path_of(
+                Label("//tools/binaries/renderer:symbol_ref_module_hook"),
+            )) + ".mjs",
             binary_helper = rel_path(file_path_of(Label("//common:binary"))) + ".mjs",
             renderer = rel_path(file_path_of(Label("//tools/binaries/renderer"))) + ".mjs",
             entry_point = entry_point,
@@ -145,12 +164,14 @@ void main(render);
             "//:node_modules/rules_prerender",
             Label("//common:binary"),
             Label("//tools/binaries/renderer"),
+            Label("//tools/binaries/renderer:symbol_ref_module_hook"),
         ],
     )
 
     # Execute the renderer and place the generated files into a directory.
     _prerender_resources(
         name = name,
+        scripts = scripts,
         styles = styles,
         renderer = ":%s" % binary,
         debug_target = debug_target,
@@ -177,14 +198,22 @@ def _prerender_resources_impl(ctx):
         print("Debugging %s from %s" % (ctx.label, debug_arg))
         args.add("--node_options=--inspect-brk")
 
+    scripts = ctx.attr.scripts[JsInfo].sources
+
     ctx.actions.run(
         mnemonic = "Prerender",
         progress_message = "Prerendering (%s)" % ctx.label,
         executable = ctx.executable.renderer,
         arguments = [args],
+        inputs = scripts,
         outputs = [output_dir],
         env = {
             "BAZEL_BINDIR": ctx.bin_dir.path,
+            "CLIENT_SCRIPTS": " ".join([
+                "%s=%s" % (script.short_path, script.path)
+                for script in scripts.to_list()
+                if script.path.endswith(".mjs")
+            ]),
         },
         execution_requirements = {} if not debugging else {
             # Don't cache the output of this action. The debugger may have
@@ -209,6 +238,7 @@ def _prerender_resources_impl(ctx):
 _prerender_resources = rule(
     implementation = _prerender_resources_impl,
     attrs = {
+        "scripts": attr.label(providers = [JsInfo]),
         "styles": attr.label(providers = [CssImportMapInfo]),
         "renderer": attr.label(
             mandatory = True,
