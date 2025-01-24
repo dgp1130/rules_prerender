@@ -1,4 +1,4 @@
-import { PrerenderResource, includeScript, inlineScript, renderToHtml } from '@rules_prerender/preact';
+import { PrerenderResource, includeScript, inlineScript, key, renderToHtml } from '@rules_prerender/preact';
 import { Component } from './component/component.js';
 
 /** Render some HTML with a `<script />` tag. */
@@ -14,7 +14,7 @@ export default function*(): Generator<PrerenderResource, void, void> {
                     This text to be overwritten by client-side JavaScript.
                 </div>
                 {includeScript('./script.mjs', import.meta)}
-                {inlineScript(`console.log('Hello from inline!');`)}
+                {inlineScript(key`log`, `console.log('Hello from inline!');`)}
                 <Component />
             </body>
         </html>

@@ -46,7 +46,9 @@ export function annotationsEqual(
             return true;
         } case 'inline-script': {
             const sec = second as InlineScriptAnnotation;
-            if (first.code !== sec.code) return false;
+            if (first.key !== sec.key) return false;
+            // Don't check `code`, allowed to be different between inline
+            // scripts with the same key.
             return true;
         } case 'style': {
             const sec = second as StyleAnnotation;
@@ -86,7 +88,8 @@ export interface InlineScriptAnnotation {
     /** TODO: `SafeCode` type? */
     readonly code: string;
 
-    // TODO: `key` to dedupe multiple identical scripts?
+    /** TODO */
+    readonly key: string;
 }
 
 /**

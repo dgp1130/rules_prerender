@@ -3,7 +3,7 @@ import { JSX, VNode, createElement } from 'preact';
 import { render } from 'preact-render-to-string';
 import * as rulesPrerender from 'rules_prerender';
 
-export { PrerenderResource } from 'rules_prerender';
+export { type Key, PrerenderResource, key } from 'rules_prerender';
 
 /** TODO */
 export type CustomElementAttrs = JSX.HTMLAttributes<HTMLElement> & (
@@ -35,9 +35,16 @@ export function define(
     };
 }
 
+// TODO: Can we get `key` out of userspace by generating a synthetic key based
+// on `SafeScript` identity?
 /** TODO */
-function inlineDefineScript(tagName: string, definition: Definition): VNode {
-    return inlineScript(`
+function inlineDefineScript(
+    tagName: string,
+    definition: Definition,
+    key: rulesPrerender.Key,
+): VNode {
+    // TODO: Move this boilerplate into a library.
+    return inlineScript(key, `
 import {${definition.symbol} as Comp} from '${definition.wkspRelativeSpecifier}';
 
 // Validate the imported symbol is a custom element.
@@ -73,11 +80,34 @@ to define \\\`${tagName}\\\`, but instead it defined \\\`\${tagName}\\\`.
     `.trim());
 }
 
+const tagNameKeyMap = new Map<string, rulesPrerender.Key>();
+
+function getOrCreateKeyForTagName(tagName: string): rulesPrerender.Key {
+    const existing = tagNameKeyMap.get(tagName);
+    if (existing) return existing;
+
+    const newKey = Symbol(tagName);
+    tagNameKeyMap.set(tagName, newKey);
+    return newKey;
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function customElement<Attrs = {}>(
     tagName: string,
     definition: Definition,
+    key?: rulesPrerender.Key,
 ): (attrs: Attrs & CustomElementAttrs, children: VNode[]) => VNode {
+    if (!key && tagNameKeyMap.has(tagName)) {
+        throw new Error(`
+Cannot use an implicit key for the same custom element multiple times. Either
+reuse the same \`customElement\` result, or pass an explicit key for each
+invocation.
+        `.trim().split('\n').join(' '));
+    }
+
+    // Create key immediately, even if we don't need it until rendering.
+    const k = key ?? getOrCreateKeyForTagName(tagName);
+
     /** TODO */
     return ({
         'defer-hydration': deferHydration,
@@ -91,7 +121,7 @@ export function customElement<Attrs = {}>(
             } as any /* TODO */, children);
         } else {
             return createElement(tagName, attrs as any /* TODO */, [
-                inlineDefineScript(tagName, definition),
+                inlineDefineScript(tagName, definition, k),
                 children,
             ]);
         }
@@ -160,9 +190,9 @@ export function includeScript(path: string, meta: ImportMeta): VNode {
 
 // TODO: `SafeScript`?
 /** TODO */
-export function inlineScript(code: string): VNode {
+export function inlineScript(key: rulesPrerender.Key, code: string): VNode {
     const annotation =
-        rulesPrerender.internalInlineScriptAnnotation(code);
+        rulesPrerender.internalInlineScriptAnnotation(key, code);
     return createElement('rules_prerender:annotation', {}, [ annotation ]);
 }
 

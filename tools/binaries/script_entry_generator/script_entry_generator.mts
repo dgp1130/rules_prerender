@@ -81,7 +81,7 @@ void main(async (args) => {
 
             return {
                 hash,
-                path: `/__rp_inline_scripts__/${hash}.js`,
+                path: `/__rp_inline_scripts__/${script.key}.js`,
                 code: rebaseImports(script.code, importDepth),
             };
         }));

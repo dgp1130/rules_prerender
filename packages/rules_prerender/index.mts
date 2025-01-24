@@ -6,6 +6,8 @@ export {
     includeScript,
     includeScriptAnnotation as internalIncludeScriptAnnotation,
     inlineScriptAnnotation as internalInlineScriptAnnotation,
+    type Key,
+    key,
 } from './scripts.mjs';
 export {
     inlineStyle,

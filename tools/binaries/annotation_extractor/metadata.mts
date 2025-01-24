@@ -19,6 +19,7 @@ export function metadataFromPrerenderAnnotations(
                 return {
                     type: 'inline-script',
                     code: annotation.code,
+                    key: annotation.key,
                 };
             } case 'style': {
                 // Annotation extractor should leave style annotations alone, they

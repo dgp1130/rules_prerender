@@ -16,6 +16,9 @@ export interface InlineScriptMetadata {
 
     /** TODO */
     readonly code: string;
+
+    /** TODO */
+    readonly key: string;
 }
 
 /** TODO */

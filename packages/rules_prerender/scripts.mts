@@ -44,10 +44,42 @@ export function includeScriptAnnotation(filePath: string, meta: ImportMeta):
     });
 }
 
+const keyNames = new Map<Key, string>();
+const keyCount = new Map<string, number>();
+
+function getKeyName(key: Key): string {
+    const existingName = keyNames.get(key);
+    if (existingName) return existingName;
+
+    const name = key.description ? key.description : '(anonymous)';
+    const count = keyCount.get(name) ?? 0;
+    const newName = count === 0 ? name : `${name}__rp:${count}`;
+    keyNames.set(key, newName);
+    keyCount.set(name, count + 1);
+    return newName;
+}
+
 /** TODO */
-export function inlineScriptAnnotation(code: string): string {
+export function inlineScriptAnnotation(key: Key, code: string): string {
     return serialize({
         type: 'inline-script',
+        key: getKeyName(key),
         code,
     });
+}
+
+/** TODO */
+export type Key = symbol;
+
+const keyMap = new Map<TemplateStringsArray, Key>();
+
+/** TODO */
+export function key(literals: TemplateStringsArray, ...values: never[]): Key {
+    if (values.length !== 0) throw new Error(`\`key\` does not accept interpolations.`);
+    const existingKey = keyMap.get(literals);
+    if (existingKey) return existingKey;
+
+    const newKey = Symbol(literals[0]);
+    keyMap.set(literals, newKey);
+    return newKey;
 }
